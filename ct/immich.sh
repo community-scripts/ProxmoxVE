@@ -65,12 +65,10 @@ EOF
     msg_ok "Installed/upgraded Testing repo packages"
   fi
 
-  if [[ ! -f /etc/apt/sources.list.d/mise.list ]]; then
-    msg_info "Installing Mise"
-    curl -fSs https://mise.jdx.dev/gpg-key.pub | tee /etc/apt/keyrings/mise-archive-keyring.pub 1>/dev/null
-    echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.pub arch=$(arch_resolve)] https://mise.jdx.dev/deb stable main" >/etc/apt/sources.list.d/mise.list
-    ensure_dependencies mise
-    msg_ok "Installed Mise"
+  if ! command -v mise >/dev/null 2>&1; then
+    MISE_ARCH="x64"
+    [[ "$(arch_resolve)" == "arm64" ]] && MISE_ARCH="arm64"
+    fetch_and_deploy_gh_release "mise" "jdx/mise" "singlefile" "latest" "/usr/local/bin" "mise-v*-linux-${MISE_ARCH}"
   fi
 
   STAGING_DIR=/opt/staging

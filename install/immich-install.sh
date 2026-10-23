@@ -25,7 +25,7 @@ if lscpu | grep -q 'GenuineIntel'; then
   echo " 2) **NEW** Intel OpenVINO CPU or iGPU"
   echo ""
 
-  read -r -p "${TAB3}Select machine-learning type [1]: " ML_TYPE
+  read -r -p "${TAB3}Select machine-learning type [1]: " ML_TYPE || true
   ML_TYPE="${ML_TYPE:-1}"
   if [[ "$ML_TYPE" == "2" ]]; then
     touch ~/.openvino
@@ -110,7 +110,7 @@ setup_deb822_repo \
   "https://repo.jellyfin.org/jellyfin_team.gpg.key" \
   "https://repo.jellyfin.org/debian" \
   "$(get_os_info codename)"
-$STD apt install -y jellyfin-ffmpeg7
+install_packages_with_retry jellyfin-ffmpeg7
 ln -sf /usr/lib/jellyfin-ffmpeg/ffmpeg /usr/bin/ffmpeg
 ln -sf /usr/lib/jellyfin-ffmpeg/ffprobe /usr/bin/ffprobe
 
@@ -124,12 +124,9 @@ if [[ "$CTTYPE" == "0" && -d /dev/dri ]]; then
 fi
 msg_ok "Dependencies Installed"
 
-msg_info "Installing Mise"
-curl -fSs https://mise.jdx.dev/gpg-key.pub | tee /etc/apt/keyrings/mise-archive-keyring.pub 1>/dev/null
-echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.pub arch=$(arch_resolve)] https://mise.jdx.dev/deb stable main" >/etc/apt/sources.list.d/mise.list
-apt_update_safe
-$STD apt install -y mise
-msg_ok "Installed Mise"
+MISE_ARCH="x64"
+[[ "$(arch_resolve)" == "arm64" ]] && MISE_ARCH="arm64"
+fetch_and_deploy_gh_release "mise" "jdx/mise" "singlefile" "latest" "/usr/local/bin" "mise-v*-linux-${MISE_ARCH}"
 
 msg_info "Configuring Debian Testing Repo"
 if [[ -f /etc/apt/sources.list.d/debian.sources ]]; then
