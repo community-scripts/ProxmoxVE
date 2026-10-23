@@ -61,6 +61,7 @@ $STD yarn web:build
 $STD yarn prisma:deploy
 rm -rf ~/.cargo/registry ~/.cargo/git ~/.cargo/.package-cache
 rm -rf /root/.cache/yarn
+rm -rf /root/.yarn/berry/cache
 rm -rf /opt/linkwarden/.next/cache
 msg_ok "Installed Linkwarden"
 
