@@ -14,9 +14,11 @@ network_check
 update_os
 
 setup_deb_based() {
-  read -r -p "${TAB3}Enter PostgreSQL version (15/16/17/18): " ver
+  ver="${var_postgresql_version:-}"
+  [[ -n "$ver" ]] || read -r -p "${TAB3}Enter PostgreSQL version (15/16/17/18) [17]: " ver || true
+  ver="${ver:-17}"
   [[ $ver =~ ^(15|16|17|18)$ ]] || {
-    echo "Invalid version"
+    msg_error "Invalid PostgreSQL version: ${ver} (expected 15, 16, 17 or 18)"
     exit 64
   }
   PG_VERSION=$ver setup_postgresql
@@ -136,8 +138,13 @@ EOF
 }
 
 setup_alpine() {
-  read -r -p "${TAB3}Enter PostgreSQL version (15/16/17): " ver
-  [[ $ver =~ ^(15|16|17)$ ]] || { echo "Invalid version"; exit 64; }
+  ver="${var_postgresql_version:-}"
+  [[ -n "$ver" ]] || read -r -p "${TAB3}Enter PostgreSQL version (16/17/18) [17]: " ver || true
+  ver="${ver:-17}"
+  [[ $ver =~ ^(16|17|18)$ ]] || {
+    msg_error "Invalid PostgreSQL version: ${ver} (expected 16, 17 or 18)"
+    exit 64
+  }
 
   msg_info "Installing PostgreSQL ${ver}"
   $STD apk add --no-cache postgresql${ver} postgresql${ver}-contrib postgresql${ver}-openrc sudo
