@@ -573,6 +573,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - apache-guacamole: require Debian 13 [@MickLesk](https://github.com/MickLesk) ([#18094](https://github.com/community-scripts/ProxmoxVE/pull/18094))
+    - unifi-os-server: require Debian 13 [@MickLesk](https://github.com/MickLesk) ([#18096](https://github.com/community-scripts/ProxmoxVE/pull/18096))
     - openwebui: drop the Intel oneAPI Base Toolkit [@MickLesk](https://github.com/MickLesk) ([#18098](https://github.com/community-scripts/ProxmoxVE/pull/18098))
     - ollama: drop the Intel oneAPI Base Toolkit [@MickLesk](https://github.com/MickLesk) ([#18097](https://github.com/community-scripts/ProxmoxVE/pull/18097))
     - tdarr: do not let a failed or slow updater block the service start [@MickLesk](https://github.com/MickLesk) ([#18100](https://github.com/community-scripts/ProxmoxVE/pull/18100))
