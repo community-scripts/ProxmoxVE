@@ -442,7 +442,7 @@ msg_ok "Bridge interfaces have been successfully added."
 msg_ok "Created a OPNsense VM ${CL}${BL}(${HN})"
 msg_ok "Starting OPNsense VM (the bootstrap takes 10-30 minutes)"
 $STD qm start $VMID
-sleep 90
+sleep 180
 send_line_to_vm "root"
 sleep 2
 send_line_to_vm ""
