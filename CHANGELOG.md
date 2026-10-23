@@ -565,6 +565,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-23
+
+### 💾 Core
+
+  - vm-core: let vm_timezone_default survive a host without /etc/timezone [@MickLesk](https://github.com/MickLesk) ([core#159](https://github.com/community-scripts/core/pull/159))
+
 ## 2026-10-22
 
 ### 🚀 Updated Scripts
