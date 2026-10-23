@@ -571,6 +571,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Storyteller: build the runtime like upstream's Dockerfile [@MickLesk](https://github.com/MickLesk) ([#18083](https://github.com/community-scripts/ProxmoxVE/pull/18083))
 
+  - #### 🐞 Bug Fixes
+
+    - kasm: survive a failed release lookup and answer the installer with flags [@MickLesk](https://github.com/MickLesk) ([#18092](https://github.com/community-scripts/ProxmoxVE/pull/18092))
+
   - #### 🔧 Refactor
 
     - apache-guacamole: require Debian 13 [@MickLesk](https://github.com/MickLesk) ([#18094](https://github.com/community-scripts/ProxmoxVE/pull/18094))
