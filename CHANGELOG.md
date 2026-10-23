@@ -569,7 +569,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - error-handler: keep the start explanation and the final IP lookup from failing the run [@MickLesk](https://github.com/MickLesk) ([core#163](https://github.com/community-scripts/core/pull/163))
+  - VM silent: return the failure instead of exiting [@MickLesk](https://github.com/MickLesk) ([core#164](https://github.com/community-scripts/core/pull/164))
+- error-handler: keep the start explanation and the final IP lookup from failing the run [@MickLesk](https://github.com/MickLesk) ([core#163](https://github.com/community-scripts/core/pull/163))
 - error output: report a failure inside a subshell once [@MickLesk](https://github.com/MickLesk) ([core#162](https://github.com/community-scripts/core/pull/162))
 - general: allow Composer as root in every script [@MickLesk](https://github.com/MickLesk) ([core#161](https://github.com/community-scripts/core/pull/161))
 - lxc-updater: skip the resource check when the container cannot read its RAM [@MickLesk](https://github.com/MickLesk) ([core#160](https://github.com/community-scripts/core/pull/160))
