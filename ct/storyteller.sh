@@ -31,42 +31,78 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="24" NODE_MODULE="corepack,yarn" setup_nodejs
+  NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
 
   if check_for_gl_release "storyteller" "storyteller-platform/storyteller" "" "" "web-v2"; then
     msg_info "Stopping Service"
     systemctl stop storyteller
     msg_ok "Stopped Service"
 
+    msg_info "Installing Dependencies"
+    $STD apt install -y cmake argon2 libcurl4t64 libxml2
+    msg_ok "Installed Dependencies"
+
+    fetch_and_deploy_gh_release "readium" "readium/cli" "prebuild" "v0.9.1" "/opt/readium" "readium_linux_$(arch_resolve "x86_64" "arm64").tar.gz"
+
     create_backup /opt/storyteller/.env
-
-    CLEAN_INSTALL=1 fetch_and_deploy_gl_release "storyteller" "storyteller-platform/storyteller" "tarball" "latest" "/opt/storyteller" "" "web-v2"
-
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="data" fetch_and_deploy_gl_release "storyteller" "storyteller-platform/storyteller" "tarball" "latest" "/opt/storyteller" "" "web-v2"
     restore_backup
 
-    msg_info "Rebuilding Storyteller"
+    msg_info "Building Storyteller (Patience)"
     cd /opt/storyteller
-    export NODE_OPTIONS="--max-old-space-size=4096"
-
-    $STD corepack yarn install --network-timeout 600000
-    $STD gcc -g -fPIC -rdynamic -shared web/sqlite/uuid.c -o web/sqlite/uuid.c.so
-    export CI=1
+    $STD corepack yarn install
     export NODE_ENV=production
     export NEXT_TELEMETRY_DISABLED=1
     export SQLITE_NATIVE_BINDING=/opt/storyteller/node_modules/better-sqlite3/build/Release/better_sqlite3.node
     $STD corepack yarn workspaces foreach -Rpt --from @storyteller-platform/web --exclude @storyteller-platform/eslint run build
-    mkdir -p /opt/storyteller/web/.next/standalone/web/.next/static
-    cp -rT /opt/storyteller/web/.next/static /opt/storyteller/web/.next/standalone/web/.next/static
-    if [[ -d /opt/storyteller/web/public ]]; then
-      mkdir -p /opt/storyteller/web/.next/standalone/web/public
-      cp -rT /opt/storyteller/web/public /opt/storyteller/web/.next/standalone/web/public
+    STANDALONE=/opt/storyteller/applications/web/.next/standalone
+    WEB_DIR="$STANDALONE/applications/web"
+    mkdir -p "$WEB_DIR"/{public,.next/static,.next/cache,migrations,sqlite,scripts}
+    cp -rT applications/web/public "$WEB_DIR/public"
+    cp -rT applications/web/.next/static "$WEB_DIR/.next/static"
+    cp -rT applications/web/migrations "$WEB_DIR/migrations"
+    cp applications/web/sqlite/uuid.c.so "$WEB_DIR/sqlite/"
+    cp docker-scripts/reset-password.sh "$WEB_DIR/scripts/"
+    cp -r applications/web/work-dist applications/web/file-write-dist "$WEB_DIR/"
+    mkdir -p "$WEB_DIR/work-dist/@storyteller-platform/align/prebuilds"
+    cp -r "libraries/align/prebuilds/linux-$(arch_resolve "x64" "arm64")" "$WEB_DIR/work-dist/@storyteller-platform/align/prebuilds/"
+    cp node_modules/@echogarden/icu-segmentation-wasm/wasm/*.wasm "$WEB_DIR/work-dist/"
+    cp -rT node_modules/@parcel "$STANDALONE/node_modules/@parcel"
+    cp -rT node_modules/kuromoji "$STANDALONE/node_modules/kuromoji"
+    ln -sf /opt/storyteller/.env "$WEB_DIR/.env"
+    msg_ok "Built Storyteller"
+
+    msg_info "Updating Whisper"
+    WHISPER_VARIANT="linux-$(arch_resolve "x64" "arm64")-cpu"
+    $STD node /opt/storyteller/libraries/ghost-story/dist/cli/bin.js install binary "$WHISPER_VARIANT"
+    $STD node /opt/storyteller/libraries/ghost-story/dist/cli/bin.js install model tiny.en
+    if [[ "$WHISPER_VARIANT" == "linux-x64-cpu" ]]; then
+      $STD node /opt/storyteller/libraries/ghost-story/dist/cli/bin.js install binary linux-x64-cpu-legacy
     fi
-    mkdir -p /opt/storyteller/web/.next/standalone/web/migrations
-    cp -rT /opt/storyteller/web/migrations /opt/storyteller/web/.next/standalone/web/migrations
-    mkdir -p /opt/storyteller/web/.next/standalone/web/sqlite
-    cp -rT /opt/storyteller/web/sqlite /opt/storyteller/web/.next/standalone/web/sqlite
-    ln -sf /opt/storyteller/.env /opt/storyteller/web/.next/standalone/web/.env
-    msg_ok "Rebuilt Storyteller"
+    msg_ok "Updated Whisper"
+
+    cat <<EOF >/etc/systemd/system/storyteller.service
+[Unit]
+Description=Storyteller
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=${WEB_DIR}
+EnvironmentFile=/opt/storyteller/.env
+Environment=SQLITE_NATIVE_BINDING=${STANDALONE}/node_modules/better-sqlite3/build/Release/better_sqlite3.node
+Environment=ERROR_ALIGN_NATIVE_BINDING=${WEB_DIR}/work-dist/@storyteller-platform/align/
+Environment=STORYTELLER_WORKER=worker.mjs
+Environment=STORYTELLER_FILE_WRITE_WORKER=fileWriteWorker.mjs
+ExecStart=/usr/bin/node --enable-source-maps server.js
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    systemctl daemon-reload
 
     msg_info "Starting Service"
     systemctl start storyteller
