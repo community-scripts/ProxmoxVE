@@ -37,10 +37,10 @@ fi
 msg_ok "Installed Docker"
 
 msg_info "Detecting latest Kasm Workspaces release"
-KASM_URL=$(curl -s https://kasm.com/downloads \
+KASM_URL=$(curl -s --max-time 30 https://kasm.com/downloads \
   | grep -oP 'https://kasm-static-content\.s3\.amazonaws\.com/kasm_release_\d+\.\d+\.\d+-latest\.tar\.gz' \
-  | head -1)
-KASM_VERSION=$(echo "$KASM_URL" | grep -oP '\d+\.\d+\.\d+(?=-latest)')
+  | head -1 || true)
+KASM_VERSION=$(echo "$KASM_URL" | grep -oP '\d+\.\d+\.\d+(?=-latest)' || true)
 
 # Fallback to predefined version if online lookup failed.
 if [[ -z "$KASM_VERSION" ]] || [[ -z "$KASM_URL" ]]; then
@@ -63,7 +63,7 @@ curl_download "/opt/kasm_release_${KASM_VERSION}.tar.gz" "$KASM_URL"
 cd /opt
 tar -xf "kasm_release_${KASM_VERSION}.tar.gz"
 chmod +x /opt/kasm_release/install.sh
-printf 'y\ny\ny\n4\n' | bash /opt/kasm_release/install.sh --ignore-dep-failures >~/kasm-install.output 2>&1
+bash /opt/kasm_release/install.sh --accept-eula --no-swap-check --no-check-disk --ignore-dep-failures >~/kasm-install.output 2>&1
 awk '
   /^Kasm UI Login Credentials$/ {capture=1}
   capture {print}
