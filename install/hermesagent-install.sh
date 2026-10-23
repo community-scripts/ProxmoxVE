@@ -36,7 +36,8 @@ msg_ok "Configured Service Environment"
 confirm_external_installer "https://hermes-agent.nousresearch.com/" "https://hermes-agent.nousresearch.com/install.sh"
 
 msg_info "Installing Hermes Agent"
-curl -fsSL https://hermes-agent.nousresearch.com/install.sh -o /tmp/hermes-install.sh
+curl_with_retry "https://hermes-agent.nousresearch.com/install.sh" /tmp/hermes-install.sh ||
+  curl_with_retry "https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh" /tmp/hermes-install.sh
 $STD setsid --wait bash -c '
   set -a; source /etc/default/hermes; set +a
   export npm_config_yes=true
