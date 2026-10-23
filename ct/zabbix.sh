@@ -85,8 +85,10 @@ function update_script() {
   rm -Rf /etc/apt/sources.list.d/zabbix.list
   cd /tmp
 
+  ZABBIX_REPO_DIR="debian"
+  [[ "$ZABBIX_VERSION" == "7.0" && "$(arch_resolve)" == "arm64" ]] && ZABBIX_REPO_DIR="debian-arm64"
   if [[ "$ZABBIX_VERSION" == "7.0" ]]; then
-    ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/debian/pool/main/z/zabbix-release/zabbix-release_latest_${ZABBIX_VERSION}+debian13_all.deb"
+    ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/${ZABBIX_REPO_DIR}/pool/main/z/zabbix-release/zabbix-release_latest_${ZABBIX_VERSION}+debian13_all.deb"
     ZABBIX_DEB_FILE="zabbix-release_latest_${ZABBIX_VERSION}+debian13_all.deb"
   else
     ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/release/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian13_all.deb"
