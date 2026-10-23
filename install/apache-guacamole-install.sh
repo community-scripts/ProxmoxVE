@@ -12,6 +12,11 @@ setting_up_container
 network_check
 update_os
 
+if is_debian && [[ "$(get_os_version_major)" -lt 13 ]]; then
+  msg_error "Apache Guacamole needs Debian 13: freerdp3-dev is not available on Debian 12."
+  exit 238
+fi
+
 msg_info "Installing Dependencies"
 $STD apt install -y \
   build-essential \
