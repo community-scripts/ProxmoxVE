@@ -38,9 +38,7 @@ function update_script() {
     systemctl stop storyteller
     msg_ok "Stopped Service"
 
-    msg_info "Installing Dependencies"
-    $STD apt install -y cmake argon2 libcurl4t64 libxml2
-    msg_ok "Installed Dependencies"
+    ensure_dependencies cmake argon2 libcurl4t64 libxml2
 
     fetch_and_deploy_gh_release "readium" "readium/cli" "prebuild" "v0.9.1" "/opt/readium" "readium_linux_$(arch_resolve "x86_64" "arm64").tar.gz"
 

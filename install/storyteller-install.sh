@@ -18,7 +18,6 @@ $STD apt install -y \
   build-essential \
   git \
   cmake \
-  python3 \
   sqlite3 \
   libsqlite3-dev \
   argon2 \
@@ -40,7 +39,6 @@ export NODE_ENV=production
 export NEXT_TELEMETRY_DISABLED=1
 export SQLITE_NATIVE_BINDING=/opt/storyteller/node_modules/better-sqlite3/build/Release/better_sqlite3.node
 $STD corepack yarn workspaces foreach -Rpt --from @storyteller-platform/web --exclude @storyteller-platform/eslint run build
-# Assembled like upstream's Dockerfile: Next does not trace the workers, native prebuilds and wasm files
 STANDALONE=/opt/storyteller/applications/web/.next/standalone
 WEB_DIR="$STANDALONE/applications/web"
 mkdir -p "$WEB_DIR"/{public,.next/static,.next/cache,migrations,sqlite,scripts}
