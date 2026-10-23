@@ -64,6 +64,7 @@ function update_script() {
     $STD yarn prisma:deploy
     rm -rf ~/.cargo/registry ~/.cargo/git ~/.cargo/.package-cache
     rm -rf /root/.cache/yarn
+    rm -rf /root/.yarn/berry/cache
     rm -rf /opt/linkwarden/.next/cache
     msg_ok "Updated Linkwarden"
 
