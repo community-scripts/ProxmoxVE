@@ -569,8 +569,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - Storyteller: build the runtime like upstream's Dockerfile [@MickLesk](https://github.com/MickLesk) ([#18083](https://github.com/community-scripts/ProxmoxVE/pull/18083))
+
   - #### 🔧 Refactor
 
+    - tdarr: do not let a failed or slow updater block the service start [@MickLesk](https://github.com/MickLesk) ([#18100](https://github.com/community-scripts/ProxmoxVE/pull/18100))
+    - immich: install mise from its GitHub release, retry jellyfin-ffmpeg, default the ML prompt [@MickLesk](https://github.com/MickLesk) ([#18099](https://github.com/community-scripts/ProxmoxVE/pull/18099))
     - Refactor: pimox-haos-vm [@MickLesk](https://github.com/MickLesk) ([#18077](https://github.com/community-scripts/ProxmoxVE/pull/18077))
 
 ### 💾 Core
