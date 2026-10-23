@@ -574,6 +574,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - zabbix: use the arm64 repository for 7.0 [@MickLesk](https://github.com/MickLesk) ([#18089](https://github.com/community-scripts/ProxmoxVE/pull/18089))
     - kasm: survive a failed release lookup and answer the installer with flags [@MickLesk](https://github.com/MickLesk) ([#18092](https://github.com/community-scripts/ProxmoxVE/pull/18092))
 
   - #### 🔧 Refactor
