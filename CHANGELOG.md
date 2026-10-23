@@ -569,7 +569,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
-  - Storyteller: build the runtime like upstream's Dockerfile [@MickLesk](https://github.com/MickLesk) ([#18083](https://github.com/community-scripts/ProxmoxVE/pull/18083))
+  - postgresql: default the version prompt and match Alpine's packages [@MickLesk](https://github.com/MickLesk) ([#18093](https://github.com/community-scripts/ProxmoxVE/pull/18093))
+- Storyteller: build the runtime like upstream's Dockerfile [@MickLesk](https://github.com/MickLesk) ([#18083](https://github.com/community-scripts/ProxmoxVE/pull/18083))
 
   - #### 🐞 Bug Fixes
 
