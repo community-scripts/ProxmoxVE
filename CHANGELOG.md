@@ -573,6 +573,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - ollama: drop the Intel oneAPI Base Toolkit [@MickLesk](https://github.com/MickLesk) ([#18097](https://github.com/community-scripts/ProxmoxVE/pull/18097))
     - tdarr: do not let a failed or slow updater block the service start [@MickLesk](https://github.com/MickLesk) ([#18100](https://github.com/community-scripts/ProxmoxVE/pull/18100))
     - immich: install mise from its GitHub release, retry jellyfin-ffmpeg, default the ML prompt [@MickLesk](https://github.com/MickLesk) ([#18099](https://github.com/community-scripts/ProxmoxVE/pull/18099))
     - Refactor: pimox-haos-vm [@MickLesk](https://github.com/MickLesk) ([#18077](https://github.com/community-scripts/ProxmoxVE/pull/18077))
