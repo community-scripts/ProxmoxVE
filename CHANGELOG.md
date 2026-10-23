@@ -569,7 +569,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - VM silent: return the failure instead of exiting [@MickLesk](https://github.com/MickLesk) ([core#164](https://github.com/community-scripts/core/pull/164))
+  - Telemetry: explain and categorize by the command that failed [@MickLesk](https://github.com/MickLesk) ([core#166](https://github.com/community-scripts/core/pull/166))
+- error-handler: report a handled silent failure only on its own line [@MickLesk](https://github.com/MickLesk) ([core#165](https://github.com/community-scripts/core/pull/165))
+- VM silent: return the failure instead of exiting [@MickLesk](https://github.com/MickLesk) ([core#164](https://github.com/community-scripts/core/pull/164))
 - error-handler: keep the start explanation and the final IP lookup from failing the run [@MickLesk](https://github.com/MickLesk) ([core#163](https://github.com/community-scripts/core/pull/163))
 - error output: report a failure inside a subshell once [@MickLesk](https://github.com/MickLesk) ([core#162](https://github.com/community-scripts/core/pull/162))
 - general: allow Composer as root in every script [@MickLesk](https://github.com/MickLesk) ([core#161](https://github.com/community-scripts/core/pull/161))
