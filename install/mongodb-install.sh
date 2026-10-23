@@ -18,7 +18,7 @@ if [[ "$(arch_resolve)" == "arm64" ]]; then
 else
   install_mongodb_8="${var_mongodb_8:-}"
   [[ -n "$install_mongodb_8" ]] || read -r -p "${TAB3}Do you want to install MongoDB 8.0 instead of 7.0? [y/N]: " install_mongodb_8 || true
-  if [[ "$install_mongodb_8" =~ ^[Yy]$ ]]; then
+  if [[ "$install_mongodb_8" =~ ^[Yy]([Ee][Ss])?$ ]]; then
     MONGO_VERSION="8.0" setup_mongodb
   else
     MONGO_VERSION="7.0" setup_mongodb
