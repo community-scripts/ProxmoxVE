@@ -52,7 +52,7 @@ msg_info "Setup Paperless-ngx"
 cd /opt/paperless
 rm -rf /opt/paperless/docker
 $STD uv sync --all-extras
-mkdir -p /opt/paperless_data/{consume,data,media,trash}
+mkdir -p /opt/paperless_data/{consume,data,index,media,trash}
 mkdir -p /opt/paperless/static
 SECRET_KEY="$(random_password 32)"
 cat <<EOF >~/paperless-ngx.creds
@@ -80,6 +80,7 @@ set -a
 . /opt/paperless/paperless.conf
 set +a
 $STD uv run -- python manage.py migrate
+$STD uv run -- python manage.py reindex
 msg_ok "Setup Paperless-ngx"
 
 msg_info "Setting up admin Paperless-ngx User & Password"
