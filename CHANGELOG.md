@@ -565,6 +565,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-24
+
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - fix(addons): use catch_errors so the update marker is cleared [@mazelado](https://github.com/mazelado) ([#18128](https://github.com/community-scripts/ProxmoxVE/pull/18128))
+
 ## 2026-10-23
 
 ### 🚀 Updated Scripts
