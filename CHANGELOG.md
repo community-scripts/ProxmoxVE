@@ -578,6 +578,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Frigate: bump to v0.18.2 [@MickLesk](https://github.com/MickLesk) ([#18120](https://github.com/community-scripts/ProxmoxVE/pull/18120))
 
+  - #### 🔧 Refactor
+
+    - install: answer every prompt from the environment, survive a closed stdin [@MickLesk](https://github.com/MickLesk) ([#18121](https://github.com/community-scripts/ProxmoxVE/pull/18121))
+
 ### 🧰 Tools
 
   - #### 🐞 Bug Fixes
