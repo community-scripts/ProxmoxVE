@@ -46,11 +46,19 @@ function update_script() {
 
     restore_backup
 
+    msg_info "Refreshing Bar-Assistant data pack"
+    rm -rf /opt/bar-assistant/resources/data
+    mkdir -p /opt/bar-assistant/resources/data
+    curl -fsSL https://github.com/bar-assistant/data/archive/refs/heads/v5.tar.gz | tar -xz --strip-components=1 -C /opt/bar-assistant/resources/data
+    chown -R www-data:www-data /opt/bar-assistant/resources/data
+    msg_ok "Refreshed Bar-Assistant data pack"
+
     msg_info "Configuring Bar-Assistant"
     cd /opt/bar-assistant
     $STD composer install --no-interaction
     $STD php artisan migrate --force
     $STD php artisan storage:link
+    $STD php artisan starter-media:publish
     $STD php artisan bar:setup-meilisearch
     $STD php artisan scout:sync-index-settings
     $STD php artisan config:cache

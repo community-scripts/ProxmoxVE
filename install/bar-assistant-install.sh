@@ -52,6 +52,7 @@ $STD php artisan key:generate
 touch storage/bar-assistant/database.ba3.sqlite
 $STD php artisan migrate --force
 $STD php artisan storage:link
+$STD php artisan starter-media:publish
 $STD php artisan bar:setup-meilisearch
 $STD php artisan scout:sync-index-settings
 $STD php artisan config:cache
