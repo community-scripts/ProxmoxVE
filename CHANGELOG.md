@@ -571,7 +571,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - SnapOtter: recreate the AI venv with --clear [@MickLesk](https://github.com/MickLesk) ([#18119](https://github.com/community-scripts/ProxmoxVE/pull/18119))
     - Update authentik version to 2026.8.5 [@thieneret](https://github.com/thieneret) ([#18125](https://github.com/community-scripts/ProxmoxVE/pull/18125))
+
+  - #### ✨ New Features
+
+    - Frigate: bump to v0.18.2 [@MickLesk](https://github.com/MickLesk) ([#18120](https://github.com/community-scripts/ProxmoxVE/pull/18120))
 
 ### 🧰 Tools
 
