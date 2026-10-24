@@ -565,42 +565,23 @@ if [ -s "$WEB_JS" ] && ! grep -q NoMoreNagging "$WEB_JS"; then
 fi
 
 MOBILE_TPL=/usr/share/pve-yew-mobile-gui/index.html.tpl
-MARKER="<!-- MANAGED BLOCK FOR MOBILE NAG -->"
-if [ -f "$MOBILE_TPL" ] && ! grep -q "$MARKER" "$MOBILE_TPL"; then
+if [ -s "$MOBILE_TPL" ] && ! grep -q NoMoreNagging "$MOBILE_TPL"; then
     echo "Patching Mobile UI nag..."
-    printf "%s\n" \
-      "$MARKER" \
-      "<script>" \
-      "  function removeSubscriptionElements() {" \
-      "    // --- Remove subscription dialogs ---" \
-      "    const dialogs = document.querySelectorAll('dialog.pwt-outer-dialog');" \
-      "    dialogs.forEach(dialog => {" \
-      "      const text = (dialog.textContent || '').toLowerCase();" \
-      "      if (text.includes('subscription')) {" \
-      "        dialog.remove();" \
-      "        console.log('Removed subscription dialog');" \
-      "      }" \
-      "    });" \
-      "" \
-      "    // --- Remove subscription cards, but keep Reboot/Shutdown/Console ---" \
-      "    const cards = document.querySelectorAll('.pwt-card.pwt-p-2.pwt-d-flex.pwt-interactive.pwt-justify-content-center');" \
-      "    cards.forEach(card => {" \
-      "      const text = (card.textContent || '').toLowerCase();" \
-      "      const hasButton = card.querySelector('button');" \
-      "      if (!hasButton && text.includes('subscription')) {" \
-      "        card.remove();" \
-      "        console.log('Removed subscription card');" \
-      "      }" \
-      "    });" \
-      "  }" \
-      "" \
-      "  const observer = new MutationObserver(removeSubscriptionElements);" \
-      "  observer.observe(document.body, { childList: true, subtree: true });" \
-      "  removeSubscriptionElements();" \
-      "  setInterval(removeSubscriptionElements, 300);" \
-      "  setTimeout(() => {observer.disconnect();}, 10000);" \
-      "</script>" \
-      "" >> "$MOBILE_TPL"
+    sed -i '/<head>/r /dev/stdin' "$MOBILE_TPL" <<'HTML'
+  <script>
+    // NoMoreNagging
+    const nativeFetch = window.fetch.bind(window);
+    window.fetch = async (...args) => {
+      const res = await nativeFetch(...args);
+      const path = new URL(String(args[0]?.url ?? args[0]), location.href).pathname;
+      if (!['/api2/json/nodes', '/api2/extjs/nodes'].includes(path)) return res;
+      const body = await res.clone().json().catch(() => null);
+      if (!Array.isArray(body?.data)) return res;
+      body.data.forEach((node) => { if (!node.level) node.level = 'NoMoreNagging'; });
+      return new Response(JSON.stringify(body), { status: res.status, headers: res.headers });
+    };
+  </script>
+HTML
 fi
 EOF
     chmod 755 /usr/local/bin/pve-remove-nag.sh
@@ -615,10 +596,13 @@ EOF
   no)
     whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Support Subscriptions" "Supporting the software's development team is essential. Check their official website's Support Subscriptions for pricing. Without their dedicated work, we wouldn't have this exceptional software." 10 58
     msg_error "Selected no to Disabling subscription nag"
-    [[ -f /etc/apt/apt.conf.d/no-nag-script ]] && rm /etc/apt/apt.conf.d/no-nag-script
+    rm -f /etc/apt/apt.conf.d/no-nag-script /usr/local/bin/pve-remove-nag.sh
     ;;
   esac
   apt --reinstall install proxmox-widget-toolkit &>/dev/null || msg_error "Widget toolkit reinstall failed"
+  if dpkg -s pve-yew-mobile-gui &>/dev/null; then
+    apt --reinstall install pve-yew-mobile-gui &>/dev/null || msg_error "Mobile UI reinstall failed"
+  fi
   if ! systemctl is-active --quiet pve-ha-lrm; then
     CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "HIGH AVAILABILITY" --menu "Enable high availability?" 10 58 2 \
       "yes" " " \
