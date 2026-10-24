@@ -11,9 +11,10 @@ var_tags="${var_tags:-ai}"
 var_cpu="${var_cpu:-4}"
 var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-40}"
-var_os="${var_os:-ubuntu}"
-var_version="${var_version:-24.04}"
+var_os="${var_os:-debian}"
+var_version="${var_version:-13}"
 var_arm64="${var_arm64:-yes}"
+var_unprivileged="${var_unprivileged:-1}"
 var_gpu="${var_gpu:-yes}"
 
 header_info "$APP"
@@ -34,23 +35,19 @@ function update_script() {
 
   if check_for_gh_release "ollama-com" "ollama/ollama"; then
     ensure_dependencies zstd
-    msg_info "Stopping Services"
+    msg_info "Stopping Ollama"
     systemctl stop ollama
-    msg_ok "Services Stopped"
+    msg_ok "Stopped Ollama"
 
-    OLLAMA_INSTALL_DIR="/usr/local/lib/ollama"
-    rm -rf "$OLLAMA_INSTALL_DIR" /usr/local/bin/ollama
-    mkdir -p "$OLLAMA_INSTALL_DIR"
-    if ! fetch_and_deploy_gh_release "ollama-com" "ollama/ollama" "prebuild" "latest" "$OLLAMA_INSTALL_DIR" "ollama-linux-$(arch_resolve).tar.zst"; then
-      msg_error "Download or deployment failed – check network connectivity and GitHub API availability"
-      exit 250
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ollama-com" "ollama/ollama" "prebuild" "latest" "/usr/local/lib/ollama" "ollama-linux-$(arch_resolve).tar.zst"
+    if [[ -e /dev/kfd && "$(arch_resolve)" == "amd64" ]]; then
+      fetch_and_deploy_gh_release "ollama-rocm-com" "ollama/ollama" "prebuild" "latest" "/usr/local/lib/ollama/lib" "ollama-linux-amd64-rocm.tar.zst"
     fi
-    ln -sf "$OLLAMA_INSTALL_DIR/bin/ollama" /usr/local/bin/ollama
-    msg_ok "Updated Ollama"
+    ln -sf /usr/local/lib/ollama/bin/ollama /usr/local/bin/ollama
 
-    msg_info "Starting Services"
+    msg_info "Starting Ollama"
     systemctl start ollama
-    msg_ok "Started Services"
+    msg_ok "Started Ollama"
     msg_ok "Updated successfully!"
   fi
   exit
