@@ -571,6 +571,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Borg-UI: recreate the borg venvs with --clear [@MickLesk](https://github.com/MickLesk) ([#18118](https://github.com/community-scripts/ProxmoxVE/pull/18118))
     - SnapOtter: recreate the AI venv with --clear [@MickLesk](https://github.com/MickLesk) ([#18119](https://github.com/community-scripts/ProxmoxVE/pull/18119))
     - Update authentik version to 2026.8.5 [@thieneret](https://github.com/thieneret) ([#18125](https://github.com/community-scripts/ProxmoxVE/pull/18125))
 
