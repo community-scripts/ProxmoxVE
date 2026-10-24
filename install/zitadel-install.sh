@@ -38,6 +38,10 @@ Database:
       Password: ${PG_DB_PASS}
       SSL:
         Mode: disable
+Machine:
+  Identification:
+    Hostname:
+      Enabled: true
 EOF
 if [[ "$var_zitadel_login" == "v1" ]]; then
   cat <<EOF >>/opt/zitadel/config.yaml
