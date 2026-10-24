@@ -51,18 +51,28 @@ function update_script() {
     exit
   fi
 
-  msg_info "Stopping Tomcat service"
-  systemctl stop tomcat
-  msg_ok "Stopped Tomcat service"
-
-  create_backup $TOMCAT_DIR/conf
-  [[ -d $TOMCAT_DIR/webapps ]] && create_backup $TOMCAT_DIR/webapps
-  [[ -d $TOMCAT_DIR/lib ]] && create_backup $TOMCAT_DIR/lib
-
   msg_info "Downloading Tomcat ${LATEST_VERSION}"
   TOMCAT_URL="https://dlcdn.apache.org/tomcat/tomcat-${TOMCAT_MAJOR}/v${LATEST_VERSION}/bin/apache-tomcat-${LATEST_VERSION}.tar.gz"
   curl -fsSL "$TOMCAT_URL" -o /tmp/tomcat-update.tar.gz
   msg_ok "Downloaded Tomcat ${LATEST_VERSION}"
+
+  # Keep only the jars in lib that the new release does not ship (JDBC drivers
+  # and the like). ecj and jakartaee-migration are Tomcat's own and change name
+  # with each version, so they are never carried over.
+  TOMCAT_FILES=$(tar -tzf /tmp/tomcat-update.tar.gz)
+  BACKUP_PATHS=("$TOMCAT_DIR/conf")
+  [[ -d $TOMCAT_DIR/webapps ]] && BACKUP_PATHS+=("$TOMCAT_DIR/webapps")
+  for jar in "$TOMCAT_DIR"/lib/*.jar; do
+    [[ -f $jar ]] || continue
+    case "${jar##*/}" in ecj-*.jar | jakartaee-migration-*.jar) continue ;; esac
+    grep -qxF "apache-tomcat-${LATEST_VERSION}/lib/${jar##*/}" <<<"$TOMCAT_FILES" || BACKUP_PATHS+=("$jar")
+  done
+
+  msg_info "Stopping Tomcat service"
+  systemctl stop tomcat
+  msg_ok "Stopped Tomcat service"
+
+  create_backup "${BACKUP_PATHS[@]}"
 
   msg_info "Installing update"
   rm -rf "${TOMCAT_DIR:?}"/*
@@ -70,21 +80,8 @@ function update_script() {
   rm -f /tmp/tomcat-update.tar.gz
   msg_ok "Installed update"
 
-  msg_info "Restoring configuration and applications"
-  cp -a "$BACKUP_DIR/conf"/* "$TOMCAT_DIR/conf/"
-  cp -a "$BACKUP_DIR/webapps"/* "$TOMCAT_DIR/webapps/" 2>/dev/null || true
-  if [[ -d "$BACKUP_DIR/lib" ]]; then
-    for jar in "$BACKUP_DIR/lib"/*.jar; do
-      [[ -f $jar ]] || continue
-      jar_name=$(basename "$jar")
-      if [[ ! -f "$TOMCAT_DIR/lib/$jar_name" ]]; then
-        cp "$jar" "$TOMCAT_DIR/lib/"
-      fi
-    done
-  fi
-  rm -rf "$BACKUP_DIR"
+  restore_backup
   chown -R root:root "$TOMCAT_DIR"
-  msg_ok "Restored configuration and applications"
 
   msg_info "Starting Tomcat service"
   systemctl start tomcat
