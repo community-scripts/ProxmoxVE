@@ -314,21 +314,51 @@ EOF
     whiptail --backtitle "Proxmox VE Helper Scripts" --msgbox --title "Support Subscriptions" \
       "Supporting the software's development team is essential.\nPlease consider buying a subscription." 10 58
     msg_info "Disabling subscription nag"
-    cat >/etc/apt/apt.conf.d/no-nag-script <<'EOF'
-DPkg::Post-Invoke { "if [ -s /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js ] && ! grep -q -F 'NoMoreNagging' /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js; then sed -i '/data\.status/{s/\!//;s/active/NoMoreNagging/}' /usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js; fi"; };
-EOF
+    mkdir -p /usr/local/bin
+    cat >/usr/local/bin/pmg-remove-nag.sh <<'EOF'
+#!/bin/sh
+WEB_JS=/usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js
+if [ -s "$WEB_JS" ] && ! grep -q NoMoreNagging "$WEB_JS"; then
+    sed -i '/data\.status/{s/\!//;s/active/NoMoreNagging/}' "$WEB_JS"
+fi
 
-    cat >/etc/apt/apt.conf.d/no-nag-script-pmgmanagerlib-mobile <<'EOF'
-DPkg::Post-Invoke { "if [ -s /usr/share/javascript/pmg-gui/js/pmgmanagerlib-mobile.js ] && ! grep -q -F 'NoMoreNagging' /usr/share/javascript/pmg-gui/js/pmgmanagerlib-mobile.js; then sed -i '/data\.status/{s/\!//;s/active/NoMoreNagging/}' /usr/share/javascript/pmg-gui/js/pmgmanagerlib-mobile.js; fi"; };
+MOBILE_JS=/usr/share/javascript/pmg-gui/js/pmgmanagerlib-mobile.js
+if [ -s "$MOBILE_JS" ] && ! grep -q NoMoreNagging "$MOBILE_JS"; then
+    sed -i '/data\.status/{s/\!//;s/active/NoMoreNagging/}' "$MOBILE_JS"
+fi
+
+MOBILE_TPL=/usr/share/pmg-mobile-quarantine-ui/pmg-mobile-index.html.tt
+if [ -s "$MOBILE_TPL" ] && ! grep -q NoMoreNagging "$MOBILE_TPL"; then
+    sed -i '/<head>/r /dev/stdin' "$MOBILE_TPL" <<'HTML'
+    <script>
+        // NoMoreNagging
+        const nativeFetch = window.fetch.bind(window);
+        window.fetch = async (...args) => {
+            const res = await nativeFetch(...args);
+            if (!String(args[0]?.url ?? args[0]).includes('/nodes/localhost/subscription')) return res;
+            const body = await res.clone().json().catch(() => null);
+            if (!body?.data) return res;
+            body.data.status = 'active';
+            return new Response(JSON.stringify(body), { status: res.status, headers: res.headers });
+        };
+    </script>
+HTML
+fi
 EOF
+    chmod 755 /usr/local/bin/pmg-remove-nag.sh
+
+    cat >/etc/apt/apt.conf.d/no-nag-script <<'EOF'
+DPkg::Post-Invoke { "/usr/local/bin/pmg-remove-nag.sh"; };
+EOF
+    rm -f /etc/apt/apt.conf.d/no-nag-script-pmgmanagerlib-mobile
     msg_ok "Disabled subscription nag (clear browser cache!)"
     ;;
   no)
     msg_error "Selected no to Disabling subscription nag"
-    rm -f /etc/apt/apt.conf.d/no-nag-script 2>/dev/null
+    rm -f /etc/apt/apt.conf.d/no-nag-script /etc/apt/apt.conf.d/no-nag-script-pmgmanagerlib-mobile /usr/local/bin/pmg-remove-nag.sh
     ;;
   esac
-  apt --reinstall install proxmox-widget-toolkit pmg-gui &>/dev/null || msg_error "Widget toolkit reinstall failed"
+  apt --reinstall install proxmox-widget-toolkit pmg-gui pmg-mobile-quarantine-ui &>/dev/null || msg_error "Widget toolkit reinstall failed"
 
   # ---- UPDATE ----
   CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UPDATE" --menu \
