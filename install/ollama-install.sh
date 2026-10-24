@@ -14,103 +14,45 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y \
-  build-essential \
-  pkg-config \
-  zstd
+$STD apt install -y zstd
 msg_ok "Installed Dependencies"
 
-if [[ "$(arch_resolve)" == "amd64" ]]; then
-msg_info "Setting up Intel® Repositories"
-mkdir -p /usr/share/keyrings
-curl -fsSL https://repositories.intel.com/gpu/intel-graphics.key | gpg --dearmor -o /usr/share/keyrings/intel-graphics.gpg 2>/dev/null || true
-cat <<EOF >/etc/apt/sources.list.d/intel-gpu.sources
-Types: deb
-URIs: https://repositories.intel.com/gpu/ubuntu
-Suites: jammy
-Components: client
-Architectures: amd64 i386
-Signed-By: /usr/share/keyrings/intel-graphics.gpg
-EOF
-curl -fsSL https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB | gpg --dearmor -o /usr/share/keyrings/oneapi-archive-keyring.gpg 2>/dev/null || true
-cat <<EOF >/etc/apt/sources.list.d/oneAPI.sources
-Types: deb
-URIs: https://apt.repos.intel.com/oneapi
-Suites: all
-Components: main
-Signed-By: /usr/share/keyrings/oneapi-archive-keyring.gpg
-EOF
-apt_update_safe
-msg_ok "Set up Intel® Repositories"
+setup_hwaccel
 
-msg_info "Installing Intel® Level Zero"
-# Debian 13+ has newer Level Zero packages in system repos that conflict with Intel repo packages
-if is_debian && [[ "$(get_os_version_major)" -ge 13 ]]; then
-  # Use system packages on Debian 13+ (avoid conflicts with libze1)
-  $STD apt -y install libze1 libze-dev intel-level-zero-gpu 2>/dev/null || {
-    msg_warn "Failed to install some Level Zero packages, continuing anyway"
-  }
-else
-  # Use Intel repository packages for older systems
-  $STD apt -y install intel-level-zero-gpu level-zero level-zero-dev 2>/dev/null || {
-    msg_warn "Failed to install Intel Level Zero packages, continuing anyway"
-  }
-fi
-msg_ok "Installed Intel® Level Zero"
+# Ollama's bundled Vulkan backend is what drives Intel and non-ROCm AMD GPUs;
+# it only needs the Mesa Vulkan drivers, which setup_hwaccel does not install for AMD.
+if [[ -d /dev/dri ]]; then
+  msg_info "Installing Vulkan Drivers"
+  $STD apt install -y mesa-vulkan-drivers
+  msg_ok "Installed Vulkan Drivers"
 fi
 
-msg_info "Installing Ollama (Patience)"
-OLLAMA_INSTALL_DIR="/usr/local/lib/ollama"
-BINDIR="/usr/local/bin"
-mkdir -p "$OLLAMA_INSTALL_DIR"
-if ! fetch_and_deploy_gh_release "ollama-com" "ollama/ollama" "prebuild" "latest" "$OLLAMA_INSTALL_DIR" "ollama-linux-$(arch_resolve).tar.zst"; then
-  msg_error "Failed to download or deploy Ollama – check network connectivity and GitHub API availability"
-  exit 250
+fetch_and_deploy_gh_release "ollama-com" "ollama/ollama" "prebuild" "latest" "/usr/local/lib/ollama" "ollama-linux-$(arch_resolve).tar.zst"
+# The ROCm archive holds a single lib/ directory, which the helper strips, so it is deployed into lib/.
+if [[ -e /dev/kfd && "$(arch_resolve)" == "amd64" ]]; then
+  fetch_and_deploy_gh_release "ollama-rocm-com" "ollama/ollama" "prebuild" "latest" "/usr/local/lib/ollama/lib" "ollama-linux-amd64-rocm.tar.zst"
 fi
-# If /dev/kfd exists assume an AMD GPU is installed, and install ROCM support for ollama
-if [[ -e /dev/kfd ]]; then
-  if ! fetch_and_deploy_gh_release "ollama-rocm-com" "ollama/ollama" "prebuild" "latest" "$OLLAMA_INSTALL_DIR/lib" "ollama-linux-amd64-rocm.tar.zst"; then
-    msg_error "Failed to download or deploy Ollama AMD ROCM suport – check network connectivity and GitHub API availability"
-    exit 250
-  fi
-fi
-ln -sf "$OLLAMA_INSTALL_DIR/bin/ollama" "$BINDIR/ollama"
-msg_ok "Installed Ollama"
-
-msg_info "Creating ollama User and Group"
-if ! id ollama >/dev/null 2>&1; then
-  useradd -r -s /usr/sbin/nologin -U -m -d /usr/share/ollama ollama
-fi
-$STD usermod -aG ollama $(id -u -n)
-msg_ok "Created ollama User and adjusted Groups"
-
-setup_hwaccel "ollama"
+ln -sf /usr/local/lib/ollama/bin/ollama /usr/local/bin/ollama
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/ollama.service
 [Unit]
 Description=Ollama Service
 After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=exec
 ExecStart=/usr/local/bin/ollama serve
-Environment=HOME=$HOME
-Environment=OLLAMA_INTEL_GPU=true
+Environment=HOME=/root
 Environment=OLLAMA_HOST=0.0.0.0
-Environment=OLLAMA_NUM_GPU=999
-Environment=SYCL_CACHE_PERSISTENT=1
-Environment=ZES_ENABLE_SYSMAN=1
+Environment=OLLAMA_IGPU_ENABLE=1
 Restart=always
 RestartSec=3
 
 [Install]
 WantedBy=multi-user.target
 EOF
-if [[ -e /dev/kfd ]]; then
-  sed -i '/Environment=OLLAMA_INTEL_GPU=true/a Environment=OLLAMA_IGPU_ENABLE=1' \
-      /etc/systemd/system/ollama.service
-fi
 systemctl enable -q --now ollama
 msg_ok "Created Service"
 
