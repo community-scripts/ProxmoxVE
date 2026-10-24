@@ -358,7 +358,10 @@ EOF
     rm -f /etc/apt/apt.conf.d/no-nag-script /etc/apt/apt.conf.d/no-nag-script-pmgmanagerlib-mobile /usr/local/bin/pmg-remove-nag.sh
     ;;
   esac
-  apt --reinstall install proxmox-widget-toolkit pmg-gui pmg-mobile-quarantine-ui &>/dev/null || msg_error "Widget toolkit reinstall failed"
+  apt --reinstall install proxmox-widget-toolkit pmg-gui &>/dev/null || msg_error "Widget toolkit reinstall failed"
+  if dpkg -s pmg-mobile-quarantine-ui &>/dev/null; then
+    apt --reinstall install pmg-mobile-quarantine-ui &>/dev/null || msg_error "Mobile quarantine UI reinstall failed"
+  fi
 
   # ---- UPDATE ----
   CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "UPDATE" --menu \
