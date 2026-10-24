@@ -23,7 +23,7 @@ declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "prometheus-pa
 
 # Enable error handling
 set -Eeuo pipefail
-trap 'error_handler' ERR
+catch_errors
 load_functions
 require_debian_like
 
