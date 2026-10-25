@@ -68,7 +68,6 @@ chmod 600 /opt/casdoor_data/conf/app.conf
 msg_ok "Configured Casdoor"
 
 msg_info "Creating Service"
-# Casdoor resolves conf/app.conf, files/ (uploads) and tmp/ (sessions) against its working directory
 cat <<EOF >/etc/systemd/system/casdoor.service
 [Unit]
 Description=Casdoor
