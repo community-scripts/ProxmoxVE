@@ -570,6 +570,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-10-25
 
+### 🆕 New Scripts
+
+  - EmDash ([#18165](https://github.com/community-scripts/ProxmoxVE/pull/18165))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
