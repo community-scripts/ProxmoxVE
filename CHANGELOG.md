@@ -123,6 +123,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 
+
+
+
 <details>
 <summary><h2>📜 History</h2></summary>
 
@@ -132,7 +135,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 <details>
-<summary><h4>October (17 entries)</h4></summary>
+<summary><h4>October (24 entries)</h4></summary>
 
 [View October 2026 Changelog](.github/changelogs/2026/10.md)
 
@@ -1276,153 +1279,3 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - Incus: make prompts visible for end-user [@MickLesk](https://github.com/MickLesk) ([core#73](https://github.com/community-scripts/core/pull/73))
 - incus: do not let an install script block on an invisible prompt [@MickLesk](https://github.com/MickLesk) ([core#71](https://github.com/community-scripts/core/pull/71))
 - tel: report progress from installs only, not updates [@MickLesk](https://github.com/MickLesk) ([core#72](https://github.com/community-scripts/core/pull/72))
-
-## 2026-09-24
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Declare the RomM filesystem structure required since 5.3.0 [@MickLesk](https://github.com/MickLesk) ([#17480](https://github.com/community-scripts/ProxmoxVE/pull/17480))
-    - general: use apt_update_safe instead of aborting on a failed apt update [@MickLesk](https://github.com/MickLesk) ([#17462](https://github.com/community-scripts/ProxmoxVE/pull/17462))
-
-  - #### 🔧 Refactor
-
-    - Journiv: Serve Node Frontend and add HTTP Auth .env [@MickLesk](https://github.com/MickLesk) ([#17479](https://github.com/community-scripts/ProxmoxVE/pull/17479))
-
-### 💾 Core
-
-  - core: accept an off-subnet gateway for /31 and /32 [@MickLesk](https://github.com/MickLesk) ([core#70](https://github.com/community-scripts/core/pull/70))
-
-## 2026-09-23
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - fix(signoz): install the histogramQuantile ClickHouse function [@maksimtech](https://github.com/maksimtech) ([#17386](https://github.com/community-scripts/ProxmoxVE/pull/17386))
-    - omniroute: bump to 4 GB for the npm install [@MickLesk](https://github.com/MickLesk) ([#17461](https://github.com/community-scripts/ProxmoxVE/pull/17461))
-    - Run Borg-UI with a single gunicorn worker [@MickLesk](https://github.com/MickLesk) ([#17445](https://github.com/community-scripts/ProxmoxVE/pull/17445))
-    - immich: keep geodata linked and the build deps present on update [@MickLesk](https://github.com/MickLesk) ([#17438](https://github.com/community-scripts/ProxmoxVE/pull/17438))
-
-  - #### 🔧 Refactor
-
-    - Refactor: Scanopy [@MickLesk](https://github.com/MickLesk) ([#16797](https://github.com/community-scripts/ProxmoxVE/pull/16797))
-
-### 💾 Core
-
-  - stop a partial find from aborting the caller under pipefail [@MickLesk](https://github.com/MickLesk) ([core#68](https://github.com/community-scripts/core/pull/68))
-- core: give RHEL-family containers an ostype PVE accepts [@MickLesk](https://github.com/MickLesk) ([core#67](https://github.com/community-scripts/core/pull/67))
-- core: do not abort on a failed apt update [@MickLesk](https://github.com/MickLesk) ([core#66](https://github.com/community-scripts/core/pull/66))
-- VM's: report a finished VM as done, not aborted [@MickLesk](https://github.com/MickLesk) ([core#65](https://github.com/community-scripts/core/pull/65))
-- VM-Core: decide console autologin from the image, not USE_CLOUD_INIT [@MickLesk](https://github.com/MickLesk) ([core#63](https://github.com/community-scripts/core/pull/63))
-- VM-Core: report failed image steps and restore tty1 autologin without cloud-init [@MickLesk](https://github.com/MickLesk) ([core#62](https://github.com/community-scripts/core/pull/62))
-- tools: raise pnpm/yarn fetch timeout and lower network concurrency [@MickLesk](https://github.com/MickLesk) ([core#59](https://github.com/community-scripts/core/pull/59))
-- VM-Core: stop discarding cloud-init error messages [@MickLesk](https://github.com/MickLesk) ([core#60](https://github.com/community-scripts/core/pull/60))
-
-## 2026-09-22
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - fix(invoiceshelf): re-link storage during update [@owenvoke](https://github.com/owenvoke) ([#17431](https://github.com/community-scripts/ProxmoxVE/pull/17431))
-    - fix(alpine-it-tools): write the version file after a successful update [@Houtek](https://github.com/Houtek) ([#17421](https://github.com/community-scripts/ProxmoxVE/pull/17421))
-    - Umami: Align pnpm with engines.pnpm on update [@ReneNulschDE](https://github.com/ReneNulschDE) ([#17404](https://github.com/community-scripts/ProxmoxVE/pull/17404))
-
-  - #### 🔧 Refactor
-
-    - several scripts: let uv see the project before syncing it | refactor some scripts that use uv [@MickLesk](https://github.com/MickLesk) ([#17436](https://github.com/community-scripts/ProxmoxVE/pull/17436))
-
-### 💾 Core
-
-  - setup_uv: honour a project's required-version pin [@MickLesk](https://github.com/MickLesk) ([core#58](https://github.com/community-scripts/core/pull/58))
-- fix(motd): repair legacy 00_lxc-details.sh header and dead color placeholders [@BadFlo](https://github.com/BadFlo) ([core#53](https://github.com/community-scripts/core/pull/53))
-- meilisearch: take the raw binary, not the .deb [@MickLesk](https://github.com/MickLesk) ([core#57](https://github.com/community-scripts/core/pull/57))
-
-### 📚 Documentation
-
-  - github: Stop generating header filenames with a newline in them [@MickLesk](https://github.com/MickLesk) ([#17435](https://github.com/community-scripts/ProxmoxVE/pull/17435))
-
-### ❔ Uncategorized
-
-  - chore(ct): sync cloudflare-ddns defaults with PocketBase [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17446](https://github.com/community-scripts/ProxmoxVE/pull/17446))
-
-## 2026-09-21
-
-### 🆕 New Scripts
-
-  - AudioMuse-AI ([#17415](https://github.com/community-scripts/ProxmoxVE/pull/17415))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - fix(portabase): meet the default admin password rules [@maksimtech](https://github.com/maksimtech) ([#17384](https://github.com/community-scripts/ProxmoxVE/pull/17384))
-    - truenas-vm: strip the G before the storage allocation [@MickLesk](https://github.com/MickLesk) ([#17407](https://github.com/community-scripts/ProxmoxVE/pull/17407))
-    - Librenms - Fix local snmpd community string setup [@dopch](https://github.com/dopch) ([#17363](https://github.com/community-scripts/ProxmoxVE/pull/17363))
-    - fix(iventoy): preserve release data and migrate legacy service launchers [@Msprg](https://github.com/Msprg) ([#17161](https://github.com/community-scripts/ProxmoxVE/pull/17161))
-    - xyops: bump Node.js from 22 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17398](https://github.com/community-scripts/ProxmoxVE/pull/17398))
-
-### 💾 Core
-
-  - Generate app headers [@github-actions[bot]](https://github.com/github-actions[bot]) ([core#56](https://github.com/community-scripts/core/pull/56))
-- github-api: take the release the maintainer marked as latest [@MickLesk](https://github.com/MickLesk) ([core#55](https://github.com/community-scripts/core/pull/55))
-- general: prune old Rust toolchains [@MickLesk](https://github.com/MickLesk) ([core#52](https://github.com/community-scripts/core/pull/52))
-- Ask when the preselected storage cannot hold the content [@MickLesk](https://github.com/MickLesk) ([core#51](https://github.com/community-scripts/core/pull/51))
-
-## 2026-09-20
-
-### 🆕 New Scripts
-
-  - Your-Spotify ([#17376](https://github.com/community-scripts/ProxmoxVE/pull/17376))
-
-## 2026-09-19
-
-### 🆕 New Scripts
-
-  - qBit-Manage ([#17377](https://github.com/community-scripts/ProxmoxVE/pull/17377))
-- Ubuntu-VM: AIO | new core | performance | remove old wrappers [@MickLesk](https://github.com/MickLesk) ([#17354](https://github.com/community-scripts/ProxmoxVE/pull/17354))
-
-### 💾 Core
-
-  - Fall back to the unversioned banner slug [@MickLesk](https://github.com/MickLesk) ([core#48](https://github.com/community-scripts/core/pull/48))
-
-### ❔ Uncategorized
-
-  - chore(ct): sync immichframe defaults with PocketBase [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17373](https://github.com/community-scripts/ProxmoxVE/pull/17373))
-
-## 2026-09-18
-
-### 🆕 New Scripts
-
-  - Almalinux-VM ([#17349](https://github.com/community-scripts/ProxmoxVE/pull/17349))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - update authentik to 2026.8.3 [@thieneret](https://github.com/thieneret) ([#17366](https://github.com/community-scripts/ProxmoxVE/pull/17366))
-    - crafty-controller: chown after restore_backup so restored data keeps ownership [@MickLesk](https://github.com/MickLesk) ([#17348](https://github.com/community-scripts/ProxmoxVE/pull/17348))
-    - databasus, domain-monitor, poznote: chown after restore_backup so restored data keeps its owner [@MickLesk](https://github.com/MickLesk) ([#17350](https://github.com/community-scripts/ProxmoxVE/pull/17350))
-    - alpine-vm: ask for the Cloud-Init credentials [@MickLesk](https://github.com/MickLesk) ([#17355](https://github.com/community-scripts/ProxmoxVE/pull/17355))
-    - suggestarr: keep the data where the app actually reads it [@MickLesk](https://github.com/MickLesk) ([#17317](https://github.com/community-scripts/ProxmoxVE/pull/17317))
-    - immichframe: set the admin password the new admin UI requires [@MickLesk](https://github.com/MickLesk) ([#17315](https://github.com/community-scripts/ProxmoxVE/pull/17315))
-
-  - #### ✨ New Features
-
-    - pangolin: Bump to 1.23.0 [@MickLesk](https://github.com/MickLesk) ([#17343](https://github.com/community-scripts/ProxmoxVE/pull/17343))
-
-  - #### 🔧 Refactor
-
-    - Refactor: Oxicloud [@MickLesk](https://github.com/MickLesk) ([#17338](https://github.com/community-scripts/ProxmoxVE/pull/17338))
-
-### 💾 Core
-
-  - Stop a modified conffile from aborting the whole update [@MickLesk](https://github.com/MickLesk) ([core#47](https://github.com/community-scripts/core/pull/47))
-- Generate app headers [@github-actions[bot]](https://github.com/github-actions[bot]) ([core#46](https://github.com/community-scripts/core/pull/46))
-- github api: retry a 200 that is not a usable release payload [@MickLesk](https://github.com/MickLesk) ([core#45](https://github.com/community-scripts/core/pull/45))
-
-### 📚 Documentation
-
-  - chore: fix PR template help [@CrazyWolf13](https://github.com/CrazyWolf13) ([#17364](https://github.com/community-scripts/ProxmoxVE/pull/17364))
