@@ -574,6 +574,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - changedetection: build Browserless from its lockfile on update [@MickLesk](https://github.com/MickLesk) ([#18157](https://github.com/community-scripts/ProxmoxVE/pull/18157))
     - Zitadel: identify the machine by hostname when it has no private IPv4 [@MickLesk](https://github.com/MickLesk) ([#18139](https://github.com/community-scripts/ProxmoxVE/pull/18139))
     - fix(bar-assistant): publish starter media catalog so new bars provision [@och29](https://github.com/och29) ([#18130](https://github.com/community-scripts/ProxmoxVE/pull/18130))
 
@@ -583,7 +584,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Upgrade Node.js in place when an app package depends on it [@MickLesk](https://github.com/MickLesk) ([core#169](https://github.com/community-scripts/core/pull/169))
+  - alpine: fix uv release url [@mfelipe](https://github.com/mfelipe) ([core#168](https://github.com/community-scripts/core/pull/168))
+- Set npm's script and git policy for root too, so --prefix keeps it [@MickLesk](https://github.com/MickLesk) ([core#170](https://github.com/community-scripts/core/pull/170))
+- Upgrade Node.js in place when an app package depends on it [@MickLesk](https://github.com/MickLesk) ([core#169](https://github.com/community-scripts/core/pull/169))
 
 ## 2026-10-24
 
