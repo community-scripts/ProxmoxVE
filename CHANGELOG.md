@@ -579,6 +579,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - iVentoy: stop early in an unprivileged container [@MickLesk](https://github.com/MickLesk) ([#18179](https://github.com/community-scripts/ProxmoxVE/pull/18179))
     - Immich: stop early on Debian 12 instead of failing at apt [@MickLesk](https://github.com/MickLesk) ([#18178](https://github.com/community-scripts/ProxmoxVE/pull/18178))
     - Element Synapse: drop the ::1 listener so a container without IPv6 starts [@MickLesk](https://github.com/MickLesk) ([#18180](https://github.com/community-scripts/ProxmoxVE/pull/18180))
     - paperless-ngx: fix missing index folder [@Segelzwerg](https://github.com/Segelzwerg) ([#18142](https://github.com/community-scripts/ProxmoxVE/pull/18142))
