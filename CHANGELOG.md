@@ -600,6 +600,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - tubearchivist: fix: prepare tubearchivist for v0.6.0 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#17867](https://github.com/community-scripts/ProxmoxVE/pull/17867))
 
+  - #### 🔧 Refactor
+
+    - TREK: build 5.0 with 4 GB RAM and without dependency install scripts [@MickLesk](https://github.com/MickLesk) ([#18194](https://github.com/community-scripts/ProxmoxVE/pull/18194))
+
 ### 💾 Core
 
   - alpine: fix uv release url [@mfelipe](https://github.com/mfelipe) ([core#168](https://github.com/community-scripts/core/pull/168))
