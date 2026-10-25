@@ -574,6 +574,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Zitadel: identify the machine by hostname when it has no private IPv4 [@MickLesk](https://github.com/MickLesk) ([#18139](https://github.com/community-scripts/ProxmoxVE/pull/18139))
     - fix(bar-assistant): publish starter media catalog so new bars provision [@och29](https://github.com/och29) ([#18130](https://github.com/community-scripts/ProxmoxVE/pull/18130))
 
 ## 2026-10-24
