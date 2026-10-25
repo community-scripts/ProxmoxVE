@@ -574,6 +574,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - paperless-ngx: fix missing index folder [@Segelzwerg](https://github.com/Segelzwerg) ([#18142](https://github.com/community-scripts/ProxmoxVE/pull/18142))
     - Anytype Server: keep the .env across updates and recreate a lost one [@MickLesk](https://github.com/MickLesk) ([#18155](https://github.com/community-scripts/ProxmoxVE/pull/18155))
     - changedetection: build Browserless from its lockfile on update [@MickLesk](https://github.com/MickLesk) ([#18157](https://github.com/community-scripts/ProxmoxVE/pull/18157))
     - Zitadel: identify the machine by hostname when it has no private IPv4 [@MickLesk](https://github.com/MickLesk) ([#18139](https://github.com/community-scripts/ProxmoxVE/pull/18139))
