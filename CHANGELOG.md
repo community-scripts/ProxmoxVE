@@ -589,6 +589,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 - Set npm's script and git policy for root too, so --prefix keeps it [@MickLesk](https://github.com/MickLesk) ([core#170](https://github.com/community-scripts/core/pull/170))
 - Upgrade Node.js in place when an app package depends on it [@MickLesk](https://github.com/MickLesk) ([core#169](https://github.com/community-scripts/core/pull/169))
 
+### 🧰 Tools
+
+  - #### ✨ New Features
+
+    - post-pve-install: hide the mobile subscription nag in every UI language [@MickLesk](https://github.com/MickLesk) ([#18143](https://github.com/community-scripts/ProxmoxVE/pull/18143))
+
 ## 2026-10-24
 
 ### 🚀 Updated Scripts
