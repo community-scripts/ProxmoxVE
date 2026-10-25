@@ -579,8 +579,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
-    - Heimdall: generate the app key without the production prompt [@MickLesk](https://github.com/MickLesk) ([#18156](https://github.com/community-scripts/ProxmoxVE/pull/18156))
+    - Element Synapse: remove the registration line by its text, not line 34 [@MickLesk](https://github.com/MickLesk) ([#18201](https://github.com/community-scripts/ProxmoxVE/pull/18201))
     - Element Synapse: drop the ::1 listener so a container without IPv6 starts [@MickLesk](https://github.com/MickLesk) ([#18180](https://github.com/community-scripts/ProxmoxVE/pull/18180))
+    - Heimdall: generate the app key without the production prompt [@MickLesk](https://github.com/MickLesk) ([#18156](https://github.com/community-scripts/ProxmoxVE/pull/18156))
     - Frigate: fetch the Intel graphics key with retries before building the media driver [@MickLesk](https://github.com/MickLesk) ([#18192](https://github.com/community-scripts/ProxmoxVE/pull/18192))
     - Pterodactyl Panel: default the admin's first and last name when left empty [@MickLesk](https://github.com/MickLesk) ([#18177](https://github.com/community-scripts/ProxmoxVE/pull/18177))
     - Jellyseerr: point fresh installs to Seerr instead of a missing install script [@MickLesk](https://github.com/MickLesk) ([#18183](https://github.com/community-scripts/ProxmoxVE/pull/18183))
