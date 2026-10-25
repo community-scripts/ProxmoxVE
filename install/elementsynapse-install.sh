@@ -40,7 +40,7 @@ chmod +x /usr/sbin/policy-rc.d
 $STD apt install matrix-synapse-py3 -y
 rm -f /usr/sbin/policy-rc.d
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/matrix-synapse/homeserver.yaml
-sed -i 's/'\''::1'\'', //g' /etc/matrix-synapse/homeserver.yaml
+sed -i '/^ *- ::1$/d' /etc/matrix-synapse/homeserver.yaml
 SECRET=$(openssl rand -hex 32)
 ADMIN_PASS="$(random_password 13)"
 echo "enable_registration_without_verification: true" >>/etc/matrix-synapse/homeserver.yaml
