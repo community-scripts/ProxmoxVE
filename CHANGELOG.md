@@ -579,6 +579,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Jellyseerr: point fresh installs to Seerr instead of a missing install script [@MickLesk](https://github.com/MickLesk) ([#18183](https://github.com/community-scripts/ProxmoxVE/pull/18183))
     - Pi-hole: download the installer before running it [@MickLesk](https://github.com/MickLesk) ([#18182](https://github.com/community-scripts/ProxmoxVE/pull/18182))
     - OmniTools: give the build a git commit to read [@MickLesk](https://github.com/MickLesk) ([#18181](https://github.com/community-scripts/ProxmoxVE/pull/18181))
     - iVentoy: stop early in an unprivileged container [@MickLesk](https://github.com/MickLesk) ([#18179](https://github.com/community-scripts/ProxmoxVE/pull/18179))
