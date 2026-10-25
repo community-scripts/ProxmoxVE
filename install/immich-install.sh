@@ -13,6 +13,11 @@ setting_up_container
 network_check
 update_os
 
+if is_debian && [[ "$(get_os_version_major)" -lt 13 ]]; then
+  msg_error "Immich needs Debian 13: its build dependencies and Intel runtime packages are not available on Debian 12."
+  exit 238
+fi
+
 RELEASE="v3.3.5"
 if lscpu | grep -q 'GenuineIntel'; then
   echo ""
