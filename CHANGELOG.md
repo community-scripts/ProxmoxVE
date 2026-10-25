@@ -580,6 +580,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix(mealie): install ffmpeg for video recipe import [@clartek](https://github.com/clartek) ([#18210](https://github.com/community-scripts/ProxmoxVE/pull/18210))
     - Termix: step through 2.9.2 when updating from 2.8 or older [@MickLesk](https://github.com/MickLesk) ([#18158](https://github.com/community-scripts/ProxmoxVE/pull/18158))
     - Element Synapse: remove the registration line by its text, not line 34 [@MickLesk](https://github.com/MickLesk) ([#18201](https://github.com/community-scripts/ProxmoxVE/pull/18201))
     - Element Synapse: drop the ::1 listener so a container without IPv6 starts [@MickLesk](https://github.com/MickLesk) ([#18180](https://github.com/community-scripts/ProxmoxVE/pull/18180))
