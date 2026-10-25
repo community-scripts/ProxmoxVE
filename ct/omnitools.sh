@@ -34,12 +34,15 @@ function update_script() {
   NODE_VERSION="24" setup_nodejs
 
   if check_for_gh_release "omnitools" "iib0011/omni-tools"; then
+    ensure_dependencies git
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "omnitools" "iib0011/omni-tools" "tarball"
 
     msg_info "Building OmniTools"
     cd /opt/omnitools
     export HUSKY=0
     $STD npm ci --allow-remote=all
+    $STD git init -q
+    $STD git -c user.name=build -c user.email=build@localhost commit -q --allow-empty -m build
     $STD npm run build
     msg_ok "Built OmniTools"
 
