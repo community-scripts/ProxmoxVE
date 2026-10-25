@@ -572,7 +572,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - TaskView ([#18166](https://github.com/community-scripts/ProxmoxVE/pull/18166))
+  - Dreeve ([#18167](https://github.com/community-scripts/ProxmoxVE/pull/18167))
+- TaskView ([#18166](https://github.com/community-scripts/ProxmoxVE/pull/18166))
 - EmDash ([#18165](https://github.com/community-scripts/ProxmoxVE/pull/18165))
 
 ### 🚀 Updated Scripts
