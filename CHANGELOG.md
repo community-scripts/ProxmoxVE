@@ -616,6 +616,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - post-pmg-install: hide the subscription nag in the PMG 9 mobile quarantine [@MickLesk](https://github.com/MickLesk) ([#18140](https://github.com/community-scripts/ProxmoxVE/pull/18140))
     - post-pve-install: hide the mobile subscription nag in every UI language [@MickLesk](https://github.com/MickLesk) ([#18143](https://github.com/community-scripts/ProxmoxVE/pull/18143))
 
 ## 2026-10-24
