@@ -124,6 +124,8 @@ msg_ok "Built SQLite Extensions"
 
 if [[ "$(arch_resolve)" == "amd64" ]]; then
   msg_info "Building Intel Media Driver (Patience)"
+  download_gpg_key "https://repositories.intel.com/gpu/intel-graphics.key" "/usr/share/keyrings/intel-graphics.gpg" "dearmor"
+  sed -i '/intel-graphics.key/d' /opt/frigate/docker/main/build_intel_media_driver.sh
   $STD bash /opt/frigate/docker/main/build_intel_media_driver.sh
   cp -a /rootfs/. /
   rm -rf /rootfs
