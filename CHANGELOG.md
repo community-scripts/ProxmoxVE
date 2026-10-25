@@ -577,6 +577,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Zitadel: identify the machine by hostname when it has no private IPv4 [@MickLesk](https://github.com/MickLesk) ([#18139](https://github.com/community-scripts/ProxmoxVE/pull/18139))
     - fix(bar-assistant): publish starter media catalog so new bars provision [@och29](https://github.com/och29) ([#18130](https://github.com/community-scripts/ProxmoxVE/pull/18130))
 
+  - #### ✨ New Features
+
+    - Gramps-Web: run the Celery task queue with Redis [@MickLesk](https://github.com/MickLesk) ([#18141](https://github.com/community-scripts/ProxmoxVE/pull/18141))
+
 ## 2026-10-24
 
 ### 🚀 Updated Scripts
