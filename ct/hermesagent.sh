@@ -33,36 +33,60 @@ function update_script() {
 
   confirm_external_installer "https://hermes-agent.nousresearch.com/" "hermes update (https://hermes-agent.nousresearch.com/)"
 
-  msg_info "Stopping Services"
-  systemctl stop hermes-dashboard
-  msg_ok "Stopped Services"
-
-  msg_info "Updating Hermes Agent"
-  $STD setsid --wait bash -c '
-    set -a; source /etc/default/hermes; set +a
-    /home/hermes/.local/bin/hermes update --yes
-  '
-  mapfile -t root_gateway_pids < <(ps -eo user=,pid=,args= | awk '$1 == "root" && /\/home\/hermes\/\.hermes\// && /hermes_cli[.]main/ && / gateway run --replace$/ { print $2 }')
-  if ((${#root_gateway_pids[@]})); then
-    kill -TERM "${root_gateway_pids[@]}"
-    for pid in "${root_gateway_pids[@]}"; do
-      while kill -0 "$pid" 2>/dev/null; do
-        sleep 0.1
+  if [[ -f /etc/systemd/system/hermes-dashboard.service ]]; then
+    msg_info "Moving Hermes to its own user"
+    systemctl disable -q --now hermes-dashboard
+    rm -f /etc/systemd/system/hermes-dashboard.service
+    systemctl daemon-reload
+    mapfile -t root_hermes_pids < <(ps -eo user=,pid=,args= | awk '$1 == "root" && /\/home\/hermes\/\.hermes\// && /hermes_cli[.]main/ { print $2 }')
+    if ((${#root_hermes_pids[@]})); then
+      kill -TERM "${root_hermes_pids[@]}" 2>/dev/null || true
+      for pid in "${root_hermes_pids[@]}"; do
+        while kill -0 "$pid" 2>/dev/null; do
+          sleep 0.1
+        done
       done
-    done
+    fi
+    ensure_dependencies libatomic1
+    sed -i '/^HOME=/d' /etc/default/hermes
+    grep -q '^GATEWAY_HEALTH_URL=' /etc/default/hermes || echo "GATEWAY_HEALTH_URL=http://127.0.0.1:8642/health" >>/etc/default/hermes
+    mkdir -p /home/hermes/.config/systemd/user
+    cat <<EOF >/home/hermes/.config/systemd/user/hermes-dashboard.service
+[Unit]
+Description=Hermes Agent Web Dashboard
+After=network-online.target
+
+[Service]
+Type=simple
+UMask=0077
+WorkingDirectory=%h
+EnvironmentFile=/etc/default/hermes
+ExecStart=%h/.local/bin/hermes dashboard --host 127.0.0.1 --port 9119 --no-open
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
+EOF
+    msg_ok "Moved Hermes to its own user"
   fi
-  if ps -eo user=,args= | awk '$1 == "root" && /\/home\/hermes\/\.hermes\// { found = 1 } END { exit !found }'; then
-    msg_warn "A root-owned Hermes process is still running; it may keep writing root-owned files"
-  fi
+
   # A writer racing chown makes files vanish between readdir and chown; one retry covers it.
   if ! chown -R hermes:hermes /home/hermes 2>/dev/null; then
     sleep 1
     chown -R hermes:hermes /home/hermes || msg_warn "Could not take ownership of everything under /home/hermes"
   fi
+  $STD runuser -l hermes -c 'systemctl --user daemon-reload && systemctl --user enable hermes-dashboard'
+
+  msg_info "Updating Hermes Agent"
+  $STD setsid --wait runuser -l hermes -c '
+    set -a; source /etc/default/hermes; set +a
+    hermes update --yes
+  '
   msg_ok "Updated Hermes Agent"
 
   msg_info "Starting Services"
-  systemctl start hermes-dashboard
+  $STD runuser -l hermes -c 'systemctl --user start hermes-dashboard'
   msg_ok "Started Services"
   msg_ok "Updated successfully!"
   exit
