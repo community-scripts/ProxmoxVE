@@ -9,7 +9,7 @@ source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_
 APP="TREK"
 var_tags="${var_tags:-travel;planning;collaboration}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-2048}"
+var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
@@ -43,6 +43,7 @@ function update_script() {
     msg_ok "Stopped Service"
 
     ensure_dependencies "libkitinerary-bin"
+    ln -sf "$(find /usr/lib -name kitinerary-extractor -type f | head -1)" /usr/local/bin/kitinerary-extractor
 
     create_backup /opt/trek/server/.env \
       /opt/trek/data \
@@ -52,7 +53,7 @@ function update_script() {
 
     msg_info "Building TREK"
     cd /opt/trek
-    $STD npm ci
+    $STD npm ci --ignore-scripts
     $STD npm run build --workspace=shared
     $STD npm run build --workspace=client
     $STD npm run build --workspace=server
@@ -72,7 +73,7 @@ function update_script() {
 
     rm -rf /opt/trek/node_modules
     cd /opt/trek
-    $STD npm ci --workspace=server --omit=dev
+    $STD npm ci --workspace=server --omit=dev --ignore-scripts
     msg_ok "Set up TREK Workspace"
 
     if [[ "$MIGRATION" == "1" ]]; then
