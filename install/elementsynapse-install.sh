@@ -71,7 +71,7 @@ Admin username: admin
 Admin password: $ADMIN_PASS
 EOF
 systemctl stop matrix-synapse
-sed -i '34d' /etc/matrix-synapse/homeserver.yaml
+sed -i '/^enable_registration_without_verification: true$/d' /etc/matrix-synapse/homeserver.yaml
 systemctl start matrix-synapse
 msg_ok "Installed Element Synapse"
 
