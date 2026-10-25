@@ -570,6 +570,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-10-25
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fix(bar-assistant): publish starter media catalog so new bars provision [@och29](https://github.com/och29) ([#18130](https://github.com/community-scripts/ProxmoxVE/pull/18130))
+
 ## 2026-10-24
 
 ### 🚀 Updated Scripts
