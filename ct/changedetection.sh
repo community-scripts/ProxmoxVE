@@ -77,7 +77,6 @@ function update_script() {
     msg_info "Updating Browserless (Patience)"
     $STD git -C /opt/browserless/ fetch --all
     $STD git -C /opt/browserless/ reset --hard origin/main
-    $STD npm update --prefix /opt/browserless
     $STD npm ci --include=optional --include=dev --prefix /opt/browserless
     $STD npm install --save-exact playwright-core@1.62.1 --prefix /opt/browserless
     $STD /opt/browserless/node_modules/playwright-core/cli.js install --with-deps
