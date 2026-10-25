@@ -22,7 +22,9 @@ msg_ok "Installed Dependencies"
 msg_info "Installing Pi-hole"
 mkdir -p /etc/pihole
 touch /etc/pihole/pihole.toml
-$STD bash <(curl -fsSL https://install.pi-hole.net) --unattended
+curl_with_retry "https://install.pi-hole.net" /tmp/pihole-install.sh
+$STD bash /tmp/pihole-install.sh --unattended
+rm -f /tmp/pihole-install.sh
 sed -i -E '
 /^\s*upstreams =/ s|=.*|= ["8.8.8.8", "8.8.4.4"]|
 /^\s*interface =/ s|=.*|= "eth0"|
