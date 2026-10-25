@@ -579,6 +579,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Heimdall: generate the app key without the production prompt [@MickLesk](https://github.com/MickLesk) ([#18156](https://github.com/community-scripts/ProxmoxVE/pull/18156))
+    - Element Synapse: drop the ::1 listener so a container without IPv6 starts [@MickLesk](https://github.com/MickLesk) ([#18180](https://github.com/community-scripts/ProxmoxVE/pull/18180))
     - Frigate: fetch the Intel graphics key with retries before building the media driver [@MickLesk](https://github.com/MickLesk) ([#18192](https://github.com/community-scripts/ProxmoxVE/pull/18192))
     - Pterodactyl Panel: default the admin's first and last name when left empty [@MickLesk](https://github.com/MickLesk) ([#18177](https://github.com/community-scripts/ProxmoxVE/pull/18177))
     - Jellyseerr: point fresh installs to Seerr instead of a missing install script [@MickLesk](https://github.com/MickLesk) ([#18183](https://github.com/community-scripts/ProxmoxVE/pull/18183))
@@ -586,7 +588,6 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - OmniTools: give the build a git commit to read [@MickLesk](https://github.com/MickLesk) ([#18181](https://github.com/community-scripts/ProxmoxVE/pull/18181))
     - iVentoy: stop early in an unprivileged container [@MickLesk](https://github.com/MickLesk) ([#18179](https://github.com/community-scripts/ProxmoxVE/pull/18179))
     - Immich: stop early on Debian 12 instead of failing at apt [@MickLesk](https://github.com/MickLesk) ([#18178](https://github.com/community-scripts/ProxmoxVE/pull/18178))
-    - Element Synapse: drop the ::1 listener so a container without IPv6 starts [@MickLesk](https://github.com/MickLesk) ([#18180](https://github.com/community-scripts/ProxmoxVE/pull/18180))
     - paperless-ngx: fix missing index folder [@Segelzwerg](https://github.com/Segelzwerg) ([#18142](https://github.com/community-scripts/ProxmoxVE/pull/18142))
     - Anytype Server: keep the .env across updates and recreate a lost one [@MickLesk](https://github.com/MickLesk) ([#18155](https://github.com/community-scripts/ProxmoxVE/pull/18155))
     - changedetection: build Browserless from its lockfile on update [@MickLesk](https://github.com/MickLesk) ([#18157](https://github.com/community-scripts/ProxmoxVE/pull/18157))
