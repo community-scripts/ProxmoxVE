@@ -581,6 +581,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Gramps-Web: run the Celery task queue with Redis [@MickLesk](https://github.com/MickLesk) ([#18141](https://github.com/community-scripts/ProxmoxVE/pull/18141))
 
+### 💾 Core
+
+  - Upgrade Node.js in place when an app package depends on it [@MickLesk](https://github.com/MickLesk) ([core#169](https://github.com/community-scripts/core/pull/169))
+
 ## 2026-10-24
 
 ### 🚀 Updated Scripts
