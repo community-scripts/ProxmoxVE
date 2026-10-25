@@ -602,6 +602,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 💥 Breaking Changes
 
+    - Hermes Agent: install, update and run everything as the hermes user [@MickLesk](https://github.com/MickLesk) ([#18203](https://github.com/community-scripts/ProxmoxVE/pull/18203))
     - tubearchivist: fix: prepare tubearchivist for v0.6.0 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#17867](https://github.com/community-scripts/ProxmoxVE/pull/17867))
 
   - #### 🔧 Refactor
