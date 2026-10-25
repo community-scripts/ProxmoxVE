@@ -37,12 +37,24 @@ function update_script() {
     systemctl stop anytype
     msg_ok "Stopped Service"
 
-    create_backup /opt/anytype/data
+    create_backup /opt/anytype/data /opt/anytype/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "anytype" "grishy/any-sync-bundle" "prebuild" "latest" "/opt/anytype" "any-sync-bundle_*_linux_$(arch_resolve).tar.gz"
     chmod +x /opt/anytype/any-sync-bundle
 
     restore_backup
+
+    if [[ ! -f /opt/anytype/.env ]]; then
+      cat <<EOF >/opt/anytype/.env
+ANY_SYNC_BUNDLE_CONFIG=/opt/anytype/data/bundle-config.yml
+ANY_SYNC_BUNDLE_CLIENT_CONFIG=/opt/anytype/data/client-config.yml
+ANY_SYNC_BUNDLE_INIT_STORAGE=/opt/anytype/data/storage/
+ANY_SYNC_BUNDLE_INIT_EXTERNAL_ADDRS=$(hostname -I | awk '{print $1}')
+ANY_SYNC_BUNDLE_INIT_MONGO_URI=mongodb://127.0.0.1:27017/
+ANY_SYNC_BUNDLE_INIT_REDIS_URI=redis://127.0.0.1:6379/
+ANY_SYNC_BUNDLE_LOG_LEVEL=info
+EOF
+    fi
 
     msg_info "Starting Service"
     systemctl start anytype
