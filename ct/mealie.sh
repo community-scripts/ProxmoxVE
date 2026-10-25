@@ -30,6 +30,9 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  ensure_dependencies ffmpeg
+
   if check_for_gh_release "mealie" "mealie-recipes/mealie"; then
 
     msg_info "Stopping Service"

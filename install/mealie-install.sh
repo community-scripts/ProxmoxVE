@@ -23,6 +23,7 @@ $STD apt install -y \
   libldap-common \
   libssl-dev \
   libldap2 \
+  ffmpeg \
   gosu \
   iproute2
 msg_ok "Installed Dependencies"
