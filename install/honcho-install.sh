@@ -24,7 +24,6 @@ fetch_and_deploy_gh_release "honcho" "plastic-labs/honcho" "tarball" "latest" "/
 
 msg_info "Installing Honcho"
 cd /opt/honcho
-# Like upstream's Dockerfile: exactly what uv.lock pins
 $STD uv sync --frozen --no-dev
 msg_ok "Installed Honcho"
 
@@ -50,7 +49,6 @@ gemini)
 *)
   HONCHO_TRANSPORT="openai" HONCHO_MODEL="${var_honcho_model:-gpt-5.4-mini}"
   HONCHO_EMBEDDING="openai" HONCHO_EMBEDDING_MODEL="${var_honcho_embedding_model:-text-embedding-3-small}"
-  # Honcho only builds a client when the key is set; local endpoints such as Ollama ignore its value
   HONCHO_KEY[openai]="${var_honcho_api_key:-${var_honcho_base_url:+not-needed}}"
   ;;
 esac
@@ -110,7 +108,6 @@ EMBEDDING_VECTOR_DIMENSIONS=${var_honcho_embedding_dims}
 EOF
 fi
 chmod 600 /opt/honcho_data/.env
-# Honcho and its scripts load .env from /opt/honcho, which updates empty; only the link lives there
 ln -sf /opt/honcho_data/.env /opt/honcho/.env
 msg_ok "Configured Honcho"
 
@@ -150,7 +147,6 @@ User=root
 WorkingDirectory=/opt/honcho
 Environment=PYTHONUNBUFFERED=1
 ExecStart=/opt/honcho/.venv/bin/python -m src.deriver
-# The deriver exits 0 after an unhandled error, which Restart=on-failure would leave stopped
 Restart=always
 RestartSec=5
 
