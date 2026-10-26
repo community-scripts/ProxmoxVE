@@ -591,6 +591,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - remove old -install.sh (verdaccio) [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18218](https://github.com/community-scripts/ProxmoxVE/pull/18218))
     - meshcentral: bump Node.js from 22 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18215](https://github.com/community-scripts/ProxmoxVE/pull/18215))
 
+### 💾 Core
+
+  - feat: create containers from the linuxcontainers.org catalog when Proxmox has no template [@MickLesk](https://github.com/MickLesk) ([core#25](https://github.com/community-scripts/core/pull/25))
+
 ## 2026-10-25
 
 ### 🆕 New Scripts
