@@ -600,6 +600,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - feat: create containers from the linuxcontainers.org catalog when Proxmox has no template [@MickLesk](https://github.com/MickLesk) ([core#25](https://github.com/community-scripts/core/pull/25))
 
+### 📚 Documentation
+
+  - Ref: Docs / Readme [@MickLesk](https://github.com/MickLesk) ([#18233](https://github.com/community-scripts/ProxmoxVE/pull/18233))
+
 ## 2026-10-25
 
 ### 🆕 New Scripts
