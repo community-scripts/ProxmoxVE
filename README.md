@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png" height="112px" alt="Proxmox VE Helper-Scripts Logo" />
+  <img src="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-proxmoxve.svg" height="112px" alt="Proxmox VE Helper-Scripts Logo" />
 
   <h1>Proxmox VE Helper-Scripts</h1>
   <p><strong>One-command installations for services, containers, and VMs on Proxmox VE</strong><br/>
@@ -30,7 +30,7 @@ The collection covers hundreds of services across categories like home automatio
 
 | Component      | Details                                          |
 | -------------- | ------------------------------------------------ |
-| **Proxmox VE** | Version 8.4, 9.0, 9.1, or 9.2                    |
+| **Proxmox VE** | 8.0 – 8.9 or 9.0 – 9.2                           |
 | **Host OS**    | Proxmox VE (Debian-based)                        |
 | **Access**     | Root shell access on the Proxmox host            |
 | **Network**    | Internet connection required during installation |
