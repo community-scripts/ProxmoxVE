@@ -568,6 +568,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-26
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - meshcentral: bump Node.js from 22 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18215](https://github.com/community-scripts/ProxmoxVE/pull/18215))
+
 ## 2026-10-25
 
 ### 🆕 New Scripts
