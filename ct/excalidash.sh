@@ -35,7 +35,8 @@ function update_script() {
     msg_info "Stopping Service"
     systemctl stop excalidash
     msg_ok "Stopped Service"
-
+    
+    NODE_VERSION="24" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "excalidash" "ZimengXiong/ExcaliDash" "tarball"
     ln -sf /opt/excalidash_data/.env /opt/excalidash/backend/.env
     set -a && source /opt/excalidash_data/.env && set +a
