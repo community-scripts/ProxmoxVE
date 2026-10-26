@@ -191,7 +191,6 @@ create` still ran and the container was still built.
 ## Notes
 
 - **Website metadata** (name, description, logo, tags) is managed via the website — use the "Report Issue" link on any script page to request changes. Do not submit metadata changes via repo files.
-- **JSON files** in `json/` define script properties used by the website. See existing files for structure reference.
 - Keep PRs small and focused. One fix or feature per PR is ideal.
 - PRs with **new scripts** opened against ProxmoxVE will be closed — submit them to [DevScripts](https://github.com/community-scripts/DevScripts) instead.
 - PRs that fail CI checks will not be merged.
