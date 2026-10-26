@@ -24,7 +24,7 @@ msg_ok "Installed Dependencies"
 setup_ffmpeg
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="readmeabook" PG_DB_USER="readmeabook" setup_postgresql_db
-NODE_VERSION="20" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 
 fetch_and_deploy_gh_release "readmeabook" "kikootwo/ReadMeABook" "tarball"
 
