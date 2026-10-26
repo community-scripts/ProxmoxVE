@@ -583,6 +583,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - VMs: pass the machine type, CPU, disk cache and discard settings to qm [@MickLesk](https://github.com/MickLesk) ([#18232](https://github.com/community-scripts/ProxmoxVE/pull/18232))
     - excalidash: bump Node.js from 20 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18213](https://github.com/community-scripts/ProxmoxVE/pull/18213))
     - readmeabook: bump Node.js from 20 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18217](https://github.com/community-scripts/ProxmoxVE/pull/18217))
     - homepage: bump Node.js from 22 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18214](https://github.com/community-scripts/ProxmoxVE/pull/18214))
