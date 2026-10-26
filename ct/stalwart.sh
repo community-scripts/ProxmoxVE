@@ -31,12 +31,13 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "stalwart" "stalwartlabs/stalwart"; then
+  RELEASE="v0.16.27"
+  if check_for_gh_release "stalwart" "stalwartlabs/stalwart" "${RELEASE}" "Stalwart v1 changes the data store layout and requires an offline migration with stalwartlabs/stalwart-migrate; pinned until this script supports it"; then
     msg_info "Stopping Service"
     systemctl stop stalwart
     msg_ok "Stopped Service"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "stalwart" "stalwartlabs/stalwart" "prebuild" "latest" "/opt/stalwart" "stalwart-$(arch_resolve x86_64 aarch64)-unknown-linux-gnu.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "stalwart" "stalwartlabs/stalwart" "prebuild" "${RELEASE}" "/opt/stalwart" "stalwart-$(arch_resolve x86_64 aarch64)-unknown-linux-gnu.tar.gz"
     chmod +x /opt/stalwart/stalwart
 
     msg_info "Starting Service"
