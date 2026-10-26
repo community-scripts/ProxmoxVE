@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -14,9 +13,7 @@ network_check
 update_os
 
 fetch_and_deploy_gh_release "stump" "stumpapp/stump" "prebuild" "latest" "/opt/stump" "linux-build-results.zip"
-# the release zip does not keep the executable bit
 chmod +x /opt/stump/stump_server
-# Stump loads PDFium at runtime for PDF support; the official image ships the same bblanchon build
 fetch_and_deploy_gh_release "pdfium" "bblanchon/pdfium-binaries" "prebuild" "latest" "/opt/pdfium" "pdfium-linux-x64.tgz"
 
 msg_info "Creating Stump Service"
