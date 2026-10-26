@@ -432,10 +432,10 @@ set_description
 
 msg_info "Bridge interfaces are being added."
 qm set $VMID \
-  -net0 virtio,bridge=${BRG},macaddr=${MAC},firewall=0,queues=${CORE_COUNT}${VLAN}${MTU} 2>/dev/null
+  -net0 virtio,bridge=${BRG},macaddr=${MAC},firewall=0,queues=${CORE_COUNT}${VLAN}${MTU} >/dev/null
 if [ -n "$WAN_BRG" ]; then
   qm set $VMID \
-    -net1 virtio,bridge=${WAN_BRG},macaddr=${WAN_MAC},firewall=0,queues=${CORE_COUNT} 2>/dev/null
+    -net1 virtio,bridge=${WAN_BRG},macaddr=${WAN_MAC},firewall=0,queues=${CORE_COUNT} >/dev/null
 fi
 msg_ok "Bridge interfaces have been successfully added."
 
