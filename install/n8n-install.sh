@@ -20,7 +20,7 @@ $STD apt install -y \
   graphicsmagick
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="24" setup_nodejs
+NODE_VERSION="26" setup_nodejs
 
 msg_info "Installing n8n (Patience)"
 $STD npm install -g n8n@latest
