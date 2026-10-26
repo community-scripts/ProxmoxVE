@@ -583,6 +583,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Immich: lock only this platform when mise installs the plugin tools [@MickLesk](https://github.com/MickLesk) ([#18241](https://github.com/community-scripts/ProxmoxVE/pull/18241))
     - Fix service name case for Splunkd [@CerberusStyle](https://github.com/CerberusStyle) ([#18238](https://github.com/community-scripts/ProxmoxVE/pull/18238))
     - VMs: pass the machine type, CPU, disk cache and discard settings to qm [@MickLesk](https://github.com/MickLesk) ([#18232](https://github.com/community-scripts/ProxmoxVE/pull/18232))
     - excalidash: bump Node.js from 20 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18213](https://github.com/community-scripts/ProxmoxVE/pull/18213))
