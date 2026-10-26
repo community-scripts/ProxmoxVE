@@ -21,11 +21,7 @@ fetch_and_deploy_gh_release "hometube" "EgalitarianMonkey/hometube" "tarball"
 
 msg_info "Installing HomeTube"
 cd /opt/hometube
-# the upstream image drops pyarrow too, HomeTube renders no dataframes
 $STD uv sync --locked --no-dev --no-install-project --no-install-package pyarrow
-msg_ok "Installed HomeTube"
-
-msg_info "Configuring HomeTube"
 mkdir -p /opt/hometube_data/{videos,tmp,cookies}
 cat <<EOF >/opt/hometube_data/.env
 VIDEOS_FOLDER=/opt/hometube_data/videos
@@ -33,7 +29,7 @@ TMP_DOWNLOAD_FOLDER=/opt/hometube_data/tmp
 YOUTUBE_COOKIES_FILE_PATH=/opt/hometube_data/cookies/youtube_cookies.txt
 REMOVE_TMP_FILES_AFTER_DOWNLOAD=true
 EOF
-msg_ok "Configured HomeTube"
+msg_ok "Installed HomeTube"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/hometube.service
