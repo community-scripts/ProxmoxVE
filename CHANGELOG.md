@@ -599,7 +599,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - feat: create containers from the linuxcontainers.org catalog when Proxmox has no template [@MickLesk](https://github.com/MickLesk) ([core#25](https://github.com/community-scripts/core/pull/25))
+  - feat: let an install survive a closed console / dont sighup installs [@MickLesk](https://github.com/MickLesk) ([core#167](https://github.com/community-scripts/core/pull/167))
+- feat: create containers from the linuxcontainers.org catalog when Proxmox has no template [@MickLesk](https://github.com/MickLesk) ([core#25](https://github.com/community-scripts/core/pull/25))
 
 ### 📚 Documentation
 
