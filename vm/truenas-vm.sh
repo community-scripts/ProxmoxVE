@@ -161,7 +161,7 @@ msg_info "Creating TrueNAS VM shell"
 qm create "$VMID"${MACHINE} -bios ovmf -agent enabled=1 -tablet 0 -localtime 1${CPU_TYPE} \
   -cores "$CORE_COUNT" -memory "$RAM_SIZE" -balloon 0 -name "$HN" -tags community-script \
   -net0 "virtio,bridge=$BRG,macaddr=$MAC$VLAN$MTU" -onboot 1 -ostype l26 \
-  -efidisk0 $STORAGE:1,efitype=4m,pre-enrolled-keys=0 -sata0 ${STORAGE}:${DISK_SIZE%G},ssd=1 \
+  -efidisk0 $STORAGE:1,efitype=4m,pre-enrolled-keys=0 -sata0 ${STORAGE}:${DISK_SIZE%G},${DISK_CACHE}ssd=1 \
   -scsihw virtio-scsi-single -cdrom "$ISO_VOLUME" -boot order='sata0;ide2' -vga virtio >/dev/null
 msg_ok "Created VM shell"
 

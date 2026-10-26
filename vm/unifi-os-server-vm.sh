@@ -374,7 +374,7 @@ vm_import_disk "$VMID" "$FILE" "$STORAGE" "$DISK_IMPORT_FORMAT"
 
 qm set "$VMID" \
   -efidisk0 "${STORAGE}:0,efitype=4m" \
-  -scsi0 "${VM_IMPORTED_DISK},${DISK_CACHE}size=${DISK_SIZE}" \
+  -scsi0 "${VM_IMPORTED_DISK},${DISK_CACHE}${THIN}size=${DISK_SIZE}" \
   -boot order=scsi0 -serial0 socket >/dev/null
 vm_resize_disk
 qm set "$VMID" --agent enabled=1 >/dev/null

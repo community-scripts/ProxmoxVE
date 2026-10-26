@@ -149,7 +149,7 @@ rm -f "$FILE_IMG"
 msg_info "Attaching EFI and root disk"
 qm set $VMID \
   --efidisk0 ${STORAGE}:0,efitype=4m \
-  --scsi0 ${DISK_REF},ssd=1,discard=on \
+  --scsi0 ${DISK_REF},${DISK_CACHE}ssd=1,discard=on \
   --boot order=scsi0 \
   --serial0 socket >/dev/null
 qm set $VMID --agent enabled=1 >/dev/null
