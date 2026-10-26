@@ -22,18 +22,40 @@ color
 catch_errors
 
 function update_script() {
-    header_info
-    check_container_storage
-    check_container_resources
-    if [[ ! -d /opt/meshcentral ]]; then
-        msg_error "No ${APP} Installation Found!"
-        exit
-    fi
-    msg_info "Updating ${APP} LXC"
-    apt_update_safe
-    $STD apt -y upgrade
-    msg_ok "Updated successfully!"
+  header_info
+  check_container_storage
+  check_container_resources
+  if [[ ! -d /opt/meshcentral ]]; then
+    msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  NODE_VERSION="24" setup_nodejs
+
+  CURRENT=$(node -p "require('/opt/meshcentral/node_modules/meshcentral/package.json').version" 2>/dev/null)
+  LATEST=$(npm view meshcentral version 2>/dev/null)
+  if [[ -z "$LATEST" ]]; then
+    msg_error "Could not determine the latest MeshCentral version from npm"
+    exit 250
+  fi
+  if [[ "$CURRENT" != "$LATEST" ]]; then
+    msg_info "Stopping Service"
+    systemctl stop meshcentral
+    msg_ok "Stopped Service"
+
+    msg_info "Updating ${APP} from v${CURRENT} to v${LATEST}"
+    cd /opt/meshcentral
+    $STD npm install "meshcentral@${LATEST}"
+    msg_ok "Updated ${APP} to v${LATEST}"
+
+    msg_info "Starting Service"
+    systemctl start meshcentral
+    msg_ok "Started Service"
+    msg_ok "Updated successfully!"
+  else
+    msg_ok "${APP} is already at v${CURRENT}"
+  fi
+  exit
 }
 
 start
