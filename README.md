@@ -19,7 +19,7 @@
 
 ## What is this?
 
-**The canonical application scripts.** More than 600 of them, covering home
+**The canonical application scripts.** More than 700 of them, covering home
 automation, media, networking, databases, monitoring, security and developer
 tooling. Paste one command into your Proxmox shell and the container or VM is
 built, configured and running.
