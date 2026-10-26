@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: MickLesk (CanbiZ)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
@@ -32,7 +31,6 @@ rm -rf /opt/ytptube/ui/node_modules
 cd /opt/ytptube
 sed -i "s/^APP_VERSION = .*/APP_VERSION = \"v$(cat ~/.ytptube)\"/" app/library/version.py
 $STD uv sync --locked --no-dev
-# app/upgrader.py refreshes yt-dlp through "python -m pip", which a uv venv lacks
 $STD uv pip install --python .venv/bin/python pip
 msg_ok "Built YTPTube"
 
@@ -40,6 +38,9 @@ msg_info "Configuring YTPTube"
 mkdir -p /opt/ytptube_data/{config,downloads,tmp}
 cat <<EOF >/opt/ytptube_data/config/.env
 YTP_PORT=8081
+YTP_CONFIG_PATH=/opt/ytptube_data/config
+YTP_DOWNLOAD_PATH=/opt/ytptube_data/downloads
+YTP_TEMP_PATH=/opt/ytptube_data/tmp
 EOF
 msg_ok "Configured YTPTube"
 
@@ -54,9 +55,7 @@ Wants=network-online.target
 Type=simple
 User=root
 WorkingDirectory=/opt/ytptube
-Environment=YTP_CONFIG_PATH=/opt/ytptube_data/config
-Environment=YTP_DOWNLOAD_PATH=/opt/ytptube_data/downloads
-Environment=YTP_TEMP_PATH=/opt/ytptube_data/tmp
+EnvironmentFile=/opt/ytptube_data/config/.env
 Environment=PATH=/opt/ytptube/.venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
 ExecStartPre=-/opt/ytptube/.venv/bin/python /opt/ytptube/app/upgrader.py
 ExecStart=/opt/ytptube/.venv/bin/python /opt/ytptube/app/main.py
