@@ -574,6 +574,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - readmeabook: bump Node.js from 20 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18217](https://github.com/community-scripts/ProxmoxVE/pull/18217))
     - homepage: bump Node.js from 22 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18214](https://github.com/community-scripts/ProxmoxVE/pull/18214))
     - remove old -install.sh (verdaccio) [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18218](https://github.com/community-scripts/ProxmoxVE/pull/18218))
     - meshcentral: bump Node.js from 22 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18215](https://github.com/community-scripts/ProxmoxVE/pull/18215))
