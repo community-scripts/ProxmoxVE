@@ -27,7 +27,6 @@ cd /opt/searxng
 $STD uv venv /opt/searxng/.venv
 $STD uv pip install -p /opt/searxng/.venv/bin/python -r requirements.txt -r requirements-server.txt
 mkdir -p /etc/searxng
-# Vane queries SearXNG with format=json and expects the Wolfram Alpha engine, like upstream's bundled instance
 cat <<EOF >/etc/searxng/settings.yml
 use_default_settings: true
 general:
