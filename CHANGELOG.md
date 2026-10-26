@@ -572,7 +572,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - HomeTube ([#18172](https://github.com/community-scripts/ProxmoxVE/pull/18172))
+  - Vane ([#18168](https://github.com/community-scripts/ProxmoxVE/pull/18168))
+- HomeTube ([#18172](https://github.com/community-scripts/ProxmoxVE/pull/18172))
 - Honcho ([#18169](https://github.com/community-scripts/ProxmoxVE/pull/18169))
 - YTPTube ([#18174](https://github.com/community-scripts/ProxmoxVE/pull/18174))
 - Stump ([#18173](https://github.com/community-scripts/ProxmoxVE/pull/18173))
