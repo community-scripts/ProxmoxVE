@@ -572,7 +572,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Stump ([#18173](https://github.com/community-scripts/ProxmoxVE/pull/18173))
+  - YTPTube ([#18174](https://github.com/community-scripts/ProxmoxVE/pull/18174))
+- Stump ([#18173](https://github.com/community-scripts/ProxmoxVE/pull/18173))
 - Casdoor ([#18170](https://github.com/community-scripts/ProxmoxVE/pull/18170))
 - Streamystats ([#18171](https://github.com/community-scripts/ProxmoxVE/pull/18171))
 
