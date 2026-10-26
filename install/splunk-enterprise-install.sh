@@ -92,7 +92,7 @@ $STD /opt/splunk/bin/splunk enable boot-start \
     --no-prompt
 chown -R splunk:splunk /opt/splunk
 $STD systemctl daemon-reload
-$STD systemctl enable --now Splunkd
+$STD systemctl enable --now splunkd
 msg_ok "Started Service"
 
 motd_ssh
