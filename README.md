@@ -60,16 +60,15 @@ finish in a few minutes.
 **Advanced** hands you container settings, networking, storage backend and
 application options before anything is created.
 
-Every container gets an `update` command. Enter the container and run it to
-update the installed application:
+Every container gets an `update` command. Type it in the container console:
 
 ```bash
-pct enter <ctid>
 update
 ```
 
-The same command reaches settings that would otherwise mean editing config files
-by hand.
+It updates the installed application and reaches settings that would otherwise
+mean editing config files by hand. VM scripts have no built-in updater — use the
+guest's own package manager.
 
 ---
 
@@ -115,15 +114,27 @@ request a change.
 
 ## Testing a fork or branch
 
-Engine and scripts resolve independently, so either can point somewhere else:
+Engine and scripts resolve independently, so either can point somewhere else.
+Put the variable on the command itself — nothing needs exporting.
+
+To run your own copy of the scripts:
 
 ```bash
-export COMMUNITY_SCRIPTS_CORE_URL=https://raw.githubusercontent.com/YOU/core/my-branch
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/debian.sh)"
+COMMUNITY_SCRIPTS_URL=https://raw.githubusercontent.com/YOU/ProxmoxVE/my-branch \
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/YOU/ProxmoxVE/my-branch/ct/debian.sh)"
 ```
 
-To run your own script repository instead, set `COMMUNITY_SCRIPTS_URL` the same
-way. A local checkout of core wins over both — point at it with
+A `ct/` script fetched with `curl` cannot tell the engine where it came from, so
+without that variable it would look for its `install/` half upstream.
+
+Only when you are changing the engine itself:
+
+```bash
+COMMUNITY_SCRIPTS_CORE_URL=https://raw.githubusercontent.com/YOU/core/my-branch \
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/debian.sh)"
+```
+
+A local checkout of core wins over both — point at it with
 `COMMUNITY_SCRIPTS_CORE_DIR`.
 
 ---
