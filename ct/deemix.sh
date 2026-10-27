@@ -31,7 +31,6 @@ function update_script() {
     exit
   fi
 
-  # The monorepo releases every package under its own tag; the server is deemix-webui
   if check_for_gh_release "deemix" "bambanah/deemix" "" "" "deemix-webui@"; then
     msg_info "Stopping Deemix"
     systemctl stop deemix
