@@ -55,8 +55,7 @@ while true; do
 done
 
 ACME_EMAIL_INPUT="${var_npmplus_acme_email:-}"
-[[ -n "$ACME_EMAIL_INPUT" ]] || read -r -p "${TAB3}Enter your ACME Email: " ACME_EMAIL_INPUT || true
-[[ -n "$ACME_EMAIL_INPUT" ]] || { msg_error "No ACME e-mail given; set var_npmplus_acme_email or answer the prompt"; exit 64; }
+[[ -n "$ACME_EMAIL_INPUT" ]] || read -r -p "${TAB3}Enter your ACME Email (optional, press ENTER to skip): " ACME_EMAIL_INPUT || true
 
 yq -i "
   .services.npmplus.environment |=
