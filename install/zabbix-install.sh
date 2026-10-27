@@ -83,23 +83,20 @@ msg_ok "Selected $AGENT_PKG"
 if [ "$AGENT_PKG" = "zabbix-agent2" ]; then
   echo "Choose plugins for Zabbix Agent2:"
   echo "1) PostgreSQL only (default, recommended)"
-  echo "2) All plugins (may cause issues)"
+  echo "2) All plugins except NVIDIA GPU (may cause issues)"
   PLUGIN_CHOICE="${var_zabbix_plugins:-}"
   [[ -n "$PLUGIN_CHOICE" ]] || read -rp "Choose option [1-2]: " PLUGIN_CHOICE || true
 
   case "$PLUGIN_CHOICE" in
   2)
-    $STD apt install -y zabbix-agent2 zabbix-agent2-plugin-*
+    # The NVIDIA plugin fails the agent's config test without NVML, which aborts the package install
+    mapfile -t AGENT2_PLUGINS < <(apt-cache search --names-only '^zabbix-agent2-plugin-' | awk '{print $1}' | grep -v nvidia)
+    $STD apt install -y zabbix-agent2 "${AGENT2_PLUGINS[@]}"
     ;;
   *)
     $STD apt install -y zabbix-agent2 zabbix-agent2-plugin-postgresql
     ;;
   esac
-
-  if [ -f /etc/zabbix/zabbix_agent2.d/plugins.d/nvidia.conf ]; then
-    sed -i 's|^Plugins.NVIDIA.System.Path=.*|# Plugins.NVIDIA.System.Path=/usr/libexec/zabbix/zabbix-agent2-plugin-nvidia-gpu|' \
-      /etc/zabbix/zabbix_agent2.d/plugins.d/nvidia.conf
-  fi
 else
   $STD apt install -y zabbix-agent
 fi
