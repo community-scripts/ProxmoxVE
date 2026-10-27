@@ -578,6 +578,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Overseerr: point fresh installs to Seerr  [@MickLesk](https://github.com/MickLesk) ([#18259](https://github.com/community-scripts/ProxmoxVE/pull/18259))
     - stalwart: pin to v0.16.27 until v1 migration is supported [@MickLesk](https://github.com/MickLesk) ([#18252](https://github.com/community-scripts/ProxmoxVE/pull/18252))
 
+### 💾 Core
+
+  - Skip the IPv6 sysctl when the host kernel has no IPv6 [@MickLesk](https://github.com/MickLesk) ([core#171](https://github.com/community-scripts/core/pull/171))
+- Stop reporting a closed console as a user abort, and shield the host's own work [@MickLesk](https://github.com/MickLesk) ([core#172](https://github.com/community-scripts/core/pull/172))
+
 ## 2026-10-26
 
 ### 🆕 New Scripts
