@@ -82,6 +82,12 @@ EOF
   exit
 }
 
+if [[ ! -d /opt/overseerr ]]; then
+  msg_error "Overseerr is now Seerr and can no longer be installed with this script."
+  msg_warn "Install Seerr instead: https://community-scripts.org/scripts/seerr"
+  exit 1
+fi
+
 start
 build_container
 description
