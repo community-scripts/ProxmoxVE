@@ -258,3 +258,20 @@ jobs:
           })().catch(e => { console.error(e); process.exit(1); });
           ENDSCRIPT
         shell: bash
+
+      - name: Move the scripts' telemetry to ProxmoxVE
+        if: ${{ !cancelled() && steps.find_issue.outputs.issue_numbers != '' && steps.get_slugs.outputs.count != '0' }}
+        shell: bash
+        env:
+          TELEMETRY_ADMIN_TOKEN: ${{ secrets.TELEMETRY_ADMIN_TOKEN }}
+        run: |
+          if [ -z "$TELEMETRY_ADMIN_TOKEN" ]; then
+            echo "TELEMETRY_ADMIN_TOKEN is not set, skipping"
+            exit 0
+          fi
+          body=$(jq -cn --arg s "$(cat pocketbase_slugs.txt)" \
+            '{slugs: ($s | split(" ") | map(select(. != ""))), from: "DevScripts", to: "ProxmoxVE"}')
+          curl -fsS -X POST "https://telemetry.community-scripts.org/api/admin/migrate-script" \
+            -H "Authorization: Bearer ${TELEMETRY_ADMIN_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d "$body" || echo "::warning::Moving the telemetry history to ProxmoxVE failed"
