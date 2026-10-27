@@ -41,7 +41,7 @@ while [[ $attempt -lt $max_attempts ]]; do
   fi
 
   if [[ "$lang_code" =~ [[:space:]] ]]; then
-    ((attempt++))
+    attempt=$((attempt + 1))
     remaining=$((max_attempts - attempt))
     lang_code=""
     if [[ $remaining -gt 0 ]]; then
