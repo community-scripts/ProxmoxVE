@@ -568,6 +568,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-27
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - stalwart: pin to v0.16.27 until v1 migration is supported [@MickLesk](https://github.com/MickLesk) ([#18252](https://github.com/community-scripts/ProxmoxVE/pull/18252))
+
 ## 2026-10-26
 
 ### 🆕 New Scripts
