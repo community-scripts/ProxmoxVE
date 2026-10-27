@@ -574,9 +574,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Omada: detect latest version from product download page [@ChrisKappe](https://github.com/ChrisKappe) ([#18248](https://github.com/community-scripts/ProxmoxVE/pull/18248))
     - LanguageTool: count ngram prompt retries without tripping errexit [@MickLesk](https://github.com/MickLesk) ([#18258](https://github.com/community-scripts/ProxmoxVE/pull/18258))
     - Overseerr: point fresh installs to Seerr  [@MickLesk](https://github.com/MickLesk) ([#18259](https://github.com/community-scripts/ProxmoxVE/pull/18259))
     - stalwart: pin to v0.16.27 until v1 migration is supported [@MickLesk](https://github.com/MickLesk) ([#18252](https://github.com/community-scripts/ProxmoxVE/pull/18252))
+
+### 🗑️ Deleted Scripts
+
+  - Remove: Readarr [@MickLesk](https://github.com/MickLesk) ([#18264](https://github.com/community-scripts/ProxmoxVE/pull/18264))
 
 ### 💾 Core
 
