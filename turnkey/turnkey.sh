@@ -12,7 +12,6 @@ catch_errors
 
 APP="TurnKey LXC"
 NSAPP="turnkey"
-# TurnKey publishes amd64 templates only
 var_arm64="no"
 DIAGNOSTICS="no"
 METHOD="default"
