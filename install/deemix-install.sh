@@ -13,17 +13,13 @@ setting_up_container
 network_check
 update_os
 
-# utf-8-validate ships no linux-arm64 prebuild and compiles through node-gyp there
 msg_info "Installing Dependencies"
-$STD apt install -y \
-  build-essential \
-  python3
+$STD apt install -y build-essential
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "deemix" "bambanah/deemix" "tarball" "latest" "/opt/deemix" "" "deemix-webui@"
 NODE_VERSION="24" NODE_MODULE="pnpm@$(sed -n 's/.*"packageManager": "pnpm@\([^"+]*\).*/\1/p' /opt/deemix/package.json)" setup_nodejs
 
-# The workspace also holds the Electron desktop app, whose binary the server never uses
 msg_info "Building Deemix"
 cd /opt/deemix
 ELECTRON_SKIP_BINARY_DOWNLOAD=1 $STD pnpm install --frozen-lockfile
