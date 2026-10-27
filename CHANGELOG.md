@@ -580,7 +580,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Skip the IPv6 sysctl when the host kernel has no IPv6 [@MickLesk](https://github.com/MickLesk) ([core#171](https://github.com/community-scripts/core/pull/171))
+  - Say the same thing on both hosts while a container is created [@MickLesk](https://github.com/MickLesk) ([core#173](https://github.com/community-scripts/core/pull/173))
+- Skip the IPv6 sysctl when the host kernel has no IPv6 [@MickLesk](https://github.com/MickLesk) ([core#171](https://github.com/community-scripts/core/pull/171))
 - Stop reporting a closed console as a user abort, and shield the host's own work [@MickLesk](https://github.com/MickLesk) ([core#172](https://github.com/community-scripts/core/pull/172))
 
 ## 2026-10-26
