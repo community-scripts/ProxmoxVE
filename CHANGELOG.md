@@ -574,10 +574,15 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Zabbix: leave out the NVIDIA agent2 plugin that breaks the all-plugins install [@MickLesk](https://github.com/MickLesk) ([#18262](https://github.com/community-scripts/ProxmoxVE/pull/18262))
     - Omada: detect latest version from product download page [@ChrisKappe](https://github.com/ChrisKappe) ([#18248](https://github.com/community-scripts/ProxmoxVE/pull/18248))
     - LanguageTool: count ngram prompt retries without tripping errexit [@MickLesk](https://github.com/MickLesk) ([#18258](https://github.com/community-scripts/ProxmoxVE/pull/18258))
     - Overseerr: point fresh installs to Seerr  [@MickLesk](https://github.com/MickLesk) ([#18259](https://github.com/community-scripts/ProxmoxVE/pull/18259))
     - stalwart: pin to v0.16.27 until v1 migration is supported [@MickLesk](https://github.com/MickLesk) ([#18252](https://github.com/community-scripts/ProxmoxVE/pull/18252))
+
+  - #### 🔧 Refactor
+
+    - NPMplus: let the ACME e-mail stay empty again, Let's Encrypt does not need one [@MickLesk](https://github.com/MickLesk) ([#18263](https://github.com/community-scripts/ProxmoxVE/pull/18263))
 
 ### 🗑️ Deleted Scripts
 
