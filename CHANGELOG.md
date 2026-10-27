@@ -580,6 +580,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Overseerr: point fresh installs to Seerr  [@MickLesk](https://github.com/MickLesk) ([#18259](https://github.com/community-scripts/ProxmoxVE/pull/18259))
     - stalwart: pin to v0.16.27 until v1 migration is supported [@MickLesk](https://github.com/MickLesk) ([#18252](https://github.com/community-scripts/ProxmoxVE/pull/18252))
 
+  - #### ✨ New Features
+
+    - TurnKey: offer only current appliances, stop on arm64 [@MickLesk](https://github.com/MickLesk) ([#18265](https://github.com/community-scripts/ProxmoxVE/pull/18265))
+
   - #### 🔧 Refactor
 
     - NPMplus: let the ACME e-mail stay empty again, Let's Encrypt does not need one [@MickLesk](https://github.com/MickLesk) ([#18263](https://github.com/community-scripts/ProxmoxVE/pull/18263))
