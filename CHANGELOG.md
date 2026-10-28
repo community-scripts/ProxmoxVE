@@ -570,6 +570,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-10-28
 
+### 🆕 New Scripts
+
+  - Deemix ([#18272](https://github.com/community-scripts/ProxmoxVE/pull/18272))
+
 ### 📚 Documentation
 
   - Move a promoted script's telemetry history to ProxmoxVE [@MickLesk](https://github.com/MickLesk) ([#18271](https://github.com/community-scripts/ProxmoxVE/pull/18271))
