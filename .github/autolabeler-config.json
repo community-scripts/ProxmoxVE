@@ -103,8 +103,7 @@
     {
       "fileStatus": null,
       "includeGlobs": [
-        "api/**",
-        "misc/api.func"
+        "api/**"
       ],
       "excludeGlobs": []
     }
