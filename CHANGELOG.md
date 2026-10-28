@@ -579,6 +579,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix(vm/opnsense): increase startup wait from 90 to 180 seconds [@MTlyx](https://github.com/MTlyx) ([#18086](https://github.com/community-scripts/ProxmoxVE/pull/18086))
     - apache-tomcat: restore the update backup from its real store [@mazelado](https://github.com/mazelado) ([#18145](https://github.com/community-scripts/ProxmoxVE/pull/18145))
     - AdventureLog: clean-install on update and drop the DRF <3.15 pin [@angusmaul](https://github.com/angusmaul) ([#18281](https://github.com/community-scripts/ProxmoxVE/pull/18281))
 
