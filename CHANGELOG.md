@@ -574,6 +574,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Deemix ([#18272](https://github.com/community-scripts/ProxmoxVE/pull/18272))
 
+### 💾 Core
+
+  - Keep the console hint out of the default output [@MickLesk](https://github.com/MickLesk) ([core#176](https://github.com/community-scripts/core/pull/176))
+
 ### 📚 Documentation
 
   - Move a promoted script's telemetry history to ProxmoxVE [@MickLesk](https://github.com/MickLesk) ([#18271](https://github.com/community-scripts/ProxmoxVE/pull/18271))
