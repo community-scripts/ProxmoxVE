@@ -568,6 +568,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-28
+
+### 📚 Documentation
+
+  - Move a promoted script's telemetry history to ProxmoxVE [@MickLesk](https://github.com/MickLesk) ([#18271](https://github.com/community-scripts/ProxmoxVE/pull/18271))
+
 ## 2026-10-27
 
 ### 🚀 Updated Scripts
