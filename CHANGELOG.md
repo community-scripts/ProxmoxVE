@@ -583,6 +583,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - apache-tomcat: restore the update backup from its real store [@mazelado](https://github.com/mazelado) ([#18145](https://github.com/community-scripts/ProxmoxVE/pull/18145))
     - AdventureLog: clean-install on update and drop the DRF <3.15 pin [@angusmaul](https://github.com/angusmaul) ([#18281](https://github.com/community-scripts/ProxmoxVE/pull/18281))
 
+  - #### 🔧 Refactor
+
+    - Refactor: ownCloud VM [@MickLesk](https://github.com/MickLesk) ([#18295](https://github.com/community-scripts/ProxmoxVE/pull/18295))
+
 ### 💾 Core
 
   - Keep the console hint out of the default output [@MickLesk](https://github.com/MickLesk) ([core#176](https://github.com/community-scripts/core/pull/176))
