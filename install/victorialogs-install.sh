@@ -27,7 +27,7 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=/opt/victorialogs
-ExecStart=/opt/victorialogs/victoria-logs-prod -storageDataPath=/opt/victorialogs_data -httpListenAddr=:9428
+ExecStart=/opt/victorialogs/victoria-logs-prod -storageDataPath=/opt/victorialogs_data -httpListenAddr=:9428 -syslog.listenAddr.tcp=:514 -syslog.listenAddr.udp=:514
 Restart=on-failure
 RestartSec=5
 

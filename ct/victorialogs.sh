@@ -32,6 +32,14 @@ function update_script() {
     exit
   fi
 
+  if ! grep -q -- '-syslog.listenAddr' /etc/systemd/system/victorialogs.service; then
+    msg_info "Enabling Syslog Ingestion"
+    sed -i '/^ExecStart=/ s|$| -syslog.listenAddr.tcp=:514 -syslog.listenAddr.udp=:514|' /etc/systemd/system/victorialogs.service
+    systemctl daemon-reload
+    systemctl restart victorialogs
+    msg_ok "Enabled Syslog Ingestion (TCP/UDP 514)"
+  fi
+
   if check_for_gh_release "victorialogs" "VictoriaMetrics/VictoriaLogs"; then
     msg_info "Stopping Service"
     systemctl stop victorialogs
@@ -56,3 +64,5 @@ msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW}Access it using the following URL:${CL}"
 echo -e "${GATEWAY}${BGN}http://${IP}:9428${CL}"
+echo -e "${INFO}${YW}Syslog ingestion (TCP/UDP):${CL}"
+echo -e "${GATEWAY}${BGN}${IP}:514${CL}"
