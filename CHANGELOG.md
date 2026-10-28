@@ -572,7 +572,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Deemix ([#18272](https://github.com/community-scripts/ProxmoxVE/pull/18272))
+  - VictoriaLogs ([#18282](https://github.com/community-scripts/ProxmoxVE/pull/18282))
+- Deemix ([#18272](https://github.com/community-scripts/ProxmoxVE/pull/18272))
 
 ### 🚀 Updated Scripts
 
