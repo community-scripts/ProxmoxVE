@@ -92,7 +92,7 @@ msg_ok "Installed Language Packs"
 msg_info "Creating Environment Variables"
 cat <<EOF >/opt/Stirling-PDF/.env
 # Java tuning
-JAVA_BASE_OPTS="-XX:+UnlockExperimentalVMOptions -XX:MaxRAMPercentage=75 -XX:InitiatingHeapOccupancyPercent=20 -XX:+G1PeriodicGCInvokesConcurrent -XX:G1PeriodicGCInterval=10000 -XX:+UseStringDeduplication -XX:G1PeriodicGCSystemLoadThreshold=70"
+JAVA_BASE_OPTS="-XX:+UnlockExperimentalVMOptions -XX:MaxRAMPercentage=50 -XX:InitiatingHeapOccupancyPercent=20 -XX:+G1PeriodicGCInvokesConcurrent -XX:G1PeriodicGCInterval=10000 -XX:+UseStringDeduplication -XX:G1PeriodicGCSystemLoadThreshold=70"
 JAVA_CUSTOM_OPTS=""
 
 # LibreOffice
@@ -135,7 +135,8 @@ msg_ok "Font Cache Updated"
 msg_info "Creating Service"
 # unoserver starts and supervises its own LibreOffice on UNO port 2002, so a separate
 # listener on that port only collides with it. Do not reintroduce one.
-cat <<EOF >/etc/systemd/system/stirlingpdf.service
+# MaxRAM: inside LXC the JVM sizes its heap from host RAM; /proc/meminfo (lxcfs) reports the CT limit
+cat <<'EOF' >/etc/systemd/system/stirlingpdf.service
 [Unit]
 Description=Stirling-PDF service
 After=syslog.target network.target unoserver.service
@@ -147,7 +148,7 @@ User=root
 Group=root
 EnvironmentFile=/opt/Stirling-PDF/.env
 WorkingDirectory=/opt/Stirling-PDF
-ExecStart=/usr/bin/java -jar Stirling-PDF.jar
+ExecStart=/bin/bash -c 'exec /usr/bin/java -XX:MaxRAM=$$(grep -m1 -o "[0-9][0-9]*" /proc/meminfo)k $$JAVA_BASE_OPTS $$JAVA_CUSTOM_OPTS -jar Stirling-PDF.jar'
 Restart=always
 RestartSec=10
 
