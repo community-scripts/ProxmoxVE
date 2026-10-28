@@ -579,6 +579,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - apache-tomcat: restore the update backup from its real store [@mazelado](https://github.com/mazelado) ([#18145](https://github.com/community-scripts/ProxmoxVE/pull/18145))
     - AdventureLog: clean-install on update and drop the DRF <3.15 pin [@angusmaul](https://github.com/angusmaul) ([#18281](https://github.com/community-scripts/ProxmoxVE/pull/18281))
 
 ### 💾 Core
