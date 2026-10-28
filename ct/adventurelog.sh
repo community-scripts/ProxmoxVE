@@ -37,9 +37,9 @@ function update_script() {
     msg_ok "Services Stopped"
 
     create_backup /opt/adventurelog/backend/server/.env \
-      /opt/adventurelog/backend/server/media
+      /opt/adventurelog/frontend/.env
 
-    fetch_and_deploy_gh_release "adventurelog" "seanmorley15/adventurelog" "tarball"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="backend/server/media" fetch_and_deploy_gh_release "adventurelog" "seanmorley15/adventurelog" "tarball"
     PYTHON_VERSION="3.13" setup_uv
 
     msg_info "Ensuring PostgreSQL Extensions"
@@ -56,7 +56,6 @@ function update_script() {
     fi
     $STD .venv/bin/python -m pip install --upgrade pip
     $STD .venv/bin/python -m pip install -r requirements.txt
-    $STD .venv/bin/python -m pip install 'djangorestframework<3.15'
     $STD .venv/bin/python -m manage collectstatic --noinput
     $STD .venv/bin/python -m manage migrate
 
