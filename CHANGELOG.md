@@ -574,6 +574,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Deemix ([#18272](https://github.com/community-scripts/ProxmoxVE/pull/18272))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - AdventureLog: clean-install on update and drop the DRF <3.15 pin [@angusmaul](https://github.com/angusmaul) ([#18281](https://github.com/community-scripts/ProxmoxVE/pull/18281))
+
 ### 💾 Core
 
   - Keep the console hint out of the default output [@MickLesk](https://github.com/MickLesk) ([core#176](https://github.com/community-scripts/core/pull/176))
