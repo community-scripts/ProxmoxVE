@@ -591,6 +591,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Move a promoted script's telemetry history to ProxmoxVE [@MickLesk](https://github.com/MickLesk) ([#18271](https://github.com/community-scripts/ProxmoxVE/pull/18271))
 
+### ❔ Uncategorized
+
+  - chore(ct): sync tdarr defaults with PocketBase [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18289](https://github.com/community-scripts/ProxmoxVE/pull/18289))
+
 ## 2026-10-27
 
 ### 🚀 Updated Scripts
