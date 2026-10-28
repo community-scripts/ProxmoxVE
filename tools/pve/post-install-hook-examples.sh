@@ -4,7 +4,7 @@
 # ----------------------------------------------------------------------------
 #  This file is NOT meant to be executed as-is.
 #  It is a collection of complete, copy-pasteable example hooks for the
-#  optional `var_post_install` feature in build.func.
+#  optional `var_post_install` feature in the core engine.
 #
 #  HOW IT WORKS
 #  ------------
@@ -118,7 +118,7 @@ TS="$(date -Iseconds)"
 read -r -d '' DISCORD_PAYLOAD <<JSON || true
 {
   "username": "Proxmox - ${NODE}",
-  "avatar_url": "https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/images/logo-81x112.png",
+  "avatar_url": "https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/.github/assets/logo-81x112.png",
   "embeds": [{
     "title": "✅ ${APP} LXC created",
     "description": "A new community-script LXC has been provisioned on **${NODE}**.",
@@ -173,7 +173,7 @@ set -euo pipefail
 
 # --- CONFIG (edit me) -------------------------------------------------------
 TARGET_POOL="auto-lxc"
-EXTRA_TAGS=("auto-provisioned" "${NSAPP}") # community-script tag is set by build.func
+EXTRA_TAGS=("auto-provisioned" "${NSAPP}") # community-script tag is set by the engine
 BACKUP_STORAGE="pbs-main"                  # set to "" to skip initial backup
 PIHOLE_HOST="192.168.1.5"
 PIHOLE_PASSWORD="changeme" # web-UI password

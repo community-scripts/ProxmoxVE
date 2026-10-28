@@ -184,8 +184,8 @@ jobs:
                 );
               }
               lines.push(
-                'Only the script itself comes from this branch. Whatever it loads, the engine',
-                'or the `misc/` helpers, still comes from `main`.',
+                'Only the script itself comes from this branch. The engine it loads still',
+                'comes from community-scripts/core on `main`.',
               );
             }
 

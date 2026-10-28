@@ -5,8 +5,8 @@ name: Sync ct/install to Incus
 #
 # The actual mirroring + transformation lives in community-scripts/Incus
 # (.github/workflows/sync-scripts.yml): it rewrites each script's bootstrap line
-# to load the engine from community-scripts/core (ProxmoxVE's misc/build.func is
-# a monolith with no Incus backend), so a plain 1:1 copy would break every Incus
+# to load the engine from community-scripts/core (ct scripts here load its PVE
+# backend; Incus needs the Incus one), so a plain 1:1 copy would break every Incus
 # script. We therefore only fire a repository_dispatch and let that single
 # source of truth do the work (and auto-approve + merge its own PR).
 #
