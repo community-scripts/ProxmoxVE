@@ -343,6 +343,7 @@ jobs:
               '`cpu` `ram` `hdd` `os` `version` also work without `method` — they go to the\n' +
               'default install method, e.g. `/pocketbase <slug> hdd=25`\n\n' +
               '**Editable fields:** `name` `description` `logo` `documentation` `website` `project_url` `repository` ' +
+              '`oidc_url` `license` ' +
               '`config_path` `port` `default_user` `default_passwd` ' +
               '`updateable` `privileged` `is_dev` `has_arm` ' +
               '`architectures` (amd64,arm64) `platforms` (pve,incus) ' +
@@ -544,6 +545,7 @@ jobs:
               out.push('- **Port:** ' + (record.port != null ? '`' + record.port + '`' : '—'));
               out.push('- **Updateable:** ' + (record.updateable ? 'Yes' : 'No'));
               out.push('- **Privileged:** ' + (record.privileged ? 'Yes' : 'No'));
+              out.push('- **License:** ' + (record.license || '—'));
               out.push('- **Architectures:** ' + ((record.architectures || []).join(', ') || 'amd64'));
               out.push('- **Platforms:** ' + ((record.platforms || []).join(', ') || 'pve'));
               if (record.is_dev) out.push('- **Dev:** Yes');
@@ -554,6 +556,7 @@ jobs:
               out.push('**Links:**');
               out.push('- **Website:** ' + (record.website || '—'));
               out.push('- **Docs:** ' + (record.documentation || '—'));
+              out.push('- **OIDC docs:** ' + (record.oidc_url || '—'));
               out.push('- **Logo:** ' + (record.logo ? '[link](' + record.logo + ')' : '—'));
               out.push('- **GitHub:** ' + (record.github || '—'));
               if (record.config_path) out.push('- **Config:** `' + record.config_path + '`');
@@ -985,6 +988,8 @@ jobs:
                 logo:             'string',
                 documentation:    'string',
                 website:          'string',
+                oidc_url:         'string',
+                license:          'string',
                 project_url:      'string',
                 repository:       'string',
                 config_path:      'string',
