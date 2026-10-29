@@ -155,7 +155,8 @@ function update_script() {
     rm -r /opt/authentik/blueprints
     $STD find /opt/authentik-data -path '*/lost+found' -prune -o -exec chown authentik:authentik {} +
 
-    if [[ $MAJOR == 2026 && $MINOR -lt 8 ]]; then
+    # Also catch installs whose version marker already reads 2026.8.x but whose units were never migrated
+    if [[ $MAJOR == 2026 && $MINOR -lt 8 ]] || grep -q "ExecStart=/opt/authentik/authentik-server" /etc/systemd/system/authentik-server.service; then
 	    msg_info "Updating Worker and Server config (from $MAJOR.$MINOR)"
       cat <<EOF >>/etc/default/authentik-server
 RUST_BACKTRACE=full
