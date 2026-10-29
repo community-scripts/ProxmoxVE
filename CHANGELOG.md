@@ -570,6 +570,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-10-29
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fix(dawarich): serve .mjs MapLibre modules as JavaScript [@ricbaral](https://github.com/ricbaral) ([#18304](https://github.com/community-scripts/ProxmoxVE/pull/18304))
+
 ### 💾 Core
 
   - feat: Performance - load host data in the background and stop reporting failed pre-checks [@MickLesk](https://github.com/MickLesk) ([core#179](https://github.com/community-scripts/core/pull/179))
