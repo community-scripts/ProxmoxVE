@@ -577,6 +577,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - fix(authentik): migrate systemd units when still on pre-2026.8 paths [@CervezaStallone](https://github.com/CervezaStallone) ([#18307](https://github.com/community-scripts/ProxmoxVE/pull/18307))
     - fix(dawarich): serve .mjs MapLibre modules as JavaScript [@ricbaral](https://github.com/ricbaral) ([#18304](https://github.com/community-scripts/ProxmoxVE/pull/18304))
 
+  - #### ✨ New Features
+
+    - VictoriaLogs: enable syslog ingestion on TCP/UDP 514 [@opastorello](https://github.com/opastorello) ([#18300](https://github.com/community-scripts/ProxmoxVE/pull/18300))
+
 ### 💾 Core
 
   - feat: Performance - load host data in the background and stop reporting failed pre-checks [@MickLesk](https://github.com/MickLesk) ([core#179](https://github.com/community-scripts/core/pull/179))
