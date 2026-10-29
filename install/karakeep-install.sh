@@ -24,7 +24,7 @@ $STD apt install -y \
   ffmpeg
 msg_ok "Installed Dependencies"
 
-fetch_and_deploy_gh_release "monolith" "Y2Z/monolith" "singlefile" "latest" "/usr/bin" "monolith-gnu-linux-$(arch_resolve "x86_64" "aarch64")"
+fetch_and_deploy_gh_release "monolith" "Y2Z/monolith" "singlefile" "latest" "/usr/bin" "monolith-cli-linux-$(arch_resolve "x86_64" "aarch64")"
 fetch_and_deploy_gh_release "yt-dlp" "yt-dlp/yt-dlp-nightly-builds" "singlefile" "latest" "/usr/bin" "yt-dlp_linux"
 fetch_and_deploy_gh_release "deno" "denoland/deno" "prebuild" "latest" "/usr/local/bin" "deno-$(uname -m)-unknown-linux-gnu.zip"
 setup_meilisearch
