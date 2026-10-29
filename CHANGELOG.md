@@ -587,6 +587,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - feat: Performance - load host data in the background and stop reporting failed pre-checks [@MickLesk](https://github.com/MickLesk) ([core#179](https://github.com/community-scripts/core/pull/179))
 
+### 📚 Documentation
+
+  - gh: let the bot set oidc_url and license [@MickLesk](https://github.com/MickLesk) ([#18313](https://github.com/community-scripts/ProxmoxVE/pull/18313))
+
 ## 2026-10-28
 
 ### 🆕 New Scripts
