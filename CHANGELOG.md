@@ -574,6 +574,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix(authentik): migrate systemd units when still on pre-2026.8 paths [@CervezaStallone](https://github.com/CervezaStallone) ([#18307](https://github.com/community-scripts/ProxmoxVE/pull/18307))
     - fix(dawarich): serve .mjs MapLibre modules as JavaScript [@ricbaral](https://github.com/ricbaral) ([#18304](https://github.com/community-scripts/ProxmoxVE/pull/18304))
 
 ### 💾 Core
