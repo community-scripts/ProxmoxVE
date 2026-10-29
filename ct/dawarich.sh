@@ -33,6 +33,13 @@ function update_script() {
 
   ensure_dependencies libgeos++-dev libxml2-dev libxslt-dev libjemalloc-dev
 
+  if [[ -f /etc/nginx/sites-available/dawarich.conf ]] && ! grep -q '\.mjs\$' /etc/nginx/sites-available/dawarich.conf; then
+    msg_info "Fixing MapLibre delivery in Nginx"
+    sed -i '/location ~ \^\/(assets|packs)\/ {/i\    location ~ \\.mjs$ {\n        types { }\n        default_type text/javascript;\n        try_files $uri @rails;\n    }\n' /etc/nginx/sites-available/dawarich.conf
+    nginx_enable_site dawarich.conf
+    msg_ok "Fixed MapLibre delivery in Nginx"
+  fi
+
   if check_for_gh_release "dawarich" "Freika/dawarich"; then
     msg_info "Stopping Services"
     systemctl stop dawarich-web dawarich-worker
