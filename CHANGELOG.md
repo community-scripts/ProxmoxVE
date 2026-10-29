@@ -568,6 +568,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-29
+
+### 💾 Core
+
+  - feat: Performance - load host data in the background and stop reporting failed pre-checks [@MickLesk](https://github.com/MickLesk) ([core#179](https://github.com/community-scripts/core/pull/179))
+
 ## 2026-10-28
 
 ### 🆕 New Scripts
