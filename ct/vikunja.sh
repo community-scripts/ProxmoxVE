@@ -47,6 +47,13 @@ function update_script() {
     [[ "$CONFIRM2" =~ ^[yY]$ ]] || exit 0
   fi
 
+  if [[ $(grep -c '^service:' /etc/vikunja/config.yml || true) -gt 1 ]]; then
+    msg_info "Merging duplicate service section in config.yml"
+    sed -i '0,/^service:/!{/^service:/d}' /etc/vikunja/config.yml
+    systemctl restart vikunja
+    msg_ok "Merged duplicate service section in config.yml"
+  fi
+
   if check_for_gh_release "vikunja" "go-vikunja/vikunja"; then
     echo
     msg_warn "The package update may include config file changes."
