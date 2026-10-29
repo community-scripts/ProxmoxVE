@@ -574,6 +574,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Karakeep: fix monolith release asset pattern [@MohamedBassem](https://github.com/MohamedBassem) ([#18317](https://github.com/community-scripts/ProxmoxVE/pull/18317))
     - Vikunja: fold the package's service block into the config's service section [@MickLesk](https://github.com/MickLesk) ([#18311](https://github.com/community-scripts/ProxmoxVE/pull/18311))
     - Stirling-PDF: size JVM heap from container memory, not host RAM [@aashishvanand](https://github.com/aashishvanand) ([#18292](https://github.com/community-scripts/ProxmoxVE/pull/18292))
     - fix(authentik): migrate systemd units when still on pre-2026.8 paths [@CervezaStallone](https://github.com/CervezaStallone) ([#18307](https://github.com/community-scripts/ProxmoxVE/pull/18307))
