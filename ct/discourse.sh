@@ -51,16 +51,33 @@ function update_script() {
   cd /opt/discourse
   export PATH="$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"
   export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+  export BUNDLE_SILENCE_ROOT_WARNING=1
   set -a
   source /opt/discourse/.env
   set +a
   $STD git pull origin main
-  $STD bundle install
+  msg_ok "Updated Discourse"
+
+  # Discourse ships no .ruby-version, the required Ruby is pinned in Gemfile.lock
+  RUBY_TARGET=$(grep -A1 '^RUBY VERSION' /opt/discourse/Gemfile.lock | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)
+  RUBY_VERSION="${RUBY_TARGET:-4.0.7}" RUBY_INSTALL_RAILS="false" setup_ruby
+  export PATH="$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"
+  hash -r
+
+  msg_info "Updating Dependencies"
+  cd /opt/discourse
+  $STD bundle install -j"$(nproc)"
   $STD pnpm install
+  msg_ok "Updated Dependencies"
+
+  msg_info "Running Database Migrations"
   $STD runuser -u postgres -- psql -d discourse -c "CREATE EXTENSION IF NOT EXISTS vector;"
   $STD bundle exec rails db:migrate
+  msg_ok "Ran Database Migrations"
+
+  msg_info "Precompiling Assets"
   $STD bundle exec rails assets:precompile
-  msg_ok "Updated Discourse"
+  msg_ok "Precompiled Assets"
 
   msg_info "Starting Services"
   systemctl start discourse discourse-sidekiq

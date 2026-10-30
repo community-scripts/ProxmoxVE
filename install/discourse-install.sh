@@ -28,9 +28,15 @@ $STD apt install -y \
   redis-server
 msg_ok "Installed Dependencies"
 
+msg_info "Cloning Discourse"
+$STD git clone --depth 1 https://github.com/discourse/discourse.git /opt/discourse
+msg_ok "Cloned Discourse"
+
 PG_VERSION="17" PG_MODULES="pgvector" setup_postgresql
 NODE_VERSION="24" setup_nodejs
-RUBY_VERSION="3.4.4" setup_ruby
+# Discourse ships no .ruby-version, the required Ruby is pinned in Gemfile.lock
+RUBY_TARGET=$(grep -A1 '^RUBY VERSION' /opt/discourse/Gemfile.lock | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)
+RUBY_VERSION="${RUBY_TARGET:-4.0.7}" RUBY_INSTALL_RAILS="false" setup_ruby
 
 msg_info "Configuring PostgreSQL for Discourse"
 DISCOURSE_DB_PASS=$(random_password 13)
@@ -42,7 +48,6 @@ msg_ok "Configured PostgreSQL for Discourse"
 
 msg_info "Configuring Discourse"
 DISCOURSE_SECRET_KEY=$(openssl rand -hex 64)
-$STD git clone --depth 1 https://github.com/discourse/discourse.git /opt/discourse
 cd /opt/discourse
 cat <<EOF >/opt/discourse/.env
 RAILS_ENV=production
@@ -77,6 +82,7 @@ export PATH="$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"
 eval "$(rbenv init - bash)" 2>/dev/null || true
 export RAILS_ENV=production
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+export BUNDLE_SILENCE_ROOT_WARNING=1
 $STD corepack enable
 $STD bundle config set --local deployment true
 $STD bundle config set --local without 'test development'
