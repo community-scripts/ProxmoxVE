@@ -568,6 +568,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-30
+
+### 🆕 New Scripts
+
+  - ChartDB ([#18323](https://github.com/community-scripts/ProxmoxVE/pull/18323))
+
 ## 2026-10-29
 
 ### 🚀 Updated Scripts
