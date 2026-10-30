@@ -572,7 +572,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Blinko ([#18324](https://github.com/community-scripts/ProxmoxVE/pull/18324))
+  - Reconya ([#18325](https://github.com/community-scripts/ProxmoxVE/pull/18325))
+- Blinko ([#18324](https://github.com/community-scripts/ProxmoxVE/pull/18324))
 - ChartDB ([#18323](https://github.com/community-scripts/ProxmoxVE/pull/18323))
 
 ## 2026-10-29
