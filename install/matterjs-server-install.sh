@@ -43,6 +43,7 @@ After=network.target
 [Service]
 Type=simple
 User=root
+Environment=ENABLE_TIME_SYNC=true
 ExecStart=/usr/bin/node /opt/matter-server/node_modules/matter-server/dist/esm/MatterServer.js --storage-path /var/lib/matterjs-server
 Restart=on-failure
 RestartSec=5

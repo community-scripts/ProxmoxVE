@@ -33,6 +33,15 @@ function update_script() {
 
   NODE_VERSION="24" setup_nodejs
 
+  SERVICE_FILE="/etc/systemd/system/matterjs-server.service"
+  if [[ -f "$SERVICE_FILE" ]] && ! grep -Fxq 'Environment=ENABLE_TIME_SYNC=true' "$SERVICE_FILE"; then
+    msg_info "Enabling MatterJS Time Sync"
+    sed -i '/^ExecStart=/i Environment=ENABLE_TIME_SYNC=true' "$SERVICE_FILE"
+    $STD systemctl daemon-reload
+    $STD systemctl restart matterjs-server
+    msg_ok "Enabled MatterJS Time Sync"
+  fi
+
   CURRENT=$(cat /opt/matter-server/node_modules/matter-server/package.json | grep '"version"' | head -1 | sed 's/.*"\([^"]*\)".*/\1/')
   LATEST=$(npm view matter-server version 2>/dev/null)
   if [[ $CURRENT != "$LATEST" ]]; then
@@ -44,6 +53,8 @@ function update_script() {
     cd /opt/matter-server
     $STD npm install matter-server@latest
     msg_ok "Updated ${APP}"
+
+    
 
     msg_info "Starting Service"
     systemctl start matterjs-server
