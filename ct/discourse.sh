@@ -58,13 +58,11 @@ function update_script() {
   $STD git pull origin main
   msg_ok "Updated Discourse"
 
-  # Discourse ships no .ruby-version, the required Ruby is pinned in Gemfile.lock
+  msg_info "Updating Dependencies"
   RUBY_TARGET=$(grep -A1 '^RUBY VERSION' /opt/discourse/Gemfile.lock | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)
   RUBY_VERSION="${RUBY_TARGET:-4.0.7}" RUBY_INSTALL_RAILS="false" setup_ruby
   export PATH="$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH"
   hash -r
-
-  msg_info "Updating Dependencies"
   cd /opt/discourse
   $STD bundle install -j"$(nproc)"
   $STD pnpm install
