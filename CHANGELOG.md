@@ -574,6 +574,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Jellyseerr, Overseerr, Paperless-ngx, Vikunja: skip migration prompts when unattended [@florianpunz](https://github.com/florianpunz) ([#18321](https://github.com/community-scripts/ProxmoxVE/pull/18321))
     - Discourse: track the Ruby version Discourse requires [@MickLesk](https://github.com/MickLesk) ([#18329](https://github.com/community-scripts/ProxmoxVE/pull/18329))
 
   - #### ✨ New Features
