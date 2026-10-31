@@ -22,7 +22,7 @@ PG_DB_NAME="norish" PG_DB_USER="norish" setup_postgresql_db
 PYTHON_VERSION="3.14" setup_uv
 
 fetch_and_deploy_gh_release "norish" "norish-recipes/norish" "tarball"
-NODE_VERSION="22" NODE_MODULE="pnpm@$(jq -r '.packageManager | split("@")[1]' /opt/norish/package.json)" setup_nodejs
+NODE_VERSION="26" NODE_MODULE="pnpm@$(jq -r '.packageManager | split("@")[1]' /opt/norish/package.json)" setup_nodejs
 fetch_and_deploy_gh_release "obscura" "$(sed -n 's#^OBSCURA_REPO=https://github.com/##p' /opt/norish/docker/obscura/pin.env)" "prebuild" "v$(sed -n 's/^OBSCURA_VERSION=//p' /opt/norish/docker/obscura/pin.env)" "/opt/obscura" "obscura-$(arch_resolve "x86_64" "aarch64")-linux-stealth.tar.gz"
 fetch_and_deploy_gh_release "yt-dlp" "yt-dlp/yt-dlp" "singlefile" "latest" "/usr/local/bin" "$(arch_resolve "yt-dlp_linux" "yt-dlp_linux_aarch64")"
 
@@ -75,9 +75,9 @@ Wants=obscura.service
 [Service]
 Type=simple
 User=root
-WorkingDirectory=/opt/norish
+WorkingDirectory=/opt/norish/apps/web
 EnvironmentFile=/opt/norish_data/.env
-ExecStart=/usr/bin/node /opt/norish/dist-server/index.mjs
+ExecStart=/usr/bin/node --import tsx server/index.ts
 Restart=on-failure
 RestartSec=5
 

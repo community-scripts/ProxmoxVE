@@ -37,7 +37,7 @@ function update_script() {
     msg_ok "Stopped Norish"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "norish" "norish-recipes/norish" "tarball"
-    NODE_VERSION="22" NODE_MODULE="pnpm@$(jq -r '.packageManager | split("@")[1]' /opt/norish/package.json)" setup_nodejs
+    NODE_VERSION="26" NODE_MODULE="pnpm@$(jq -r '.packageManager | split("@")[1]' /opt/norish/package.json)" setup_nodejs
     PYTHON_VERSION="3.14" setup_uv
     fetch_and_deploy_gh_release "obscura" "$(sed -n 's#^OBSCURA_REPO=https://github.com/##p' /opt/norish/docker/obscura/pin.env)" "prebuild" "v$(sed -n 's/^OBSCURA_VERSION=//p' /opt/norish/docker/obscura/pin.env)" "/opt/obscura" "obscura-$(arch_resolve "x86_64" "aarch64")-linux-stealth.tar.gz"
     fetch_and_deploy_gh_release "yt-dlp" "yt-dlp/yt-dlp" "singlefile" "latest" "/usr/local/bin" "$(arch_resolve "yt-dlp_linux" "yt-dlp_linux_aarch64")"
@@ -48,6 +48,8 @@ function update_script() {
     $STD uv sync --project /opt/norish/apps/parser-api --locked
     NODE_ENV=production SKIP_ENV_VALIDATION=1 NEXT_TELEMETRY_DISABLED=1 $STD pnpm turbo run build --filter "@norish/web"
     rm -rf /opt/norish/apps/web/.next/cache /opt/norish/apps/web/.next/standalone
+    sed -i -e "s|^WorkingDirectory=.*|WorkingDirectory=/opt/norish/apps/web|" -e "s|^ExecStart=.*|ExecStart=/usr/bin/node --import tsx server/index.ts|" /etc/systemd/system/norish.service
+    systemctl daemon-reload
     msg_ok "Built Norish"
 
     msg_info "Starting Norish"
