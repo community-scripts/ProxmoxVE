@@ -391,24 +391,7 @@ msg_ok "Created VM shell"
 # ==============================================================================
 # DISK IMPORT
 # ==============================================================================
-msg_info "Importing disk into storage ($STORAGE)"
-
-if qm disk import --help >/dev/null 2>&1; then
-  IMPORT_CMD=(qm disk import)
-else
-  IMPORT_CMD=(qm importdisk)
-fi
-
-IMPORT_OUT="$("${IMPORT_CMD[@]}" "$VMID" "$WORK_FILE" "$STORAGE" ${DISK_IMPORT:-} 2>&1 || true)"
-DISK_REF_IMPORTED="$(printf '%s\n' "$IMPORT_OUT" | sed -n "s/.*successfully imported disk '\([^']\+\)'.*/\1/p" | tr -d "\r\"'")"
-[[ -z "$DISK_REF_IMPORTED" ]] && DISK_REF_IMPORTED="$(pvesm list "$STORAGE" | awk -v id="$VMID" '$5 ~ ("vm-"id"-disk-") {print $1":"$5}' | sort | tail -n1)"
-[[ -z "$DISK_REF_IMPORTED" ]] && {
-  msg_error "Unable to determine imported disk reference."
-  echo "$IMPORT_OUT"
-  exit 226
-}
-
-msg_ok "Imported disk (${CL}${BL}${DISK_REF_IMPORTED}${CL})"
+vm_import_disk "$VMID" "$WORK_FILE" "$STORAGE" "${DISK_IMPORT#--format }" || exit 226
 
 # Clean up work file
 rm -f "$WORK_FILE"
@@ -420,7 +403,7 @@ msg_info "Attaching EFI and root disk"
 
 qm set "$VMID" \
   --efidisk0 "${STORAGE}:0,efitype=4m" \
-  --scsi0 "${DISK_REF_IMPORTED},${DISK_CACHE}${THIN%,}" \
+  --scsi0 "${VM_IMPORTED_DISK},${DISK_CACHE}${THIN%,}" \
   --boot order=scsi0 \
   --serial0 socket >/dev/null
 
