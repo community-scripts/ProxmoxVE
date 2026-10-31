@@ -574,6 +574,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Aurral: build the pnpm workspace and run backend/server.ts [@MickLesk](https://github.com/MickLesk) ([#18340](https://github.com/community-scripts/ProxmoxVE/pull/18340))
+    - PS5-MQTT: build the yarn workspace and run the packaged server [@MickLesk](https://github.com/MickLesk) ([#18339](https://github.com/community-scripts/ProxmoxVE/pull/18339))
     - Jellyseerr, Overseerr, Paperless-ngx, Vikunja: skip migration prompts when unattended [@florianpunz](https://github.com/florianpunz) ([#18321](https://github.com/community-scripts/ProxmoxVE/pull/18321))
     - Discourse: track the Ruby version Discourse requires [@MickLesk](https://github.com/MickLesk) ([#18329](https://github.com/community-scripts/ProxmoxVE/pull/18329))
 
