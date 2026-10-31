@@ -574,6 +574,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Docker VM: take the imported disk from vm_import_disk [@MickLesk](https://github.com/MickLesk) ([#18341](https://github.com/community-scripts/ProxmoxVE/pull/18341))
     - Twenty: move to Node.js 26 [@MickLesk](https://github.com/MickLesk) ([#18337](https://github.com/community-scripts/ProxmoxVE/pull/18337))
     - Norish: fetch Obscura from the repo Norish pins [@MickLesk](https://github.com/MickLesk) ([#18338](https://github.com/community-scripts/ProxmoxVE/pull/18338))
     - HAOS VM: take the imported disk from vm_import_disk [@MickLesk](https://github.com/MickLesk) ([#18342](https://github.com/community-scripts/ProxmoxVE/pull/18342))
