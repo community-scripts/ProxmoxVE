@@ -589,6 +589,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Debian VM: keep a static IP without a snippets storage [@MickLesk](https://github.com/MickLesk) ([#18346](https://github.com/community-scripts/ProxmoxVE/pull/18346))
     - Ubuntu VM: check for a snippets storage before building a static-IP VM [@MickLesk](https://github.com/MickLesk) ([#18347](https://github.com/community-scripts/ProxmoxVE/pull/18347))
 
 ### 💾 Core
