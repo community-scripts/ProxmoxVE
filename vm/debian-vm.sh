@@ -191,7 +191,10 @@ if [ "$USE_CLOUD_INIT" == "yes" ] && declare -f setup_cloud_init >/dev/null 2>&1
     "${CLOUDINIT_GW:-}" \
     "${CLOUDINIT_DNS:-${CLOUDINIT_DNS_SERVERS:-1.1.1.1 8.8.8.8}}"
 
-  if [[ "${CLOUDINIT_NETWORK_MODE:-dhcp}" == "static" ]]; then
+  if [[ "${CLOUDINIT_NETWORK_MODE:-dhcp}" == "static" && -z "${CLOUDINIT_SNIPPET_STORAGE:-}" ]] &&
+    ! pvesm status -content snippets 2>/dev/null | awk 'NR > 1 && $3 == "active" {found = 1} END {exit !found}'; then
+    msg_warn "No storage with 'snippets' content: the static IP uses Proxmox's own cloud-init network config"
+  elif [[ "${CLOUDINIT_NETWORK_MODE:-dhcp}" == "static" ]]; then
     setup_cloud_init_network_no_rename \
       "$VMID" \
       "$MAC" \
