@@ -583,7 +583,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - analtics: name the Proxmox tasks when a container stops mid-install [@MickLesk](https://github.com/MickLesk) ([core#184](https://github.com/community-scripts/core/pull/184))
+  - feat: add setup_java_memory: size Java services from the CT's RAM on Proxmox [@MickLesk](https://github.com/MickLesk) ([core#181](https://github.com/community-scripts/core/pull/181))
+- analytics: name the Proxmox tasks when a container stops mid-install [@MickLesk](https://github.com/MickLesk) ([core#184](https://github.com/community-scripts/core/pull/184))
 - PVE: do not abort when the spinner PID file cannot be written [@MickLesk](https://github.com/MickLesk) ([core#183](https://github.com/community-scripts/core/pull/183))
 
 ### 📂 Github
