@@ -581,6 +581,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - MatterJS-Server: Add time sync [@tomfrenzel](https://github.com/tomfrenzel) ([#18330](https://github.com/community-scripts/ProxmoxVE/pull/18330))
 
+### 💾 Core
+
+  - PVE: do not abort when the spinner PID file cannot be written [@MickLesk](https://github.com/MickLesk) ([core#183](https://github.com/community-scripts/core/pull/183))
+
 ### 📂 Github
 
   - Drop the legacy engine copies from misc/ [@MickLesk](https://github.com/MickLesk) ([#18294](https://github.com/community-scripts/ProxmoxVE/pull/18294))
