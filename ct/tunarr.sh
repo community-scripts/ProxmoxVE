@@ -52,13 +52,12 @@ function update_script() {
     systemctl stop tunarr
     msg_ok "Stopped Service"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ersatztv-ffmpeg" "ErsatzTV/ErsatzTV-ffmpeg" "prebuild" "latest" "/opt/ErsatzTV-ffmpeg" "*-linux$(arch_resolve "64" "arm64")-gpl-7.1.tar.xz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ersatztv-ffmpeg" "ErsatzTV/ErsatzTV-ffmpeg" "prebuild" "latest" "/opt/ErsatzTV-ffmpeg" "*-linux$(arch_resolve "64" "arm64")-gpl-8.1.tar.xz"
 
     msg_info "Set ErsatzTV-ffmpeg links"
     chmod +x /opt/ErsatzTV-ffmpeg/bin/*
-    ln -sf /opt/ErsatzTV-ffmpeg/bin/ffmpeg /usr/local/bin/ffmpeg
-    ln -sf /opt/ErsatzTV-ffmpeg/bin/ffplay /usr/local/bin/ffplay
-    ln -sf /opt/ErsatzTV-ffmpeg/bin/ffprobe /usr/local/bin/ffprobe
+    ln -sf /opt/ErsatzTV-ffmpeg/bin/ffmpeg /usr/bin/ffmpeg
+    ln -sf /opt/ErsatzTV-ffmpeg/bin/ffprobe /usr/bin/ffprobe
     msg_ok "ffmpeg links set"
 
     msg_info "Starting Service"
