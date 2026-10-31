@@ -583,7 +583,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - PVE: do not abort when the spinner PID file cannot be written [@MickLesk](https://github.com/MickLesk) ([core#183](https://github.com/community-scripts/core/pull/183))
+  - analtics: name the Proxmox tasks when a container stops mid-install [@MickLesk](https://github.com/MickLesk) ([core#184](https://github.com/community-scripts/core/pull/184))
+- PVE: do not abort when the spinner PID file cannot be written [@MickLesk](https://github.com/MickLesk) ([core#183](https://github.com/community-scripts/core/pull/183))
 
 ### 📂 Github
 
