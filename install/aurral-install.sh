@@ -32,7 +32,7 @@ cd /opt/aurral
 export VITE_APP_VERSION="$(cat ~/.aurral)"
 export VITE_GITHUB_REPO="lklynet/aurral"
 export VITE_RELEASE_CHANNEL="stable"
-$STD pnpm install --frozen-lockfile --config.engine-strict=false
+$STD pnpm install --frozen-lockfile --config.engine-strict=false --filter aurral-frontend --filter aurral-backend
 $STD pnpm --filter aurral-frontend run build
 msg_ok "Built Aurral"
 
