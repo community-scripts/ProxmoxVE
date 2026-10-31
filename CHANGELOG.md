@@ -587,6 +587,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - MatterJS-Server: Add time sync [@tomfrenzel](https://github.com/tomfrenzel) ([#18330](https://github.com/community-scripts/ProxmoxVE/pull/18330))
 
+  - #### 🔧 Refactor
+
+    - Ubuntu VM: check for a snippets storage before building a static-IP VM [@MickLesk](https://github.com/MickLesk) ([#18347](https://github.com/community-scripts/ProxmoxVE/pull/18347))
+
 ### 💾 Core
 
   - feat: add setup_java_memory: size Java services from the CT's RAM on Proxmox [@MickLesk](https://github.com/MickLesk) ([core#181](https://github.com/community-scripts/core/pull/181))
