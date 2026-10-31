@@ -9,7 +9,7 @@ source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_
 APP="PS5-MQTT"
 var_tags="${var_tags:-smarthome;automation}"
 var_cpu="${var_cpu:-1}"
-var_ram="${var_ram:-512}"
+var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-3}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
@@ -37,12 +37,16 @@ function update_script() {
     systemctl stop ps5-mqtt
     msg_ok "Stopped service"
 
-    fetch_and_deploy_gh_release "ps5-mqtt" "FunkeyFlo/ps5-mqtt" "tarball"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ps5-mqtt" "FunkeyFlo/ps5-mqtt" "tarball"
 
     msg_info "Configuring ${APP}"
-    cd /opt/ps5-mqtt/ps5-mqtt/
-    $STD npm install
-    $STD npm run build
+    cd /opt/ps5-mqtt
+    $STD corepack yarn install --immutable
+    $STD env PREPARE_ONLY=1 corepack yarn workspace @ps5-mqtt/server run package
+    cd /opt/ps5-mqtt/ps5-mqtt/server/.packaged/server
+    $STD npm install --omit=dev --omit=optional
+    sed -i 's|^WorkingDirectory=.*|WorkingDirectory=/opt/ps5-mqtt/ps5-mqtt/server/.packaged|' /etc/systemd/system/ps5-mqtt.service
+    systemctl daemon-reload
     msg_ok "Configured ${APP}"
 
     msg_info "Starting service"
