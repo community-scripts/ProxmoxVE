@@ -37,12 +37,16 @@ function update_script() {
     systemctl stop ps5-mqtt
     msg_ok "Stopped service"
 
-    fetch_and_deploy_gh_release "ps5-mqtt" "FunkeyFlo/ps5-mqtt" "tarball"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ps5-mqtt" "FunkeyFlo/ps5-mqtt" "tarball"
 
     msg_info "Configuring ${APP}"
-    cd /opt/ps5-mqtt/ps5-mqtt/
-    $STD npm install
-    $STD npm run build
+    cd /opt/ps5-mqtt
+    $STD corepack yarn install --immutable
+    $STD env PREPARE_ONLY=1 corepack yarn workspace @ps5-mqtt/server run package
+    cd /opt/ps5-mqtt/ps5-mqtt/server/.packaged/server
+    $STD npm install --omit=dev --omit=optional
+    sed -i 's|^WorkingDirectory=.*|WorkingDirectory=/opt/ps5-mqtt/ps5-mqtt/server/.packaged|' /etc/systemd/system/ps5-mqtt.service
+    systemctl daemon-reload
     msg_ok "Configured ${APP}"
 
     msg_info "Starting service"
