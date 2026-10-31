@@ -38,6 +38,7 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "aurral" "lklynet/aurral" "tarball"
     NODE_VERSION="26" NODE_MODULE="pnpm" setup_nodejs
+    ensure_dependencies git
 
     msg_info "Updating Aurral"
     cd /opt/aurral
