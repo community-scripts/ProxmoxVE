@@ -568,6 +568,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-10-31
+
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - MatterJS-Server: Add time sync [@tomfrenzel](https://github.com/tomfrenzel) ([#18330](https://github.com/community-scripts/ProxmoxVE/pull/18330))
+
 ## 2026-10-30
 
 ### 🆕 New Scripts
