@@ -572,6 +572,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Discourse: track the Ruby version Discourse requires [@MickLesk](https://github.com/MickLesk) ([#18329](https://github.com/community-scripts/ProxmoxVE/pull/18329))
+
   - #### ✨ New Features
 
     - MatterJS-Server: Add time sync [@tomfrenzel](https://github.com/tomfrenzel) ([#18330](https://github.com/community-scripts/ProxmoxVE/pull/18330))
