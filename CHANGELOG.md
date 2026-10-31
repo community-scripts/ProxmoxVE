@@ -574,6 +574,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - HAOS VM: take the imported disk from vm_import_disk [@MickLesk](https://github.com/MickLesk) ([#18342](https://github.com/community-scripts/ProxmoxVE/pull/18342))
     - Aurral: build the pnpm workspace and run backend/server.ts [@MickLesk](https://github.com/MickLesk) ([#18340](https://github.com/community-scripts/ProxmoxVE/pull/18340))
     - PS5-MQTT: build the yarn workspace and run the packaged server [@MickLesk](https://github.com/MickLesk) ([#18339](https://github.com/community-scripts/ProxmoxVE/pull/18339))
     - Jellyseerr, Overseerr, Paperless-ngx, Vikunja: skip migration prompts when unattended [@florianpunz](https://github.com/florianpunz) ([#18321](https://github.com/community-scripts/ProxmoxVE/pull/18321))
