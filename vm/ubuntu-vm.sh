@@ -130,6 +130,12 @@ vm_prompt_cloud_init "ubuntu"
 if [ "$USE_CLOUD_INIT" != "yes" ]; then
   msg_warn "Without Cloud-Init this Ubuntu image gets no network configuration or credentials; configure them in the guest yourself."
 fi
+if [[ "$USE_CLOUD_INIT" == "yes" && "${CLOUDINIT_NETWORK_MODE:-dhcp}" == "static" && -z "${CLOUDINIT_SNIPPET_STORAGE:-}" ]] &&
+  ! pvesm status -content snippets 2>/dev/null | awk 'NR > 1 && $3 == "active" {found = 1} END {exit !found}'; then
+  msg_error "A static IP needs a storage with 'snippets' content, and none is active"
+  msg_warn "Enable Snippets under Datacenter > Storage on a directory storage, or choose DHCP"
+  exit 1
+fi
 post_to_api_vm
 vm_select_storage "$HN"
 vm_define_disk_references 2
