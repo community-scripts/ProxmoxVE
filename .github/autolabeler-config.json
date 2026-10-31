@@ -77,17 +77,6 @@
       "excludeGlobs": []
     }
   ],
-  "core": [
-    {
-      "fileStatus": null,
-      "includeGlobs": [
-        "misc/*.func"
-      ],
-      "excludeGlobs": [
-        "misc/api.func"
-      ]
-    }
-  ],
   "documentation": [
     {
       "fileStatus": null,
@@ -114,8 +103,7 @@
     {
       "fileStatus": null,
       "includeGlobs": [
-        "api/**",
-        "misc/api.func"
+        "api/**"
       ],
       "excludeGlobs": []
     }

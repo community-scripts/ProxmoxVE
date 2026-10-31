@@ -1,6 +1,6 @@
 <div align="center">
-  <a href="misc/images/community-scripts.svg"><img src="misc/images/community-scripts.png" width="112" height="112" alt="Community Scripts — Proxmox VE logo" /></a>
-  <!-- Editable artwork: misc/images/community-scripts.svg; PNG export: 512 × 512. -->
+  <a href=".github/assets/community-scripts.svg"><img src=".github/assets/community-scripts.png" width="112" height="112" alt="Community Scripts — Proxmox VE logo" /></a>
+  <!-- Editable artwork: .github/assets/community-scripts.svg; PNG export: 512 × 512. -->
 
   <h1>Community Scripts — Proxmox VE</h1>
   <p><strong>One-command installations for services, containers and VMs on Proxmox VE</strong><br/>
@@ -104,7 +104,6 @@ Virtual machine scripts need the same versions as containers.
 | `vm/` | Virtual machine scripts |
 | `tools/pve/` | Host tooling: post-install, hardware passthrough, maintenance |
 | `turnkey/` | TurnKey Linux appliance helper |
-| `misc/` | Legacy engine copies — current scripts load [core](https://github.com/community-scripts/core) at runtime, so changes here never reach a running install |
 
 Application metadata — name, description, logo, tags — is managed on the website,
 not in this repository. Use the **Report Issue** link on any script page to
