@@ -54,8 +54,6 @@ function update_script() {
     $STD npm install matter-server@latest
     msg_ok "Updated ${APP}"
 
-    
-
     msg_info "Starting Service"
     systemctl start matterjs-server
     msg_ok "Started Service"
