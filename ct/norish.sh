@@ -39,7 +39,7 @@ function update_script() {
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "norish" "norish-recipes/norish" "tarball"
     NODE_VERSION="22" NODE_MODULE="pnpm@$(jq -r '.packageManager | split("@")[1]' /opt/norish/package.json)" setup_nodejs
     PYTHON_VERSION="3.14" setup_uv
-    fetch_and_deploy_gh_release "obscura" "h4ckf0r0day/obscura" "prebuild" "v$(sed -n 's/^OBSCURA_VERSION=//p' /opt/norish/docker/obscura/pin.env)" "/opt/obscura" "obscura-$(arch_resolve "x86_64" "aarch64")-linux-stealth.tar.gz"
+    fetch_and_deploy_gh_release "obscura" "$(sed -n 's#^OBSCURA_REPO=https://github.com/##p' /opt/norish/docker/obscura/pin.env)" "prebuild" "v$(sed -n 's/^OBSCURA_VERSION=//p' /opt/norish/docker/obscura/pin.env)" "/opt/obscura" "obscura-$(arch_resolve "x86_64" "aarch64")-linux-stealth.tar.gz"
     fetch_and_deploy_gh_release "yt-dlp" "yt-dlp/yt-dlp" "singlefile" "latest" "/usr/local/bin" "$(arch_resolve "yt-dlp_linux" "yt-dlp_linux_aarch64")"
 
     msg_info "Building Norish"
