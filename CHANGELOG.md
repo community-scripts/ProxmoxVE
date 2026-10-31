@@ -581,6 +581,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - MatterJS-Server: Add time sync [@tomfrenzel](https://github.com/tomfrenzel) ([#18330](https://github.com/community-scripts/ProxmoxVE/pull/18330))
 
+### 📂 Github
+
+  - Drop the legacy engine copies from misc/ [@MickLesk](https://github.com/MickLesk) ([#18294](https://github.com/community-scripts/ProxmoxVE/pull/18294))
+
 ## 2026-10-30
 
 ### 🆕 New Scripts
