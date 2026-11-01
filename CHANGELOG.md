@@ -575,7 +575,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - CachyOS VM ([#18368](https://github.com/community-scripts/ProxmoxVE/pull/18368))
+  - Amazon Linux ([#18369](https://github.com/community-scripts/ProxmoxVE/pull/18369))
+- CachyOS VM ([#18368](https://github.com/community-scripts/ProxmoxVE/pull/18368))
 - Razzia ([#18366](https://github.com/community-scripts/ProxmoxVE/pull/18366))
 
 ### 🚀 Updated Scripts
