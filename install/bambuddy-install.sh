@@ -29,7 +29,7 @@ msg_ok "Set up Python Environment"
 
 msg_info "Building Frontend"
 cd /opt/bambuddy/frontend
-$STD npm install
+$STD npm ci --allow-remote=all
 $STD npm run build
 msg_ok "Built Frontend"
 
