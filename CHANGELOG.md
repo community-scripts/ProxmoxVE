@@ -573,6 +573,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-01
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - fix(zerobyte): build the bundled local agent [@nicotsx](https://github.com/nicotsx) ([#18363](https://github.com/community-scripts/ProxmoxVE/pull/18363))
+
 ## 2026-10-31
 
 ### 🚀 Updated Scripts
