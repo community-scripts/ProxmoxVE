@@ -573,6 +573,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-01
 
+### 🆕 New Scripts
+
+  - Razzia ([#18366](https://github.com/community-scripts/ProxmoxVE/pull/18366))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
