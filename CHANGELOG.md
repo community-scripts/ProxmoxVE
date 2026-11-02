@@ -584,7 +584,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - fix: do not wait forever for verbose output a daemon keeps open [@MickLesk](https://github.com/MickLesk) ([core#185](https://github.com/community-scripts/core/pull/185))
+  - github: trim theater, add signal to the engine bug report; move AI block to end of PR template [@MickLesk](https://github.com/MickLesk) ([core#186](https://github.com/community-scripts/core/pull/186))
+- fix: do not wait forever for verbose output a daemon keeps open [@MickLesk](https://github.com/MickLesk) ([core#185](https://github.com/community-scripts/core/pull/185))
 
 ## 2026-11-01
 
