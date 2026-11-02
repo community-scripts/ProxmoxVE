@@ -58,9 +58,9 @@ body:
 
         Before continuing, verify that the requested project meets the minimum requirements below.
 
-        **Projects with fewer than 1,000 stars are generally not eligible for a script request.**
+        **Projects with fewer than 1,000 stars, or younger than 6 months, are generally not eligible for a script request.**
 
-        Exceptions are only considered where there is a clearly verifiable, significant public adoption signal.
+        An automated check verifies the star count and project age for GitHub-hosted projects. If the project doesn't meet these requirements, fill in **Justification for an exception** below — without one, the request is closed automatically. With one, it's flagged for manual review instead. Exceptions are rare and require a clearly verifiable, significant public adoption signal.
 
   - type: input
     id: repository-stars
@@ -133,6 +133,22 @@ body:
           required: true
         - label: I understand that requests outside the project scope may be closed without an extensive explanation.
           required: true
+
+  - type: textarea
+    id: justification
+    attributes:
+      label: Justification for an exception
+      description: >-
+        Only needed if the project has fewer than 1,000 stars or is younger than 6 months (e.g. it has no GitHub
+        presence, so stars don't apply). Explain the significant public adoption signal. Leave blank if the project
+        meets the normal requirements — requests that don't meet the requirements and have no justification here are
+        closed automatically.
+      placeholder: |
+        Example:
+        No public GitHub repository, but the project has 50k+ active installs reported by its own telemetry
+        dashboard and is covered by several established self-hosting publications.
+    validations:
+      required: false
 
   - type: markdown
     attributes:

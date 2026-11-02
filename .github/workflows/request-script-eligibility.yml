@@ -1,0 +1,141 @@
+name: Request Script Eligibility Check
+
+# category.slug is the same string GitHub uses in the "new discussion" URL
+# (?category=request-script, linked from every repo's issue chooser), so this
+# guard matches the live category without needing its numeric id.
+on:
+  discussion:
+    types: [created, edited, reopened]
+
+jobs:
+  check-eligibility:
+    if: github.repository == 'community-scripts/ProxmoxVE' && github.event.discussion.category.slug == 'request-script'
+    runs-on: ubuntu-latest
+    permissions:
+      discussions: write
+      issues: write
+      contents: read
+    steps:
+      - name: Verify stars/age, flag or close
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const discussion = context.payload.discussion;
+
+            if (!discussion || discussion.state === "closed") {
+              core.info("Discussion missing or already closed — skipping.");
+              return;
+            }
+
+            const body = discussion.body || "";
+            const lines = body.split("\n");
+            const fields = {};
+            let current = null;
+            for (const line of lines) {
+              const m = line.match(/^###\s+(.+?)\s*$/);
+              if (m) {
+                current = m[1].trim();
+                fields[current] = [];
+              } else if (current) {
+                fields[current].push(line);
+              }
+            }
+            function fieldText(label) {
+              const raw = (fields[label] || []).join("\n").trim();
+              return raw === "_No response_" ? "" : raw;
+            }
+
+            const sourceRepo = fieldText("Source Repository");
+            const justification = fieldText("Justification for an exception");
+
+            let eligible = false;
+            let verified = false;
+            const ghMatch = sourceRepo.match(/^https?:\/\/(?:www\.)?github\.com\/([^\/\s]+)\/([^\/\s#?]+?)(?:\.git)?\/?(?:[#?].*)?$/i);
+
+            if (ghMatch) {
+              const [, repoOwner, repoName] = ghMatch;
+              try {
+                const { data: repoData } = await github.rest.repos.get({ owner: repoOwner, repo: repoName });
+                const stars = repoData.stargazers_count;
+                const createdAt = new Date(repoData.created_at);
+                const now = new Date();
+                const ageMonths =
+                  (now.getFullYear() - createdAt.getFullYear()) * 12 +
+                  (now.getMonth() - createdAt.getMonth()) -
+                  (now.getDate() < createdAt.getDate() ? 1 : 0);
+                eligible = stars >= 1000 && ageMonths >= 6;
+                verified = true;
+                core.info(`Verified ${repoOwner}/${repoName}: ${stars} stars, ${ageMonths} months old, eligible=${eligible}`);
+              } catch (err) {
+                core.warning(`Could not verify ${repoOwner}/${repoName}: ${err.message} — treating as unverifiable.`);
+              }
+            } else {
+              core.info("Source Repository is not a github.com URL — cannot auto-verify, treating as unverifiable.");
+            }
+
+            if (eligible) {
+              core.info(`Discussion #${discussion.number} meets the requirements — no action.`);
+              return;
+            }
+
+            const labels = (discussion.labels || []).map(l => l.name);
+            const reasonLine = verified
+              ? "the source repository does not meet the 1,000-star / 6-month minimum adoption requirement"
+              : "the source repository's star count and age could not be verified automatically";
+
+            if (justification) {
+              if (labels.includes("investigation")) {
+                core.info(`Discussion #${discussion.number} already flagged for investigation — skipping.`);
+                return;
+              }
+
+              try {
+                await github.rest.issues.createLabel({
+                  owner, repo, name: "investigation",
+                  color: "fbca04",
+                  description: "Below the normal script-request threshold; a justification was given and needs maintainer review.",
+                });
+              } catch (err) {
+                if (err.status !== 422) throw err;
+              }
+
+              const labelQuery = await github.graphql(
+                `query($owner: String!, $repo: String!) { repository(owner: $owner, name: $repo) { label(name: "investigation") { id } } }`,
+                { owner, repo }
+              );
+              const labelNodeId = labelQuery.repository.label.id;
+
+              await github.graphql(
+                `mutation($labelableId: ID!, $labelIds: [ID!]!) { addLabelsToLabelable(input: { labelableId: $labelableId, labelIds: $labelIds }) { clientMutationId } }`,
+                { labelableId: discussion.node_id, labelIds: [labelNodeId] }
+              );
+
+              await github.graphql(
+                `mutation($discussionId: ID!, $body: String!) { addDiscussionComment(input: { discussionId: $discussionId, body: $body }) { comment { id } } }`,
+                {
+                  discussionId: discussion.node_id,
+                  body:
+                    `Thanks for the justification — ${reasonLine}, so this has been flagged \`investigation\` for a maintainer ` +
+                    `to review manually rather than closed automatically.`,
+                }
+              );
+            } else {
+              await github.graphql(
+                `mutation($discussionId: ID!, $body: String!) { addDiscussionComment(input: { discussionId: $discussionId, body: $body }) { comment { id } } }`,
+                {
+                  discussionId: discussion.node_id,
+                  body:
+                    `This request doesn't meet the minimum requirements (1,000 stars, project at least 6 months old) — ` +
+                    `${reasonLine}, and no justification was given. Closing automatically.\n\n` +
+                    `If you believe this project qualifies for an exception, edit this discussion to fill in ` +
+                    `**Justification for an exception** and reopen it — it will then be flagged for manual review instead of closed again.`,
+                }
+              );
+
+              await github.graphql(
+                `mutation($discussionId: ID!) { closeDiscussion(input: { discussionId: $discussionId, reason: OUTDATED }) { discussion { id } } }`,
+                { discussionId: discussion.node_id }
+              );
+            }
