@@ -39,6 +39,7 @@ function update_script() {
     create_backup /opt/anchor/.env
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "anchor" "ZhFahim/anchor" "tarball"
+    NODE_VERSION="26" NODE_MODULE="pnpm" setup_nodejs
 
     msg_info "Building Server"
     cd /opt/anchor/server
