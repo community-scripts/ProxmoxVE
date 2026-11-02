@@ -37,10 +37,9 @@ function update_script() {
     msg_ok "Stopped Service"
 
     create_backup /opt/nametag/.env
-
     CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="data" fetch_and_deploy_gh_release "nametag" "mattogodoy/nametag" "tarball" "latest" "/opt/nametag"
-
     restore_backup
+    NODE_VERSION="24" setup_nodejs
 
     msg_info "Rebuilding Application"
     cd /opt/nametag
