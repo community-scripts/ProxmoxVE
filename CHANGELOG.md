@@ -571,6 +571,15 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-11-02
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - guardian: bump Node.js from 24 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18375](https://github.com/community-scripts/ProxmoxVE/pull/18375))
+    - nametag: bump Node.js from 20 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18376](https://github.com/community-scripts/ProxmoxVE/pull/18376))
+
 ## 2026-11-01
 
 ### 🆕 New Scripts
