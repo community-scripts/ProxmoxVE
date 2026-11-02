@@ -15,7 +15,7 @@ update_os
 
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="nametag_db" PG_DB_USER="nametag" setup_postgresql_db
-NODE_VERSION="20" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 fetch_and_deploy_gh_release "nametag" "mattogodoy/nametag" "tarball" "latest" "/opt/nametag"
 
 msg_info "Setting up Application"
