@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y sqlite3
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="24" setup_nodejs
+NODE_VERSION="26" setup_nodejs
 fetch_and_deploy_gh_release "guardian" "HydroshieldMKII/Guardian" "tarball" "latest" "/opt/guardian"
 
 msg_info "Configuring ${APPLICATION}"
