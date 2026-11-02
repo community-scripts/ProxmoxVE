@@ -11,21 +11,9 @@ var_tags="${var_tags:-files;storage}"
 var_cpu="${var_cpu:-1}"
 var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
-if [[ -z "${var_os:-}" ]] && command -v pveversion >/dev/null 2>&1; then
-  var_os=$(msg_menu "Choose the container OS" \
-    "debian" "Debian 13" \
-    "alpine" "Alpine 3.24 (smaller)")
-fi
-
-if [[ "${var_os:-}" == "alpine" ]]; then
-  var_ram="${var_ram:-512}"
-  var_disk="${var_disk:-4}"
-  var_version="${var_version:-3.24}"
-else
-  var_ram="${var_ram:-1024}"
-  var_disk="${var_disk:-6}"
-  var_version="${var_version:-13}"
-fi
+var_ram="${var_ram:-1024}"
+var_disk="${var_disk:-6}"
+var_version="${var_version:-13}"
 
 header_info "$APP"
 variables
