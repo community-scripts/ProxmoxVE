@@ -102,6 +102,7 @@ function update_script() {
   fi
   msg_ok "Ensured ASP.NET Core Runtime"
 
+  rm -rf /opt/fileflows/{Server,FlowRunner,Libraries,Agent}
   fetch_and_deploy_from_url "https://fileflows.com/downloads/ff-latest.tar.xz" "/opt/fileflows"
 
   msg_info "Starting Service"
