@@ -581,6 +581,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - guardian: bump Node.js from 24 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18375](https://github.com/community-scripts/ProxmoxVE/pull/18375))
     - nametag: bump Node.js from 20 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18376](https://github.com/community-scripts/ProxmoxVE/pull/18376))
 
+### 💾 Core
+
+  - fix: do not wait forever for verbose output a daemon keeps open [@MickLesk](https://github.com/MickLesk) ([core#185](https://github.com/community-scripts/core/pull/185))
+
 ## 2026-11-01
 
 ### 🆕 New Scripts
