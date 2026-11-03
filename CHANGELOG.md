@@ -581,7 +581,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - fix: keep a piped stdin when output moves to the log after a hangup [@MickLesk](https://github.com/MickLesk) ([core#193](https://github.com/community-scripts/core/pull/193))
+  - ref: give a host tool one log file for the whole run [@MickLesk](https://github.com/MickLesk) ([core#194](https://github.com/community-scripts/core/pull/194))
+- fix: keep a piped stdin when output moves to the log after a hangup [@MickLesk](https://github.com/MickLesk) ([core#193](https://github.com/community-scripts/core/pull/193))
 - fix: pve-LXC: say when the container went away during its setup [@MickLesk](https://github.com/MickLesk) ([core#192](https://github.com/community-scripts/core/pull/192))
 - fix: treat Esc in a VM wizard dialog as leaving the script [@MickLesk](https://github.com/MickLesk) ([core#190](https://github.com/community-scripts/core/pull/190))
 - ref: count a container stopped during a detached install as an abort [@MickLesk](https://github.com/MickLesk) ([core#187](https://github.com/community-scripts/core/pull/187))
