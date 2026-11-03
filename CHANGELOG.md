@@ -599,7 +599,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Privilege-Converter: offer only container-capable storages as the converter's restore target [@MickLesk](https://github.com/MickLesk) ([#18415](https://github.com/community-scripts/ProxmoxVE/pull/18415))
     - let post-pve-install go on when legacy sources are kept [@MickLesk](https://github.com/MickLesk) ([#18403](https://github.com/community-scripts/ProxmoxVE/pull/18403))
+
+  - #### 🔧 Refactor
+
+    - fstrim: keep trimming when pct fstrim fails on one container [@MickLesk](https://github.com/MickLesk) ([#18413](https://github.com/community-scripts/ProxmoxVE/pull/18413))
+    - execute-lxc: do not abort on a container that is not Debian or Ubuntu [@MickLesk](https://github.com/MickLesk) ([#18414](https://github.com/community-scripts/ProxmoxVE/pull/18414))
 
 ## 2026-11-02
 
