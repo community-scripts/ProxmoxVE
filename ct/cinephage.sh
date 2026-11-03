@@ -48,7 +48,7 @@ function update_script() {
     msg_ok "Built Cinephage"
 
     msg_info "Updating Camoufox"
-    $STD /opt/cinephage/node_modules/.bin/camoufox-js fetch
+    $STD /opt/cinephage/node_modules/.bin/camoufox fetch
     msg_ok "Updated Camoufox"
 
     msg_info "Starting Cinephage"
