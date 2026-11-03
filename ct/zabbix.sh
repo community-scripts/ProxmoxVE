@@ -88,11 +88,11 @@ function update_script() {
   ZABBIX_REPO_DIR="debian"
   [[ "$ZABBIX_VERSION" == "7.0" && "$(arch_resolve)" == "arm64" ]] && ZABBIX_REPO_DIR="debian-arm64"
   if [[ "$ZABBIX_VERSION" == "7.0" ]]; then
-    ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/${ZABBIX_REPO_DIR}/pool/main/z/zabbix-release/zabbix-release_latest_${ZABBIX_VERSION}+debian13_all.deb"
-    ZABBIX_DEB_FILE="zabbix-release_latest_${ZABBIX_VERSION}+debian13_all.deb"
+    ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/${ZABBIX_REPO_DIR}/pool/main/z/zabbix-release/zabbix-release_latest_${ZABBIX_VERSION}+debian$(get_os_version_major)_all.deb"
+    ZABBIX_DEB_FILE="zabbix-release_latest_${ZABBIX_VERSION}+debian$(get_os_version_major)_all.deb"
   else
-    ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/release/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian13_all.deb"
-    ZABBIX_DEB_FILE="zabbix-release_latest+debian13_all.deb"
+    ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/release/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian$(get_os_version_major)_all.deb"
+    ZABBIX_DEB_FILE="zabbix-release_latest+debian$(get_os_version_major)_all.deb"
   fi
 
   curl -fsSL "$ZABBIX_DEB_URL" -o /tmp/"$ZABBIX_DEB_FILE"
@@ -100,7 +100,7 @@ function update_script() {
   rm -rf /tmp/zabbix-release_*.deb
   apt_update_safe
 
-  $STD apt install --only-upgrade -y zabbix-server-pgsql zabbix-frontend-php php8.4-pgsql
+  $STD apt install --only-upgrade -y zabbix-server-pgsql zabbix-frontend-php php-pgsql
 
   if [[ "$AGENT_SERVICE" == "zabbix-agent2" ]]; then
     $STD apt install --only-upgrade -y zabbix-agent2 zabbix-agent2-plugin-postgresql

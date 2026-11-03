@@ -36,17 +36,17 @@ cd /tmp
 ZABBIX_REPO_DIR="debian"
 [[ "$ZABBIX_VERSION" == "7.0" && "$(arch_resolve)" == "arm64" ]] && ZABBIX_REPO_DIR="debian-arm64"
 if [[ "$ZABBIX_VERSION" == "7.0" ]]; then
-  ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/${ZABBIX_REPO_DIR}/pool/main/z/zabbix-release/zabbix-release_latest_${ZABBIX_VERSION}+debian13_all.deb"
-  ZABBIX_DEB_FILE="zabbix-release_latest_${ZABBIX_VERSION}+debian13_all.deb"
+  ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/${ZABBIX_REPO_DIR}/pool/main/z/zabbix-release/zabbix-release_latest_${ZABBIX_VERSION}+debian$(get_os_version_major)_all.deb"
+  ZABBIX_DEB_FILE="zabbix-release_latest_${ZABBIX_VERSION}+debian$(get_os_version_major)_all.deb"
 else
-  ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/release/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian13_all.deb"
-  ZABBIX_DEB_FILE="zabbix-release_latest+debian13_all.deb"
+  ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/release/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian$(get_os_version_major)_all.deb"
+  ZABBIX_DEB_FILE="zabbix-release_latest+debian$(get_os_version_major)_all.deb"
 fi
 
 curl -fsSL "$ZABBIX_DEB_URL" -o /tmp/"$ZABBIX_DEB_FILE"
 $STD dpkg -i /tmp/"$ZABBIX_DEB_FILE"
 apt_update_safe
-$STD apt install -y zabbix-server-pgsql zabbix-frontend-php php8.4-pgsql zabbix-apache-conf zabbix-sql-scripts
+$STD apt install -y zabbix-server-pgsql zabbix-frontend-php php-pgsql zabbix-apache-conf zabbix-sql-scripts
 
 if [[ "$ZABBIX_VERSION" == "7.0" ]]; then
   ZABBIX_SQL="/usr/share/zabbix-sql-scripts/postgresql/server.sql.gz"
