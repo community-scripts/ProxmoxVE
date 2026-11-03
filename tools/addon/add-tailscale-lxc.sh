@@ -65,6 +65,28 @@ while [[ -z "${CTID}" ]]; do
     "${CTID_MENU[@]}" 3>&1 1>&2 2>&3) || exit 0
 done
 
+if [[ "$(pct status "$CTID" | awk '{print $2}')" != "running" ]]; then
+  msg_info "Starting CT $CTID"
+  pct start "$CTID"
+  for _ in {1..30}; do
+    pct exec "$CTID" -- sh -c 'ip route 2>/dev/null | grep -q "^default"' && break
+    sleep 1
+  done
+  msg_ok "Started CT $CTID"
+fi
+
+CT_OS=$(pct exec "$CTID" -- sh -c '. /etc/os-release 2>/dev/null; echo "${ID:-}"')
+case "$CT_OS" in
+debian | ubuntu) ;;
+alpine)
+  pct exec "$CTID" -- sh -c 'command -v bash >/dev/null 2>&1 || apk add --no-cache bash >/dev/null'
+  ;;
+*)
+  msg_error "CT $CTID runs ${CT_OS:-an unknown OS}. This add-on supports Debian, Ubuntu and Alpine containers."
+  exit 238
+  ;;
+esac
+
 CTID_CONFIG_PATH="/etc/pve/lxc/${CTID}.conf"
 
 # Skip if already configured
