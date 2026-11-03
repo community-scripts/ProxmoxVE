@@ -42,7 +42,7 @@ require_debian_like
 function uninstall() {
   msg_info "Uninstalling Homebrew"
 
-  BREW_USER=$(awk -F: '$3 >= 1000 && $3 < 65534 { print $1; exit }' /etc/passwd)
+  BREW_USER=$(awk -F: '$3 >= 1000 && $3 < 65534 && $7 !~ /(nologin|false)$/ { print $1; exit }' /etc/passwd)
   if [[ -n "$BREW_USER" ]]; then
     BREW_USER_HOME=$(getent passwd "$BREW_USER" | cut -d: -f6)
     for rc_file in "$BREW_USER_HOME/.bashrc" "$BREW_USER_HOME/.profile"; do
@@ -64,7 +64,7 @@ function uninstall() {
 # ==============================================================================
 function install() {
   msg_info "Detecting Non-Root User"
-  BREW_USER=$(awk -F: '$3 >= 1000 && $3 < 65534 { print $1; exit }' /etc/passwd)
+  BREW_USER=$(awk -F: '$3 >= 1000 && $3 < 65534 && $7 !~ /(nologin|false)$/ { print $1; exit }' /etc/passwd)
   if [[ -z "$BREW_USER" ]]; then
     msg_warn "No non-root user found (uid >= 1000). Homebrew cannot run as root."
     read -r -p "${TAB}Create a 'brew' user automatically? (y/N): " create_user_prompt
@@ -81,7 +81,7 @@ function install() {
   msg_ok "Detected User: $BREW_USER"
 
   msg_info "Installing Dependencies"
-  $STD apt update
+  apt_update_safe
   $STD apt install -y build-essential git file procps
   msg_ok "Installed Dependencies"
 
