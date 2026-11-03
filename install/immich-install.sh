@@ -18,6 +18,11 @@ if is_debian && [[ "$(get_os_version_major)" -lt 13 ]]; then
   exit 238
 fi
 
+if [[ "$(arch_resolve)" == "amd64" ]] && ! grep -qm1 sse4_2 /proc/cpuinfo; then
+  msg_error "Immich needs a CPU with SSE4.2: its web build stops with 'Illegal instruction' on older ones."
+  exit 236
+fi
+
 RELEASE="v3.3.5"
 if lscpu | grep -q 'GenuineIntel'; then
   echo ""
@@ -108,6 +113,7 @@ $STD apt install --no-install-recommends -y \
   libhwy-dev \
   libwebp-dev \
   libaom-dev \
+  unzip \
   ccache
 
 setup_deb822_repo \
@@ -128,6 +134,28 @@ if [[ "$CTTYPE" == "0" && -d /dev/dri ]]; then
   $STD adduser "$(id -u -n)" render 2>/dev/null || true
 fi
 msg_ok "Dependencies Installed"
+
+INSTALL_DIR="/opt/${APPLICATION}"
+UPLOAD_DIR="${INSTALL_DIR}/upload"
+SRC_DIR="${INSTALL_DIR}/source"
+APP_DIR="${INSTALL_DIR}/app"
+PLUGIN_DIR="${APP_DIR}/plugins/immich-plugin-core"
+ML_DIR="${APP_DIR}/machine-learning"
+GEO_DIR="${INSTALL_DIR}/geodata"
+mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
+
+msg_info "Installing GeoNames data"
+cd "$GEO_DIR"
+curl_with_retry "https://download.geonames.org/export/dump/admin1CodesASCII.txt" "admin1CodesASCII.txt"
+curl_with_retry "https://download.geonames.org/export/dump/admin2Codes.txt" "admin2Codes.txt"
+curl_with_retry "https://download.geonames.org/export/dump/countryInfo.txt" "countryInfo.txt"
+curl_with_retry "https://download.geonames.org/export/dump/cities500.zip" "cities500.zip"
+curl_with_retry "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/v5.1.2/geojson/ne_10m_admin_0_countries.geojson" "ne_10m_admin_0_countries.geojson"
+unzip -q cities500.zip
+date --iso-8601=seconds | tr -d "\n" >geodata-date.txt
+rm cities500.zip
+cd ~
+msg_ok "Installed GeoNames data"
 
 MISE_ARCH="x64"
 [[ "$(arch_resolve)" == "arm64" ]] && MISE_ARCH="arm64"
@@ -167,7 +195,7 @@ ACTUAL_PG_VERSION=$(ls /etc/postgresql/ 2>/dev/null | sort -V | tail -1)
 ACTUAL_PG_VERSION=${ACTUAL_PG_VERSION:-16}
 
 VCHORD_RELEASE="1.1.1"
-fetch_and_deploy_gh_release "VectorChord" "tensorchord/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-${ACTUAL_PG_VERSION}-vchord_*_$(arch_resolve).deb"
+fetch_and_deploy_gh_release "VectorChord" "supervc-stack/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-${ACTUAL_PG_VERSION}-vchord_*_$(arch_resolve).deb"
 
 sed -i "s/^#shared_preload.*/shared_preload_libraries = 'vchord.so'/" /etc/postgresql/${ACTUAL_PG_VERSION}/main/postgresql.conf
 systemctl restart postgresql.service
@@ -347,15 +375,6 @@ libvips: $LIBVIPS_REVISION
 EOF
 msg_ok "Custom Photo-processing Libraries Compiled Successfully"
 
-INSTALL_DIR="/opt/${APPLICATION}"
-UPLOAD_DIR="${INSTALL_DIR}/upload"
-SRC_DIR="${INSTALL_DIR}/source"
-APP_DIR="${INSTALL_DIR}/app"
-PLUGIN_DIR="${APP_DIR}/plugins/immich-plugin-core"
-ML_DIR="${APP_DIR}/machine-learning"
-GEO_DIR="${INSTALL_DIR}/geodata"
-mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
-
 fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "${RELEASE}" "$SRC_DIR"
 PNPM_VERSION="$(jq -r '.packageManager | split("@")[1] | split("+")[0]' ${SRC_DIR}/package.json)"
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
@@ -396,7 +415,7 @@ cp -a web/build "$APP_DIR"/www
 cp LICENSE "$APP_DIR"
 cd "$SRC_DIR"
 export MISE_TRUSTED_CONFIG_PATHS="$SRC_DIR"/mise.toml
-export MISE_DISABLE_TOOLS=github:jellyfin/jellyfin-ffmpeg
+export MISE_DISABLE_TOOLS=github:jellyfin/jellyfin-ffmpeg,java,terragrunt,opentofu,npm:@openapitools/openapi-generator-cli
 export MISE_LOCKFILE_MODE=merge MISE_LOCKFILE_PLATFORMS="linux-$(arch_resolve x64 arm64)"
 mise_ok=0
 for i in 1 2 3; do
@@ -481,20 +500,8 @@ grep -rlE "'/build'" | xargs -n1 sed -i "s|'/build'|'$APP_DIR'|g"
 sed -i "s@\"/cache\"@\"$INSTALL_DIR/cache\"@g" "$ML_DIR"/immich_ml/config.py
 ln -s "$UPLOAD_DIR" "$APP_DIR"/upload
 ln -s "$UPLOAD_DIR" "$ML_DIR"/upload
-
-msg_info "Installing GeoNames data"
-cd "$GEO_DIR"
-curl_with_retry "https://download.geonames.org/export/dump/admin1CodesASCII.txt" "admin1CodesASCII.txt"
-curl_with_retry "https://download.geonames.org/export/dump/admin2Codes.txt" "admin2Codes.txt"
-curl_with_retry "https://download.geonames.org/export/dump/countryInfo.txt" "countryInfo.txt"
-curl_with_retry "https://download.geonames.org/export/dump/cities500.zip" "cities500.zip"
-curl_with_retry "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/v5.1.2/geojson/ne_10m_admin_0_countries.geojson" "ne_10m_admin_0_countries.geojson"
-unzip -q cities500.zip
-date --iso-8601=seconds | tr -d "\n" >geodata-date.txt
-rm cities500.zip
 cd "$INSTALL_DIR"
 ln -s "$GEO_DIR" "$APP_DIR"
-msg_ok "Installed GeoNames data"
 
 # MickLesk temporary patch for HEIC thumbnail gen
 MEDIA_REPO_JS="/opt/immich/app/dist/repositories/media.repository.js"
