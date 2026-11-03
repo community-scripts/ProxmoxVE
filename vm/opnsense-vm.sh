@@ -47,7 +47,7 @@ function check_disk_space() {
 }
 
 TEMP_DIR=$(mktemp -d)
-if ! check_disk_space "$TEMP_DIR" 20 && [ -d "/var/tmp" ] && check_disk_space "/var/tmp" 20; then
+if ! check_disk_space "$TEMP_DIR" 4 && [ -d "/var/tmp" ] && check_disk_space "/var/tmp" 4; then
   rm -rf "$TEMP_DIR"
   TEMP_DIR=$(mktemp -d /var/tmp/opnsense-vm.XXXXXX)
 fi
@@ -364,15 +364,6 @@ FREEBSD_VER="$VM_INDEX_LATEST"
 URL="$VM_INDEX_URL"
 msg_ok "Download URL: ${CL}${BL}${URL}${CL}"
 
-# Check available disk space (require at least 20GB for safety)
-if ! check_disk_space "$TEMP_DIR" 20; then
-  AVAILABLE_GB=$(df -h "$TEMP_DIR" | awk 'NR==2 {print $4}')
-  msg_error "Insufficient disk space in temporary directory ($TEMP_DIR)."
-  msg_error "Available: ${AVAILABLE_GB}, Required: ~20GB for FreeBSD image decompression."
-  msg_error "Please free up space or ensure /tmp has sufficient storage."
-  exit 214
-fi
-
 msg_info "Downloading FreeBSD Image"
 # A mirror serving an error page returns 200, so size decides whether this
 # is an image. Anything real here is far above 5 MB.
@@ -381,11 +372,14 @@ vm_fetch_image "$URL" "$CACHE_FILE" --cache --verify-xz --min-bytes $((5 * 1024 
 echo -en "\e[1A\e[0K"
 msg_ok "Downloaded ${CL}${BL}$(basename "$CACHE_FILE")${CL}"
 
-# Check disk space again before decompression
-if ! check_disk_space "$TEMP_DIR" 15; then
+# The download sits in the image cache; only the unpacked image (2.5 GB for
+# FreeBSD 15.1, not 20) lands in TEMP_DIR, and xz knows its size up front.
+NEED_GB=$(($(xz --robot -l "$CACHE_FILE" | awk '$1 == "totals" {print $5}') / 1024 / 1024 / 1024 + 1))
+if ! check_disk_space "$TEMP_DIR" "$NEED_GB"; then
   AVAILABLE_GB=$(df -h "$TEMP_DIR" | awk 'NR==2 {print $4}')
-  msg_error "Insufficient disk space for decompression."
-  msg_error "Available: ${AVAILABLE_GB}, Required: ~15GB for decompressed image."
+  msg_error "Insufficient disk space for decompression in ${TEMP_DIR}."
+  msg_error "Available: ${AVAILABLE_GB}, Required: ~${NEED_GB}GB for the decompressed image."
+  msg_error "Please free up space or ensure /tmp or /var/tmp has sufficient storage."
   exit 214
 fi
 
