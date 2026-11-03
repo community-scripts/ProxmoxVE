@@ -31,7 +31,7 @@ check_root() {
 
 select_target_storage_and_container_id() {
   echo -e "\nSelect target storage for restored container:\n"
-  mapfile -t target_storages < <(pvesm status --content images | awk 'NR > 1 {print $1}')
+  mapfile -t target_storages < <(pvesm status --content rootdir | awk 'NR > 1 {print $1}')
   for i in "${!target_storages[@]}"; do
     printf "%s) %s\n" "$((i + 1))" "${target_storages[$i]}"
   done
