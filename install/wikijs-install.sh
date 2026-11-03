@@ -39,12 +39,11 @@ sed -i \
   -e "s|^dataPath: .*|dataPath: /opt/wikijs_data|" \
   /opt/wikijs/config.yml
 ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-16)
-{
-  echo ""
-  echo "Wiki.js Admin"
-  echo "Email: admin@example.com"
-  echo "Password: ${ADMIN_PASS}"
-} >>~/wikijs.creds
+cat <<EOF >~/wikijs.creds
+Wiki.js Admin
+Email: admin@example.com
+Password: ${ADMIN_PASS}
+EOF
 msg_ok "Configured Wiki.js"
 
 msg_info "Creating Service"
