@@ -80,7 +80,7 @@ install() {
   msg_ok "Set up repository"
 
   msg_info "Installing ${APP}"
-  $STD apt update
+  apt_update_safe
   $STD apt install -y netdata
   msg_ok "Installed ${APP}"
   msg_ok "Completed successfully!\n"
@@ -108,7 +108,7 @@ OPTIONS=(Install "Install ${APP} on Proxmox VE"
   Uninstall "Uninstall ${APP} from Proxmox VE")
 
 CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "${APP}" \
-  --menu "Select an option:" 10 58 2 "${OPTIONS[@]}" 3>&1 1>&2 2>&3)
+  --menu "Select an option:" 10 58 2 "${OPTIONS[@]}" 3>&1 1>&2 2>&3) || exit 0
 
 case $CHOICE in
 "Install") install ;;
