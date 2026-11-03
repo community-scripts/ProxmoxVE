@@ -584,6 +584,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Wazuh: show the installer's own error when it fails [@MickLesk](https://github.com/MickLesk) ([#18428](https://github.com/community-scripts/ProxmoxVE/pull/18428))
     - Tracearr: move to Node.js 26 [@connorgallopo](https://github.com/connorgallopo) ([#18393](https://github.com/community-scripts/ProxmoxVE/pull/18393))
 
+  - #### 🔧 Refactor
+
+    - Immich: fetch VectorChord from its new repo, skip Java, get GeoNames first [@MickLesk](https://github.com/MickLesk) ([#18397](https://github.com/community-scripts/ProxmoxVE/pull/18397))
+
 ### 💾 Core
 
   - fix: put the reason for a VM failure into its trace [@MickLesk](https://github.com/MickLesk) ([core#200](https://github.com/community-scripts/core/pull/200))
