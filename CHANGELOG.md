@@ -577,6 +577,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Cinephage: run the camoufox binary the package now ships [@MickLesk](https://github.com/MickLesk) ([#18426](https://github.com/community-scripts/ProxmoxVE/pull/18426))
     - AlmaLinux VM: report failures through the engine's error handler [@MickLesk](https://github.com/MickLesk) ([#18418](https://github.com/community-scripts/ProxmoxVE/pull/18418))
     - WireGuard: give the Debian container 1 GB for WGDashboard [@MickLesk](https://github.com/MickLesk) ([#18419](https://github.com/community-scripts/ProxmoxVE/pull/18419))
     - zabbix: use os specific apt packages [@MickLesk](https://github.com/MickLesk) ([#18417](https://github.com/community-scripts/ProxmoxVE/pull/18417))
