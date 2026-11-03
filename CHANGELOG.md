@@ -595,6 +595,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 - fix: restore npm when an interrupted update left it behind [@MickLesk](https://github.com/MickLesk) ([core#189](https://github.com/community-scripts/core/pull/189))
 - feat: add var_cmode to set the container console mode [@MickLesk](https://github.com/MickLesk) ([core#180](https://github.com/community-scripts/core/pull/180))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - let post-pve-install go on when legacy sources are kept [@MickLesk](https://github.com/MickLesk) ([#18403](https://github.com/community-scripts/ProxmoxVE/pull/18403))
+
 ## 2026-11-02
 
 ### 🚀 Updated Scripts
