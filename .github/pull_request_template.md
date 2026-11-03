@@ -19,16 +19,6 @@ Fixes #
 
 ---
 
-## 🤖 AI Assistance (**X** in brackets)
-
-> If you used an AI tool (GitHub Copilot, Claude, ChatGPT, etc.) to write or generate any scripts in this PR, you **must** confirm compliance below.  
-> Select exactly one option.
-
-- [ ] **No AI used** – Scripts were written without AI assistance.
-- [ ] **AI was used** – I confirm the scripts were built using [`AGENTS.md`](https://github.com/community-scripts/DevScripts/blob/main/AGENTS.md) and [`.github/agents/pve-script-creator.agent.md`](https://github.com/community-scripts/DevScripts/blob/main/.github/agents/pve-script-creator.agent.md) as guidance, and the output has been reviewed and corrected to match those guidelines.
-
----
-
 ## 🛠️ Type of Change (**X** in brackets)
 
 - [ ] 🐞 **Bug fix** – Resolves an issue without breaking functionality.
@@ -70,3 +60,13 @@ Guidance:
 -->
 
 <!-- The advisory block is only active once it is OUTSIDE this comment. -->
+
+---
+
+## 🤖 AI Assistance (**X** in brackets)
+
+> If you used an AI tool (GitHub Copilot, Claude, ChatGPT, etc.) to write or generate any scripts in this PR, you **must** confirm compliance below.  
+> Select exactly one option.
+
+- [ ] **No AI used** – Scripts were written without AI assistance.
+- [ ] **AI was used** – I confirm the scripts were built using [`AGENTS.md`](https://github.com/community-scripts/DevScripts/blob/main/AGENTS.md) and [`.github/agents/pve-script-creator.agent.md`](https://github.com/community-scripts/DevScripts/blob/main/.github/agents/pve-script-creator.agent.md) as guidance, and the output has been reviewed and corrected to match those guidelines.
