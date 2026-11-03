@@ -25,8 +25,35 @@ $STD apt install -y \
   gsfonts \
   brotli \
   nginx \
-  redis-server
+  redis-server \
+  meson \
+  ninja-build \
+  pkg-config \
+  libglib2.0-dev \
+  libexpat1-dev \
+  libjpeg-dev \
+  libpng-dev \
+  libwebp-dev \
+  libtiff-dev \
+  libheif-dev \
+  libjxl-dev \
+  librsvg2-dev \
+  libcgif-dev \
+  libexif-dev \
+  liblcms2-dev \
+  liborc-0.4-dev \
+  libimagequant-dev \
+  libpango1.0-dev
 msg_ok "Installed Dependencies"
+
+fetch_and_deploy_gh_release "libvips" "libvips/libvips" "prebuild" "latest" "/opt/libvips" "vips-*.tar.xz"
+
+msg_info "Building libvips"
+cd /opt/libvips
+$STD meson setup build --prefix=/usr/local --libdir=lib --buildtype=release -Dmodules=disabled -Dmagick=disabled -Dexamples=false
+$STD ninja -C build install
+ldconfig
+msg_ok "Built libvips"
 
 msg_info "Cloning Discourse"
 $STD git clone --depth 1 https://github.com/discourse/discourse.git /opt/discourse
