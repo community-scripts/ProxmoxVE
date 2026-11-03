@@ -199,6 +199,11 @@ while true; do
   esac
 done
 
+if command -v pveversion >/dev/null 2>&1; then
+  echo -e "\n🛑  PVE Detected, Wrong Script!\n"
+  exit 232
+fi
+
 if [ "$(dpkg --print-architecture 2>/dev/null)" = "arm64" ]; then
   header_info
   msg_error "This upgrade script targets the amd64 Proxmox repositories and is not supported on ARM64."
