@@ -46,7 +46,10 @@ EOF
     systemctl daemon-reload
   fi
 
-  $STD npm install -g n8n@latest
+  # n8n-nodes-base 2.46.0 pins both @napi-rs/canvas musl binaries as hard
+  # dependencies, which no os/cpu/libc combination can satisfy. Drop --force
+  # once upstream makes them optional again.
+  $STD npm install -g n8n@latest --force
   systemctl restart n8n
   msg_ok "Updated n8n"
   msg_ok "Updated successfully!"
