@@ -581,7 +581,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - feat: report a cancelled tool dialog as an abort and name the failing command [@MickLesk](https://github.com/MickLesk) ([core#197](https://github.com/community-scripts/core/pull/197))
+  - fix: put the reason for a VM failure into its trace [@MickLesk](https://github.com/MickLesk) ([core#200](https://github.com/community-scripts/core/pull/200))
+- fix: check the bridge before creating a container, and its state after start [@MickLesk](https://github.com/MickLesk) ([core#199](https://github.com/community-scripts/core/pull/199))
+- ref: offer to remove only the container this run created [@MickLesk](https://github.com/MickLesk) ([core#198](https://github.com/community-scripts/core/pull/198))
+- feat: report a cancelled tool dialog as an abort and name the failing command [@MickLesk](https://github.com/MickLesk) ([core#197](https://github.com/community-scripts/core/pull/197))
 - feat: check KVM and the host's threads before building a VM [@MickLesk](https://github.com/MickLesk) ([core#196](https://github.com/community-scripts/core/pull/196))
 - ref: give a host tool one log file for the whole run [@MickLesk](https://github.com/MickLesk) ([core#194](https://github.com/community-scripts/core/pull/194))
 - fix: keep a piped stdin when output moves to the log after a hangup [@MickLesk](https://github.com/MickLesk) ([core#193](https://github.com/community-scripts/core/pull/193))
