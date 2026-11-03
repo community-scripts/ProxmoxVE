@@ -118,7 +118,8 @@ function trim_container() {
   fi
 
   local fstrim_output
-  fstrim_output=$(pct fstrim "$container" 2>&1)
+  # pct fstrim fails on a locked CT (e.g. a running backup); report it and go on.
+  fstrim_output=$(pct fstrim "$container" 2>&1) || true
   if echo "$fstrim_output" | grep -qi "not supported"; then
     echo -e "${RD}fstrim isnt supported on this storage!${CL}"
   elif echo "$fstrim_output" | grep -Eq '([0-9]+(\.[0-9]+)?\s*[KMGT]?B)'; then
