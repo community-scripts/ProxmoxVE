@@ -411,7 +411,7 @@ while :; do
     alloc_delay=$((alloc_delay * 2))
     continue
   fi
-  echo -e "$alloc_err" >&2
+  msg_error "Could not allocate the EFI disk on ${STORAGE}: ${alloc_err}"
   exit 220
 done
 vm_import_disk "$VMID" "$FILE" "$STORAGE"
