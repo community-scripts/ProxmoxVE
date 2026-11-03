@@ -21,7 +21,11 @@ msg_info "Setup Wazuh"
 curl -fsSL https://packages.wazuh.com/$RELEASE/wazuh-install.sh -o wazuh-install.sh
 chmod +x wazuh-install.sh
 if [ "$STD" = "silent" ]; then
-  bash wazuh-install.sh -a >>~/wazuh-install.output
+  bash wazuh-install.sh -a >>~/wazuh-install.output || {
+    $STD tail -n 25 ~/wazuh-install.output
+    msg_error "The Wazuh installer failed, see its output above or in ~/wazuh-install.output"
+    exit 1
+  }
 else
   bash wazuh-install.sh -a | tee -a ~/wazuh-install.output
 fi
