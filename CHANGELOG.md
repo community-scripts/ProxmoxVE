@@ -581,7 +581,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - ref: give a host tool one log file for the whole run [@MickLesk](https://github.com/MickLesk) ([core#194](https://github.com/community-scripts/core/pull/194))
+  - feat: report a cancelled tool dialog as an abort and name the failing command [@MickLesk](https://github.com/MickLesk) ([core#197](https://github.com/community-scripts/core/pull/197))
+- feat: check KVM and the host's threads before building a VM [@MickLesk](https://github.com/MickLesk) ([core#196](https://github.com/community-scripts/core/pull/196))
+- ref: give a host tool one log file for the whole run [@MickLesk](https://github.com/MickLesk) ([core#194](https://github.com/community-scripts/core/pull/194))
 - fix: keep a piped stdin when output moves to the log after a hangup [@MickLesk](https://github.com/MickLesk) ([core#193](https://github.com/community-scripts/core/pull/193))
 - fix: pve-LXC: say when the container went away during its setup [@MickLesk](https://github.com/MickLesk) ([core#192](https://github.com/community-scripts/core/pull/192))
 - fix: treat Esc in a VM wizard dialog as leaving the script [@MickLesk](https://github.com/MickLesk) ([core#190](https://github.com/community-scripts/core/pull/190))
