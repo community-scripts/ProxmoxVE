@@ -149,13 +149,13 @@ EOF
     PG_VERSION=$(ls /etc/postgresql/ 2>/dev/null | sort -V | tail -1)
     PG_VERSION=${PG_VERSION:-16}
     [[ -f ~/.vchord_version ]] && mv ~/.vchord_version ~/.vectorchord
-    if check_for_gh_release "VectorChord" "tensorchord/VectorChord" "${VCHORD_RELEASE}" "updated together with Immich after testing"; then
+    if check_for_gh_release "VectorChord" "supervc-stack/VectorChord" "${VCHORD_RELEASE}" "updated together with Immich after testing"; then
       # dead tuples in smart_search/face_search make the REINDEX below fail with
       # "missing chunk ... for toast value" on VectorChord 1.0.0 (#15588); must vacuum
       # while still on the old extension version, a post-upgrade vacuum errors instead
       $STD sudo -u postgres psql -d immich -c "VACUUM (ANALYZE) smart_search;"
       $STD sudo -u postgres psql -d immich -c "VACUUM (ANALYZE) face_search;"
-      fetch_and_deploy_gh_release "VectorChord" "tensorchord/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-${PG_VERSION}-vchord_*_$(arch_resolve).deb"
+      fetch_and_deploy_gh_release "VectorChord" "supervc-stack/VectorChord" "binary" "${VCHORD_RELEASE}" "/tmp" "postgresql-${PG_VERSION}-vchord_*_$(arch_resolve).deb"
       systemctl restart postgresql
       $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vector UPDATE;"
       $STD sudo -u postgres psql -d immich -c "ALTER EXTENSION vchord UPDATE;"
@@ -232,7 +232,7 @@ EOF
     # plugins
     cd "$SRC_DIR"
     export MISE_TRUSTED_CONFIG_PATHS="$SRC_DIR"/mise.toml
-    export MISE_DISABLE_TOOLS=github:jellyfin/jellyfin-ffmpeg
+    export MISE_DISABLE_TOOLS=github:jellyfin/jellyfin-ffmpeg,java,terragrunt,opentofu,npm:@openapitools/openapi-generator-cli
     export MISE_LOCKFILE_MODE=merge MISE_LOCKFILE_PLATFORMS="linux-$(arch_resolve x64 arm64)"
     mise_ok=0
     for i in 1 2 3; do
