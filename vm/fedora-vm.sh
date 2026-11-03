@@ -89,13 +89,6 @@ post_to_api_vm
 
 vm_select_storage "$HN"
 
-if ! command -v virt-customize &>/dev/null; then
-  msg_info "Installing libguestfs-tools"
-  $STD apt-get update
-  $STD apt-get install -y libguestfs-tools
-  msg_ok "Installed libguestfs-tools"
-fi
-
 msg_info "Retrieving the URL for the Fedora Cloud Base image"
 MIRROR="https://dl.fedoraproject.org/pub/fedora/linux/releases"
 FEDORA_RELEASE=$(curl -fsSL "$MIRROR/" 2>/dev/null | grep -oP 'href="\K[0-9]+(?=/")' | sort -rn | head -1)
