@@ -30,6 +30,41 @@ function update_script() {
     exit
   fi
 
+  if [[ -d /opt/wikijs/backend ]]; then
+    NODE_VERSION="26" setup_nodejs
+
+    if check_for_gh_release "wikijs" "requarks/wiki"; then
+      PUPPETEER_INSTALLED=$([[ -d /opt/wikijs/backend/node_modules/puppeteer ]] && echo "true" || echo "false")
+
+      msg_info "Stopping Service"
+      systemctl stop wikijs
+      msg_ok "Stopped Service"
+
+      create_backup /opt/wikijs/config.yml
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wikijs" "requarks/wiki" "prebuild" "latest" "/opt/wikijs" "wiki-js.tar.gz"
+      restore_backup
+
+      cd /opt/wikijs/backend
+      if [[ "$(arch_resolve)" == "arm64" ]]; then
+        msg_info "Building Wiki.js Dependencies"
+        $STD npm ci --omit=dev
+        msg_ok "Built Wiki.js Dependencies"
+      fi
+      if [[ "$PUPPETEER_INSTALLED" == "true" ]]; then
+        msg_info "Reinstalling Puppeteer"
+        $STD npm install --no-save --force --include=optional --no-ignore-scripts --no-audit --no-fund "puppeteer@$(sed -n 's/^installVersion: *//p' modules/extensions/puppeteer/definition.yml)"
+        msg_ok "Reinstalled Puppeteer"
+      fi
+
+      msg_info "Starting Service"
+      systemctl start wikijs
+      msg_ok "Started Service"
+      msg_ok "Updated successfully!"
+    fi
+    exit
+  fi
+
+  msg_warn "Wiki.js 3 cannot update a 2.x install in place. Export it under Administration > Utilities > Export for Wiki.js 3.x and import it into a new Wiki.js 3 container."
   NODE_VERSION="26" NODE_MODULE="yarn,node-gyp" setup_nodejs
 
   if check_for_gh_release "wikijs" "requarks/wiki-v2"; then
