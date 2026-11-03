@@ -588,6 +588,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - OpenWrt VM: read the stable release from downloads.openwrt.org [@MickLesk](https://github.com/MickLesk) ([#18411](https://github.com/community-scripts/ProxmoxVE/pull/18411))
     - Immich: fetch VectorChord from its new repo, skip Java, get GeoNames first [@MickLesk](https://github.com/MickLesk) ([#18397](https://github.com/community-scripts/ProxmoxVE/pull/18397))
 
 ### 💾 Core
