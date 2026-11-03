@@ -577,6 +577,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - AlmaLinux VM: report failures through the engine's error handler [@MickLesk](https://github.com/MickLesk) ([#18418](https://github.com/community-scripts/ProxmoxVE/pull/18418))
+    - WireGuard: give the Debian container 1 GB for WGDashboard [@MickLesk](https://github.com/MickLesk) ([#18419](https://github.com/community-scripts/ProxmoxVE/pull/18419))
     - zabbix: use os specific apt packages [@MickLesk](https://github.com/MickLesk) ([#18417](https://github.com/community-scripts/ProxmoxVE/pull/18417))
     - Discourse: build libvips 8.18 for its image worker [@MickLesk](https://github.com/MickLesk) ([#18430](https://github.com/community-scripts/ProxmoxVE/pull/18430))
     - Wazuh: show the installer's own error when it fails [@MickLesk](https://github.com/MickLesk) ([#18428](https://github.com/community-scripts/ProxmoxVE/pull/18428))
@@ -602,6 +604,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - add-tailscale-lxc: start a stopped container and check its OS first [@MickLesk](https://github.com/MickLesk) ([#18421](https://github.com/community-scripts/ProxmoxVE/pull/18421))
     - netdata: survive a failed apt update, leave quietly on Cancel [@MickLesk](https://github.com/MickLesk) ([#18427](https://github.com/community-scripts/ProxmoxVE/pull/18427))
     - Privilege-Converter: offer only container-capable storages as the converter's restore target [@MickLesk](https://github.com/MickLesk) ([#18415](https://github.com/community-scripts/ProxmoxVE/pull/18415))
     - let post-pve-install go on when legacy sources are kept [@MickLesk](https://github.com/MickLesk) ([#18403](https://github.com/community-scripts/ProxmoxVE/pull/18403))
