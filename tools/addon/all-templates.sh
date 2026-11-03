@@ -70,14 +70,10 @@ function cleanup_ctid() {
 header_info
 require_pve_host
 
-# Stop Proxmox VE Monitor-All if running
-if systemctl is-active -q ping-instances.service; then
-  systemctl stop ping-instances.service
-fi
 msg_info "Updating template list"
 pveam update >/dev/null 2>&1
 msg_ok "Updated template list"
-whiptail --backtitle "Proxmox VE Helper Scripts" --title "All Templates" --yesno "This will allow for the creation of one of the many Template LXC Containers. Proceed?" 10 68
+whiptail --backtitle "Proxmox VE Helper Scripts" --title "All Templates" --yesno "This will allow for the creation of one of the many Template LXC Containers. Proceed?" 10 68 || exit 0
 TEMPLATE_MENU=()
 MSG_MAX_LENGTH=0
 HOST_ARCH=$(dpkg --print-architecture)
@@ -87,7 +83,7 @@ while read -r TAG ITEM ARCH; do
   ((${#ITEM} + OFFSET > MSG_MAX_LENGTH)) && MSG_MAX_LENGTH=${#ITEM}+OFFSET
   TEMPLATE_MENU+=("$ITEM" "$TAG " "OFF")
 done < <(pveam available)
-TEMPLATE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "All Template LXCs" --radiolist "\nSelect a Template LXC to create:\n" 16 $((MSG_MAX_LENGTH + 58)) 10 "${TEMPLATE_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"')
+TEMPLATE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "All Template LXCs" --radiolist "\nSelect a Template LXC to create:\n" 16 $((MSG_MAX_LENGTH + 58)) 10 "${TEMPLATE_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"') || exit 0
 [ -z "$TEMPLATE" ] && {
   whiptail --backtitle "Proxmox VE Helper Scripts" --title "No Template LXC Selected" --msgbox "It appears that no Template LXC container was selected" 10 68
   echo "Done"
@@ -184,6 +180,11 @@ msg_ok "Using '$TEMPLATE_STORAGE' for template storage."
 # Get container storage
 CONTAINER_STORAGE=$(select_storage container)
 msg_ok "Using '$CONTAINER_STORAGE' for container storage."
+
+# Stop Proxmox VE Monitor-All if running
+if systemctl is-active -q ping-instances.service; then
+  systemctl stop ping-instances.service
+fi
 
 # Download template
 msg_info "Downloading LXC template (Patience)"
