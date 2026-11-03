@@ -579,6 +579,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Tracearr: move to Node.js 26 [@connorgallopo](https://github.com/connorgallopo) ([#18393](https://github.com/community-scripts/ProxmoxVE/pull/18393))
 
+### 💾 Core
+
+  - feat: find the assets of a renamed GitHub repo without the API [@MickLesk](https://github.com/MickLesk) ([core#188](https://github.com/community-scripts/core/pull/188))
+- ref: count a container stopped during a detached install as an abort [@MickLesk](https://github.com/MickLesk) ([core#187](https://github.com/community-scripts/core/pull/187))
+
 ## 2026-11-02
 
 ### 🚀 Updated Scripts
