@@ -271,15 +271,22 @@ function dry_run_container() {
   fi
 }
 
+# The line of vzdump or pct restore output that says why it failed.
+function failure_reason() {
+  local reason
+  reason=$(grep -m1 '^ERROR:' <<<"$1" | sed 's/^ERROR: //')
+  [[ -n "$reason" ]] || reason=$(grep -v '^[[:space:]]*$' <<<"$1" | tail -n1)
+  printf '%s' "$reason"
+}
+
 function backup_container() {
   msg_info "Creating backup for container $1"
-  vzdump $1 --compress zstd --storage $STORAGE_CHOICE -notes-template "{{guestname}} - community-scripts backup updater" >/dev/null 2>&1
-  status=$?
-
-  if [ $status -eq 0 ]; then
+  local output
+  if output=$(vzdump $1 --compress zstd --storage $STORAGE_CHOICE -notes-template "{{guestname}} - community-scripts backup updater" 2>&1); then
     msg_ok "Backup created"
   else
-    msg_error "Backup failed for container $1"
+    log_write "Container $1: vzdump failed:"$'\n'"$output"
+    msg_error "Backup failed for container $1: $(failure_reason "$output")"
     exit 235
   fi
 }
@@ -337,7 +344,7 @@ function log_write() {
 
 # Skip confirmation if var_skip_confirm is set to yes
 if [[ "$var_skip_confirm" != "yes" ]]; then
-  whiptail --backtitle "Proxmox VE Helper Scripts" --title "LXC App Update" --yesno "This will update apps in LXCs installed by Helper-Scripts. Proceed?" 10 58 || exit
+  whiptail --backtitle "Proxmox VE Helper Scripts" --title "LXC App Update" --yesno "This will update apps in LXCs installed by Helper-Scripts. Proceed?" 10 58 || exit 0
 fi
 
 tags_formatted="${var_tags//|/, }"
@@ -460,12 +467,11 @@ if [ "$BACKUP_CHOICE" == "yes" ]; then
   # Determine storage based on var_backup_storage
   if [[ -n "$var_backup_storage" ]]; then
     # Validate that the specified storage exists and supports backups
-    if echo "$STORAGES" | grep -qw "$var_backup_storage"; then
+    if grep -qxF -- "$var_backup_storage" <<<"$STORAGES"; then
       STORAGE_CHOICE="$var_backup_storage"
       msg_ok "Using backup storage: $STORAGE_CHOICE"
     else
-      msg_error "Specified backup storage '$var_backup_storage' not found or doesn't support backups!"
-      msg_info "Available storages: $(echo $STORAGES | tr '\n' ' ')"
+      msg_error "Specified backup storage '$var_backup_storage' not found or doesn't support backups! Available: $(echo $STORAGES)"
       exit 119
     fi
   else
@@ -642,7 +648,7 @@ for container in $CHOICE; do
     log_result "$container" "$service" "SKIPPED" "Storage critically low on /boot (>80%)"
     log_write "Container $container ($service): SKIPPED — storage critically low on /boot"
   elif [ "$BACKUP_CHOICE" == "yes" ]; then
-    msg_error "Update failed for container $container (exit code: $exit_code) — attempting restore"
+    msg_error "Update failed for container $container ($service, exit code: $exit_code) — attempting restore"
     log_write "Container $container ($service): FAILED (exit $exit_code) — attempting restore"
     msg_info "Restoring LXC $container from backup ($STORAGE_CHOICE)"
     pct stop $container
@@ -654,7 +660,7 @@ for container in $CHOICE; do
       log_write "Container $container ($service): FAILED — no backup found for restore"
       exit 235
     fi
-    pct restore $container "$BACKUP_ENTRY" --storage $LXC_STORAGE --force >/dev/null 2>&1
+    restore_output=$(pct restore $container "$BACKUP_ENTRY" --storage $LXC_STORAGE --force 2>&1)
     restorestatus=$?
     if [ $restorestatus -eq 0 ]; then
       pct start $container
@@ -662,13 +668,14 @@ for container in $CHOICE; do
       log_result "$container" "$service" "RESTORED" "Update failed (exit $exit_code) — restored from backup"
       log_write "Container $container ($service): RESTORED from $BACKUP_ENTRY"
     else
-      msg_error "Restore failed for container $container"
+      log_write "Container $container: pct restore failed:"$'\n'"$restore_output"
+      msg_error "Restore failed for container $container: $(failure_reason "$restore_output")"
       log_result "$container" "$service" "FAILED" "Update failed (exit $exit_code) — restore also failed"
       log_write "Container $container ($service): FAILED — restore also failed"
       exit 235
     fi
   else
-    msg_error "Update failed for container $container (exit code: $exit_code)"
+    msg_error "Update failed for container $container ($service, exit code: $exit_code)"
     log_result "$container" "$service" "FAILED" "Exit code $exit_code"
     log_write "Container $container ($service): FAILED (exit $exit_code)"
     if [[ "$var_continue_on_error" == "yes" ]]; then
