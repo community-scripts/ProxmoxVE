@@ -11,7 +11,7 @@ declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "storage-share
 set -eEuo pipefail
 
 function header_info() {
-  clear
+  clear 2>/dev/null || printf '\033[H\033[2J\033[3J'
   cat <<"EOF"
     _____ __                                 ___    _________ 
    / ___// /_____  _________ _____ ____     /   |  /  _/ __ \

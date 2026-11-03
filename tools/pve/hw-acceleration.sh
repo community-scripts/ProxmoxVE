@@ -9,7 +9,7 @@
 
 set -e
 function header_info {
-  clear
+  clear 2>/dev/null || printf '\033[H\033[2J\033[3J'
   cat <<"EOF"
 
    __ ___      __  ___              __             __  _
