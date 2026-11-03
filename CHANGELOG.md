@@ -581,7 +581,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - feat: find the assets of a renamed GitHub repo without the API [@MickLesk](https://github.com/MickLesk) ([core#188](https://github.com/community-scripts/core/pull/188))
+  - fix: restore npm when an interrupted update left it behind [@MickLesk](https://github.com/MickLesk) ([core#189](https://github.com/community-scripts/core/pull/189))
+- feat: find the assets of a renamed GitHub repo without the API [@MickLesk](https://github.com/MickLesk) ([core#188](https://github.com/community-scripts/core/pull/188))
 - ref: count a container stopped during a detached install as an abort [@MickLesk](https://github.com/MickLesk) ([core#187](https://github.com/community-scripts/core/pull/187))
 
 ## 2026-11-02
