@@ -577,6 +577,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Fedora VM: let the engine install libguestfs-tools [@MickLesk](https://github.com/MickLesk) ([#18422](https://github.com/community-scripts/ProxmoxVE/pull/18422))
     - Cinephage: run the camoufox binary the package now ships [@MickLesk](https://github.com/MickLesk) ([#18426](https://github.com/community-scripts/ProxmoxVE/pull/18426))
     - AlmaLinux VM: report failures through the engine's error handler [@MickLesk](https://github.com/MickLesk) ([#18418](https://github.com/community-scripts/ProxmoxVE/pull/18418))
     - WireGuard: give the Debian container 1 GB for WGDashboard [@MickLesk](https://github.com/MickLesk) ([#18419](https://github.com/community-scripts/ProxmoxVE/pull/18419))
@@ -609,6 +610,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - all-templates: answering No or Cancel is not a failure [@MickLesk](https://github.com/MickLesk) ([#18423](https://github.com/community-scripts/ProxmoxVE/pull/18423))
+    - homebrew: skip service accounts when picking the user, survive a failed apt update [@MickLesk](https://github.com/MickLesk) ([#18424](https://github.com/community-scripts/ProxmoxVE/pull/18424))
     - add-tailscale-lxc: start a stopped container and check its OS first [@MickLesk](https://github.com/MickLesk) ([#18421](https://github.com/community-scripts/ProxmoxVE/pull/18421))
     - netdata: survive a failed apt update, leave quietly on Cancel [@MickLesk](https://github.com/MickLesk) ([#18427](https://github.com/community-scripts/ProxmoxVE/pull/18427))
     - Privilege-Converter: offer only container-capable storages as the converter's restore target [@MickLesk](https://github.com/MickLesk) ([#18415](https://github.com/community-scripts/ProxmoxVE/pull/18415))
