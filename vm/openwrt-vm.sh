@@ -259,7 +259,7 @@ post_to_api_vm
 vm_select_storage "$HN"
 msg_info "Getting URL for OpenWrt Disk Image"
 
-vm_latest_from_index "https://openwrt.org" 'Current stable release - OpenWrt \K[0-9]+\.[0-9]+\.[0-9]+' || exit 115
+vm_latest_from_index "https://downloads.openwrt.org/.versions.json" '"stable_version": *"\K[0-9]+\.[0-9]+\.[0-9]+' || exit 115
 var_version="$VM_INDEX_LATEST"
 URL="https://downloads.openwrt.org/releases/$var_version/targets/x86/64/openwrt-$var_version-x86-64-generic-ext4-combined.img.gz"
 
