@@ -3,7 +3,7 @@
 set -eEuo pipefail
 
 function header_info() {
-  clear
+  clear 2>/dev/null || printf '\033[H\033[2J\033[3J'
   cat <<"EOF"
     _______ __                     __                    ______     _
    / ____(_) /__  _______  _______/ /____  ____ ___     /_  __/____(_)___ ___

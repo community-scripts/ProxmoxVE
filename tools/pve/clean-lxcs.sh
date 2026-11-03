@@ -5,7 +5,7 @@
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 function header_info() {
-  clear
+  clear 2>/dev/null || printf '\033[H\033[2J\033[3J'
   cat <<"EOF"
    ________                    __   _  ________
   / ____/ /__  ____ _____     / /  | |/ / ____/

@@ -11,7 +11,7 @@ source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "scaling-governor" "pve"
 
 header_info() {
-  clear
+  clear 2>/dev/null || printf '\033[H\033[2J\033[3J'
   cat <<EOF
   ________  __  __  _____
  / ___/ _ \/ / / / / ___/__ _  _____ _______  ___  _______
@@ -26,7 +26,7 @@ GOV_BASE="/sys/devices/system/cpu/cpu0/cpufreq"
 if [[ ! -r "$GOV_BASE/scaling_governor" || ! -r "$GOV_BASE/scaling_available_governors" ]]; then
   whiptail --backtitle "Proxmox VE Helper Scripts" --title "CPU Scaling Not Available" \
     --msgbox "CPU frequency scaling is not available on this system.\n\nThis is normal when no cpufreq driver is active (e.g. CPU power management handled by the BIOS, or certain virtualized hosts)." 12 70
-  clear
+  clear 2>/dev/null || printf '\033[H\033[2J\033[3J'
   exit 0
 fi
 
@@ -42,7 +42,7 @@ done < <(tr ' ' '\n' <"$GOV_BASE/scaling_available_governors" | sed '/^$/d' | gr
 scaling_governor=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Current CPU Scaling Governor is set to $current_governor" --radiolist "\nSelect the Scaling Governor to use:\n" 16 $((MSG_MAX_LENGTH + 58)) 6 "${GOVERNORS_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"')
 [ -z "$scaling_governor" ] && {
   whiptail --backtitle "Proxmox VE Helper Scripts" --title "No CPU Scaling Governor Selected" --msgbox "It appears that no CPU Scaling Governor was selected" 10 68
-  clear
+  clear 2>/dev/null || printf '\033[H\033[2J\033[3J'
   exit
 }
 echo "${scaling_governor}" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor >/dev/null

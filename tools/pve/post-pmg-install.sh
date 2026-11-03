@@ -5,7 +5,7 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 header_info() {
-  clear
+  clear 2>/dev/null || printf '\033[H\033[2J\033[3J'
   cat <<"EOF"
     ____  __  _________   ____             __     ____           __        ____
    / __ \/  |/  / ____/  / __ \____  _____/ /_   /  _/___  _____/ /_____ _/ / /
@@ -410,7 +410,7 @@ while true; do
   case $yn in
   [Yy]*) break ;;
   [Nn]*)
-    clear
+    clear 2>/dev/null || printf '\033[H\033[2J\033[3J'
     exit
     ;;
   *) echo "Please answer yes or no." ;;
