@@ -586,6 +586,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Wazuh: show the installer's own error when it fails [@MickLesk](https://github.com/MickLesk) ([#18428](https://github.com/community-scripts/ProxmoxVE/pull/18428))
     - Tracearr: move to Node.js 26 [@connorgallopo](https://github.com/connorgallopo) ([#18393](https://github.com/community-scripts/ProxmoxVE/pull/18393))
 
+  - #### ✨ New Features
+
+    - Wiki.js: install 3.x [@MickLesk](https://github.com/MickLesk) ([#18382](https://github.com/community-scripts/ProxmoxVE/pull/18382))
+
   - #### 🔧 Refactor
 
     - OpenWrt VM: read the stable release from downloads.openwrt.org [@MickLesk](https://github.com/MickLesk) ([#18411](https://github.com/community-scripts/ProxmoxVE/pull/18411))
