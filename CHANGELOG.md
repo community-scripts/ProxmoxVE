@@ -620,6 +620,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    -  update-apps: say why an backup or restore failed [@MickLesk](https://github.com/MickLesk) ([#18405](https://github.com/community-scripts/ProxmoxVE/pull/18405))
     - Keep host tools running when clear does not know the terminal [@MickLesk](https://github.com/MickLesk) ([#18412](https://github.com/community-scripts/ProxmoxVE/pull/18412))
     - Refuse to run the PBS 4 upgrade on a Proxmox VE host [@MickLesk](https://github.com/MickLesk) ([#18416](https://github.com/community-scripts/ProxmoxVE/pull/18416))
     - fstrim: keep trimming when pct fstrim fails on one container [@MickLesk](https://github.com/MickLesk) ([#18413](https://github.com/community-scripts/ProxmoxVE/pull/18413))
