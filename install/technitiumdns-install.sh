@@ -23,7 +23,7 @@ setup_deb822_repo \
 $STD apt install -y aspnetcore-runtime-10.0
 msg_ok "Installed Dependencies"
 
-RELEASE=$(curl -fsSL https://technitium.com/dns/ | grep -oP 'Version \K[\d.]+')
+RELEASE=$(get_latest_github_release "TechnitiumSoftware/DnsServer")
 fetch_and_deploy_from_url "https://download.technitium.com/dns/DnsServerPortable.tar.gz" /opt/technitium/dns
 echo "${RELEASE}" >~/.technitium
 
