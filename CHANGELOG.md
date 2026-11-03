@@ -577,6 +577,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - zabbix: use os specific apt packages [@MickLesk](https://github.com/MickLesk) ([#18417](https://github.com/community-scripts/ProxmoxVE/pull/18417))
+    - Discourse: build libvips 8.18 for its image worker [@MickLesk](https://github.com/MickLesk) ([#18430](https://github.com/community-scripts/ProxmoxVE/pull/18430))
     - Wazuh: show the installer's own error when it fails [@MickLesk](https://github.com/MickLesk) ([#18428](https://github.com/community-scripts/ProxmoxVE/pull/18428))
     - Tracearr: move to Node.js 26 [@connorgallopo](https://github.com/connorgallopo) ([#18393](https://github.com/community-scripts/ProxmoxVE/pull/18393))
 
@@ -606,6 +608,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refuse to run the PBS 4 upgrade on a Proxmox VE host [@MickLesk](https://github.com/MickLesk) ([#18416](https://github.com/community-scripts/ProxmoxVE/pull/18416))
     - fstrim: keep trimming when pct fstrim fails on one container [@MickLesk](https://github.com/MickLesk) ([#18413](https://github.com/community-scripts/ProxmoxVE/pull/18413))
     - execute-lxc: do not abort on a container that is not Debian or Ubuntu [@MickLesk](https://github.com/MickLesk) ([#18414](https://github.com/community-scripts/ProxmoxVE/pull/18414))
 
