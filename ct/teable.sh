@@ -32,6 +32,16 @@ function update_script() {
     exit
   fi
 
+  ensure_dependencies redis-server
+  systemctl enable -q --now redis-server
+  if ! grep -q "BACKEND_CACHE_REDIS_URI" /opt/teable/.env; then
+    sed -i '/^BACKEND_CACHE_SQLITE_URI=/d' /opt/teable/.env
+    sed -i 's|^BACKEND_CACHE_PROVIDER=.*|BACKEND_CACHE_PROVIDER=redis\nBACKEND_CACHE_REDIS_URI=redis://127.0.0.1:6379/0|' /opt/teable/.env
+    sed -i 's|^After=network.target postgresql.service$|After=network.target postgresql.service redis-server.service|' /etc/systemd/system/teable.service
+    systemctl daemon-reload
+    systemctl restart teable
+  fi
+
   if check_for_gh_release "teable" "teableio/teable"; then
     msg_info "Stopping Service"
     systemctl stop teable
