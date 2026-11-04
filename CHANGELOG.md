@@ -582,7 +582,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - feat: read the MOTD's OS version at login [@MickLesk](https://github.com/MickLesk) ([core#207](https://github.com/community-scripts/core/pull/207))
+  - feat: say why download_gpg_key failed [@MickLesk](https://github.com/MickLesk) ([core#208](https://github.com/community-scripts/core/pull/208))
+- feat: read the MOTD's OS version at login [@MickLesk](https://github.com/MickLesk) ([core#207](https://github.com/community-scripts/core/pull/207))
 - feat: skip screen clear when there is no terminal | pin only the scripts own app with var_appversion [@MickLesk](https://github.com/MickLesk) ([core#203](https://github.com/community-scripts/core/pull/203))
 
 ## 2026-11-03
