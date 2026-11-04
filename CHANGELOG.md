@@ -577,6 +577,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - n8n: install past its unsatisfiable canvas dependencies [@MickLesk](https://github.com/MickLesk) ([#18439](https://github.com/community-scripts/ProxmoxVE/pull/18439))
     - Teable: add Redis cache [@MickLesk](https://github.com/MickLesk) ([#18450](https://github.com/community-scripts/ProxmoxVE/pull/18450))
 
 ## 2026-11-03
