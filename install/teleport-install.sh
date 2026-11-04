@@ -24,7 +24,11 @@ msg_info "Configuring Teleport"
 $STD apt install -y teleport
 $STD teleport configure -o /etc/teleport.yaml
 systemctl enable -q --now teleport
-sleep 10
+SECONDS=0
+until teleport debug readyz &>/dev/null; do
+  sleep 2
+  ((SECONDS >= 120)) && { msg_error "Teleport did not become ready in time"; exit 1; }
+done
 tctl users add teleport-admin --roles=editor,access --logins=root >~/teleportadmin.txt
 sed -i "s|https://[^:]*:3080|https://${LOCAL_IP}:3080|g" ~/teleportadmin.txt
 msg_ok "Configured Teleport"
