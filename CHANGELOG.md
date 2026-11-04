@@ -580,6 +580,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - n8n: install past its unsatisfiable canvas dependencies [@MickLesk](https://github.com/MickLesk) ([#18439](https://github.com/community-scripts/ProxmoxVE/pull/18439))
     - Teable: add Redis cache [@MickLesk](https://github.com/MickLesk) ([#18450](https://github.com/community-scripts/ProxmoxVE/pull/18450))
 
+### 💾 Core
+
+  - feat: skip screen clear when there is no terminal | pin only the scripts own app with var_appversion [@MickLesk](https://github.com/MickLesk) ([core#203](https://github.com/community-scripts/core/pull/203))
+
 ## 2026-11-03
 
 ### 🚀 Updated Scripts
