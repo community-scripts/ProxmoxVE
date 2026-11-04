@@ -582,7 +582,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - feat: skip screen clear when there is no terminal | pin only the scripts own app with var_appversion [@MickLesk](https://github.com/MickLesk) ([core#203](https://github.com/community-scripts/core/pull/203))
+  - feat: read the MOTD's OS version at login [@MickLesk](https://github.com/MickLesk) ([core#207](https://github.com/community-scripts/core/pull/207))
+- feat: skip screen clear when there is no terminal | pin only the scripts own app with var_appversion [@MickLesk](https://github.com/MickLesk) ([core#203](https://github.com/community-scripts/core/pull/203))
 
 ## 2026-11-03
 
