@@ -577,6 +577,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Teleport: Poll readyz instead of fixed 10 second sleep. [@cthach](https://github.com/cthach) ([#18461](https://github.com/community-scripts/ProxmoxVE/pull/18461))
     - n8n: install past its unsatisfiable canvas dependencies [@MickLesk](https://github.com/MickLesk) ([#18439](https://github.com/community-scripts/ProxmoxVE/pull/18439))
     - Teable: add Redis cache [@MickLesk](https://github.com/MickLesk) ([#18450](https://github.com/community-scripts/ProxmoxVE/pull/18450))
 
