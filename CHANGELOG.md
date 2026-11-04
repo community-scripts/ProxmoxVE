@@ -571,6 +571,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-11-04
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Teable: add Redis cache [@MickLesk](https://github.com/MickLesk) ([#18450](https://github.com/community-scripts/ProxmoxVE/pull/18450))
+
 ## 2026-11-03
 
 ### 🚀 Updated Scripts
