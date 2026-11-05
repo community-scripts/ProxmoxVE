@@ -582,6 +582,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - truenas-VM: let a failed ISO lookup reach its own error [@MickLesk](https://github.com/MickLesk) ([#18476](https://github.com/community-scripts/ProxmoxVE/pull/18476))
     - proxmox-mail-gateway: take the repo suite from the container  [@MickLesk](https://github.com/MickLesk) ([#18475](https://github.com/community-scripts/ProxmoxVE/pull/18475))
     - Immich: Bump to 3.3.6 and minor improvement [@MickLesk](https://github.com/MickLesk) ([#18474](https://github.com/community-scripts/ProxmoxVE/pull/18474))
     - Tududi: run 2.0 on PostgreSQL, keep SQLite installs on 1.15.0 [@MickLesk](https://github.com/MickLesk) ([#18465](https://github.com/community-scripts/ProxmoxVE/pull/18465))
