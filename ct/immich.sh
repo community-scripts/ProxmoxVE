@@ -75,7 +75,7 @@ EOF
   BASE_DIR=${STAGING_DIR}/base-images
   SOURCE_DIR=${STAGING_DIR}/image-source
   cd /tmp
-  RELEASE="v3.3.5"
+  RELEASE="v3.3.6"
   if [[ -f ~/.intel_version ]]; then
     INTEL_SRC="https://raw.githubusercontent.com/immich-app/immich/${RELEASE}/machine-learning"
     curl -fsSL "${INTEL_SRC}/scripts/install-intel-runtime.sh" -o ./intel-runtime 2>/dev/null ||
@@ -292,7 +292,7 @@ EOF
       msg_ok "Pre-installed Python ${ML_PYTHON}"
       msg_info "Updating Intel OpenVINO machine-learning"
       for attempt in $(seq 1 3); do
-        $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT,UV_CONCURRENT_DOWNLOADS,UV_CONCURRENT_BUILDS,UV_CONCURRENT_INSTALLS -Pnu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
+        $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT,UV_CONCURRENT_DOWNLOADS,UV_CONCURRENT_BUILDS,UV_CONCURRENT_INSTALLS -Pnu immich uv sync --extra openvino --no-dev --upgrade-package watchfiles --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
         [[ $attempt -eq 3 ]] && { ML_FAILED=1; break; }
         # Parallel fetches can trip DNS rate limits (AdGuard, Pi-hole); retry one at a time.
         export UV_CONCURRENT_DOWNLOADS=1 UV_CONCURRENT_BUILDS=1 UV_CONCURRENT_INSTALLS=1
@@ -310,7 +310,7 @@ EOF
       msg_ok "Pre-installed Python ${ML_PYTHON}"
       msg_info "Updating machine-learning"
       for attempt in $(seq 1 3); do
-        $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT,UV_CONCURRENT_DOWNLOADS,UV_CONCURRENT_BUILDS,UV_CONCURRENT_INSTALLS -Pnu immich uv sync --extra cpu --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
+        $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT,UV_CONCURRENT_DOWNLOADS,UV_CONCURRENT_BUILDS,UV_CONCURRENT_INSTALLS -Pnu immich uv sync --extra cpu --no-dev --upgrade-package watchfiles --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
         [[ $attempt -eq 3 ]] && { ML_FAILED=1; break; }
         # Parallel fetches can trip DNS rate limits (AdGuard, Pi-hole); retry one at a time.
         export UV_CONCURRENT_DOWNLOADS=1 UV_CONCURRENT_BUILDS=1 UV_CONCURRENT_INSTALLS=1
