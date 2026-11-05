@@ -571,6 +571,29 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-11-05
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - OPNsense VM: wait for the FreeBSD login prompt instead of 180 seconds [@MickLesk](https://github.com/MickLesk) ([#18467](https://github.com/community-scripts/ProxmoxVE/pull/18467))
+
+  - #### 🔧 Refactor
+
+    - Tududi: run 2.0 on PostgreSQL, keep SQLite installs on 1.15.0 [@MickLesk](https://github.com/MickLesk) ([#18465](https://github.com/community-scripts/ProxmoxVE/pull/18465))
+
+### 💾 Core
+
+  - fix: keep the existing install until the new archive has extracted [@rcourtman](https://github.com/rcourtman) ([core#201](https://github.com/community-scripts/core/pull/201))
+- fix: keep the install when a clone or an Alpine extract fails [@rcourtman](https://github.com/rcourtman) ([core#210](https://github.com/community-scripts/core/pull/210))
+
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - Arcane: write both env names, stop shipping the unused .env [@MickLesk](https://github.com/MickLesk) ([#18466](https://github.com/community-scripts/ProxmoxVE/pull/18466))
+
 ## 2026-11-04
 
 ### 🚀 Updated Scripts
