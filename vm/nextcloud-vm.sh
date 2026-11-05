@@ -109,5 +109,7 @@ vm_next_steps \
   "Set the root, Nextcloud admin, and database credentials when prompted." \
   "After installation, detach the ISO: qm set ${VMID} --ide2 none." \
   "Start or reboot the VM, then open https://<VM-IP>/ for Nextcloud." \
-  "Manage the appliance through Webmin at https://<VM-IP>:12321/."
+  "Manage the appliance through Webmin at https://<VM-IP>:12321/." \
+  "Known issue: Background jobs may fail because of config.php ownership; see https://github.com/turnkeylinux/tracker/issues/2149 for the manual fix." \
+  "Known issue: Apache may return 404 for chunked-upload finalization and for paths containing dot-prefixed files or folders; see https://github.com/turnkeylinux/tracker/issues/2152 for details and the workaround."
 vm_finish "VM created; complete the TurnKey Nextcloud installation in the Proxmox console."
