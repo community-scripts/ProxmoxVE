@@ -442,7 +442,26 @@ msg_ok "Bridge interfaces have been successfully added."
 msg_ok "Created a OPNsense VM ${CL}${BL}(${HN})"
 msg_ok "Starting OPNsense VM (the bootstrap takes 10-30 minutes)"
 $STD qm start $VMID
-sleep 180
+# The FreeBSD image prints its login prompt on the serial console too. Boot takes
+# under a minute with DHCP, each NIC without a DHCP server adds a 60s timeout.
+SERIAL_LOG="${TEMP_DIR}/serial-${VMID}.log"
+timeout 900 socat -u "UNIX-CONNECT:/var/run/qemu-server/${VMID}.serial0" - >"$SERIAL_LOG" 2>/dev/null &
+SERIAL_PID=$!
+boot_wait=0
+until grep -aq 'login:' "$SERIAL_LOG" 2>/dev/null || ! kill -0 "$SERIAL_PID" 2>/dev/null; do
+  sleep 5
+  boot_wait=$((boot_wait + 5))
+done
+kill "$SERIAL_PID" 2>/dev/null || true
+if grep -aq 'login:' "$SERIAL_LOG" 2>/dev/null; then
+  msg_ok "FreeBSD booted after ${boot_wait}s"
+elif [ $boot_wait -lt 180 ]; then
+  msg_warn "Could not read the serial console, waiting 3 minutes instead"
+  sleep $((180 - boot_wait))
+else
+  msg_warn "No login prompt on the serial console after $((boot_wait / 60)) minutes; continuing"
+fi
+sleep 3
 send_line_to_vm "root"
 sleep 2
 send_line_to_vm ""
