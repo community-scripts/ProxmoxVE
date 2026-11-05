@@ -55,9 +55,13 @@ update_deb_based() {
       setup_go
       fetch_and_deploy_gh_release "xcaddy" "caddyserver/xcaddy" "binary"
 
-      msg_info "Updating xCaddy"
-      $STD xcaddy build
-      msg_ok "Updated xCaddy"
+      if (($(awk '/^MemTotal:/ {print int($2 / 1024)}' /proc/meminfo) < 1900)); then
+        msg_warn "xCaddy updated; its test build was skipped because linking Caddy needs about 2 GB RAM"
+      else
+        msg_info "Updating xCaddy"
+        $STD xcaddy build
+        msg_ok "Updated xCaddy"
+      fi
     fi
   fi
   msg_ok "Updated successfully!"

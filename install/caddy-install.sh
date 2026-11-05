@@ -23,10 +23,14 @@ setup_deb_based() {
     setup_go
     fetch_and_deploy_gh_release "xcaddy" "caddyserver/xcaddy" "binary"
 
-    msg_info "Setup xCaddy"
     $STD apt install -y git
-    $STD xcaddy build
-    msg_ok "Setup xCaddy"
+    if (($(awk '/^MemTotal:/ {print int($2 / 1024)}' /proc/meminfo) < 1900)); then
+      msg_warn "xCaddy is installed; its test build was skipped because linking Caddy needs about 2 GB RAM"
+    else
+      msg_info "Setup xCaddy"
+      $STD xcaddy build
+      msg_ok "Setup xCaddy"
+    fi
   fi
 }
 
@@ -69,10 +73,14 @@ EOF
     GO_VERSION="$(curl -fsSL https://go.dev/VERSION?m=text | head -1 | cut -c3-)" setup_go
     fetch_and_deploy_gh_release "xcaddy" "caddyserver/xcaddy" "prebuild" "latest" "/opt/xcaddy" "xcaddy_*_linux_$(arch_resolve).tar.gz"
     ln -sf /opt/xcaddy/xcaddy /usr/local/bin/xcaddy
-    msg_info "Setup xCaddy"
-    cd /opt
-    $STD xcaddy build
-    msg_ok "Setup xCaddy"
+    if (($(awk '/^MemTotal:/ {print int($2 / 1024)}' /proc/meminfo) < 1900)); then
+      msg_warn "xCaddy is installed; its test build was skipped because linking Caddy needs about 2 GB RAM"
+    else
+      msg_info "Setup xCaddy"
+      cd /opt
+      $STD xcaddy build
+      msg_ok "Setup xCaddy"
+    fi
   fi
 
   msg_info "Enabling Caddy Service"
