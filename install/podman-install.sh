@@ -48,6 +48,10 @@ msg_ok "Installed Podman"
 
 mkdir -p /etc/containers/systemd
 
+if [[ ! -x /usr/libexec/podman/quadlet ]]; then
+  msg_warn "Portainer runs as a Quadlet unit, which needs Podman 4.4 or newer (Debian 13); skipping it"
+  var_podman_portainer="n" var_podman_portainer_agent="n"
+fi
 prompt="${var_podman_portainer:-}"
 [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Portainer? <y/N> " prompt || true
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
