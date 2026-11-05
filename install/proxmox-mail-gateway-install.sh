@@ -14,12 +14,11 @@ network_check
 update_os
 
 msg_info "Installing Proxmox Mail Gateway"
-CODENAME="$(get_os_info codename)"
 setup_deb822_repo \
   "pmg" \
-  "https://enterprise.proxmox.com/debian/proxmox-release-${CODENAME}.gpg" \
+  "https://enterprise.proxmox.com/debian/proxmox-release-$(get_os_info codename).gpg" \
   "http://download.proxmox.com/debian/pmg" \
-  "${CODENAME}" \
+  "$(get_os_info codename)" \
   "pmg-no-subscription"
 $STD apt install -y proxmox-mailgateway-container
 msg_ok "Installed Proxmox Mail Gateway"
