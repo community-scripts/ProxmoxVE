@@ -39,7 +39,7 @@ function truenas_iso_lookup() {
   local pre_releases=()
 
   local all_paths=$(
-    curl -fsSL --retry 3 --retry-delay 2 --connect-timeout 15 --max-time 90 "$BASE_URL" |
+    curl -fsSL "${_CS_CURL_RETRY[@]}" --max-time 90 "$BASE_URL" |
       grep -oE 'href="[^"]+\.iso"' |
       sed 's/href="//; s/"$//' |
       grep -vE '(MASTER|ALPHA)' |
