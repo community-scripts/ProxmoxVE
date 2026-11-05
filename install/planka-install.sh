@@ -70,7 +70,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=/opt/planka
-ExecStart=/usr/bin/npm start --prod
+ExecStart=/usr/bin/npm start --production
 Restart=always
 
 [Install]
