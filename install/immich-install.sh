@@ -146,10 +146,10 @@ mkdir -p {"${APP_DIR}","${UPLOAD_DIR}","${GEO_DIR}","${INSTALL_DIR}"/cache}
 
 msg_info "Installing GeoNames data"
 cd "$GEO_DIR"
-curl_with_retry "https://download.geonames.org/export/dump/admin1CodesASCII.txt" "admin1CodesASCII.txt"
-curl_with_retry "https://download.geonames.org/export/dump/admin2Codes.txt" "admin2Codes.txt"
-curl_with_retry "https://download.geonames.org/export/dump/countryInfo.txt" "countryInfo.txt"
-curl_with_retry "https://download.geonames.org/export/dump/cities500.zip" "cities500.zip"
+CURL_RETRIES=6 CURL_CONNECT_TO=30 curl_with_retry "https://download.geonames.org/export/dump/admin1CodesASCII.txt" "admin1CodesASCII.txt"
+CURL_RETRIES=6 CURL_CONNECT_TO=30 curl_with_retry "https://download.geonames.org/export/dump/admin2Codes.txt" "admin2Codes.txt"
+CURL_RETRIES=6 CURL_CONNECT_TO=30 curl_with_retry "https://download.geonames.org/export/dump/countryInfo.txt" "countryInfo.txt"
+CURL_RETRIES=6 CURL_CONNECT_TO=30 curl_with_retry "https://download.geonames.org/export/dump/cities500.zip" "cities500.zip"
 curl_with_retry "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/v5.1.2/geojson/ne_10m_admin_0_countries.geojson" "ne_10m_admin_0_countries.geojson"
 unzip -q cities500.zip
 date --iso-8601=seconds | tr -d "\n" >geodata-date.txt
@@ -463,7 +463,7 @@ if [[ -f ~/.openvino ]]; then
   msg_ok "Pre-installed Python ${ML_PYTHON}"
   msg_info "Installing Intel OpenVINO machine-learning"
   for attempt in $(seq 1 3); do
-    $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT,UV_CONCURRENT_DOWNLOADS,UV_CONCURRENT_BUILDS,UV_CONCURRENT_INSTALLS -Pnu immich uv sync --extra openvino --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
+    $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT,UV_CONCURRENT_DOWNLOADS,UV_CONCURRENT_BUILDS,UV_CONCURRENT_INSTALLS -Pnu immich uv sync --extra openvino --no-dev --upgrade-package watchfiles --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
     [[ $attempt -eq 3 ]] && { msg_error "uv sync failed three times, the machine-learning environment was not built"; exit 1; }
     # Parallel fetches can trip DNS rate limits (AdGuard, Pi-hole); retry one at a time.
     export UV_CONCURRENT_DOWNLOADS=1 UV_CONCURRENT_BUILDS=1 UV_CONCURRENT_INSTALLS=1
@@ -481,7 +481,7 @@ else
   msg_ok "Pre-installed Python ${ML_PYTHON}"
   msg_info "Installing machine-learning"
   for attempt in $(seq 1 3); do
-    $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT,UV_CONCURRENT_DOWNLOADS,UV_CONCURRENT_BUILDS,UV_CONCURRENT_INSTALLS -Pnu immich uv sync --extra cpu --no-dev --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
+    $STD sudo --preserve-env=VIRTUAL_ENV,UV_HTTP_TIMEOUT,UV_CONCURRENT_DOWNLOADS,UV_CONCURRENT_BUILDS,UV_CONCURRENT_INSTALLS -Pnu immich uv sync --extra cpu --no-dev --upgrade-package watchfiles --active --link-mode copy -n -p "${ML_PYTHON}" --managed-python && break
     [[ $attempt -eq 3 ]] && { msg_error "uv sync failed three times, the machine-learning environment was not built"; exit 1; }
     # Parallel fetches can trip DNS rate limits (AdGuard, Pi-hole); retry one at a time.
     export UV_CONCURRENT_DOWNLOADS=1 UV_CONCURRENT_BUILDS=1 UV_CONCURRENT_INSTALLS=1
