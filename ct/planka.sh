@@ -80,6 +80,7 @@ function update_script() {
     msg_ok "Migrated Database"
 
     msg_info "Starting Service"
+    sed -i 's|ExecStart=/usr/bin/npm start --prod$|ExecStart=/usr/bin/npm start --production|' /etc/systemd/system/planka.service
     systemctl start planka
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
