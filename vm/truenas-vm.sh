@@ -39,7 +39,7 @@ function truenas_iso_lookup() {
   local pre_releases=()
 
   local all_paths=$(
-    curl -sL "$BASE_URL" |
+    curl -fsSL --retry 3 --retry-delay 2 --connect-timeout 15 --max-time 90 "$BASE_URL" |
       grep -oE 'href="[^"]+\.iso"' |
       sed 's/href="//; s/"$//' |
       grep -vE '(MASTER|ALPHA)' |
@@ -47,6 +47,7 @@ function truenas_iso_lookup() {
   )
 
   while read -r path; do
+    [[ -n "$path" ]] || continue
     local filename=$(basename "$path")
     local version=$(echo "$filename" | sed -E 's/.*TrueNAS-SCALE-([0-9]{2}\.[0-9]{2}(\.[0-9]+)*(-RC[0-9]|-BETA[0-9])?)\.iso.*/\1/')
     if [[ "$version" =~ (RC|BETA) ]]; then
@@ -139,7 +140,7 @@ post_to_api_vm
 vm_select_storage "$HN"
 
 if [ -z "${SELECTED_ISO:-}" ]; then
-  SELECTED_ISO=$(truenas_iso_lookup | grep -vE 'RC|BETA' | sort -V | tail -n 1)
+  SELECTED_ISO=$(truenas_iso_lookup | grep -vE 'RC|BETA' | sort -V | tail -n 1) || true
 
   if [ -z "$SELECTED_ISO" ]; then
     msg_error "Could not find a stable ISO for fallback."
