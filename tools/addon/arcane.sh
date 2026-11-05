@@ -58,8 +58,21 @@ function uninstall() {
 # ==============================================================================
 # UPDATE
 # ==============================================================================
+# Arcane 3 needs the ARCANE_* names, the current latest image reads only the old ones.
+function sync_env_names() {
+  local key
+  for key in ENCRYPTION_KEY PROJECTS_DIRECTORY; do
+    grep -q "^[[:space:]]*- ARCANE_${key}=" "$COMPOSE_FILE" || sed -i "/^[[:space:]]*- ${key}=/{p;s/- ${key}=/- ARCANE_${key}=/;}" "$COMPOSE_FILE"
+    grep -q "^[[:space:]]*- ${key}=" "$COMPOSE_FILE" || sed -i "/^[[:space:]]*- ARCANE_${key}=/{p;s/- ARCANE_${key}=/- ${key}=/;}" "$COMPOSE_FILE"
+  done
+  if [[ -f "$ENV_FILE" ]]; then
+    sed -i 's/^ARCANE_#/#ARCANE_/' "$ENV_FILE"
+  fi
+}
+
 function update() {
   chown -R 65532:65532 /etc/arcane/projects /etc/arcane/builds 2>/dev/null || true
+  sync_env_names
 
   msg_info "Pulling latest ${APP} image"
   cd "$INSTALL_PATH"
@@ -85,9 +98,8 @@ function install() {
   msg_ok "Created ${INSTALL_PATH}"
 
   # Generate secrets and config values
-  local ENCRYPTION_KEY JWT_SECRET PROJ_DIR BUILDS_DIR
+  local ENCRYPTION_KEY PROJ_DIR BUILDS_DIR
   ENCRYPTION_KEY=$(random_password 32)
-  JWT_SECRET=$(random_password 32)
   PROJ_DIR="/etc/arcane/projects"
   BUILDS_DIR="/etc/arcane/builds"
 
@@ -108,20 +120,12 @@ function install() {
   curl -fsSL "https://raw.githubusercontent.com/getarcaneapp/arcane/refs/heads/main/docker/examples/compose.basic.yaml" -o "$COMPOSE_FILE"
   msg_ok "Downloaded Docker Compose file"
 
-  msg_info "Downloading .env file"
-  curl -fsSL "https://raw.githubusercontent.com/getarcaneapp/arcane/refs/heads/main/.env.example" -o "$ENV_FILE"
-  chmod 600 "$ENV_FILE"
-  msg_ok "Downloaded .env file"
-
-  msg_info "Configuring compose and env files"
+  msg_info "Configuring compose file"
   sed -i '/^[[:space:]]*#/!s|/host/path/to/projects|'"$PROJ_DIR"'|g' "$COMPOSE_FILE"
   sed -i '/^[[:space:]]*#/!s|/host/path/to/builds|'"$BUILDS_DIR"'|g' "$COMPOSE_FILE"
   sed -i '/^[[:space:]]*#/!s|ENCRYPTION_KEY=.*|ENCRYPTION_KEY='"$ENCRYPTION_KEY"'|g' "$COMPOSE_FILE"
-  sed -i '/^[[:space:]]*#/!s|JWT_SECRET=.*|JWT_SECRET='"$JWT_SECRET"'|g' "$COMPOSE_FILE"
-  sed -i '/^[[:space:]]*#/!s|APP_URL=.*|APP_URL=http://localhost:'"$DEFAULT_PORT"'|g' "$ENV_FILE"
-  sed -i '/^[[:space:]]*#/!s|ENCRYPTION_KEY=.*|#&|g' "$ENV_FILE"
-  sed -i '/^[[:space:]]*#/!s|JWT_SECRET=.*|#&|g' "$ENV_FILE"
-  msg_ok "Configured compose and env files"
+  sync_env_names
+  msg_ok "Configured compose file"
 
   msg_info "Starting ${APP}"
   cd "$INSTALL_PATH"
