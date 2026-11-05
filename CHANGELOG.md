@@ -577,6 +577,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Planka: change npm start argument to --production [@CerberusStyle](https://github.com/CerberusStyle) ([#18478](https://github.com/community-scripts/ProxmoxVE/pull/18478))
     - OPNsense VM: wait for the FreeBSD login prompt instead of 180 seconds [@MickLesk](https://github.com/MickLesk) ([#18467](https://github.com/community-scripts/ProxmoxVE/pull/18467))
 
   - #### 🔧 Refactor
