@@ -4,7 +4,7 @@
 # License: MIT
 # https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
-COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/community-scripts/DevScripts/main}"
+COMMUNITY_SCRIPTS_URL="${COMMUNITY_SCRIPTS_URL:-https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main}"
 source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/pve/vm-core.func")
 load_functions
 
@@ -340,6 +340,18 @@ if [[ "$VM_STATE" != *stopped* ]]; then
   exit 226
 fi
 msg_ok "OpenWrt has shut down"
+
+# pve-bridge tags a NIC on a port of the bridge; a bridge without one only takes tags when VLAN-aware
+if [[ -n "$LAN_VLAN" && -d "/sys/class/net/${LAN_BRG}/bridge" && "$(cat "/sys/class/net/${LAN_BRG}/bridge/vlan_filtering" 2>/dev/null)" != "1" ]] &&
+  ! ls "/sys/class/net/${LAN_BRG}/brif" 2>/dev/null | grep -qE '^((eth|bond)[0-9]+|en[^.]+)(\.[0-9]+)?$'; then
+  msg_warn "LAN bridge ${LAN_BRG} has no physical port and is not VLAN-aware; the LAN NIC stays untagged"
+  LAN_VLAN=""
+fi
+if [[ -n "$VLAN" && -d "/sys/class/net/${BRG}/bridge" && "$(cat "/sys/class/net/${BRG}/bridge/vlan_filtering" 2>/dev/null)" != "1" ]] &&
+  ! ls "/sys/class/net/${BRG}/brif" 2>/dev/null | grep -qE '^((eth|bond)[0-9]+|en[^.]+)(\.[0-9]+)?$'; then
+  msg_warn "WAN bridge ${BRG} has no physical port and is not VLAN-aware; the WAN NIC stays untagged"
+  VLAN=""
+fi
 
 msg_info "Adding bridge interfaces on Proxmox side"
 qm set $VMID \
