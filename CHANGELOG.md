@@ -577,6 +577,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - OpenWRT-VM: leave the NIC untagged on a bridge without a port [@MickLesk](https://github.com/MickLesk) ([#18473](https://github.com/community-scripts/ProxmoxVE/pull/18473))
     - Podman: skip Portainer where Podman has no Quadlet [@MickLesk](https://github.com/MickLesk) ([#18469](https://github.com/community-scripts/ProxmoxVE/pull/18469))
     - Planka: change npm start argument to --production [@CerberusStyle](https://github.com/CerberusStyle) ([#18478](https://github.com/community-scripts/ProxmoxVE/pull/18478))
     - OPNsense VM: wait for the FreeBSD login prompt instead of 180 seconds [@MickLesk](https://github.com/MickLesk) ([#18467](https://github.com/community-scripts/ProxmoxVE/pull/18467))
