@@ -577,6 +577,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Thingsboard: keep the package defaults in thingsboard.conf [@MickLesk](https://github.com/MickLesk) ([#18499](https://github.com/community-scripts/ProxmoxVE/pull/18499))
     - Nexterm: keep the extracted app out of the /tmp cleanup [@MickLesk](https://github.com/MickLesk) ([#18501](https://github.com/community-scripts/ProxmoxVE/pull/18501))
     - PLANKA: run the service with node instead of nodemon [@MickLesk](https://github.com/MickLesk) ([#18503](https://github.com/community-scripts/ProxmoxVE/pull/18503))
     - MeTube/Yubal: install Deno without its shell setup [@MickLesk](https://github.com/MickLesk) ([#18406](https://github.com/community-scripts/ProxmoxVE/pull/18406))
