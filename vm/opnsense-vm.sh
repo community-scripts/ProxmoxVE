@@ -372,8 +372,6 @@ vm_fetch_image "$URL" "$CACHE_FILE" --cache --verify-xz --min-bytes $((5 * 1024 
 echo -en "\e[1A\e[0K"
 msg_ok "Downloaded ${CL}${BL}$(basename "$CACHE_FILE")${CL}"
 
-# The download sits in the image cache; only the unpacked image (2.5 GB for
-# FreeBSD 15.1, not 20) lands in TEMP_DIR, and xz knows its size up front.
 NEED_GB=$(($(xz --robot -l "$CACHE_FILE" | awk '$1 == "totals" {print $5}') / 1024 / 1024 / 1024 + 1))
 if ! check_disk_space "$TEMP_DIR" "$NEED_GB"; then
   AVAILABLE_GB=$(df -h "$TEMP_DIR" | awk 'NR==2 {print $4}')
