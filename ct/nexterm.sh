@@ -31,6 +31,8 @@ function update_script() {
     exit
   fi
 
+  echo "x /tmp/nexterm-sea-*" >/etc/tmpfiles.d/nexterm.conf
+
   if check_for_gh_release "nexterm-engine" "gnmyt/Nexterm"; then
     msg_info "Stopping nexterm-engine"
     systemctl stop nexterm-engine
@@ -46,6 +48,7 @@ function update_script() {
   if check_for_gh_release "nexterm-server" "gnmyt/Nexterm"; then
     msg_info "Stopping nexterm-server"
     systemctl stop nexterm-server
+    rm -rf /tmp/nexterm-sea-*
     msg_ok "Stopped nexterm-server"
 
     fetch_and_deploy_gh_release "nexterm-server" "gnmyt/Nexterm" "singlefile" "latest" "/opt/nexterm/server" "nexterm-server-linux-$(arch_resolve "x64" "arm64")"
