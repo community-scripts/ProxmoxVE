@@ -1,0 +1,27 @@
+name: Check Script Repo URL
+
+on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "ct/**"
+      - "install/**"
+      - "vm/**"
+      - "tools/**"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    if: github.repository == 'community-scripts/ProxmoxVE'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Reject DevScripts URLs
+        run: |
+          if grep -rnE 'community-scripts/(ProxmoxVED|DevScripts)/' ct install vm tools; then
+            echo "::error::These lines point at DevScripts, so telemetry files the runs there. Use community-scripts/ProxmoxVE."
+            exit 1
+          fi
