@@ -577,16 +577,25 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Caddy: skip the xCaddy test build below 2 GB RAM [@MickLesk](https://github.com/MickLesk) ([#18472](https://github.com/community-scripts/ProxmoxVE/pull/18472))
     - Thingsboard: keep the package defaults in thingsboard.conf [@MickLesk](https://github.com/MickLesk) ([#18499](https://github.com/community-scripts/ProxmoxVE/pull/18499))
     - Nexterm: keep the extracted app out of the /tmp cleanup [@MickLesk](https://github.com/MickLesk) ([#18501](https://github.com/community-scripts/ProxmoxVE/pull/18501))
     - PLANKA: run the service with node instead of nodemon [@MickLesk](https://github.com/MickLesk) ([#18503](https://github.com/community-scripts/ProxmoxVE/pull/18503))
     - MeTube/Yubal: install Deno without its shell setup [@MickLesk](https://github.com/MickLesk) ([#18406](https://github.com/community-scripts/ProxmoxVE/pull/18406))
     - OPNsense VM: size the temp space check to the unpacked image |  say why the EFI disk could not be allocated [@MickLesk](https://github.com/MickLesk) ([#18404](https://github.com/community-scripts/ProxmoxVE/pull/18404))
 
+  - #### 🔧 Refactor
+
+    - Technitium DNS: read the version from its GitHub releases [@MickLesk](https://github.com/MickLesk) ([#18425](https://github.com/community-scripts/ProxmoxVE/pull/18425))
+
 ### 💾 Core
 
   - fix: spot same-filesystem bind mounts on Alpine [@rcourtman](https://github.com/rcourtman) ([core#212](https://github.com/community-scripts/core/pull/212))
 - fix: report a container that went down during setup, keep finished installs [@MickLesk](https://github.com/MickLesk) ([core#211](https://github.com/community-scripts/core/pull/211))
+
+### 📚 Documentation
+
+  - ci: reject DevScripts URLs in scripts [@MickLesk](https://github.com/MickLesk) ([#18498](https://github.com/community-scripts/ProxmoxVE/pull/18498))
 
 ## 2026-11-05
 
