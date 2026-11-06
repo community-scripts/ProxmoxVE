@@ -573,9 +573,16 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-06
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - OPNsense VM: size the temp space check to the unpacked image |  say why the EFI disk could not be allocated [@MickLesk](https://github.com/MickLesk) ([#18404](https://github.com/community-scripts/ProxmoxVE/pull/18404))
+
 ### 💾 Core
 
-  - fix: report a container that went down during setup, keep finished installs [@MickLesk](https://github.com/MickLesk) ([core#211](https://github.com/community-scripts/core/pull/211))
+  - fix: spot same-filesystem bind mounts on Alpine [@rcourtman](https://github.com/rcourtman) ([core#212](https://github.com/community-scripts/core/pull/212))
+- fix: report a container that went down during setup, keep finished installs [@MickLesk](https://github.com/MickLesk) ([core#211](https://github.com/community-scripts/core/pull/211))
 
 ## 2026-11-05
 
