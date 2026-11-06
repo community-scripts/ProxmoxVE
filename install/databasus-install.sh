@@ -16,119 +16,47 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   nginx \
-  valkey \
-  mariadb-client \
-  rclone
+  libedit2 \
+  libgssapi-krb5-2 \
+  libncurses6 \
+  libreadline8t64
 msg_ok "Installed Dependencies"
 
 PG_VERSION="17" setup_postgresql
 NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
 
-msg_info "Installing Database Clients"
-# Create PostgreSQL version symlinks for compatibility
-for v in 12 13 14 15 16 18; do
-  ln -sf /usr/lib/postgresql/17 /usr/lib/postgresql/$v
-done
-# Install MongoDB Database Tools via direct .deb (no APT repo for Debian 13)
-[[ "$(get_os_info id)" == "ubuntu" ]] && MONGO_DIST="ubuntu2204" || MONGO_DIST="debian12"
-# MongoDB only publishes arm64 builds for Ubuntu
-[[ "$(arch_resolve "x86_64" "arm64")" == "arm64" ]] && MONGO_DIST="ubuntu2204"
-MONGO_VERSION=$(get_latest_gh_tag "mongodb/mongo-tools" "100." || echo "100.16.1")
-fetch_and_deploy_from_url "https://fastdl.mongodb.org/tools/db/mongodb-database-tools-${MONGO_DIST}-$(arch_resolve "x86_64" "arm64")-${MONGO_VERSION}.deb" ""
-mkdir -p /usr/local/mongodb-database-tools/bin
-[[ -f /usr/bin/mongodump ]] && ln -sf /usr/bin/mongodump /usr/local/mongodb-database-tools/bin/mongodump
-[[ -f /usr/bin/mongorestore ]] && ln -sf /usr/bin/mongorestore /usr/local/mongodb-database-tools/bin/mongorestore
-# Create MariaDB and MySQL client symlinks for compatibility
-mkdir -p /usr/local/mariadb-{10.6,12.1}/bin /usr/local/mysql-{5.7,8.0,8.4,9}/bin
-for dir in /usr/local/mariadb-{10.6,12.1}/bin; do
-  ln -sf /usr/bin/mariadb-dump "$dir/mariadb-dump"
-  ln -sf /usr/bin/mariadb "$dir/mariadb"
-done
-for dir in /usr/local/mysql-{5.7,8.0,8.4,9}/bin; do
-  ln -sf /usr/bin/mariadb-dump "$dir/mysqldump"
-  ln -sf /usr/bin/mariadb "$dir/mysql"
-done
-msg_ok "Installed Database Clients"
-
 fetch_and_deploy_gh_release "databasus" "databasus/databasus" "tarball" "latest" "/opt/databasus"
 GO_VERSION="$(grep -m1 '^go ' /opt/databasus/backend/go.mod | awk '{print $2}')" setup_go
 
 msg_info "Building Databasus (Patience)"
+RELEASE=$(cat ~/.databasus)
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 cd /opt/databasus/frontend
-
 $STD corepack prepare pnpm@latest --activate
 $STD pnpm install --frozen-lockfile
-$STD pnpm run build
+$STD env VITE_APP_VERSION="${RELEASE}" pnpm run build
 cd /opt/databasus/backend
-$STD go mod tidy
-$STD go mod download
-$STD go install github.com/swaggo/swag/cmd/swag@latest
-$STD /root/go/bin/swag init -g cmd/main.go -o swagger
-$STD env CGO_ENABLED=0 GOOS=linux GOARCH=$(arch_resolve) go build -o databasus ./cmd
-mv /opt/databasus/backend/databasus /opt/databasus/databasus
+$STD env CGO_ENABLED=0 GOOS=linux GOARCH="$(arch_resolve)" go build -o /opt/databasus/databasus ./cmd/databasus
+mkdir -p /opt/databasus/agent-binaries
+for arch in amd64 arm64; do
+  $STD env CGO_ENABLED=0 GOOS=linux GOARCH=$arch go build -ldflags "-X main.Version=${RELEASE}" -o /opt/databasus/agent-binaries/databasus-verification-agent-linux-$arch ./cmd/verification-agent
+done
 mkdir -p /databasus-data/{pgdata,temp,backups,data,logs}
 mkdir -p /opt/databasus/ui/build
-mkdir -p /opt/databasus/migrations
 cp -r /opt/databasus/frontend/dist/* /opt/databasus/ui/build/
-cp -r /opt/databasus/backend/migrations/* /opt/databasus/migrations/
 chown -R postgres:postgres /databasus-data
 msg_ok "Built Databasus"
 
 msg_info "Configuring Databasus"
-JWT_SECRET=$(openssl rand -hex 32)
-ENCRYPTION_KEY=$(openssl rand -hex 32)
-# Install goose for migrations
-$STD go install github.com/pressly/goose/v3/cmd/goose@latest
-ln -sf /root/go/bin/goose /usr/local/bin/goose
 cat <<EOF >/.env
-# Environment
 ENV_MODE=production
-
-# Server
-SERVER_PORT=4005
-SERVER_HOST=0.0.0.0
-
-# Database
+APP_VERSION=${RELEASE}
 DATABASE_DSN=host=localhost user=postgres password=postgres dbname=databasus port=5432 sslmode=disable
-DATABASE_URL=postgres://postgres:postgres@localhost:5432/databasus?sslmode=disable
-
-# Migrations
-GOOSE_DRIVER=postgres
-GOOSE_DBSTRING=postgres://postgres:postgres@localhost:5432/databasus?sslmode=disable
-GOOSE_MIGRATION_DIR=/opt/databasus/migrations
-
-# Valkey (Redis-compatible cache)
-VALKEY_HOST=localhost
-VALKEY_PORT=6379
-
-# Security
-JWT_SECRET=${JWT_SECRET}
-ENCRYPTION_KEY=${ENCRYPTION_KEY}
-
-# Paths
-DATA_DIR=/databasus-data/data
-BACKUP_DIR=/databasus-data/backups
-LOG_DIR=/databasus-data/logs
 EOF
 chmod 600 /.env
 msg_ok "Configured Databasus"
 
-msg_info "Configuring Valkey"
-cat <<EOF >/etc/valkey/valkey.conf
-port 6379
-bind 127.0.0.1
-protected-mode yes
-save ""
-maxmemory 256mb
-maxmemory-policy allkeys-lru
-EOF
-systemctl enable -q --now valkey-server
-systemctl restart valkey-server
-msg_ok "Configured Valkey"
-
 msg_info "Creating Database"
-# Configure PostgreSQL to allow local password auth for databasus
 PG_HBA="/etc/postgresql/17/main/pg_hba.conf"
 if ! grep -q "databasus" "$PG_HBA"; then
   sed -i '/^local\s*all\s*all/i local   databasus   postgres                                trust' "$PG_HBA"
@@ -143,8 +71,8 @@ msg_info "Creating Databasus Service"
 cat <<EOF >/etc/systemd/system/databasus.service
 [Unit]
 Description=Databasus - Database Backup Management
-After=network.target postgresql.service valkey.service
-Requires=postgresql.service valkey.service
+After=network.target postgresql.service
+Requires=postgresql.service
 
 [Service]
 Type=simple
