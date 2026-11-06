@@ -28,6 +28,7 @@ setup_deb_based() {
       msg_warn "xCaddy is installed; its test build was skipped because linking Caddy needs about 2 GB RAM"
     else
       msg_info "Setup xCaddy"
+      cd /opt
       $STD xcaddy build
       msg_ok "Setup xCaddy"
     fi
