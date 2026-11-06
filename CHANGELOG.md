@@ -571,6 +571,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-11-06
+
+### 💾 Core
+
+  - fix: report a container that went down during setup, keep finished installs [@MickLesk](https://github.com/MickLesk) ([core#211](https://github.com/community-scripts/core/pull/211))
+
 ## 2026-11-05
 
 ### 🚀 Updated Scripts
