@@ -30,6 +30,15 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  if ! grep -q "^Environment=HOME=" /etc/systemd/system/planka.service; then
+    msg_info "Updating Service"
+    sed -i -e '/^Environment=NODE_ENV=/d' -e 's|^ExecStart=.*|Environment=NODE_ENV=production\nEnvironment=HOME=/root\nExecStart=/usr/bin/node app.js --prod|' /etc/systemd/system/planka.service
+    systemctl daemon-reload
+    systemctl restart planka
+    msg_ok "Updated Service"
+  fi
+
   if check_for_gh_release "planka" "plankanban/planka"; then
     msg_info "Stopping Service"
     systemctl stop planka
@@ -80,8 +89,6 @@ function update_script() {
     msg_ok "Migrated Database"
 
     msg_info "Starting Service"
-    sed -i 's|ExecStart=/usr/bin/npm start --prod$|ExecStart=/usr/bin/npm start --production|' /etc/systemd/system/planka.service
-    systemctl daemon-reload
     systemctl start planka
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
