@@ -577,6 +577,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - PLANKA: run the service with node instead of nodemon [@MickLesk](https://github.com/MickLesk) ([#18503](https://github.com/community-scripts/ProxmoxVE/pull/18503))
+    - MeTube/Yubal: install Deno without its shell setup [@MickLesk](https://github.com/MickLesk) ([#18406](https://github.com/community-scripts/ProxmoxVE/pull/18406))
     - OPNsense VM: size the temp space check to the unpacked image |  say why the EFI disk could not be allocated [@MickLesk](https://github.com/MickLesk) ([#18404](https://github.com/community-scripts/ProxmoxVE/pull/18404))
 
 ### 💾 Core
