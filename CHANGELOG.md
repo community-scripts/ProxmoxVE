@@ -577,6 +577,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - UmbrelOS-VM: report runs as ProxmoxVE, not DevScripts [@MickLesk](https://github.com/MickLesk) ([#18497](https://github.com/community-scripts/ProxmoxVE/pull/18497))
     - Caddy: skip the xCaddy test build below 2 GB RAM [@MickLesk](https://github.com/MickLesk) ([#18472](https://github.com/community-scripts/ProxmoxVE/pull/18472))
     - Thingsboard: keep the package defaults in thingsboard.conf [@MickLesk](https://github.com/MickLesk) ([#18499](https://github.com/community-scripts/ProxmoxVE/pull/18499))
     - Nexterm: keep the extracted app out of the /tmp cleanup [@MickLesk](https://github.com/MickLesk) ([#18501](https://github.com/community-scripts/ProxmoxVE/pull/18501))
