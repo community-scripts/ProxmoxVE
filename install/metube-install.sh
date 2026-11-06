@@ -26,7 +26,7 @@ NODE_VERSION="24" NODE_MODULE="corepack,pnpm" setup_nodejs
 
 msg_info "Installing Deno"
 export DENO_INSTALL="/usr/local"
-curl -fsSL https://deno.land/install.sh | $STD sh -s -- -y
+curl -fsSL https://deno.land/install.sh | CI=1 $STD sh -s
 [[ ":$PATH:" != *":/usr/local/bin:"* ]] &&
   echo -e "\nexport PATH=\"/usr/local/bin:\$PATH\"" >>~/.bashrc &&
   source ~/.bashrc

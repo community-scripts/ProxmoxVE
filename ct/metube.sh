@@ -36,7 +36,7 @@ function update_script() {
     source ~/.bashrc
     if ! command -v deno &>/dev/null; then
       export DENO_INSTALL="/usr/local"
-      curl -fsSL https://deno.land/install.sh | $STD sh -s -- -y
+      curl -fsSL https://deno.land/install.sh | CI=1 $STD sh -s
     else
       $STD deno upgrade
     fi

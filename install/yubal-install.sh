@@ -31,7 +31,7 @@ ln -sf /opt/bun/bin/bunx /usr/local/bin/bunx
 msg_ok "Installed Bun"
 
 msg_info "Installing Deno"
-$STD sh -c "curl -fsSL https://deno.land/install.sh | DENO_INSTALL=/usr/local sh -s -- -y"
+curl -fsSL https://deno.land/install.sh | CI=1 $STD sh -s
 msg_ok "Installed Deno"
 
 msg_info "Creating directories"
