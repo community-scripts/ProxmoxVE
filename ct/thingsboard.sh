@@ -31,12 +31,30 @@ function update_script() {
   fi
 
   JAVA_VERSION="25" setup_java
+
+  if ! grep -q "install.data_dir" /etc/thingsboard/conf/thingsboard.conf; then
+    msg_info "Restoring Package Defaults"
+    cat <<'EOF' >>/etc/thingsboard/conf/thingsboard.conf
+
+export JAVA_OPTS="$JAVA_OPTS -Dplatform=deb -Dinstall.data_dir=/usr/share/thingsboard/data"
+export JAVA_OPTS="$JAVA_OPTS -Xlog:gc*,heap*,age*,safepoint=debug:file=/var/log/thingsboard/gc.log:time,uptime,level,tags:filecount=10,filesize=10M"
+export JAVA_OPTS="$JAVA_OPTS -XX:+IgnoreUnrecognizedVMOptions -XX:+HeapDumpOnOutOfMemoryError"
+export JAVA_OPTS="$JAVA_OPTS -XX:-UseBiasedLocking -XX:+UseTLAB -XX:+ResizeTLAB -XX:+PerfDisableSharedMem -XX:+UseCondCardMark"
+export JAVA_OPTS="$JAVA_OPTS -XX:+UseG1GC -XX:MaxGCPauseMillis=500 -XX:+UseStringDeduplication -XX:+ParallelRefProcEnabled -XX:MaxTenuringThreshold=10"
+export LOG_FILENAME=thingsboard.out
+export LOADER_PATH=/usr/share/thingsboard/conf,/usr/share/thingsboard/extensions
+export SQL_DATA_FOLDER=/usr/share/thingsboard/data/sql
+EOF
+    systemctl restart thingsboard
+    msg_ok "Restored Package Defaults"
+  fi
+
   if check_for_gh_release "thingsboard" "thingsboard/thingsboard"; then
     msg_info "Stopping Service"
     systemctl stop thingsboard
     msg_ok "Stopped Service"
 
-    fetch_and_deploy_gh_release "thingsboard" "thingsboard/thingsboard" "binary" "latest" "/tmp" "thingsboard-*.deb"
+    DPKG_FORCE_CONFOLD=1 fetch_and_deploy_gh_release "thingsboard" "thingsboard/thingsboard" "binary" "latest" "/tmp" "thingsboard-*.deb"
 
     msg_info "Running Database Upgrade"
     $STD /usr/share/thingsboard/bin/install/upgrade.sh
