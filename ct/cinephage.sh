@@ -36,7 +36,7 @@ function update_script() {
     systemctl stop cinephage
     msg_ok "Stopped Cinephage"
 
-    NODE_VERSION="24" setup_nodejs
+    NODE_VERSION="26" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "cinephage" "MoldyTaint/Cinephage" "tarball"
 
     msg_info "Building Cinephage"
