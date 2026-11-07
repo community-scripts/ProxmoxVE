@@ -589,7 +589,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Minor fixes: restart php-fpm during sigpipe, Install jq for forge commands  [@MickLesk](https://github.com/MickLesk) ([core#213](https://github.com/community-scripts/core/pull/213))
+  - nvidia: close the hardware acceleration step when no GPU is usable | pin the whole NVIDIA userspace to the host's driver version [@MickLesk](https://github.com/MickLesk) ([core#215](https://github.com/community-scripts/core/pull/215))
+- fix: stage release downloads on disk, not in /tmp [@rcourtman](https://github.com/rcourtman) ([core#218](https://github.com/community-scripts/core/pull/218))
+- Minor fixes: restart php-fpm during sigpipe, Install jq for forge commands  [@MickLesk](https://github.com/MickLesk) ([core#213](https://github.com/community-scripts/core/pull/213))
 - incus: name the project restriction that refuses an Incus launch [@MickLesk](https://github.com/MickLesk) ([core#214](https://github.com/community-scripts/core/pull/214))
 
 ## 2026-11-06
