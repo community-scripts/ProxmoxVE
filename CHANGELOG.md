@@ -579,6 +579,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - RomM: emit player isolation headers from the serving location [@adotagarwal](https://github.com/adotagarwal) ([#18511](https://github.com/community-scripts/ProxmoxVE/pull/18511))
+
   - #### 💥 Breaking Changes
 
     - fix: gotenberg: update to v9 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#18491](https://github.com/community-scripts/ProxmoxVE/pull/18491))
