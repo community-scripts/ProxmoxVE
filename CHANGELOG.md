@@ -587,6 +587,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - fix: gotenberg: update to v9 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#18491](https://github.com/community-scripts/ProxmoxVE/pull/18491))
 
+### 💾 Core
+
+  - Minor fixes: restart php-fpm during sigpipe, Install jq for forge commands  [@MickLesk](https://github.com/MickLesk) ([core#213](https://github.com/community-scripts/core/pull/213))
+- incus: name the project restriction that refuses an Incus launch [@MickLesk](https://github.com/MickLesk) ([core#214](https://github.com/community-scripts/core/pull/214))
+
 ## 2026-11-06
 
 ### 🚀 Updated Scripts
