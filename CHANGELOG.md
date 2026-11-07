@@ -573,6 +573,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-07
 
+### 🚀 Updated Scripts
+
+  - #### 💥 Breaking Changes
+
+    - fix: gotenberg: update to v9 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#18491](https://github.com/community-scripts/ProxmoxVE/pull/18491))
+
 ## 2026-11-06
 
 ### 🚀 Updated Scripts
