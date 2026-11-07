@@ -257,15 +257,33 @@ map $http_upgrade $connection_upgrade {
     '' close;
 }
 
+# COEP/COOP for the EmulatorJS and js-dos players (SharedArrayBuffer needs a
+# crossOriginIsolated document). Matched on $request_uri because try_files
+# rewrites $uri to /index.html before add_header runs, so a per-location
+# add_header on the player route never fires. Mirrors upstream RomM's
+# docker/nginx/templates/default.conf.template.
+map $request_uri $coep_header {
+    default        "";
+    ~^/rom/.*/(ejs|jsdos)(\?|$) "require-corp";
+}
+map $request_uri $coop_header {
+    default        "";
+    ~^/rom/.*/(ejs|jsdos)(\?|$) "same-origin";
+}
+
 server {
     listen 80;
     server_name _;
     root /opt/romm/frontend/dist;
     client_max_body_size 0;
 
-    # Frontend SPA
+    # Frontend SPA - also emits the player isolation headers: the player URLs
+    # fall through try_files to /index.html, which this location serves
     location / {
         try_files $uri $uri/ /index.html;
+        add_header Cache-Control "no-cache";
+        add_header Cross-Origin-Embedder-Policy $coep_header;
+        add_header Cross-Origin-Opener-Policy $coop_header;
     }
 
     # Static assets
@@ -274,13 +292,6 @@ server {
         try_files $uri $uri/ =404;
         expires 1y;
         add_header Cache-Control "public, immutable";
-    }
-
-    # EmulatorJS player - requires COOP/COEP headers for SharedArrayBuffer
-    location ~ ^/rom/.*/ejs$ {
-        add_header Cross-Origin-Embedder-Policy "require-corp";
-        add_header Cross-Origin-Opener-Policy "same-origin";
-        try_files $uri /index.html;
     }
 
     # Backend API
