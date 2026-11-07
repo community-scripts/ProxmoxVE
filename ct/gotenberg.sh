@@ -45,15 +45,32 @@ function update_script() {
     export CGO_ENABLED=0
     $STD go mod download
     $STD go build -o /usr/local/bin/gotenberg \
-      -ldflags "-s -w -X 'github.com/gotenberg/gotenberg/v8/cmd.Version=$(cat ~/.gotenberg)'" \
+      -ldflags "-s -w -X 'github.com/gotenberg/gotenberg/v9/cmd.Version=$(cat ~/.gotenberg)'" \
       cmd/gotenberg/main.go
     msg_ok "Built gotenberg"
 
-    msg_info "Updating unoconverter"
-    UNOCONVERTER_VERSION=$(get_latest_github_release "gotenberg/unoconverter" "false")
-    download_file "https://raw.githubusercontent.com/gotenberg/unoconverter/${UNOCONVERTER_VERSION}/unoconv" /usr/local/bin/unoconverter
-    chmod +x /usr/local/bin/unoconverter
-    msg_ok "Updated unoconverter"
+    LOK_VERSION="$(awk -F= '/^ARG LOK_VERSION=/{print $2}' /opt/gotenberg/build/Dockerfile)"
+    fetch_and_deploy_gh_release "lok" "gotenberg/lok" "prebuild" "$LOK_VERSION" "/usr/local/bin" "lok_${LOK_VERSION#v}_linux_$(arch_resolve "amd64" "arm64").tar.gz"
+
+    msg_info "Migrating to Gotenberg 9"
+    CODENAME=$(get_os_info codename)
+    setup_deb822_repo \
+      "debian-backports" \
+      "file:///usr/share/keyrings/debian-archive-keyring.gpg" \
+      "http://deb.debian.org/debian" \
+      "${CODENAME}-backports" \
+      "main"
+    $STD apt install -y fonts-urw-base35
+    $STD apt install -y -t "${CODENAME}-backports" \
+      libreoffice-writer libreoffice-calc libreoffice-impress libreoffice-draw libreoffice-math
+    $STD apt purge -y python3-uno python-is-python3 pdftk-java qpdf libimage-exiftool-perl
+    $STD apt autoremove -y
+    rm -rf /usr/local/bin/unoconverter /usr/local/bin/pdfcpu /opt/pdfcpu
+    sed -i '/^Environment=\(UNOCONVERTER\|PDFTK\|QPDF\|EXIFTOOL\|PDFCPU\)_BIN_PATH=/d' /etc/systemd/system/gotenberg.service
+    grep -q '^Environment=LOK_BIN_PATH=' /etc/systemd/system/gotenberg.service ||
+      sed -i '/^Environment=LIBREOFFICE_BIN_PATH=/a Environment=LOK_BIN_PATH=/usr/local/bin/lok' /etc/systemd/system/gotenberg.service
+    systemctl daemon-reload
+    msg_ok "Migrated to Gotenberg 9"
 
     msg_info "Starting Service"
     systemctl start gotenberg
