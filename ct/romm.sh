@@ -107,8 +107,9 @@ function update_script() {
     ln -sfn "$ROMM_BASE"/resources /opt/romm/frontend/dist/assets/romm/resources
     ln -sfn "$ROMM_BASE"/assets /opt/romm/frontend/dist/assets/romm/assets
     if [[ -f /etc/angie/http.d/romm.conf ]]; then
-      if ! grep -q "js_content decode.decodeBase64" /etc/angie/http.d/romm.conf; then
-        msg_info "Adding missing /decode and /cache locations to Angie config"
+      if ! grep -q "js_content decode.decodeBase64" /etc/angie/http.d/romm.conf ||
+        ! grep -q "coep_header" /etc/angie/http.d/romm.conf; then
+        msg_info "Updating Angie config (decode/cache locations, player isolation headers)"
         dpkg -l angie-module-njs &>/dev/null || $STD apt install -y angie-module-njs
         grep -q "ngx_http_js_module.so" /etc/angie/angie.conf || sed -i '1i load_module modules/ngx_http_js_module.so;' /etc/angie/angie.conf
         mkdir -p /etc/angie/js "${ROMM_BASE}/cache"
@@ -147,6 +148,20 @@ map \$http_upgrade \$connection_upgrade {
     '' close;
 }
 
+# COEP/COOP for the EmulatorJS and js-dos players (SharedArrayBuffer needs a
+# crossOriginIsolated document). Matched on \$request_uri because try_files
+# rewrites \$uri to /index.html before add_header runs, so a per-location
+# add_header on the player route never fires. Mirrors upstream RomM's
+# docker/nginx/templates/default.conf.template.
+map \$request_uri \$coep_header {
+    default        "";
+    ~^/rom/.*/(ejs|jsdos)(\?|\$) "require-corp";
+}
+map \$request_uri \$coop_header {
+    default        "";
+    ~^/rom/.*/(ejs|jsdos)(\?|\$) "same-origin";
+}
+
 server {
     listen 80;
     server_name _;
@@ -155,6 +170,9 @@ server {
 
     location / {
         try_files \$uri \$uri/ /index.html;
+        add_header Cache-Control "no-cache";
+        add_header Cross-Origin-Embedder-Policy \$coep_header;
+        add_header Cross-Origin-Opener-Policy \$coop_header;
     }
 
     location /assets {
@@ -162,12 +180,6 @@ server {
         try_files \$uri \$uri/ =404;
         expires 1y;
         add_header Cache-Control "public, immutable";
-    }
-
-    location ~ ^/rom/.*/ejs\$ {
-        add_header Cross-Origin-Embedder-Policy "require-corp";
-        add_header Cross-Origin-Opener-Policy "same-origin";
-        try_files \$uri /index.html;
     }
 
     location /api {
@@ -209,7 +221,7 @@ server {
     }
 }
 EOF
-        msg_ok "Added /decode and /cache locations"
+        msg_ok "Updated Angie config"
       else
         sed -i -e "s|alias .*/library/;|alias ${ROMM_BASE}/library/;|" \
           -e "s|alias .*/cache/;|alias ${ROMM_BASE}/cache/;|" /etc/angie/http.d/romm.conf
