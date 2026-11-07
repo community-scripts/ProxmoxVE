@@ -573,6 +573,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-07
 
+### 🆕 New Scripts
+
+  - EspoCRM ([#18519](https://github.com/community-scripts/ProxmoxVE/pull/18519))
+
 ### 🚀 Updated Scripts
 
   - #### 💥 Breaking Changes
