@@ -33,7 +33,7 @@ msg_ok "Installed Dependencies"
 setup_mariadb
 MARIADB_DB_NAME="espocrm" MARIADB_DB_USER="espocrm" setup_mariadb_db
 PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="ldap" setup_php
-fetch_and_deploy_gh_release "espocrm" "espocrm/espocrm" "prebuild" "latest" "/opt/espocrm" "EspoCRM-*.zip"
+fetch_and_deploy_gh_release "espo-crm" "espocrm/espocrm" "prebuild" "latest" "/opt/espocrm" "EspoCRM-*.zip"
 
 msg_info "Configuring EspoCRM"
 cd /opt/espocrm
