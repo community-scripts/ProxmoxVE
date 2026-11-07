@@ -34,7 +34,6 @@ cd /opt/firefox-syncserver
 $STD cargo build --release --locked --no-default-features --features=syncstorage-db/postgres --features=tokenserver-db/postgres --features=py_verifier
 cp target/release/syncserver /usr/local/bin/syncserver
 rm -rf target
-# The binary embeds the system libpython, so the verifier packages must be built for that same interpreter
 $STD uv venv --python /usr/bin/python3 /opt/firefox-syncserver/.venv
 $STD uv pip install --python /opt/firefox-syncserver/.venv/bin/python pyfxa tokenlib cryptography
 msg_ok "Built Firefox Syncserver"
@@ -58,7 +57,6 @@ SYNC_TOKENSERVER__FXA_OAUTH_SERVER_URL=https://oauth.accounts.firefox.com
 SYNC_TOKENSERVER__INIT_NODE_URL=http://${LOCAL_IP}:8000
 EOF
 chmod 600 /opt/firefox-syncserver_data/.env
-# The server only ever inserts INIT_NODE_URL; keep it the single node so a changed URL needs just a restart
 cat <<'EOF' >/opt/firefox-syncserver_data/nodes.sql
 SELECT to_regclass('nodes') IS NOT NULL AS ready \gset
 \if :ready
