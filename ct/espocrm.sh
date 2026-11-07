@@ -35,18 +35,17 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "espocrm" "espocrm/espocrm"; then
+  if check_for_gh_release "espo-crm" "espocrm/espocrm"; then
     msg_info "Stopping Services"
     systemctl stop nginx cron php8.4-fpm
     msg_ok "Stopped Services"
 
-    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="data custom client/custom" fetch_and_deploy_gh_release "espocrm" "espocrm/espocrm" "prebuild" "latest" "/opt/espocrm" "EspoCRM-*.zip"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="data custom client/custom" fetch_and_deploy_gh_release "espo-crm" "espocrm/espocrm" "prebuild" "latest" "/opt/espocrm" "EspoCRM-*.zip"
 
     msg_info "Migrating EspoCRM"
     cd /opt/espocrm
     $STD php bin/command clear-cache
     if ! $STD php bin/command migrate; then
-      rm -f ~/.espocrm
       chown -R www-data:www-data /opt/espocrm
       systemctl start php8.4-fpm
       systemctl start cron nginx
