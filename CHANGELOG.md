@@ -594,6 +594,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Databasus: build 3.65 and ship the verification agent [@MickLesk](https://github.com/MickLesk) ([#18500](https://github.com/community-scripts/ProxmoxVE/pull/18500))
 
+### 💾 Core
+
+  - fix: a closed console no longer ends a running setup | ERR trap fixes | check VM ID before creating [@MickLesk](https://github.com/MickLesk) ([core#219](https://github.com/community-scripts/core/pull/219))
+
 ## 2026-11-07
 
 ### 🆕 New Scripts
