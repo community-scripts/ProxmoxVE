@@ -583,6 +583,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-08
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Databasus: build 3.65 and ship the verification agent [@MickLesk](https://github.com/MickLesk) ([#18500](https://github.com/community-scripts/ProxmoxVE/pull/18500))
+
 ## 2026-11-07
 
 ### 🆕 New Scripts
