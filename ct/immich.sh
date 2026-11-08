@@ -419,7 +419,7 @@ function compile_libjxl() {
     $STD git clone https://github.com/libjxl/libjxl.git "$SOURCE"
     cd "$SOURCE"
     $STD git reset --hard "$LIBJXL_REVISION"
-    $STD git submodule update --init --recursive --depth 1 --recommend-shallow
+    $STD git submodule update --init --recursive --depth 1 --recommend-shallow -- third_party
     mkdir build
     cd build
     $STD cmake \
