@@ -54,35 +54,35 @@ function run_lxc_clean() {
   header_info
   name=$(pct exec "$container" -- hostname)
 
-  pct exec "$container" -- bash -c '
+  pct exec "$container" -- sh -c '
     BL="\033[36m"; GN="\033[1;92m"; CL="\033[m"
     name=$(hostname)
     if [ -e /etc/alpine-release ]; then
-      echo -e "${BL}[Info]${GN} Cleaning $name (Alpine)${CL}\n"
+      printf "%b\n\n" "${BL}[Info]${GN} Cleaning $name (Alpine)${CL}"
       apk cache clean
       find /var/log -type f -delete 2>/dev/null
       find /tmp -mindepth 1 -delete 2>/dev/null
       apk update
     elif [ -e /etc/redhat-release ]; then
-      echo -e "${BL}[Info]${GN} Cleaning $name (CentOS)${CL}\n"
+      printf "%b\n\n" "${BL}[Info]${GN} Cleaning $name (CentOS)${CL}"
       yum clean all
       find /var/log -type f -delete 2>/dev/null
       find /tmp -mindepth 1 -delete 2>/dev/null
       yum update
       yum upgrade -y
     else
-      echo -e "${BL}[Info]${GN} Cleaning $name (Debian/Ubuntu)${CL}\n"
+      printf "%b\n\n" "${BL}[Info]${GN} Cleaning $name (Debian/Ubuntu)${CL}"
       find /var/cache -type f -delete 2>/dev/null
       find /var/log -type f -delete 2>/dev/null
       find /tmp -mindepth 1 -delete 2>/dev/null
       apt -y --purge autoremove
       apt -y autoclean
-      rm -rf /var/lib/apt/lists/*
       apt update
     fi
   '
 }
 
+failed_containers=()
 for container in $(pct list | awk '{if(NR>1) print $1}'); do
   excluded=0
   for ex in $excluded_containers; do
@@ -112,17 +112,25 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
 
   if [ "$template" == "false" ] && [ "$status" == "status: stopped" ]; then
     echo -e "${BL}[Info]${GN} Starting${BL} $container ${CL} \n"
-    pct start "$container"
+    if ! pct start "$container"; then
+      failed_containers+=("$container (start)")
+      continue
+    fi
     echo -e "${BL}[Info]${GN} Waiting For${BL} $container${CL}${GN} To Start ${CL} \n"
     sleep 5
-    run_lxc_clean "$container"
+    run_lxc_clean "$container" || failed_containers+=("$container")
     echo -e "${BL}[Info]${GN} Shutting down${BL} $container ${CL} \n"
     pct shutdown "$container" &
   elif [ "$status" == "status: running" ]; then
-    run_lxc_clean "$container"
+    run_lxc_clean "$container" || failed_containers+=("$container")
   fi
 done
 
 wait
 header_info
+if [ "${#failed_containers[@]}" -gt 0 ]; then
+  echo -e "${RD}Cleaning failed in these containers:${CL}"
+  printf '%s\n' "${failed_containers[@]}"
+  exit 1
+fi
 echo -e "${GN} Finished, Selected Containers Cleaned. ${CL} \n"
