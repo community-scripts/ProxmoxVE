@@ -129,6 +129,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 
+
+
+
 <details>
 <summary><h2>📜 History</h2></summary>
 
@@ -136,6 +139,13 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 <details>
 <summary><h3>2026</h3></summary>
 
+
+<details>
+<summary><h4>November (7 entries)</h4></summary>
+
+[View November 2026 Changelog](.github/changelogs/2026/11.md)
+
+</details>
 
 <details>
 <summary><h4>October (31 entries)</h4></summary>
@@ -1343,188 +1353,3 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### ✨ New Features
 
     - FileBrowser Quantum: migrate the config and database to v2 [@MickLesk](https://github.com/MickLesk) ([#17815](https://github.com/community-scripts/ProxmoxVE/pull/17815))
-
-## 2026-10-08
-
-### 🆕 New Scripts
-
-  - Unifi-OS-Server VM ([#17752](https://github.com/community-scripts/ProxmoxVE/pull/17752))
-- ZimaOS VM ([#17778](https://github.com/community-scripts/ProxmoxVE/pull/17778))
-
-### 🚀 Updated Scripts
-
-  - Revert "Immich: Pin to v3.3.0" [@MickLesk](https://github.com/MickLesk) ([#17767](https://github.com/community-scripts/ProxmoxVE/pull/17767))
-
-  - #### 🐞 Bug Fixes
-
-    - Homarr: replace the musl better-sqlite3 that v2.3.0 ships for Debian [@MickLesk](https://github.com/MickLesk) ([#17789](https://github.com/community-scripts/ProxmoxVE/pull/17789))
-    - CLIProxyAPI: keep plugins and data across updates [@MickLesk](https://github.com/MickLesk) ([#17790](https://github.com/community-scripts/ProxmoxVE/pull/17790))
-    - Kima-Hub: install the Python services into a uv venv [@MickLesk](https://github.com/MickLesk) ([#17791](https://github.com/community-scripts/ProxmoxVE/pull/17791))
-
-  - #### ✨ New Features
-
-    - Immich: Pin to 3.3.0 / Update ML Python to 3.13 [@MickLesk](https://github.com/MickLesk) ([#17770](https://github.com/community-scripts/ProxmoxVE/pull/17770))
-
-  - #### 🔧 Refactor
-
-    - Refactor: OPNsense VM [@MickLesk](https://github.com/MickLesk) ([#17785](https://github.com/community-scripts/ProxmoxVE/pull/17785))
-    - Refactor: Nextcloud VM (Turnkey) [@MickLesk](https://github.com/MickLesk) ([#17787](https://github.com/community-scripts/ProxmoxVE/pull/17787))
-    - Refactor: OpenWrt VM [@MickLesk](https://github.com/MickLesk) ([#17774](https://github.com/community-scripts/ProxmoxVE/pull/17774))
-    - Refactor: Ubuntu VM [@MickLesk](https://github.com/MickLesk) ([#17776](https://github.com/community-scripts/ProxmoxVE/pull/17776))
-
-### 💾 Core
-
-  - Tolerate a missing datacenter.cfg in vm_keyboard_default [@MickLesk](https://github.com/MickLesk) ([core#124](https://github.com/community-scripts/core/pull/124))
-- Take the ISO storage from the disk pool when it can hold ISOs [@MickLesk](https://github.com/MickLesk) ([core#122](https://github.com/community-scripts/core/pull/122))
-- Shared VM helpers: disk import, releases, checksums, first boot, IP by MAC [@MickLesk](https://github.com/MickLesk) ([core#117](https://github.com/community-scripts/core/pull/117))
-- tools: forge truncated release list [@MickLesk](https://github.com/MickLesk) ([core#118](https://github.com/community-scripts/core/pull/118))
-- Remember a kept cached image until the upstream changes [@MickLesk](https://github.com/MickLesk) ([core#119](https://github.com/community-scripts/core/pull/119))
-- Choose the VM keyboard layout and carry the host's timezone into prepared images [@MickLesk](https://github.com/MickLesk) ([core#120](https://github.com/community-scripts/core/pull/120))
-- VM's: run first-boot units without debconf dialogs [@MickLesk](https://github.com/MickLesk) ([core#121](https://github.com/community-scripts/core/pull/121))
-
-## 2026-10-07
-
-### 🆕 New Scripts
-
-  - Fedora VM ([#17747](https://github.com/community-scripts/ProxmoxVE/pull/17747))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - AudioMuse-AI: replace the venv on update without asking [@MickLesk](https://github.com/MickLesk) ([#17738](https://github.com/community-scripts/ProxmoxVE/pull/17738))
-    - paperclip: run as a dedicated non-root user so Claude Code can skip permissions [@samvandenbossche](https://github.com/samvandenbossche) ([#17707](https://github.com/community-scripts/ProxmoxVE/pull/17707))
-    - Thingsboard: update Java version from 17 to 25 [@CerberusStyle](https://github.com/CerberusStyle) ([#17733](https://github.com/community-scripts/ProxmoxVE/pull/17733))
-
-  - #### ✨ New Features
-
-    - Immich: Pin to v3.3.0 [@vhsdream](https://github.com/vhsdream) ([#17759](https://github.com/community-scripts/ProxmoxVE/pull/17759))
-
-  - #### 💥 Breaking Changes
-
-    - OpenCloud: bump to v8.1.0, rebuild search index on upgrade [@SimKaiLong](https://github.com/SimKaiLong) ([#17710](https://github.com/community-scripts/ProxmoxVE/pull/17710))
-
-  - #### 🔧 Refactor
-
-    - Pangolin: Unpin Release, stable enough, Bump to latest [@MickLesk](https://github.com/MickLesk) ([#17740](https://github.com/community-scripts/ProxmoxVE/pull/17740))
-    - Refactor: Archlinux-VM [@MickLesk](https://github.com/MickLesk) ([#17741](https://github.com/community-scripts/ProxmoxVE/pull/17741))
-    - Refactor: MikroTik RouterOS [@MickLesk](https://github.com/MickLesk) ([#17748](https://github.com/community-scripts/ProxmoxVE/pull/17748))
-
-### 💾 Core
-
-  - Fix Fedora and BLS cloud image console setup [@MickLesk](https://github.com/MickLesk) ([core#116](https://github.com/community-scripts/core/pull/116))
-- Keep setup_nodejs alive when the caller's directory is gone [@MickLesk](https://github.com/MickLesk) ([core#114](https://github.com/community-scripts/core/pull/114))
-
-## 2026-10-06
-
-### 🆕 New Scripts
-
-  - Pricebuddy ([#17708](https://github.com/community-scripts/ProxmoxVE/pull/17708))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Webtrees: stop serving data/ and the source folders directly [@MickLesk](https://github.com/MickLesk) ([#17724](https://github.com/community-scripts/ProxmoxVE/pull/17724))
-
-### 💾 Core
-
-  - Incus: check the architecture on Incus hosts too [@MickLesk](https://github.com/MickLesk) ([core#113](https://github.com/community-scripts/core/pull/113))
-- Incus: Pass the app's var_* settings into Incus containers  [@MickLesk](https://github.com/MickLesk) ([core#112](https://github.com/community-scripts/core/pull/112))
-- Incus: stub storage_content_check on Incus [@MickLesk](https://github.com/MickLesk) ([core#104](https://github.com/community-scripts/core/pull/104))
-- Incus: map Proxmox template versions to Incus image names [@MickLesk](https://github.com/MickLesk) ([core#111](https://github.com/community-scripts/core/pull/111))
-- Incus: read storage names from .vars files  [@MickLesk](https://github.com/MickLesk) ([core#110](https://github.com/community-scripts/core/pull/110))
-- Incus: show the spinner inside containers again [@MickLesk](https://github.com/MickLesk) ([core#109](https://github.com/community-scripts/core/pull/109))
-- Incus: set the hostname with sh, so it works before bash is installed [@MickLesk](https://github.com/MickLesk) ([core#102](https://github.com/community-scripts/core/pull/102))
-- Incus: reserve a plain address on Incus, leave the gateway to the network [@MickLesk](https://github.com/MickLesk) ([core#101](https://github.com/community-scripts/core/pull/101))
-- Incus: Wait for the network on Alpine OS too [@MickLesk](https://github.com/MickLesk) ([core#105](https://github.com/community-scripts/core/pull/105))
-- Incus: do not fail the build when hostname -I is missing [@MickLesk](https://github.com/MickLesk) ([core#103](https://github.com/community-scripts/core/pull/103))
-- Incus: Fuse always in unprivileged Containers, attach TUN only when container lacks it [@MickLesk](https://github.com/MickLesk) ([core#108](https://github.com/community-scripts/core/pull/108))
-- Incus: accept mode=generated [@MickLesk](https://github.com/MickLesk) ([core#106](https://github.com/community-scripts/core/pull/106))
-- Incus: pass the full install environment into Incus containers (quoted) [@MickLesk](https://github.com/MickLesk) ([core#107](https://github.com/community-scripts/core/pull/107))
-
-## 2026-10-05
-
-### 🚀 Updated Scripts
-
-  - Point to DevScripts, the renamed ProxmoxVED [@MickLesk](https://github.com/MickLesk) ([#17694](https://github.com/community-scripts/ProxmoxVE/pull/17694))
-
-  - #### 🐞 Bug Fixes
-
-    - wanderer: set the proxy secret and install plugins in their own directories [@MickLesk](https://github.com/MickLesk) ([#17698](https://github.com/community-scripts/ProxmoxVE/pull/17698))
-    - discourse: serve stylesheets and repair the update [@MickLesk](https://github.com/MickLesk) ([#17697](https://github.com/community-scripts/ProxmoxVE/pull/17697))
-    - wikijs: bump Node.js from 24 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17689](https://github.com/community-scripts/ProxmoxVE/pull/17689))
-    - jotty: bump Node.js from 22 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17688](https://github.com/community-scripts/ProxmoxVE/pull/17688))
-
-### 💾 Core
-
-  - Read releases from github.com when the API is rate limited, resume stalled downloads [@MickLesk](https://github.com/MickLesk) ([core#99](https://github.com/community-scripts/core/pull/99))
-- Check for template and container storage before the settings menu [@MickLesk](https://github.com/MickLesk) ([core#98](https://github.com/community-scripts/core/pull/98))
-- Check /etc/pve before the settings menu [@MickLesk](https://github.com/MickLesk) ([core#97](https://github.com/community-scripts/core/pull/97))
-- Check container settings before pct create rejects them [@MickLesk](https://github.com/MickLesk) ([core#96](https://github.com/community-scripts/core/pull/96))
-- PVE: Smart Diagnosis - say why a container would not start [@MickLesk](https://github.com/MickLesk) ([core#95](https://github.com/community-scripts/core/pull/95))
-- Retry template downloads that pveam reports as done but are not [@MickLesk](https://github.com/MickLesk) ([core#94](https://github.com/community-scripts/core/pull/94))
-- Check the OS release against pve-container before creating anything [@MickLesk](https://github.com/MickLesk) ([core#93](https://github.com/community-scripts/core/pull/93))
-- Rename "ProxmoxVED"-Links to "DevScripts" [@MickLesk](https://github.com/MickLesk) ([core#91](https://github.com/community-scripts/core/pull/91))
-
-### 🧰 Tools
-
-  - #### 🐞 Bug Fixes
-
-    - monitor-all: read container IPs from the host side [@jasonobrien](https://github.com/jasonobrien) ([#17686](https://github.com/community-scripts/ProxmoxVE/pull/17686))
-
-## 2026-10-04
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - immich: read the Intel runtime from the pinned release [@MickLesk](https://github.com/MickLesk) ([#17677](https://github.com/community-scripts/ProxmoxVE/pull/17677))
-
-### 💾 Core
-
-  - better explain unsupported version & upgrade path for pve [@MickLesk](https://github.com/MickLesk) ([core#86](https://github.com/community-scripts/core/pull/86))
-- Quote PostgreSQL identifiers and drop spaces from the creds file name [@MickLesk](https://github.com/MickLesk) ([core#89](https://github.com/community-scripts/core/pull/89))
-- Find the default Rust toolchain in current rustup output [@MickLesk](https://github.com/MickLesk) ([core#88](https://github.com/community-scripts/core/pull/88))
-
-## 2026-10-03
-
-### 🆕 New Scripts
-
-  - Keeper.sh ([#17659](https://github.com/community-scripts/ProxmoxVE/pull/17659))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - hermesagent: download the installer before running it [@MickLesk](https://github.com/MickLesk) ([#17666](https://github.com/community-scripts/ProxmoxVE/pull/17666))
-    - frigate: raise the Node heap for the web build [@MickLesk](https://github.com/MickLesk) ([#17667](https://github.com/community-scripts/ProxmoxVE/pull/17667))
-    - Tracearr: workaround for failing map tiles download and data preservation [@durzo](https://github.com/durzo) ([#17661](https://github.com/community-scripts/ProxmoxVE/pull/17661))
-    - fix(nginxproxymanager): clean yarn cache after builds to prevent disk growth [@PsycoStea](https://github.com/PsycoStea) ([#17653](https://github.com/community-scripts/ProxmoxVE/pull/17653))
-
-  - #### 🔧 Refactor
-
-    - Several Scripts: refactor msg_ blocks, generate passwords with helper, add CLEAN_INSTALL_KEEP  [@MickLesk](https://github.com/MickLesk) ([#17655](https://github.com/community-scripts/ProxmoxVE/pull/17655))
-
-### 💾 Core
-
-  - detect_repo_source: read the license header and fall back to ProxmoxVE [@MickLesk](https://github.com/MickLesk) ([core#85](https://github.com/community-scripts/core/pull/85))
-
-## 2026-10-02
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - zerobyte: upgrade Bun on update [@MickLesk](https://github.com/MickLesk) ([#17646](https://github.com/community-scripts/ProxmoxVE/pull/17646))
-    - sure: keep Active Storage uploads across updates [@MickLesk](https://github.com/MickLesk) ([#17648](https://github.com/community-scripts/ProxmoxVE/pull/17648))
-    - twenty: run upstreams upgrade command instead of the removed setup-db.ts [@MickLesk](https://github.com/MickLesk) ([#17647](https://github.com/community-scripts/ProxmoxVE/pull/17647))
-
-  - #### 🔧 Refactor
-
-    - NPM: Refactor / Fix npm openresty user and certbot version [@MickLesk](https://github.com/MickLesk) ([#17649](https://github.com/community-scripts/ProxmoxVE/pull/17649))
-    - several scripts: use the release helpers instead of hand-rolled version checks and downloads [@MickLesk](https://github.com/MickLesk) ([#17625](https://github.com/community-scripts/ProxmoxVE/pull/17625))
-
-### 💾 Core
-
-  - QoL: message blocks, clean-install keep list, password helper, network limits [@MickLesk](https://github.com/MickLesk) ([core#61](https://github.com/community-scripts/core/pull/61))
