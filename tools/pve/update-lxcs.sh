@@ -84,6 +84,7 @@ function update_container() {
 }
 
 containers_needing_reboot=()
+failed_containers=()
 header_info
 for container in $(pct list | awk '{if(NR>1) print $1}'); do
   if [[ " ${excluded_containers[@]} " =~ " $container " ]]; then
@@ -101,14 +102,17 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
     template=$(pct config $container | grep -q "template:" && echo "true" || echo "false")
     if [ "$template" == "false" ] && [ "$status" == "status: stopped" ]; then
       echo -e "${BL}[Info]${GN} Starting${BL} $container ${CL} \n"
-      pct start $container
+      if ! pct start $container; then
+        failed_containers+=("$container (start)")
+        continue
+      fi
       echo -e "${BL}[Info]${GN} Waiting For${BL} $container${CL}${GN} To Start ${CL} \n"
       sleep 5
-      update_container $container
+      update_container $container || failed_containers+=("$container")
       echo -e "${BL}[Info]${GN} Shutting down${BL} $container ${CL} \n"
       pct shutdown $container &
     elif [ "$status" == "status: running" ]; then
-      update_container $container
+      update_container $container || failed_containers+=("$container")
     fi
     if [ "$status" == "status: running" ]; then
       if pct exec "$container" -- [ -e "/var/run/reboot-required" ]; then
@@ -119,14 +123,20 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
       # check if patchmon agent is present in container and run a report if found
       if pct exec "$container" -- [ -e "/usr/local/bin/patchmon-agent" ]; then
         echo -e "${BL}[Info]${GN} patchmon-agent found in ${BL} $container ${CL}, triggering report. \n"
-        pct exec "$container" -- "/usr/local/bin/patchmon-agent" "report"
+        pct exec "$container" -- "/usr/local/bin/patchmon-agent" "report" || echo -e "${YW}[Warn]${CL} patchmon-agent report failed in $container\n"
       fi
     fi
   fi
 done
 wait
 header_info
-echo -e "${GN}The process is complete, and the containers have been successfully updated.${CL}\n"
+if [ "${#failed_containers[@]}" -gt 0 ]; then
+  echo -e "${RD}The update failed in these containers:${CL}"
+  printf '%s\n' "${failed_containers[@]}"
+  echo ""
+else
+  echo -e "${GN}The process is complete, and the containers have been successfully updated.${CL}\n"
+fi
 if [ "${#containers_needing_reboot[@]}" -gt 0 ]; then
   echo -e "${RD}The following containers require a reboot:${CL}"
   for container_name in "${containers_needing_reboot[@]}"; do
@@ -134,3 +144,4 @@ if [ "${#containers_needing_reboot[@]}" -gt 0 ]; then
   done
 fi
 echo ""
+[ "${#failed_containers[@]}" -eq 0 ] || exit 1
