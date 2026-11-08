@@ -599,6 +599,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - fix: a closed console no longer ends a running setup | ERR trap fixes | check VM ID before creating [@MickLesk](https://github.com/MickLesk) ([core#219](https://github.com/community-scripts/core/pull/219))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - update-apps: keep the backup alive on a closed console, stop before restoring [@MickLesk](https://github.com/MickLesk) ([#18540](https://github.com/community-scripts/ProxmoxVE/pull/18540))
+    - clean-lxcs: run with sh and keep going when one container fails [@MickLesk](https://github.com/MickLesk) ([#18538](https://github.com/community-scripts/ProxmoxVE/pull/18538))
+    - update-lxcs: keep going when one container fails [@MickLesk](https://github.com/MickLesk) ([#18541](https://github.com/community-scripts/ProxmoxVE/pull/18541))
+
 ## 2026-11-07
 
 ### 🆕 New Scripts
