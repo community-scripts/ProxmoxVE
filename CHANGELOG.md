@@ -592,6 +592,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Immich: do not clone libjxl's testdata [@MickLesk](https://github.com/MickLesk) ([#18539](https://github.com/community-scripts/ProxmoxVE/pull/18539))
     - Databasus: build 3.65 and ship the verification agent [@MickLesk](https://github.com/MickLesk) ([#18500](https://github.com/community-scripts/ProxmoxVE/pull/18500))
 
 ### 💾 Core
