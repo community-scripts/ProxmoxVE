@@ -583,6 +583,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-08
 
+### 🆕 New Scripts
+
+  - Chatto ([#18521](https://github.com/community-scripts/ProxmoxVE/pull/18521))
+- Firefox-Syncserver ([#18520](https://github.com/community-scripts/ProxmoxVE/pull/18520))
+
 ### 🚀 Updated Scripts
 
   - #### 🔧 Refactor
