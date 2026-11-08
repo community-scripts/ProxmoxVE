@@ -282,7 +282,7 @@ function failure_reason() {
 function backup_container() {
   msg_info "Creating backup for container $1"
   local output
-  if output=$(vzdump $1 --compress zstd --storage $STORAGE_CHOICE -notes-template "{{guestname}} - community-scripts backup updater" 2>&1); then
+  if output=$(_cs_shield_hangup vzdump $1 --compress zstd --storage $STORAGE_CHOICE -notes-template "{{guestname}} - community-scripts backup updater" 2>&1); then
     msg_ok "Backup created"
   else
     log_write "Container $1: vzdump failed:"$'\n'"$output"
@@ -651,7 +651,18 @@ for container in $CHOICE; do
     msg_error "Update failed for container $container ($service, exit code: $exit_code) — attempting restore"
     log_write "Container $container ($service): FAILED (exit $exit_code) — attempting restore"
     msg_info "Restoring LXC $container from backup ($STORAGE_CHOICE)"
-    pct stop $container
+    wait
+    pct stop $container &>/dev/null || true
+    for _ in {1..30}; do
+      [[ "$(pct status $container 2>/dev/null)" == "status: stopped" ]] && break
+      sleep 1
+    done
+    if [[ "$(pct status $container 2>/dev/null)" != "status: stopped" ]]; then
+      msg_error "Container $container did not stop, so it cannot be restored"
+      log_result "$container" "$service" "FAILED" "Update failed (exit $exit_code) — container did not stop for the restore"
+      log_write "Container $container ($service): FAILED — container did not stop for the restore"
+      exit 235
+    fi
     LXC_STORAGE=$(pct config $container | awk -F '[:,]' '/rootfs/ {print $2}')
     BACKUP_ENTRY=$(pvesm list "$STORAGE_CHOICE" 2>/dev/null | awk -v ctid="$container" '$1 ~ "vzdump-lxc-"ctid"-" || $1 ~ "/ct/"ctid"/" {print $1}' | sort -r | head -n1)
     if [ -z "$BACKUP_ENTRY" ]; then
