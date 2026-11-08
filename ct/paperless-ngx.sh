@@ -57,7 +57,12 @@ function update_script() {
     BRIDGE_UPDATE=1
   fi
 
-  if check_for_gh_release "paperless" "paperless-ngx/paperless-ngx"; then
+  local PAPERLESS_LATEST_VERSION
+  PAPERLESS_LATEST_VERSION="$(get_latest_github_release "paperless-ngx/paperless-ngx")" || {
+    msg_error "Unable to check the latest Paperless-ngx release"
+    exit 1
+  }
+  if [[ "$PAPERLESS_INSTALLED_VERSION" != "$PAPERLESS_LATEST_VERSION" ]]; then
     if [[ "$PAPERLESS_INSTALLED_VERSION" == "2.20.15" ]]; then
       msg_warn "Paperless-ngx v3 does not support encrypted documents anymore."
       echo -e "${GATEWAY}${BGN}https://docs.paperless-ngx.com/migration-v3/#encryption-support${CL}"
