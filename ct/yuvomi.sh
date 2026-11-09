@@ -38,7 +38,7 @@ function update_script() {
 
     create_backup /opt/yuvomi/data /opt/yuvomi/.env
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "yuvomi" "ulsklyc/yuvomi" "tarball"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "yuvomi" "ulsklyc/yuvomi" "prebuild" "latest" "/opt/yuvomi" "yuvomi-*-dist.tar.gz"
     NODE_VERSION="24" setup_nodejs
 
     msg_info "Installing Node.js Dependencies"
