@@ -605,7 +605,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - core: load an app's own settings from its .vars file [@MickLesk](https://github.com/MickLesk) ([core#216](https://github.com/community-scripts/core/pull/216))
+  - core: detect GPUs by their PCI class, not by text anywhere in the line [@MickLesk](https://github.com/MickLesk) ([core#221](https://github.com/community-scripts/core/pull/221))
+- core: load an app's own settings from its .vars file [@MickLesk](https://github.com/MickLesk) ([core#216](https://github.com/community-scripts/core/pull/216))
 
 ### 🧰 Tools
 
