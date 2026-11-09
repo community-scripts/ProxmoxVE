@@ -588,11 +588,17 @@ get_vm_ips() {
     fi
     if [[ "$agent_enabled" == "1" ]] && command -v qm >/dev/null 2>&1; then
         debug_log "vm $vmid: querying guest agent"
-        local qm_ips=$(timeout 5 qm guest cmd "$vmid" network-get-interfaces 2>/dev/null | grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' | grep -v "127.0.0.1" | head -3)
+        local qm_ips=$(timeout 5 qm guest cmd "$vmid" network-get-interfaces 2>/dev/null | grep -oE '([0-9]{1,3}\.){3}[0-9]{1,3}' | grep -v "127.0.0.1")
+        local qm_kept=0
         for qm_ip in $qm_ips; do
             if [[ "$qm_ip" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
-                debug_log "vm $vmid: found IP $qm_ip via qm guest cmd"
-                ips+="$qm_ip "
+                if ip_in_cidrs "$qm_ip" "${CIDR_LIST[*]}"; then
+                    debug_log "vm $vmid: found IP $qm_ip via qm guest cmd"
+                    ips+="$qm_ip "
+                    ((++qm_kept >= 3)) && break
+                else
+                    debug_log "vm $vmid: skipping IP $qm_ip via qm guest cmd (outside CIDR_LIST)"
+                fi
             fi
         done
     else
