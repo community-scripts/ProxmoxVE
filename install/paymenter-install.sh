@@ -43,7 +43,13 @@ $STD php artisan migrate --force --seed
 msg_ok "Set up database"
 
 msg_info "Creating Admin User"
-$STD php artisan app:user:create paymenter admin admin@paymenter.org paymenter 1 -q
+PAYMENTER_PASS=$(random_password 20)
+$STD php artisan app:user:create paymenter admin admin@paymenter.org "$PAYMENTER_PASS" 1 -q
+{
+  echo "Paymenter Credentials"
+  echo "Email: admin@paymenter.org"
+  echo "Password: ${PAYMENTER_PASS}"
+} >~/paymenter.creds
 msg_ok "Created Admin User"
 
 msg_info "Configuring Nginx"

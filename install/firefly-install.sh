@@ -26,6 +26,7 @@ chown -R www-data:www-data /opt/firefly
 chmod -R 775 /opt/firefly/storage
 cd /opt/firefly
 cp .env.example .env
+sed -i -e "s|^APP_KEY=.*|APP_KEY=$(random_password 32)|" -e "s|^STATIC_CRON_TOKEN=.*|STATIC_CRON_TOKEN=$(random_password 32)|" /opt/firefly/.env
 sed -i "s/DB_HOST=.*/DB_HOST=localhost/" /opt/firefly/.env
 sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=$MARIADB_DB_PASS/" /opt/firefly/.env
 $STD composer install --no-dev --no-plugins --no-interaction

@@ -78,6 +78,12 @@ msg_info "Configuring SnapOtter"
 mkdir -p /opt/snapotter_data/files
 mkdir -p /tmp/snapotter-workspace
 
+SNAPOTTER_PASS=$(random_password 20)
+{
+  echo "SnapOtter Credentials"
+  echo "Username: admin"
+  echo "Password: ${SNAPOTTER_PASS}"
+} >~/snapotter.creds
 cat <<EOF >/opt/snapotter_data/.env
 PORT=1349
 NODE_ENV=production
@@ -92,7 +98,7 @@ FEATURE_MANIFEST_PATH=/opt/snapotter/docker/feature-manifest.json
 U2NET_HOME=/opt/snapotter_data/ai/models/rembg
 AUTH_ENABLED=true
 DEFAULT_USERNAME=admin
-DEFAULT_PASSWORD=admin
+DEFAULT_PASSWORD=${SNAPOTTER_PASS}
 LOG_LEVEL=info
 TRUST_PROXY=true
 FILE_MAX_AGE_HOURS=72

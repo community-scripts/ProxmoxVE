@@ -116,10 +116,6 @@ if [[ "$login_mode" == "true" ]]; then
 # activate Login
 DISABLE_ADDITIONAL_FEATURES=false
 SECURITY_ENABLELOGIN=true
-
-# login credentials
-SECURITY_INITIALLOGIN_USERNAME=admin
-SECURITY_INITIALLOGIN_PASSWORD=stirling
 EOF
 fi
 msg_ok "Created Environment Variables"

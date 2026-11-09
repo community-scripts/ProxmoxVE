@@ -43,9 +43,15 @@ $STD rabbitmqctl enable_feature_flag all
 msg_ok "Enabled RabbitMQ Management Plugin"
 
 msg_info "Creating User"
-$STD rabbitmqctl add_user proxmox proxmox
+RABBITMQ_PASS=$(random_password 20)
+$STD rabbitmqctl add_user proxmox "$RABBITMQ_PASS"
 $STD rabbitmqctl set_user_tags proxmox administrator
 $STD rabbitmqctl set_permissions -p / proxmox ".*" ".*" ".*"
+{
+  echo "RabbitMQ Credentials"
+  echo "Username: proxmox"
+  echo "Password: ${RABBITMQ_PASS}"
+} >~/rabbitmq.creds
 msg_ok "Created User"
 
 motd_ssh
