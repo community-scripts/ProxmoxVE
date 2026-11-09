@@ -132,6 +132,21 @@ EOF
   if check_for_gh_release "Immich" "immich-app/immich" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
     msg_warn "The update takes 5-15 minutes, do not interrupt it"
     PREV_IMMICH="$(cat ~/.immich)"
+    INSTALL_DIR="/opt/${APP}"
+    UPLOAD_DIR="$(sed -n '/^IMMICH_MEDIA_LOCATION/s/[^=]*=//p' /opt/immich/.env)"
+    SRC_DIR="${INSTALL_DIR}/source"
+    APP_DIR="${INSTALL_DIR}/app"
+    PLUGIN_DIR="${APP_DIR}/plugins/immich-plugin-core"
+    ML_DIR="${APP_DIR}/machine-learning"
+    GEO_DIR="${INSTALL_DIR}/geodata"
+
+    # Download before stopping anything: a failed fetch (e.g. a GitHub 504) must leave the running install untouched.
+    setup_uv
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "${RELEASE}" "$SRC_DIR"
+    # The fetch records the new version; keep the old one until the update finishes so a failed run can be retried.
+    NEW_IMMICH="$(cat ~/.immich)"
+    echo "$PREV_IMMICH" >~/.immich
+
     # An interrupted update leaves app/ empty, so there may be no immich-admin to call.
     if [[ "$PREV_IMMICH" > "2.5.1" && -x /opt/immich/app/bin/immich-admin ]]; then
       msg_info "Enabling Maintenance Mode"
@@ -164,14 +179,6 @@ EOF
     fi
     ensure_dependencies ccache gcc-13 g++-13
 
-    INSTALL_DIR="/opt/${APP}"
-    UPLOAD_DIR="$(sed -n '/^IMMICH_MEDIA_LOCATION/s/[^=]*=//p' /opt/immich/.env)"
-    SRC_DIR="${INSTALL_DIR}/source"
-    APP_DIR="${INSTALL_DIR}/app"
-    PLUGIN_DIR="${APP_DIR}/plugins/immich-plugin-core"
-    ML_DIR="${APP_DIR}/machine-learning"
-    GEO_DIR="${INSTALL_DIR}/geodata"
-
     [[ -f "$ML_DIR"/ml_start.sh ]] && cp "$ML_DIR"/ml_start.sh "$INSTALL_DIR"
     if grep -qs "set -a" "$APP_DIR"/bin/start.sh && grep -qs "warnings" "$APP_DIR"/bin/start.sh; then
       cp "$APP_DIR"/bin/start.sh "$INSTALL_DIR"
@@ -193,8 +200,6 @@ EOF
       rm -rf "${APP_DIR:?}"/*
     )
 
-    setup_uv
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "${RELEASE}" "$SRC_DIR"
     PNPM_VERSION="$(jq -r '.packageManager | split("@")[1] | split("+")[0]' ${SRC_DIR}/package.json)"
     export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
     export CI=1
@@ -386,7 +391,8 @@ EOF
     chown immich:immich "$INSTALL_DIR"
     find "$INSTALL_DIR" -maxdepth 1 -mindepth 1 ! -name upload -exec chown -R immich:immich {} +
     chown immich:immich "${UPLOAD_DIR:-$INSTALL_DIR/upload}" 2>/dev/null || true
-    if [[ "${MAINT_MODE:-0}" == 1 ]]; then
+    # Not only when this run enabled it: a run that was interrupted earlier may have left it on.
+    if [[ -x /opt/immich/app/bin/immich-admin ]]; then
       msg_info "Disabling Maintenance Mode"
       cd /opt/immich/app/bin
       $STD ./immich-admin disable-maintenance-mode || true
@@ -405,6 +411,7 @@ EOF
     fi
     systemctl restart immich-ml immich-web
     [[ -f /etc/systemd/system/immich-proxy.service ]] && systemctl restart immich-proxy
+    echo "$NEW_IMMICH" >~/.immich
     msg_ok "Updated successfully!"
   fi
   exit
