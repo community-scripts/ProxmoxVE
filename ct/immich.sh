@@ -131,7 +131,7 @@ EOF
 
   if check_for_gh_release "Immich" "immich-app/immich" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
     msg_warn "The update takes 5-15 minutes, do not interrupt it"
-    PREV_IMMICH="$(cat ~/.immich)"
+    PREV_IMMICH="${CS_PREVIOUS_VERSION:-$(cat ~/.immich)}"
     INSTALL_DIR="/opt/${APP}"
     UPLOAD_DIR="$(sed -n '/^IMMICH_MEDIA_LOCATION/s/[^=]*=//p' /opt/immich/.env)"
     SRC_DIR="${INSTALL_DIR}/source"
@@ -143,9 +143,6 @@ EOF
     # Download before stopping anything, so a failed fetch leaves the running install untouched.
     setup_uv
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "${RELEASE}" "$SRC_DIR"
-    # Record the new version only once the update finishes, so a failed run is retried.
-    NEW_IMMICH="$(cat ~/.immich)"
-    echo "$PREV_IMMICH" >~/.immich
 
     # An interrupted update leaves app/ empty, so there may be no immich-admin to call.
     if [[ "$PREV_IMMICH" > "2.5.1" && -x /opt/immich/app/bin/immich-admin ]]; then
@@ -156,6 +153,7 @@ EOF
       $STD cd -
       msg_ok "Enabled Maintenance Mode"
     fi
+    [[ -x /opt/immich/app/bin/immich-admin ]] || export MAINT_MODE=1
     msg_info "Stopping Services"
     systemctl stop immich-web
     systemctl stop immich-ml
@@ -391,7 +389,7 @@ EOF
     chown immich:immich "$INSTALL_DIR"
     find "$INSTALL_DIR" -maxdepth 1 -mindepth 1 ! -name upload -exec chown -R immich:immich {} +
     chown immich:immich "${UPLOAD_DIR:-$INSTALL_DIR/upload}" 2>/dev/null || true
-    if [[ -x /opt/immich/app/bin/immich-admin ]]; then
+    if [[ "${MAINT_MODE:-0}" == 1 ]]; then
       msg_info "Disabling Maintenance Mode"
       cd /opt/immich/app/bin
       $STD ./immich-admin disable-maintenance-mode || true
@@ -410,7 +408,6 @@ EOF
     fi
     systemctl restart immich-ml immich-web
     [[ -f /etc/systemd/system/immich-proxy.service ]] && systemctl restart immich-proxy
-    echo "$NEW_IMMICH" >~/.immich
     msg_ok "Updated successfully!"
   fi
   exit
