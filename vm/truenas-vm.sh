@@ -158,13 +158,23 @@ post_to_api_vm
 
 vm_select_storage "$HN"
 
-if [ -z "${SELECTED_ISO:-}" ]; then
-  SELECTED_ISO=$(truenas_iso_lookup | grep -vE 'RC|BETA' | sort -V | tail -n 1) || true
+ISO_LIST=($(truenas_iso_lookup))
 
-  if [ -z "$SELECTED_ISO" ]; then
-    msg_error "Could not find a stable ISO for fallback."
-    exit 115
-  fi
+if [ ${#ISO_LIST[@]} -eq 0 ]; then
+  msg_error "Could not find any TrueNAS ISOs."
+  exit 115
+fi
+
+ISO_ARRAY=()
+for iso in "${ISO_LIST[@]}"; do
+  ISO_ARRAY+=("$iso" "" "OFF")
+done
+
+if vm_dialog menu "SELECT TRUENAS ISO" --cancel-button "Exit Script" \
+  "\nSelect the TrueNAS ISO version to install:\n" 20 78 10 "${ISO_ARRAY[@]}"; then
+  SELECTED_ISO="$VM_DIALOG_RESULT"
+else
+  exit 0
 fi
 
 FULL_URL="https://download.truenas.com/${SELECTED_ISO#/}"
