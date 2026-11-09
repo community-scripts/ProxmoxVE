@@ -87,6 +87,20 @@ if [ -f "$INSTALL_PATH" ]; then
 
   read -r -p "Would you like to update ${APP}? (y/N): " update_prompt
   if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
+    # Older installs created admin with the public password community-scripts.org
+    fb_port=$(grep -oP '(?<=-p )[0-9]+' "$SERVICE_PATH" 2>/dev/null | head -n1)
+    fb_db=$(grep -oP '(?<=-d )\S+' "$SERVICE_PATH" 2>/dev/null | head -n1)
+    [[ -n "$fb_db" ]] || fb_db="$(grep -oP '(?<=^WorkingDirectory=)\S+' "$SERVICE_PATH" 2>/dev/null || echo /root)/filebrowser.db"
+    if [[ "$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: application/json' -d '{"username":"admin","password":"community-scripts.org","recaptcha":""}' "http://127.0.0.1:${fb_port:-8080}/api/login")" == "200" ]]; then
+      msg_info "Replacing the default admin password"
+      ADMIN_PASS=$(random_password 20)
+      if [[ "$OS" == "Debian" ]]; then systemctl stop filebrowser; else rc-service filebrowser stop &>/dev/null; fi
+      $STD filebrowser users update admin --password "$ADMIN_PASS" --database "$fb_db"
+      if [[ "$OS" == "Debian" ]]; then systemctl start filebrowser; else rc-service filebrowser start &>/dev/null; fi
+      echo -e "FileBrowser\nUsername: admin\nPassword: ${ADMIN_PASS}" >~/filebrowser.creds
+      chmod 600 ~/filebrowser.creds
+      msg_ok "Replaced the default admin password (saved in ~/filebrowser.creds)"
+    fi
     if check_for_gh_release "filebrowser" "filebrowser/filebrowser"; then
       msg_info "Updating ${APP}"
       fetch_and_deploy_gh_release "filebrowser" "filebrowser/filebrowser" "prebuild" "latest" "/opt/filebrowser-dist" "linux-$(arch_resolve)-filebrowser.tar.gz"
@@ -125,6 +139,8 @@ if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
   chmod 644 "$DB_PATH"
   msg_ok "Directory created successfully"
 
+  ADMIN_PASS=$(random_password 20)
+  msg_warn "FileBrowser runs as root and shows the whole filesystem. Without authentication, anyone who reaches port ${PORT} can read and change every file."
   read -r -p "Would you like to use No Authentication? (y/N): " auth_prompt
   if [[ "${auth_prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Configuring No Authentication"
@@ -133,16 +149,18 @@ if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
     $STD filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH"
     $STD filebrowser config set --auth.method=noauth --database "$DB_PATH"
     if ! filebrowser users update 1 --perm.admin --database "$DB_PATH" &>/dev/null; then
-      $STD filebrowser users add admin community-scripts.org --perm.admin --database "$DB_PATH"
+      $STD filebrowser users add admin "$ADMIN_PASS" --perm.admin --database "$DB_PATH"
     fi
     msg_ok "No Authentication configured"
   else
-    msg_info "Setting up default authentication"
+    msg_info "Setting up authentication"
     cd /usr/local/community-scripts
     $STD filebrowser config init -a '0.0.0.0' -p "$PORT" -d "$DB_PATH"
     $STD filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH"
-    $STD filebrowser users add admin community-scripts.org --perm.admin --database "$DB_PATH"
-    msg_ok "Default authentication configured (admin:community-scripts.org)"
+    $STD filebrowser users add admin "$ADMIN_PASS" --perm.admin --database "$DB_PATH"
+    echo -e "FileBrowser\nUsername: admin\nPassword: ${ADMIN_PASS}" >~/filebrowser.creds
+    chmod 600 ~/filebrowser.creds
+    msg_ok "Authentication configured (credentials saved in ~/filebrowser.creds)"
   fi
 
   msg_info "Creating service"
@@ -156,7 +174,6 @@ After=network-online.target
 User=root
 WorkingDirectory=/usr/local/community-scripts
 ExecStartPre=/bin/touch /usr/local/community-scripts/filebrowser.db
-ExecStartPre=/usr/local/bin/filebrowser config set -a "0.0.0.0" -p ${PORT} -d /usr/local/community-scripts/filebrowser.db
 ExecStart=/usr/local/bin/filebrowser -r / -d /usr/local/community-scripts/filebrowser.db -p ${PORT}
 Restart=always
 
