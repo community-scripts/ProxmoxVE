@@ -140,23 +140,6 @@ if [[ -f "$INSTALL_PATH" ]]; then
   echo -n "${TAB}Update ${APP}? (y/N): "
   read -r update_prompt
   if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
-    # Older installs kept the public password in the config, which resets it on every start
-    if grep -qE '^\s*adminPassword:\s*"?community-scripts\.org"?\s*$' "$CONFIG_PATH" 2>/dev/null; then
-      msg_info "Replacing the default admin password"
-      ADMIN_PASS=$(random_password 20)
-      sed -i -E "s|^(\s*adminPassword:).*|\1 ${ADMIN_PASS}|" "$CONFIG_PATH"
-      chmod 600 "$CONFIG_PATH"
-      if [[ "$OS" == "Debian" ]]; then systemctl restart filebrowser.service; else rc-service filebrowser restart &>/dev/null; fi
-      fq_port=$(awk '/^http:/{h=1} h && /^  port:/{print $2; exit}' "$CONFIG_PATH")
-      for _ in {1..30}; do
-        [[ "$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:${fq_port:-8080}/health")" == "200" ]] && break
-        sleep 1
-      done
-      sed -i '/^\s*adminPassword:/d' "$CONFIG_PATH"
-      echo -e "FileBrowser Quantum\nUsername: admin\nPassword: ${ADMIN_PASS}" >~/filebrowser-quantum.creds
-      chmod 600 ~/filebrowser-quantum.creds
-      msg_ok "Replaced the default admin password (saved in ~/filebrowser-quantum.creds)"
-    fi
     if check_for_gh_release "filebrowser-quantum" "gtsteffaniak/filebrowser"; then
       msg_info "Updating ${APP}"
       if ! command -v curl &>/dev/null; then $STD $PKG_MANAGER curl; fi

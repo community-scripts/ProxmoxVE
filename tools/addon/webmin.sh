@@ -30,6 +30,7 @@ catch_errors
 
 # Initialize all core functions (colors, formatting, icons, STD mode)
 load_functions
+confirm_not_pve_host
 require_debian_like
 
 header_info
@@ -49,9 +50,13 @@ msg_ok "Installed Prerequisites"
 
 msg_info "Installing ${APP}"
 fetch_and_deploy_gh_release "webmin" "webmin/webmin" "binary" "latest" "/opt/webmin" "webmin_*_all.deb"
-/usr/share/webmin/changepass.pl /etc/webmin root root &>/dev/null
+WEBMIN_PASS=$(random_password 20)
+/usr/share/webmin/changepass.pl /etc/webmin root "$WEBMIN_PASS" &>/dev/null
+echo -e "Webmin\nUsername: root\nPassword: ${WEBMIN_PASS}" >~/webmin.creds
+chmod 600 ~/webmin.creds
 msg_ok "Installed ${APP}"
 
 get_lxc_ip
 echo -e "Successfully Installed!! ${APP} should be reachable by going to ${BL}https://${LOCAL_IP}:10000${CL}"
+echo -e "Login: root, password in ~/webmin.creds"
 

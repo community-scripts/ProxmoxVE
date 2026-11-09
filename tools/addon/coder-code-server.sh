@@ -85,12 +85,16 @@ function install() {
   mkdir -p "${HOME}/.config/code-server/"
 
   if [ "$preexisting_config" = false ]; then
+    CS_PASS=$(random_password 20)
     cat <<EOF >"$config_path"
 bind-addr: 0.0.0.0:8680
-auth: none
-password: 
+auth: password
+password: ${CS_PASS}
 cert: false
 EOF
+    chmod 600 "$config_path"
+    echo -e "Coder Code Server\nPassword: ${CS_PASS}" >~/coder-code-server.creds
+    chmod 600 ~/coder-code-server.creds
   fi
   systemctl enable -q --now code-server@"$USER"
   systemctl restart code-server@"$USER"
@@ -111,7 +115,7 @@ EOF
   msg_ok "Created update script (/usr/local/bin/update_coder-code-server)"
 
   echo -e "${APP} should be reachable by going to the following URL.
-         ${BL}http://${IP}:8680${CL} \n"
+         ${BL}http://${IP}:8680${CL} (password in ~/coder-code-server.creds)\n"
 }
 
 # ==============================================================================

@@ -87,20 +87,6 @@ if [ -f "$INSTALL_PATH" ]; then
 
   read -r -p "Would you like to update ${APP}? (y/N): " update_prompt
   if [[ "${update_prompt,,}" =~ ^(y|yes)$ ]]; then
-    # Older installs created admin with the public password community-scripts.org
-    fb_port=$(grep -oP '(?<=-p )[0-9]+' "$SERVICE_PATH" 2>/dev/null | head -n1)
-    fb_db=$(grep -oP '(?<=-d )\S+' "$SERVICE_PATH" 2>/dev/null | head -n1)
-    [[ -n "$fb_db" ]] || fb_db="$(grep -oP '(?<=^WorkingDirectory=)\S+' "$SERVICE_PATH" 2>/dev/null || echo /root)/filebrowser.db"
-    if [[ "$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: application/json' -d '{"username":"admin","password":"community-scripts.org","recaptcha":""}' "http://127.0.0.1:${fb_port:-8080}/api/login")" == "200" ]]; then
-      msg_info "Replacing the default admin password"
-      ADMIN_PASS=$(random_password 20)
-      if [[ "$OS" == "Debian" ]]; then systemctl stop filebrowser; else rc-service filebrowser stop &>/dev/null; fi
-      $STD filebrowser users update admin --password "$ADMIN_PASS" --database "$fb_db"
-      if [[ "$OS" == "Debian" ]]; then systemctl start filebrowser; else rc-service filebrowser start &>/dev/null; fi
-      echo -e "FileBrowser\nUsername: admin\nPassword: ${ADMIN_PASS}" >~/filebrowser.creds
-      chmod 600 ~/filebrowser.creds
-      msg_ok "Replaced the default admin password (saved in ~/filebrowser.creds)"
-    fi
     if check_for_gh_release "filebrowser" "filebrowser/filebrowser"; then
       msg_info "Updating ${APP}"
       fetch_and_deploy_gh_release "filebrowser" "filebrowser/filebrowser" "prebuild" "latest" "/opt/filebrowser-dist" "linux-$(arch_resolve)-filebrowser.tar.gz"
@@ -136,7 +122,7 @@ if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
   chmod 755 /usr/local/community-scripts
   touch "$DB_PATH"
   chown root:root "$DB_PATH"
-  chmod 644 "$DB_PATH"
+  chmod 600 "$DB_PATH"
   msg_ok "Directory created successfully"
 
   ADMIN_PASS=$(random_password 20)
