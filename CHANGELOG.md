@@ -587,6 +587,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - OpenObserve: extract release tarball with --no-same-owner [@BadFlo](https://github.com/BadFlo) ([#18564](https://github.com/community-scripts/ProxmoxVE/pull/18564))
     - Immich: download before stopping, and clear maintenance mode after an interrupted update [@angusmaul](https://github.com/angusmaul) ([#18553](https://github.com/community-scripts/ProxmoxVE/pull/18553))
     - cinephage: bump Node.js from 24 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18374](https://github.com/community-scripts/ProxmoxVE/pull/18374))
     - kan: bump Node.js from 20 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18549](https://github.com/community-scripts/ProxmoxVE/pull/18549))
@@ -598,7 +599,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🗑️ Deleted Scripts
 
-  - Delete ct/coolify.sh [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#18562](https://github.com/community-scripts/ProxmoxVE/pull/18562))
+  - coolify: delete old ct / its an addon [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#18562](https://github.com/community-scripts/ProxmoxVE/pull/18562))
 
 ### 💾 Core
 
