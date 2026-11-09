@@ -140,10 +140,10 @@ EOF
     ML_DIR="${APP_DIR}/machine-learning"
     GEO_DIR="${INSTALL_DIR}/geodata"
 
-    # Download before stopping anything: a failed fetch (e.g. a GitHub 504) must leave the running install untouched.
+    # Download before stopping anything, so a failed fetch leaves the running install untouched.
     setup_uv
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "${RELEASE}" "$SRC_DIR"
-    # The fetch records the new version; keep the old one until the update finishes so a failed run can be retried.
+    # Record the new version only once the update finishes, so a failed run is retried.
     NEW_IMMICH="$(cat ~/.immich)"
     echo "$PREV_IMMICH" >~/.immich
 
@@ -391,7 +391,6 @@ EOF
     chown immich:immich "$INSTALL_DIR"
     find "$INSTALL_DIR" -maxdepth 1 -mindepth 1 ! -name upload -exec chown -R immich:immich {} +
     chown immich:immich "${UPLOAD_DIR:-$INSTALL_DIR/upload}" 2>/dev/null || true
-    # Not only when this run enabled it: a run that was interrupted earlier may have left it on.
     if [[ -x /opt/immich/app/bin/immich-admin ]]; then
       msg_info "Disabling Maintenance Mode"
       cd /opt/immich/app/bin
