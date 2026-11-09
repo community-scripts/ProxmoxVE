@@ -378,7 +378,7 @@ msg_ok "Custom Photo-processing Libraries Compiled Successfully"
 fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "${RELEASE}" "$SRC_DIR"
 PNPM_VERSION="$(jq -r '.packageManager | split("@")[1] | split("+")[0]' ${SRC_DIR}/package.json)"
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
+NODE_VERSION="26" NODE_MODULE="corepack" setup_nodejs
 # Provision the exact pnpm pinned in package.json's packageManager field via corepack instead
 # of `npm i -g pnpm@X`, which collides (EEXIST) with the corepack pnpm shim shipped by the
 $STD corepack prepare "pnpm@${PNPM_VERSION}" --activate

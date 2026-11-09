@@ -198,7 +198,7 @@ EOF
     PNPM_VERSION="$(jq -r '.packageManager | split("@")[1] | split("+")[0]' ${SRC_DIR}/package.json)"
     export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
     export CI=1
-    NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
+    NODE_VERSION="26" NODE_MODULE="corepack" setup_nodejs
     $STD corepack prepare "pnpm@${PNPM_VERSION}" --activate
     export PATH="/root/.local/share/pnpm/bin:$PATH"
     $STD pnpm config set --global dangerouslyAllowAllBuilds true
