@@ -36,7 +36,6 @@ function truenas_iso_lookup() {
   local pre_releases=()
   local excluded_codenames="(Angelfish|Bluefin|Cobia|Dragonfish|ElectricEel|Fangtooth)"
 
-  # Fetch directory listing
   local all_paths=$(
     curl -fsSL "${_CS_CURL_RETRY[@]}" --max-time 90 "$BASE_URL" |
       grep -oE 'href="[^"]+\.iso"' |
@@ -48,26 +47,21 @@ function truenas_iso_lookup() {
     [[ -n "$path" ]] || continue
     local filename=$(basename "$path")
 
-    # Skip old excluded stable codenames
     if [[ "$path" =~ $excluded_codenames ]]; then
       continue
     fi
 
-    # Handle Pre-releases (BETA / RC)
     if [[ "$filename" =~ (RC|BETA) ]]; then
-      # Explicitly skip specific Goldeye pre-releases requested for exclusion
       if [[ "$path" =~ 25\.10-(BETA|RC) ]]; then
         continue
       fi
 
-      # Only keep recent pre-releases (year 24 or newer in the path or filename)
       if [[ "$path" =~ /(2[4-9]|[3-9][0-9]) ]] || [[ "$filename" =~ (2[4-9]|[3-9][0-9]) ]]; then
         pre_releases+=("$path")
       fi
       continue
     fi
 
-    # Extract version string for stables
     local version=$(echo "$filename" | sed -E 's/.*TrueNAS-(SCALE-|CORE-)?([0-9]{2}\.[0-9]{2}(\.[0-9]+)*)\.iso.*/\2/')
     [[ -z "$version" ]] && continue
 
@@ -84,7 +78,6 @@ function truenas_iso_lookup() {
     fi
   done <<<"$all_paths"
 
-  # Print out stables sorted, followed by valid pre-releases if needed
   for key in "${!latest_stables[@]}"; do
     echo "${latest_stables[$key]#/}"
   done | sort -V
@@ -167,13 +160,16 @@ fi
 
 ISO_ARRAY=()
 for iso in "${ISO_LIST[@]}"; do
-  ISO_ARRAY+=("$iso" "" "OFF")
+  ISO_ARRAY+=("$iso" "")
 done
 
-if vm_dialog menu "SELECT TRUENAS ISO" --cancel-button "Exit Script" \
-  "\nSelect the TrueNAS ISO version to install:\n" 20 78 10 "${ISO_ARRAY[@]}"; then
-  SELECTED_ISO="$VM_DIALOG_RESULT"
-else
+SELECTED_ISO=$(whiptail --title "SELECT TRUENAS ISO" --menu "\nSelect the TrueNAS ISO version to install:\n" 20 78 10 "${ISO_ARRAY[@]}" 3>&1 1>&2 2>&3) || {
+  msg_error "ISO selection cancelled."
+  exit 0
+}
+
+if [ -z "$SELECTED_ISO" ]; then
+  msg_error "No ISO selected."
   exit 0
 fi
 
