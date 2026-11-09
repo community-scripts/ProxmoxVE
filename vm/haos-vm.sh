@@ -128,12 +128,12 @@ msg_ok "Created VM shell"
 vm_extract_image "$CACHE_FILE" || exit 115
 FILE_IMG="$VM_IMAGE_FILE"
 
-msg_info "Synchronizing extracted disk image"
+msg_info "Synchronizing filesystem after image extraction"
 if ! sync -f "$FILE_IMG"; then
-  msg_error "Failed to synchronize extracted disk image"
+  msg_error "Failed to synchronize filesystem"
   exit 226
 fi
-msg_ok "Synchronized extracted disk image"
+msg_ok "Synchronized filesystem"
 
 vm_import_disk "$VMID" "$FILE_IMG" "$STORAGE" raw || exit 226
 
