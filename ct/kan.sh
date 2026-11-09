@@ -32,14 +32,14 @@ function update_script() {
   fi
 
   if check_for_gh_tag "kan" "kanbn/kan"; then
+    NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
+    
     msg_info "Stopping Service"
     systemctl stop kan
     msg_ok "Stopped Service"
 
     create_backup /opt/kan/.env
-
     CLEAN_INSTALL=1 fetch_and_deploy_gh_tag "kan" "kanbn/kan" "latest"
-
     restore_backup
 
     msg_info "Building Application"
