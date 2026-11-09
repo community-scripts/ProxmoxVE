@@ -592,6 +592,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - kan: bump Node.js from 20 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18549](https://github.com/community-scripts/ProxmoxVE/pull/18549))
     - myip: bump Node.js from 24 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18550](https://github.com/community-scripts/ProxmoxVE/pull/18550))
 
+  - #### 🔧 Refactor
+
+    - yuvomi: install from the attested release asset [@ulsklyc](https://github.com/ulsklyc) ([#18554](https://github.com/community-scripts/ProxmoxVE/pull/18554))
+
 ### 💾 Core
 
   - core: load an app's own settings from its .vars file [@MickLesk](https://github.com/MickLesk) ([core#216](https://github.com/community-scripts/core/pull/216))
