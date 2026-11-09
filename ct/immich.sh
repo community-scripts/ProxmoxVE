@@ -140,7 +140,6 @@ EOF
     ML_DIR="${APP_DIR}/machine-learning"
     GEO_DIR="${INSTALL_DIR}/geodata"
 
-    # Download before stopping anything, so a failed fetch leaves the running install untouched.
     setup_uv
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "${RELEASE}" "$SRC_DIR"
 
