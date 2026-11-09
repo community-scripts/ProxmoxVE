@@ -38,7 +38,6 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tunarr" "chrisbenincasa/tunarr" "prebuild" "latest" "/opt/tunarr" "*linux-$(arch_resolve "x64" "arm64").tar.gz"
     cd /opt/tunarr
-    mv tunarr* tunarr
     restore_backup
 
     msg_info "Starting Service"
