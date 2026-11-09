@@ -31,48 +31,67 @@ trap 'post_update_to_api "failed" "129"; exit 129' SIGHUP
 
 function truenas_iso_lookup() {
   local BASE_URL="https://download.truenas.com"
-  local current_year=$(date +%y)
-  local last_year=$(date -d "1 year ago" +%y)
-  local year_pattern="${current_year}\.|${last_year}\."
 
   declare -A latest_stables
   local pre_releases=()
+  local excluded_codenames="(Angelfish|Bluefin|Cobia|Dragonfish|ElectricEel|Fangtooth)"
 
+  # Fetch directory listing
   local all_paths=$(
     curl -fsSL "${_CS_CURL_RETRY[@]}" --max-time 90 "$BASE_URL" |
       grep -oE 'href="[^"]+\.iso"' |
       sed 's/href="//; s/"$//' |
-      grep -vE '(MASTER|ALPHA)' |
-      grep -E "$year_pattern"
+      grep -vE '(MASTER|ALPHA)'
   )
 
   while read -r path; do
     [[ -n "$path" ]] || continue
     local filename=$(basename "$path")
-    local version=$(echo "$filename" | sed -E 's/.*TrueNAS-SCALE-([0-9]{2}\.[0-9]{2}(\.[0-9]+)*(-RC[0-9]|-BETA[0-9])?)\.iso.*/\1/')
-    if [[ "$version" =~ (RC|BETA) ]]; then
-      pre_releases+=("$path")
+
+    # Skip old excluded stable codenames
+    if [[ "$path" =~ $excluded_codenames ]]; then
+      continue
+    fi
+
+    # Handle Pre-releases (BETA / RC)
+    if [[ "$filename" =~ (RC|BETA) ]]; then
+      # Explicitly skip specific Goldeye pre-releases requested for exclusion
+      if [[ "$path" =~ 25\.10-(BETA|RC) ]]; then
+        continue
+      fi
+
+      # Only keep recent pre-releases (year 24 or newer in the path or filename)
+      if [[ "$path" =~ /(2[4-9]|[3-9][0-9]) ]] || [[ "$filename" =~ (2[4-9]|[3-9][0-9]) ]]; then
+        pre_releases+=("$path")
+      fi
+      continue
+    fi
+
+    # Extract version string for stables
+    local version=$(echo "$filename" | sed -E 's/.*TrueNAS-(SCALE-|CORE-)?([0-9]{2}\.[0-9]{2}(\.[0-9]+)*)\.iso.*/\2/')
+    [[ -z "$version" ]] && continue
+
+    local major_version=$(echo "$version" | cut -d'.' -f1,2)
+    local current_stored_path=${latest_stables["$major_version"]:-}
+
+    if [[ -z "$current_stored_path" ]]; then
+      latest_stables["$major_version"]="$path"
     else
-      local major_version=$(echo "$version" | cut -d'.' -f1,2)
-      local current_stored_path=${latest_stables["$major_version"]:-}
-      if [[ -z "$current_stored_path" ]]; then
+      local stored_version=$(basename "$current_stored_path" | sed -E 's/.*TrueNAS-(SCALE-|CORE-)?([0-9]{2}\.[0-9]{2}(\.[0-9]+)*)\.iso.*/\2/')
+      if printf '%s\n' "$version" "$stored_version" | sort -V | tail -n 1 | grep -q "$version"; then
         latest_stables["$major_version"]="$path"
-      else
-        local stored_version=$(basename "$current_stored_path" | sed -E 's/.*TrueNAS-SCALE-([0-9]{2}\.[0-9]{2}(\.[0-9]+)*)\.iso.*/\1/')
-        if printf '%s\n' "$version" "$stored_version" | sort -V | tail -n 1 | grep -q "$version"; then
-          latest_stables["$major_version"]="$path"
-        fi
       fi
     fi
   done <<<"$all_paths"
 
+  # Print out stables sorted, followed by valid pre-releases if needed
   for key in "${!latest_stables[@]}"; do
     echo "${latest_stables[$key]#/}"
-  done
+  done | sort -V
 
   for pre in "${pre_releases[@]}"; do
     echo "${pre#/}"
-  done | sort -V
+  done | sort -V | uniq
 }
 
 TEMP_DIR=$(mktemp -d)
