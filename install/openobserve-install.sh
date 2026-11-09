@@ -25,7 +25,7 @@ ZO_ROOT_USER_PASSWORD = "${ROOT_PASS}"
 ZO_DATA_DIR = "/opt/openobserve/data"
 ZO_HTTP_PORT = "5080"
 EOF
-echo "${RELEASE}" >>~/.openobserve
+echo "${RELEASE}" >~/.openobserve
 msg_ok "Installed OpenObserve"
 
 msg_info "Creating Service"
@@ -38,7 +38,6 @@ After=network.target
 Type=simple
 EnvironmentFile=/opt/openobserve/data/.env
 ExecStart=/opt/openobserve/openobserve
-ExecStop=killall -QUIT openobserve
 Restart=on-failure
 
 [Install]
