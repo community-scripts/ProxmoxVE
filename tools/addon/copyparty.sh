@@ -151,9 +151,9 @@ function install() {
   else
     read -rp "${TAB}Set admin username [admin]: " admin_user
     admin_user=${admin_user:-admin}
-    read -rsp "${TAB}Set admin password [community-scripts.org]: " admin_pass
+    read -rsp "${TAB}Set admin password [random]: " admin_pass
     echo ""
-    admin_pass=${admin_pass:-community-scripts.org}
+    admin_pass=${admin_pass:-$(random_password 20)}
     msg_ok "Configured with admin user: ${admin_user}"
   fi
 
@@ -291,8 +291,10 @@ UPDATEEOF
   msg_ok "Storage: ${BL}${DATA_PATH}${CL}"
   msg_ok "Config: ${BL}${CONF_PATH}${CL}"
   if [[ -n "$admin_user" ]]; then
+    echo -e "Copyparty\nUsername: ${admin_user}\nPassword: ${admin_pass}" >~/copyparty.creds
+    chmod 600 ~/copyparty.creds
     echo ""
-    msg_ok "Login: ${GN}${admin_user}${CL} / ${GN}${admin_pass}${CL}"
+    msg_ok "Login: ${GN}${admin_user}${CL} (password in ~/copyparty.creds)"
   fi
 }
 

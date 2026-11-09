@@ -40,6 +40,7 @@ cp .env.dist .env
 sed -i "/^DATABASE_URL=.*/c\DATABASE_URL=mysql://kimai:$MARIADB_DB_PASS@127.0.0.1:3306/kimai_db?charset=utf8mb4&serverVersion=mariadb-$MYSQL_VERSION" /opt/kimai/.env
 sed -i "s|^APP_SECRET=.*|APP_SECRET=$APP_SECRET|" /opt/kimai/.env
 $STD bin/console kimai:install -n
+ADMIN_PASS=$(random_password 20)
 $STD expect <<EOF
 set timeout -1
 log_user 0
@@ -47,10 +48,16 @@ log_user 0
 spawn bin/console kimai:user:create admin admin@community-scripts.org ROLE_SUPER_ADMIN
 
 expect "Please enter the password:"
-send "community-scripts.org\r"
+send "${ADMIN_PASS}\r"
 
 expect eof
 EOF
+{
+  echo "Kimai Credentials"
+  echo "Username: admin"
+  echo "Email: admin@community-scripts.org"
+  echo "Password: ${ADMIN_PASS}"
+} >~/kimai.creds
 $STD composer update --no-interaction
 cat <<EOF >/opt/kimai/config/packages/local.yaml
 kimai:

@@ -46,10 +46,16 @@ tar -xzf /tmp/libheif.tar.gz -C /usr/local
 ldconfig
 echo "${LIBHEIF_URL}" >~/.photoprism_libheif
 chmod -R 755 /opt/photoprism/photos/originals
+ADMIN_PASS=$(random_password 20)
+{
+  echo "PhotoPrism Credentials"
+  echo "Username: admin"
+  echo "Password: ${ADMIN_PASS}"
+} >~/photoprism.creds
 cat <<EOF >/opt/photoprism/config/.env
 # Authentication
 PHOTOPRISM_ADMIN_USER='admin'
-PHOTOPRISM_ADMIN_PASSWORD='changeme'
+PHOTOPRISM_ADMIN_PASSWORD='${ADMIN_PASS}'
 PHOTOPRISM_AUTH_MODE='password'
 PHOTOPRISM_PUBLIC='false'
 
@@ -112,7 +118,7 @@ StoragePath: "/opt/photoprism/storage"
 OriginalsPath: "/opt/photoprism/photos/originals"
 ImportPath: "/media"
 AdminUser: "admin"
-AdminPassword: "changeme"
+AdminPassword: "${ADMIN_PASS}"
 AuthMode: "password"
 DatabaseDriver: "sqlite"
 HttpHost: "0.0.0.0"

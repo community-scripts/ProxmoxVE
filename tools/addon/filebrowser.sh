@@ -122,9 +122,11 @@ if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
   chmod 755 /usr/local/community-scripts
   touch "$DB_PATH"
   chown root:root "$DB_PATH"
-  chmod 644 "$DB_PATH"
+  chmod 600 "$DB_PATH"
   msg_ok "Directory created successfully"
 
+  ADMIN_PASS=$(random_password 20)
+  msg_warn "FileBrowser runs as root and shows the whole filesystem. Without authentication, anyone who reaches port ${PORT} can read and change every file."
   read -r -p "Would you like to use No Authentication? (y/N): " auth_prompt
   if [[ "${auth_prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Configuring No Authentication"
@@ -133,16 +135,18 @@ if [[ "${install_prompt,,}" =~ ^(y|yes)$ ]]; then
     $STD filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH"
     $STD filebrowser config set --auth.method=noauth --database "$DB_PATH"
     if ! filebrowser users update 1 --perm.admin --database "$DB_PATH" &>/dev/null; then
-      $STD filebrowser users add admin community-scripts.org --perm.admin --database "$DB_PATH"
+      $STD filebrowser users add admin "$ADMIN_PASS" --perm.admin --database "$DB_PATH"
     fi
     msg_ok "No Authentication configured"
   else
-    msg_info "Setting up default authentication"
+    msg_info "Setting up authentication"
     cd /usr/local/community-scripts
     $STD filebrowser config init -a '0.0.0.0' -p "$PORT" -d "$DB_PATH"
     $STD filebrowser config set -a '0.0.0.0' -p "$PORT" -d "$DB_PATH"
-    $STD filebrowser users add admin community-scripts.org --perm.admin --database "$DB_PATH"
-    msg_ok "Default authentication configured (admin:community-scripts.org)"
+    $STD filebrowser users add admin "$ADMIN_PASS" --perm.admin --database "$DB_PATH"
+    echo -e "FileBrowser\nUsername: admin\nPassword: ${ADMIN_PASS}" >~/filebrowser.creds
+    chmod 600 ~/filebrowser.creds
+    msg_ok "Authentication configured (credentials saved in ~/filebrowser.creds)"
   fi
 
   msg_info "Creating service"
@@ -156,7 +160,6 @@ After=network-online.target
 User=root
 WorkingDirectory=/usr/local/community-scripts
 ExecStartPre=/bin/touch /usr/local/community-scripts/filebrowser.db
-ExecStartPre=/usr/local/bin/filebrowser config set -a "0.0.0.0" -p ${PORT} -d /usr/local/community-scripts/filebrowser.db
 ExecStart=/usr/local/bin/filebrowser -r / -d /usr/local/community-scripts/filebrowser.db -p ${PORT}
 Restart=always
 

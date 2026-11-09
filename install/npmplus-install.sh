@@ -57,11 +57,17 @@ done
 ACME_EMAIL_INPUT="${var_npmplus_acme_email:-}"
 [[ -n "$ACME_EMAIL_INPUT" ]] || read -r -p "${TAB3}Enter your ACME Email (optional, press ENTER to skip): " ACME_EMAIL_INPUT || true
 
+ADMIN_PASS=$(random_password 20)
 yq -i "
   .services.npmplus.environment |=
     (map(select(. != \"TZ=*\" and . != \"ACME_EMAIL=*\" and . != \"INITIAL_ADMIN_EMAIL=*\" and . != \"INITIAL_ADMIN_PASSWORD=*\")) +
-    [\"TZ=$TZ_INPUT\", \"ACME_EMAIL=$ACME_EMAIL_INPUT\", \"INITIAL_ADMIN_EMAIL=admin@local.com\", \"INITIAL_ADMIN_PASSWORD=community-scripts.org\"])
+    [\"TZ=$TZ_INPUT\", \"ACME_EMAIL=$ACME_EMAIL_INPUT\", \"INITIAL_ADMIN_EMAIL=admin@local.com\", \"INITIAL_ADMIN_PASSWORD=${ADMIN_PASS}\"])
 " /opt/compose.yaml
+{
+  echo "NPMplus Credentials"
+  echo "Email: admin@local.com"
+  echo "Password: ${ADMIN_PASS}"
+} >~/npmplus.creds
 
 msg_info "Building and Starting NPMplus (Patience)"
 $STD docker compose up -d

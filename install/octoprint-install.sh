@@ -30,7 +30,13 @@ rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
 msg_ok "Setup Python3"
 
 msg_info "Creating user octoprint"
-useradd -m -s /bin/bash -p $(openssl passwd -1 octoprint) octoprint
+OCTOPRINT_PASS=$(random_password 20)
+useradd -m -s /bin/bash -p "$(openssl passwd -6 "$OCTOPRINT_PASS")" octoprint
+{
+  echo "OctoPrint Linux user Credentials"
+  echo "Username: octoprint"
+  echo "Password: ${OCTOPRINT_PASS}"
+} >~/octoprint.creds
 usermod -aG sudo,tty,dialout octoprint
 chown -R octoprint:octoprint /opt
 echo "octoprint ALL=NOPASSWD: $(command -v systemctl) restart octoprint, $(command -v reboot), $(command -v poweroff)" >/etc/sudoers.d/octoprint

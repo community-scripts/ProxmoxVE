@@ -48,6 +48,7 @@ chown -R archivebox:archivebox /opt/archivebox/{data,.npm,.cache,.local}
 chmod -R 755 /opt/archivebox/data
 $STD uv pip install archivebox --system --break-system-packages
 cd /opt/archivebox/data
+ADMIN_PASS=$(random_password 20)
 expect <<EOF
 set timeout -1
 log_user 0
@@ -62,13 +63,18 @@ expect "Email address"
 send "\r"
 
 expect "Password"
-send "community-scripts.org\r"
+send "${ADMIN_PASS}\r"
 
 expect "Password (again)"
-send "community-scripts.org\r"
+send "${ADMIN_PASS}\r"
 
 expect eof
 EOF
+{
+  echo "ArchiveBox Credentials"
+  echo "Username: archivebox"
+  echo "Password: ${ADMIN_PASS}"
+} >~/archivebox.creds
 msg_ok "Installed ArchiveBox"
 
 msg_info "Creating Service"

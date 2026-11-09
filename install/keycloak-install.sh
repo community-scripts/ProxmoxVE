@@ -21,6 +21,7 @@ PG_DB_NAME="keycloak" PG_DB_USER="keycloak" setup_postgresql_db
 fetch_and_deploy_gh_release "keycloak_app" "keycloak/keycloak" "prebuild" "latest" "/opt/keycloak" "keycloak-*.tar.gz"
 
 msg_info "Creating Service"
+ADMIN_PASS=$(random_password 20)
 cat <<EOF >/etc/systemd/system/keycloak.service
 [Unit]
 Description=Keycloak Service
@@ -40,7 +41,7 @@ Environment="KC_DB_USERNAME=keycloak"
 Environment="KC_DB_PASSWORD=$PG_DB_PASS"
 Environment="KC_HTTP_ENABLED=true"
 Environment="KC_BOOTSTRAP_ADMIN_USERNAME=tmpadm"
-Environment="KC_BOOTSTRAP_ADMIN_PASSWORD=admin123"
+Environment="KC_BOOTSTRAP_ADMIN_PASSWORD=${ADMIN_PASS}"
 # Comment following line and uncomment the next 2 if working behind a reverse proxy
 Environment="KC_HOSTNAME_STRICT=false"
 #Environment="KC_HOSTNAME=keycloak.example.com"
@@ -48,6 +49,13 @@ Environment="KC_HOSTNAME_STRICT=false"
 [Install]
 WantedBy=multi-user.target
 EOF
+chmod 600 /etc/systemd/system/keycloak.service
+{
+  echo "Keycloak Credentials"
+  echo "Temporary admin, replace it with a permanent one"
+  echo "Username: tmpadm"
+  echo "Password: ${ADMIN_PASS}"
+} >~/keycloak.creds
 systemctl enable -q --now keycloak
 msg_ok "Created Service"
 

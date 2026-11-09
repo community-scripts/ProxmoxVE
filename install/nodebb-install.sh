@@ -31,6 +31,7 @@ NODEBB_USER="nodebb"
 NODEBB_PWD="$(random_password 13)"
 MONGO_CONNECTION_STRING="mongodb://${NODEBB_USER}:${NODEBB_PWD}@localhost:27017/nodebb"
 NODEBB_SECRET=$(uuidgen)
+NODEBB_ADMIN_PASS="$(random_password 20)"
 cat <<EOF >~/nodebb.creds
 NodeBB-Credentials
 Mongo Database User: $MONGO_ADMIN_USER
@@ -38,6 +39,8 @@ Mongo Database Password: $MONGO_ADMIN_PWD
 NodeBB User: $NODEBB_USER
 NodeBB Password: $NODEBB_PWD
 NodeBB Secret: $NODEBB_SECRET
+NodeBB Admin User: community-scripts
+NodeBB Admin Password: $NODEBB_ADMIN_PASS
 EOF
 
 $STD mongosh <<EOF
@@ -97,10 +100,10 @@ expect "Administrator email address" {
     send "admin@community-scripts.org\r"
 }
 expect "Password" {
-    send "community-scripts\r"
+    send "$NODEBB_ADMIN_PASS\r"
 }
 expect "Confirm Password" {
-    send "community-scripts\r"
+    send "$NODEBB_ADMIN_PASS\r"
 }
 expect eof
 EOF

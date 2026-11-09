@@ -63,12 +63,19 @@ else
 fi
 echo "$AUTHELIA_URL" >/etc/authelia/.authelia_url
 
+AUTHELIA_PASS=$(random_password 20)
+AUTHELIA_HASH=$(authelia crypto hash generate argon2 --password "$AUTHELIA_PASS" | awk '/Digest:/{print $2}')
+{
+  echo "Authelia Credentials"
+  echo "Username: authelia"
+  echo "Password: ${AUTHELIA_PASS}"
+} >~/authelia.creds
 cat <<EOF >/etc/authelia/users.yml
 users:
   authelia:
     disabled: false
     displayname: "Authelia Admin"
-    password: "\$argon2id\$v=19\$m=65536,t=3,p=4\$ZBopMzXrzhHXPEZxRDVT2w\$SxWm96DwhOsZyn34DLocwQEIb4kCDsk632PuiMdZnig"
+    password: "${AUTHELIA_HASH}"
     groups: []
 EOF
 cat <<EOF >/etc/authelia/configuration.yml
