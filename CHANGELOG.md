@@ -587,6 +587,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - zipline: Update RAM to 3GB [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18569](https://github.com/community-scripts/ProxmoxVE/pull/18569))
     - OpenObserve: record installed version, drop killall ExecStop [@BadFlo](https://github.com/BadFlo) ([#18566](https://github.com/community-scripts/ProxmoxVE/pull/18566))
     - OpenObserve: extract release tarball with --no-same-owner [@BadFlo](https://github.com/BadFlo) ([#18564](https://github.com/community-scripts/ProxmoxVE/pull/18564))
     - Immich: download before stopping, and clear maintenance mode after an interrupted update [@angusmaul](https://github.com/angusmaul) ([#18553](https://github.com/community-scripts/ProxmoxVE/pull/18553))
