@@ -37,7 +37,7 @@ function update_script() {
     msg_ok "Installed Archive Tools"
   fi
 
-  NODE_VERSION="24" setup_nodejs
+  NODE_VERSION="26" setup_nodejs
 
   # RomM 5.3.0 replaced rq-scheduler with `rq cron` and moved scans to their own queue
   if grep -q rqscheduler /etc/systemd/system/romm-scheduler.service 2>/dev/null; then

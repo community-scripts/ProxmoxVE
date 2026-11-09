@@ -76,7 +76,7 @@ function decodeBase64(r) {
 export default { decodeBase64 };
 EOF
 msg_ok "Installed Angie with mod_zip and njs modules"
-NODE_VERSION="24" setup_nodejs
+NODE_VERSION="26" setup_nodejs
 setup_mariadb
 MARIADB_DB_NAME="romm" MARIADB_DB_USER="romm" setup_mariadb_db
 
