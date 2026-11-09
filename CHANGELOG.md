@@ -597,6 +597,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - security: remove hardcoded credentials in several scripts [@MickLesk](https://github.com/MickLesk) ([#18572](https://github.com/community-scripts/ProxmoxVE/pull/18572))
     - yuvomi: install from the attested release asset [@ulsklyc](https://github.com/ulsklyc) ([#18554](https://github.com/community-scripts/ProxmoxVE/pull/18554))
 
 ### 🗑️ Deleted Scripts
