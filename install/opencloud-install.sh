@@ -14,6 +14,8 @@ network_check
 update_os
 
 MAX_ATTEMPTS=3
+# Each FQDN is read from var_opencloud_opencloud_fqdn, var_opencloud_collabora_fqdn and var_opencloud_wopi_fqdn when set.
+# Named literally here because the prompt below builds the name from $server, and unattended runs look for the literal names.
 servers=("opencloud" "collabora" "wopi")
 attempt=0
 for server in "${servers[@]}"; do
