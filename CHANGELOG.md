@@ -596,6 +596,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - fix: flush the image before importing a VM disk [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([core#223](https://github.com/community-scripts/core/pull/223))
 
+### 📂 Github
+
+  - Build PR scripts on a Proxmox test host via /test [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#18594](https://github.com/community-scripts/ProxmoxVE/pull/18594))
+
 ## 2026-11-09
 
 ### 🚀 Updated Scripts
