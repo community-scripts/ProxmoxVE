@@ -25,44 +25,23 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -d /opt/trilium ]]; then
+  if [[ ! -f /etc/systemd/system/trilium.service ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
   if check_for_gh_release "Trilium" "TriliumNext/Trilium" "" "" "v"; then
-    if [[ -d /opt/trilium/db ]]; then
-      DB_PATH="/opt/trilium/db"
-      DB_RESTORE_PATH="/opt/trilium/db"
-    elif [[ -d /opt/trilium/assets/db ]]; then
-      DB_PATH="/opt/trilium/assets/db"
-      DB_RESTORE_PATH="/opt/trilium/assets/db"
-    else
-      msg_error "Database not found in either /opt/trilium/db or /opt/trilium/assets/db"
-      exit
-    fi
-
     msg_info "Stopping Service"
     systemctl stop trilium
-    sleep 1
     msg_ok "Stopped Service"
 
-    msg_info "Backing up Database"
-    mkdir -p /opt/trilium_backup
-    cp -r "${DB_PATH}" /opt/trilium_backup/
-    rm -rf /opt/trilium
-    msg_ok "Backed up Database"
-
-    fetch_and_deploy_gh_release "Trilium" "TriliumNext/Trilium" "prebuild" "latest" "/opt/trilium" "TriliumNotes-Server-*linux-$(arch_resolve "x64" "arm64").tar.xz" "v"
-
-    msg_info "Restoring Database"
-    mkdir -p "$(dirname "${DB_RESTORE_PATH}")"
-    cp -r /opt/trilium_backup/$(basename "${DB_PATH}") "${DB_RESTORE_PATH}"
-    rm -rf /opt/trilium_backup
-    msg_ok "Restored Database"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Trilium" "TriliumNext/Trilium" "prebuild" "latest" "/opt/trilium" "TriliumNotes-Server-*linux-$(arch_resolve "x64" "arm64").tar.xz" "v" || {
+      systemctl start trilium
+      msg_error "Update failed - the previous version is still installed and was restarted"
+      exit 1
+    }
 
     msg_info "Starting Service"
     systemctl start trilium
-    sleep 1
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
   fi
