@@ -25,14 +25,45 @@ function update_script() {
   header_info
   check_container_storage
   check_container_resources
-  if [[ ! -f /etc/systemd/system/trilium.service ]]; then
+  if [[ ! -d /opt/trilium && ! -f /etc/systemd/system/trilium.service ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
   if check_for_gh_release "Trilium" "TriliumNext/Trilium" "" "" "v"; then
+    # Notes live in Trilium's data directory, not in /opt/trilium: TRILIUM_DATA_DIR
+    # when the service sets it, otherwise ~/trilium-data or ~/.local/share/trilium-data.
+    DATA_DIR="$(systemctl show trilium -p Environment --value 2>/dev/null | tr ' ' '\n' | sed -n 's/^TRILIUM_DATA_DIR=//p' || true)"
+    if [[ -z "$DATA_DIR" ]]; then
+      DATA_DIR="/root/trilium-data"
+      [[ -d "$DATA_DIR" ]] || DATA_DIR="/root/.local/share/trilium-data"
+    fi
+    if [[ "${DATA_DIR%/}" == "/opt/trilium" || "$DATA_DIR" == /opt/trilium/* ]]; then
+      msg_error "Notes are stored in ${DATA_DIR}, which the update replaces. Move TRILIUM_DATA_DIR out of /opt/trilium first."
+      exit 1
+    fi
+    DB_BACKUP="${DATA_DIR}/backup/backup-before-update.db"
+
     msg_info "Stopping Service"
     systemctl stop trilium
     msg_ok "Stopped Service"
+
+    if [[ -f "${DATA_DIR}/document.db" ]]; then
+      msg_info "Backing up Database"
+      rm -f "$DB_BACKUP" "${DB_BACKUP}-wal" "${DB_BACKUP}-shm"
+      # Trilium folds its -wal file into document.db when it stops; a leftover one
+      # is copied as well, so the backup is complete even if it was killed.
+      if mkdir -p "${DATA_DIR}/backup" && cp -a "${DATA_DIR}/document.db" "$DB_BACKUP" &&
+        { [[ ! -f "${DATA_DIR}/document.db-wal" ]] || cp -a "${DATA_DIR}/document.db-wal" "${DB_BACKUP}-wal"; }; then
+        msg_ok "Backed up Database to ${DB_BACKUP}"
+      else
+        rm -f "$DB_BACKUP" "${DB_BACKUP}-wal"
+        systemctl start trilium
+        msg_error "Database backup failed - update not started, Trilium restarted"
+        exit 1
+      fi
+    else
+      msg_warn "No database found in ${DATA_DIR}, nothing to back up"
+    fi
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "Trilium" "TriliumNext/Trilium" "prebuild" "latest" "/opt/trilium" "TriliumNotes-Server-*linux-$(arch_resolve "x64" "arm64").tar.xz" "v" || {
       systemctl start trilium
