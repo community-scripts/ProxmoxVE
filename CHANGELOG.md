@@ -587,6 +587,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - homeassistant.sh: Update pip install command for runlike [@Zajsoft](https://github.com/Zajsoft) ([#18583](https://github.com/community-scripts/ProxmoxVE/pull/18583))
     - Tunarr: fix install and update for the new release layout and latest ErsatzTV-ffmpeg [@chrisbenincasa](https://github.com/chrisbenincasa) ([#18577](https://github.com/community-scripts/ProxmoxVE/pull/18577))
 
 ## 2026-11-09
