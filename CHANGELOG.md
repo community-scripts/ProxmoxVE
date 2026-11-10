@@ -587,6 +587,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - openproject: start memcached when IPv6 is disabled [@MickLesk](https://github.com/MickLesk) ([#18584](https://github.com/community-scripts/ProxmoxVE/pull/18584))
     - homeassistant.sh: Update pip install command for runlike [@Zajsoft](https://github.com/Zajsoft) ([#18583](https://github.com/community-scripts/ProxmoxVE/pull/18583))
     - Tunarr: fix install and update for the new release layout and latest ErsatzTV-ffmpeg [@chrisbenincasa](https://github.com/chrisbenincasa) ([#18577](https://github.com/community-scripts/ProxmoxVE/pull/18577))
 
