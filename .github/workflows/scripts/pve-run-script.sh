@@ -283,7 +283,13 @@ ci_value() {
   *pass* | *secret* | *token* | *key*) head -c 32 /dev/urandom | base64 | tr -dc 'A-Za-z0-9' | cut -c1-20 ;;
   *email* | *mail*) echo "ci@example.test" ;;
   *url* | *endpoint*) echo "https://ci-${host_app}.example.test" ;;
-  *host* | *domain* | *fqdn*) echo "ci-${host_app}.example.test" ;;
+  # One name per variable: var_opencloud_collabora_fqdn ->
+  # ci-opencloud-collabora.example.test, so several of them cannot collide.
+  *host* | *domain* | *fqdn*)
+    local part="${1#var_}"
+    part=$(sed -E 's/_?(fqdn|hostname|host|domain)$//' <<<"${part,,}" | tr '_' '-')
+    echo "ci-${part:-$host_app}.example.test"
+    ;;
   *user*) echo "ciadmin" ;;
   *) echo "ci-test" ;;
   esac
@@ -296,6 +302,29 @@ if [[ -f "$json" ]]; then
   done < <(jq -r '(if type == "array" then .[0] else . end).app_vars // [] | .[] |
     select(.name | test("^var_[a-z0-9_]{1,40}$")) | [.name, (.default // "" | tostring)] | @tsv' "$json" 2>/dev/null)
 fi
+# Names built at run time from a loop, e.g. OpenCloud:
+#   servers=("opencloud" "collabora" "wopi")
+#   for server in "${servers[@]}"; do fqdn_var="var_opencloud_${server}_fqdn"
+# Each var_...${x}... template is expanded with the words of `for x in ...`
+# (or of the array that loop walks). Nothing is executed, only read.
+expand_templates() {
+  local tpl x pre suf words arr w
+  while read -r tpl; do
+    x=$(sed -E 's/^[^$]*\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?.*$/\1/' <<<"$tpl")
+    pre="${tpl%%\$*}"
+    suf=$(sed -E 's/^[^$]*\$\{?[A-Za-z_][A-Za-z0-9_]*\}?//' <<<"$tpl")
+    words=$(grep -m1 -oE "for ${x} in [^;]*" "$1" | sed -E "s/^for ${x} in //")
+    if [[ "$words" =~ \$\{([A-Za-z_][A-Za-z0-9_]*)\[@\]\} ]]; then
+      arr="${BASH_REMATCH[1]}"
+      words=$(grep -m1 -oE "^\s*${arr}=\([^)]*\)" "$1" | sed -E "s/^\s*${arr}=\(//; s/\)$//")
+    fi
+    for w in $words; do
+      w="${w//[\"\']/}"
+      [[ "${pre}${w}${suf}" =~ ^var_[a-z0-9_]{1,40}$ ]] && echo "${pre}${w}${suf}"
+    done
+  done < <(grep -oE 'var_[a-z0-9_]*\$\{?[A-Za-z_][A-Za-z0-9_]*\}?[a-z0-9_]*' "$1" | sort -u)
+}
+
 # The engine names the install script after APP (lower case, no spaces), which
 # need not match the ct/ file name: ct/bluesky-pds.sh -> blueskypds-install.sh.
 nsapp=$(grep -m1 -oE '^APP="[^"]+"' "$tree/$SCRIPT" | cut -d'"' -f2 | tr -d ' ' | tr '[:upper:]' '[:lower:]')
@@ -303,7 +332,10 @@ for f in "$tree/install/${app}-install.sh" "$tree/install/${nsapp}-install.sh" "
   [[ -f "$f" ]] || continue
   while read -r name; do
     [[ -v "answers[$name]" ]] || answers[$name]=""
-  done < <(grep -E '\bread\b|prompt_(input|input_required|confirm|select|password)\b' "$f" | grep -oE '\bvar_[a-z0-9_]{1,40}\b' | sort -u)
+  done < <({
+    grep -E '\bread\b|prompt_(input|input_required|confirm|select|password)\b' "$f" | grep -oE '\bvar_[a-z0-9_]{1,40}\b'
+    expand_templates "$f"
+  } | sort -u)
 done
 for name in "${!answers[@]}"; do
   [[ "$ENGINE_VARS" == *" $name "* ]] && continue
