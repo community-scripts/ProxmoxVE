@@ -5,11 +5,15 @@ name: PR script test
 # date.
 #
 # A self-hosted runner that executes pull request code as root is only
-# acceptable if a human decides what runs on it. Nothing here starts on a push:
-# someone with write access comments `/test` (optionally followed by a full SHA
-# to pin, and the ct/ paths to build). Only a commit that existed when the
-# comment was written gets built: a push after it is never covered, not even
-# one that lands in the seconds before this job runs.
+# acceptable if a human decides what runs on it. So it starts on a push only
+# for trusted PRs: those the push-app-to-main app opens on a branch of this
+# repository when a script moves over from DevScripts (already reviewed and
+# tested there; only writers can push to such a branch). Those are built
+# automatically and approved when every script passes. Everything else waits
+# for someone with write access to comment `/test` (optionally followed by a
+# full SHA to pin, and the ct/ paths to build). Only a commit that existed when
+# the comment was written gets built: a push after it is never covered, not
+# even one that lands in the seconds before this job runs.
 #
 #   gate    ubuntu-latest   who asked, which scripts, which commit
 #   test    proxmox-test    build + checks, one matrix job per script/OS
@@ -24,6 +28,13 @@ name: PR script test
 on:
   issue_comment:
     types: [created]
+  # Trusted PRs only, see above. pull_request_target runs this file from main,
+  # never the PR's copy of it.
+  pull_request_target:
+    types: [opened, reopened, synchronize, ready_for_review]
+    paths:
+      - "ct/**"
+      - "install/**"
   workflow_dispatch:
     inputs:
       pr:
@@ -45,7 +56,10 @@ jobs:
   gate:
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      (github.event.issue.pull_request && startsWith(github.event.comment.body, '/test'))
+      (github.event_name == 'issue_comment' && github.event.issue.pull_request && startsWith(github.event.comment.body, '/test')) ||
+      (github.event_name == 'pull_request_target' && !github.event.pull_request.draft &&
+       github.event.pull_request.user.login == 'push-app-to-main[bot]' &&
+       github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
     permissions:
       actions: read # when the run was dispatched, for a /test without SHA
@@ -61,6 +75,7 @@ jobs:
       check_id: ${{ steps.plan.outputs.check_id }}
       actor: ${{ steps.plan.outputs.actor }}
       not_built: ${{ steps.plan.outputs.not_built }}
+      trusted: ${{ steps.plan.outputs.trusted }}
     steps:
       - id: plan
         uses: actions/github-script@v8
@@ -70,8 +85,20 @@ jobs:
             const MAX = 10;
             core.setOutput('matrix', '[]');
 
+            // Trusted: a PR the push-app-to-main app opened on a branch of this
+            // repository, i.e. a script moving over from DevScripts.
+            const TRUSTED_AUTHOR = 'push-app-to-main[bot]';
+            const isTrusted = p => !!p && p.user && p.user.login === TRUSTED_AUTHOR && p.user.type === 'Bot' &&
+              !!p.head.repo && p.head.repo.full_name === `${owner}/${repo}`;
+
             let prNumber, requested = '';
-            if (context.eventName === 'workflow_dispatch') {
+            if (context.eventName === 'pull_request_target') {
+              const p = context.payload.pull_request;
+              if (!isTrusted(p)) return;
+              prNumber = p.number;
+              // Exactly the pushed commit; a later push starts its own run.
+              requested = p.head.sha;
+            } else if (context.eventName === 'workflow_dispatch') {
               prNumber = Number(context.payload.inputs.pr);
               requested = `${context.payload.inputs.sha || ''} ${context.payload.inputs.scripts || ''}`;
             } else {
@@ -94,6 +121,11 @@ jobs:
             const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number: prNumber });
             if (pr.state !== 'open' || !pr.head.repo) { core.notice('PR is closed or its fork is gone'); return; }
             const head = pr.head.repo;
+            if (context.eventName === 'pull_request_target' && pr.head.sha !== requested) {
+              core.notice('Pushed to again since; the newer push has its own run');
+              return;
+            }
+            core.setOutput('trusted', isTrusted(pr) ? 'true' : 'false');
             const MARK = '<!-- pr-script-test -->';
             const sticky = async body => {
               const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number: prNumber });
@@ -283,6 +315,7 @@ jobs:
           TEST_RESULT: ${{ needs.test.result }}
           ACTOR: ${{ needs.gate.outputs.actor }}
           NOT_BUILT: ${{ needs.gate.outputs.not_built }}
+          TRUSTED: ${{ needs.gate.outputs.trusted }}
         with:
           script: |
             const fs = require('fs');
@@ -474,12 +507,36 @@ jobs:
             const REVIEW_MARK = '<!-- pr-script-test-review -->';
             const failedRows = cancelled ? [] : rows.filter(r => r.status === 'fail');
             const sha7 = process.env.SHA.slice(0, 7);
+            // Trusted PRs (scripts moving over from DevScripts) are approved when
+            // every script passes -- not on untestable or setup trouble, which
+            // means "not tested", not "good". That approval counts toward the
+            // ruleset's required review; a push dismisses it as stale, and a
+            // later run that does not fully pass withdraws it.
+            const approve = process.env.TRUSTED === 'true' && allPass;
             try {
               const reviews = await github.paginate(github.rest.pulls.listReviews, { owner, repo, pull_number: pr });
-              for (const v of reviews.filter(v => v.user && v.user.type === 'Bot' && v.state === 'CHANGES_REQUESTED' && (v.body || '').includes(REVIEW_MARK))) {
+              const ours = state => reviews.filter(v => v.user && v.user.type === 'Bot' && v.state === state && (v.body || '').includes(REVIEW_MARK));
+              for (const v of ours('CHANGES_REQUESTED')) {
                 await github.rest.pulls.dismissReview({
                   owner, repo, pull_number: pr, review_id: v.id,
                   message: failedRows.length ? 'Replaced by a newer Proxmox script test.' : `Proxmox script test passed at ${sha7}.`,
+                });
+              }
+              if (!approve && !cancelled) {
+                for (const v of ours('APPROVED')) {
+                  await github.rest.pulls.dismissReview({
+                    owner, repo, pull_number: pr, review_id: v.id,
+                    message: `Withdrawn: the Proxmox script test at ${sha7} did not fully pass.`,
+                  });
+                }
+              }
+              if (approve && !ours('APPROVED').some(v => v.commit_id === process.env.SHA)) {
+                await github.rest.pulls.createReview({
+                  owner, repo, pull_number: pr, commit_id: process.env.SHA, event: 'APPROVE',
+                  body: [
+                    REVIEW_MARK, `**Proxmox script test passed** at \`${sha7}\`: ${rows.map(r => `\`${r.script}\``).join(', ')}.`, '',
+                    `Script moved over from DevScripts, built and checked on a real Proxmox host. [Test result](${posted.html_url}).`,
+                  ].join('\n'),
                 });
               }
               if (failedRows.length) {
