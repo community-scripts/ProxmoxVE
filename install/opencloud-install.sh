@@ -223,8 +223,12 @@ OPENCLOUD_SECRET="$(sed -n '/jwt/p' "$CONFIG_DIR"/opencloud.yaml | awk '{print $
 sed -i "s/JWT_SECRET=/&${OPENCLOUD_SECRET//&/\\&}/" "$ENV_FILE"
 ACCOUNT_ID="$(awk '/service_account_id:/ {gsub(/["'\'']/, "", $2); print $2; exit}' "$CONFIG_DIR"/opencloud.yaml)"
 ACCOUNT_SECRET="$(awk '/service_account_secret:/ {sub(/^[^:]*:[[:space:]]*/, ""); gsub(/^["'\'']|["'\'']$/, ""); print; exit}' "$CONFIG_DIR"/opencloud.yaml)"
-printf "OC_SERVICE_ACCOUNT_ID=%s\nOC_SERVICE_ACCOUNT_SECRET='%s'\n" "$ACCOUNT_ID" "$ACCOUNT_SECRET" |
-  sed -i '/^STORAGE_SYSTEM_OC_ROOT=/r /dev/stdin' "$ENV_FILE"
+if [[ -n "$ACCOUNT_ID" && -n "$ACCOUNT_SECRET" && "$ACCOUNT_SECRET" != *"'"* ]]; then
+  printf "OC_SERVICE_ACCOUNT_ID=%s\nOC_SERVICE_ACCOUNT_SECRET='%s'\n" "$ACCOUNT_ID" "$ACCOUNT_SECRET" |
+    sed -i '/^STORAGE_SYSTEM_OC_ROOT=/r /dev/stdin' "$ENV_FILE"
+else
+  msg_warn "Could not read the service account from opencloud.yaml; set OC_SERVICE_ACCOUNT_ID/SECRET in opencloud.env"
+fi
 msg_ok "Configured OpenCloud"
 
 msg_info "Starting services"
