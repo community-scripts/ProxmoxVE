@@ -592,6 +592,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - homeassistant.sh: Update pip install command for runlike [@Zajsoft](https://github.com/Zajsoft) ([#18583](https://github.com/community-scripts/ProxmoxVE/pull/18583))
     - Tunarr: fix install and update for the new release layout and latest ErsatzTV-ffmpeg [@chrisbenincasa](https://github.com/chrisbenincasa) ([#18577](https://github.com/community-scripts/ProxmoxVE/pull/18577))
 
+### 💾 Core
+
+  - fix: flush the image before importing a VM disk [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([core#223](https://github.com/community-scripts/core/pull/223))
+
 ## 2026-11-09
 
 ### 🚀 Updated Scripts
