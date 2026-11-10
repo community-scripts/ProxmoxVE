@@ -70,6 +70,9 @@ memcached/autoinstall install
 openproject/admin_email admin@example.net
 openproject/default_language en
 EOF
+# Debian's memcached also listens on ::1 and does not start when IPv6 is disabled
+$STD apt install -y memcached
+sed -i '/^-l ::1$/d' /etc/memcached.conf
 $STD sudo openproject configure
 systemctl stop openproject-web-1
 if ! grep -qF 'Environment=LD_PRELOAD=/usr/local/lib/libjemalloc.so.2' /etc/systemd/system/openproject-web-1.service; then
