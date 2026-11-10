@@ -512,7 +512,24 @@ jobs:
             // means "not tested", not "good". That approval counts toward the
             // ruleset's required review; a push dismisses it as stale, and a
             // later run that does not fully pass withdraws it.
-            const approve = process.env.TRUSTED === 'true' && allPass;
+            // Anyone with write access can push to a migration branch, and the
+            // approval counts toward the required review. So it only covers
+            // what a migration contains: ct/ and install/ scripts. A PR that
+            // also changes anything else (workflows, misc/, ...) is tested but
+            // never approved.
+            let approve = process.env.TRUSTED === 'true' && allPass;
+            let noApproveWhy = '';
+            if (approve) {
+              const changed = await github.paginate(github.rest.pulls.listFiles, { owner, repo, pull_number: pr });
+              const other = changed.map(f => f.filename).filter(n => !/^(ct|install)\/[A-Za-z0-9._-]+\.sh$/.test(n));
+              if (other.length) {
+                approve = false;
+                noApproveWhy = `Not approved automatically: besides \`ct/\` and \`install/\` scripts this PR changes ${other.slice(0, 5).map(n => '`' + n.replace(/[`\r\n]/g, '') + '`').join(', ')}${other.length > 5 ? ', …' : ''}. That needs a human review.`;
+              }
+            }
+            if (noApproveWhy) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: posted.id, body: `${body}\n\n> ${noApproveWhy}`.slice(0, 65000) });
+            }
             try {
               const reviews = await github.paginate(github.rest.pulls.listReviews, { owner, repo, pull_number: pr });
               const ours = state => reviews.filter(v => v.user && v.user.type === 'Bot' && v.state === state && (v.body || '').includes(REVIEW_MARK));
