@@ -75,7 +75,7 @@ EOF
   BASE_DIR=${STAGING_DIR}/base-images
   SOURCE_DIR=${STAGING_DIR}/image-source
   cd /tmp
-  RELEASE="v3.3.6"
+  RELEASE="v3.4.0"
   if [[ -f ~/.intel_version ]]; then
     INTEL_SRC="https://raw.githubusercontent.com/immich-app/immich/${RELEASE}/machine-learning"
     curl -fsSL "${INTEL_SRC}/scripts/install-intel-runtime.sh" -o ./intel-runtime 2>/dev/null ||
@@ -109,7 +109,7 @@ EOF
   libraries=("libjxl" "jpegli" "libheif" "libraw" "imagemagick" "libvips")
   cd "$BASE_DIR"
   msg_warn "Checking for updates to custom image-processing libraries (recompile time: 2-15min per library)"
-  ensure_dependencies liblcms2-dev libjpeg62-turbo-dev libspng-dev libexif-dev libopenjp2-7-dev
+  ensure_dependencies liblcms2-dev libjpeg62-turbo-dev libspng-dev libexif-dev libopenjp2-7-dev pigz
   $STD git pull
   for library in "${libraries[@]}"; do
     compile_"$library"
@@ -234,7 +234,7 @@ EOF
     # plugins
     cd "$SRC_DIR"
     export MISE_TRUSTED_CONFIG_PATHS="$SRC_DIR"/mise.toml
-    export MISE_DISABLE_TOOLS=github:jellyfin/jellyfin-ffmpeg,java,terragrunt,opentofu,npm:@openapitools/openapi-generator-cli
+    export MISE_DISABLE_TOOLS=github:jellyfin/jellyfin-ffmpeg,java,terragrunt,opentofu,restic,npm:@openapitools/openapi-generator-cli
     export MISE_LOCKFILE_MODE=merge MISE_LOCKFILE_PLATFORMS="linux-$(arch_resolve x64 arm64)"
     mise_ok=0
     for i in 1 2 3; do
@@ -251,7 +251,8 @@ EOF
       # extism-js ships as a bare gzip-compressed single binary (.gz) that
       # fetch_and_deploy_gh_release cannot deploy; fetch + gunzip it directly.
       EXTISM_ARCH="$(arch_resolve x86_64 aarch64)"
-      curl_download /tmp/extism-js.gz "https://github.com/extism/js-pdk/releases/download/v1.6.0/extism-js-${EXTISM_ARCH}-linux-v1.6.0.gz"
+      EXTISM_VERSION="$(grep -oP '"github:extism/js-pdk"\s*=\s*"\K[^"]+' "$SRC_DIR"/mise.toml)"
+      curl_download /tmp/extism-js.gz "https://github.com/extism/js-pdk/releases/download/${EXTISM_VERSION}/extism-js-${EXTISM_ARCH}-linux-${EXTISM_VERSION}.gz"
       gunzip -f /tmp/extism-js.gz
       install -m 0755 /tmp/extism-js /usr/local/bin/extism-js
       rm -f /tmp/extism-js
@@ -275,6 +276,27 @@ EOF
     cp -r ./packages/plugin-core/dist "$PLUGIN_DIR"/dist
     cp ./packages/plugin-core/manifest.json "$PLUGIN_DIR"
     msg_ok "Updated Immich server, web, cli and plugins"
+
+    RESTIC_REF="$(grep -oP 'futo-org/restic:sha-\K[0-9a-f]+' "$SRC_DIR"/server/Dockerfile)"
+    RESTIC_PROXY_REF="$(grep -oP 'futo-org/backups/restic-proxy:\K[^@]+' "$SRC_DIR"/server/Dockerfile)"
+    if [[ "$(cat ~/.immich_restic 2>/dev/null)" != "${RESTIC_REF} ${RESTIC_PROXY_REF}" || ! -x /usr/local/bin/restic ]]; then
+      FUTO_DIR=/opt/staging/futo
+      rm -rf "$FUTO_DIR"
+      $STD git clone --filter=blob:none --no-checkout https://github.com/futo-org/restic "$FUTO_DIR"/restic
+      $STD git -C "$FUTO_DIR"/restic checkout "$RESTIC_REF"
+      $STD git clone --depth 1 --filter=blob:none --sparse -b "$RESTIC_PROXY_REF" https://github.com/futo-org/backups "$FUTO_DIR"/backups
+      $STD git -C "$FUTO_DIR"/backups sparse-checkout set packages/restic-proxy
+      GO_VERSION="$(awk '/^go /{print $2}' "$FUTO_DIR"/backups/packages/restic-proxy/go.mod)" setup_go
+      msg_info "Building restic for FUTO Backups"
+      cd "$FUTO_DIR"/restic
+      $STD env CGO_ENABLED=0 go build -o /usr/local/bin/restic ./cmd/restic
+      cd "$FUTO_DIR"/backups/packages/restic-proxy
+      $STD env CGO_ENABLED=0 go build -o /usr/local/bin/restic-proxy .
+      cd "$SRC_DIR"
+      rm -rf "$FUTO_DIR"
+      echo "${RESTIC_REF} ${RESTIC_PROXY_REF}" >~/.immich_restic
+      msg_ok "Built restic for FUTO Backups"
+    fi
 
     cd "$SRC_DIR"/machine-learning
     mkdir -p "$ML_DIR"
