@@ -15,12 +15,14 @@ update_os
 
 msg_info "Installing Dependencies"
 CODENAME=$(get_os_info codename)
-setup_deb822_repo \
-  "debian-backports" \
-  "file:///usr/share/keyrings/debian-archive-keyring.gpg" \
-  "http://deb.debian.org/debian" \
-  "${CODENAME}-backports" \
-  "main"
+cat <<EOF >/etc/apt/sources.list.d/debian-backports.sources
+Types: deb
+URIs: http://deb.debian.org/debian
+Suites: ${CODENAME}-backports
+Components: main
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+EOF
+apt_update_safe
 $STD apt install -y \
   chromium \
   fonts-crosextra-carlito \
