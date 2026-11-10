@@ -594,7 +594,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - fix: flush the image before importing a VM disk [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([core#223](https://github.com/community-scripts/core/pull/223))
+  - fix: keep a script's config file when a package installs it [@MickLesk](https://github.com/MickLesk) ([core#226](https://github.com/community-scripts/core/pull/226))
+- fix: flush the image before importing a VM disk [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([core#223](https://github.com/community-scripts/core/pull/223))
 
 ### 📂 Github
 
