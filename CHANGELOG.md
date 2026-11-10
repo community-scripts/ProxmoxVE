@@ -581,6 +581,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-11-10
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Tunarr: fix install and update for the new release layout and latest ErsatzTV-ffmpeg [@chrisbenincasa](https://github.com/chrisbenincasa) ([#18577](https://github.com/community-scripts/ProxmoxVE/pull/18577))
+
 ## 2026-11-09
 
 ### 🚀 Updated Scripts
