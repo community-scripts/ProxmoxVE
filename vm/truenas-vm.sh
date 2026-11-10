@@ -31,6 +31,9 @@ trap 'post_update_to_api "failed" "129"; exit 129' SIGHUP
 
 function truenas_iso_lookup() {
   local BASE_URL="https://download.truenas.com"
+  local current_year=$(date +%y)
+  local last_year=$(date -d "1 year ago" +%y)
+  local year_pattern="${current_year}\.|${last_year}\."
 
   declare -A latest_stables
   local pre_releases=()
@@ -40,51 +43,31 @@ function truenas_iso_lookup() {
     curl -fsSL "${_CS_CURL_RETRY[@]}" --max-time 90 "$BASE_URL" |
       grep -oE 'href="[^"]+\.iso"' |
       sed 's/href="//; s/"$//' |
-      grep -vE '(MASTER|ALPHA)'
+      grep -vE '(MASTER|ALPHA|BETA)' |
+      grep -E "$year_pattern"
   )
 
   while read -r path; do
     [[ -n "$path" ]] || continue
     local filename=$(basename "$path")
-
-    if [[ "$path" =~ $excluded_codenames ]]; then
-      continue
-    fi
-
-    if [[ "$filename" =~ (RC|BETA) ]]; then
-      if [[ "$path" =~ 25\.10-(BETA|RC) ]]; then
-        continue
-      fi
-
-      if [[ "$path" =~ /(2[4-9]|[3-9][0-9]) ]] || [[ "$filename" =~ (2[4-9]|[3-9][0-9]) ]]; then
-        pre_releases+=("$path")
-      fi
-      continue
-    fi
-
-    local version=$(echo "$filename" | sed -E 's/.*TrueNAS-(SCALE-|CORE-)?([0-9]{2}\.[0-9]{2}(\.[0-9]+)*)\.iso.*/\2/')
-    [[ -z "$version" ]] && continue
-
+    [[ "$filename" =~ ^TrueNAS-(SCALE-)?([0-9]+\.[0-9]+(\.[0-9]+)*)\.iso$ ]] || continue
+    local version="${BASH_REMATCH[2]}"
     local major_version=$(echo "$version" | cut -d'.' -f1,2)
     local current_stored_path=${latest_stables["$major_version"]:-}
 
     if [[ -z "$current_stored_path" ]]; then
       latest_stables["$major_version"]="$path"
     else
-      local stored_version=$(basename "$current_stored_path" | sed -E 's/.*TrueNAS-(SCALE-|CORE-)?([0-9]{2}\.[0-9]{2}(\.[0-9]+)*)\.iso.*/\2/')
-      if printf '%s\n' "$version" "$stored_version" | sort -V | tail -n 1 | grep -q "$version"; then
+      local stored_version=$(basename "$current_stored_path" | sed -E 's/.*TrueNAS-(SCALE-)?([0-9]+\.[0-9]+(\.[0-9]+)*)\.iso.*/\2/')
+      if printf '%s\n' "$version" "$stored_version" | sort -V | tail -n 1 | grep -qxF "$version"; then
         latest_stables["$major_version"]="$path"
       fi
     fi
   done <<<"$all_paths"
 
-  for key in "${!latest_stables[@]}"; do
+  for key in $(printf '%s\n' "${!latest_stables[@]}" | sort -V); do
     echo "${latest_stables[$key]#/}"
-  done | sort -V
-
-  for pre in "${pre_releases[@]}"; do
-    echo "${pre#/}"
-  done | sort -V | uniq
+  done
 }
 
 TEMP_DIR=$(mktemp -d)
@@ -127,6 +110,35 @@ function advanced_settings() {
   vm_prompt_mtu
   vm_prompt_verbose "no"
 
+  ISOARRAY=()
+  mapfile -t ALL_ISOS < <(truenas_iso_lookup)
+  ISO_COUNT=${#ALL_ISOS[@]}
+
+  if [ $ISO_COUNT -eq 0 ]; then
+    msg_error "Could not find any TrueNAS ISOs."
+    exit 115
+  fi
+
+  for i in "${!ALL_ISOS[@]}"; do
+    ISOPATH="${ALL_ISOS[$i]}"
+    FILENAME=$(basename "$ISOPATH")
+
+    # The newest stable release is preselected
+    if [[ "$i" -eq "$((ISO_COUNT - 1))" ]]; then
+      ISOARRAY+=("$ISOPATH" "$FILENAME" "ON")
+    else
+      ISOARRAY+=("$ISOPATH" "$FILENAME" "OFF")
+    fi
+  done
+
+  if vm_dialog radiolist "SELECT ISO TO INSTALL" --notags --cancel-button Exit-Script \
+    "\nSelect version (Latest stable preselected):" 20 58 12 "${ISOARRAY[@]}"; then
+    SELECTED_ISO="$VM_DIALOG_RESULT"
+    echo -e "${ISO}${BOLD}${DGN}ISO Chosen: ${BGN}$(basename "$SELECTED_ISO")${CL}"
+  else
+    exit_script
+  fi
+
   if vm_dialog yesno "IMPORT ONBOARD DISKS" --defaultno "Would you like to import onboard disks?" 10 58; then
     IMPORT_DISKS="yes"
   else
@@ -151,26 +163,13 @@ post_to_api_vm
 
 vm_select_storage "$HN"
 
-ISO_LIST=($(truenas_iso_lookup))
+if [ -z "${SELECTED_ISO:-}" ]; then
+  SELECTED_ISO=$(truenas_iso_lookup | tail -n 1) || true
 
-if [ ${#ISO_LIST[@]} -eq 0 ]; then
-  msg_error "Could not find any TrueNAS ISOs."
-  exit 115
-fi
-
-ISO_ARRAY=()
-for iso in "${ISO_LIST[@]}"; do
-  ISO_ARRAY+=("$iso" "")
-done
-
-SELECTED_ISO=$(whiptail --title "SELECT TRUENAS ISO" --menu "\nSelect the TrueNAS ISO version to install:\n" 20 78 10 "${ISO_ARRAY[@]}" 3>&1 1>&2 2>&3) || {
-  msg_error "ISO selection cancelled."
-  exit 0
-}
-
-if [ -z "$SELECTED_ISO" ]; then
-  msg_error "No ISO selected."
-  exit 0
+  if [ -z "$SELECTED_ISO" ]; then
+    msg_error "Could not find a stable ISO for fallback."
+    exit 115
+  fi
 fi
 
 FULL_URL="https://download.truenas.com/${SELECTED_ISO#/}"
