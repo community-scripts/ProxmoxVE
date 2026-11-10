@@ -60,6 +60,7 @@ jobs:
       sha: ${{ steps.plan.outputs.sha }}
       check_id: ${{ steps.plan.outputs.check_id }}
       actor: ${{ steps.plan.outputs.actor }}
+      not_built: ${{ steps.plan.outputs.not_built }}
     steps:
       - id: plan
         uses: actions/github-script@v8
@@ -150,6 +151,10 @@ jobs:
               core.setFailed(`Only ct/<name>.sh paths can be requested, got: ${requested}`);
               return;
             }
+            // Everything the PR changes that this test cannot build is named in
+            // the comment, so a /test never ends in silence.
+            const notBuilt = [];
+            const code = s => '`' + String(s).replace(/[`\r\n]/g, '') + '`';
             if (entries.length === 0) {
               const files = await github.paginate(github.rest.pulls.listFiles, { owner, repo, pull_number: prNumber });
               const set = new Set();
@@ -158,6 +163,8 @@ jobs:
                 let m;
                 if ((m = f.filename.match(/^install\/([A-Za-z0-9._-]+)-install\.sh$/))) set.add(`ct/${m[1]}.sh`);
                 else if (/^ct\/[A-Za-z0-9._-]+\.sh$/.test(f.filename)) set.add(f.filename);
+                else if (/^vm\/.*\.sh$/.test(f.filename)) notBuilt.push(`${code(f.filename)}: \`vm/\` scripts are not covered`);
+                else if (/^(tools|turnkey)\/.*\.sh$/.test(f.filename)) notBuilt.push(`${code(f.filename)}: only \`ct/\` scripts are built`);
               }
               entries = [...set].sort();
             }
@@ -168,14 +175,25 @@ jobs:
               try {
                 const res = await github.rest.repos.getContent({ owner: head.owner.login, repo: head.name, path: script, ref: pr.head.sha });
                 text = Buffer.from(res.data.content || '', 'base64').toString('utf8');
-              } catch (e) { continue; }   // install script without a ct/ entry point
+              } catch (e) {
+                notBuilt.push(`\`${script}\` does not exist in this PR (an \`install/\` script is built through the \`ct/\` script of the same name)`);
+                continue;
+              }
               // Scripts that ask for the OS get built once per OS.
               const oses = /msg_menu\s+"Choose the container OS"/.test(text) ? ['debian', 'alpine'] : [''];
               const name = script.slice(3, -3);
               for (const os of oses) include.push({ script, os, name: os ? `${name}-${os}` : name });
             }
-            if (entries.length > MAX) core.warning(`Only the first ${MAX} of ${entries.length} scripts are built`);
-            if (include.length === 0) { core.notice('No ct/ script to build'); return; }
+            for (const script of entries.slice(MAX)) notBuilt.push(`\`${script}\`: at most ${MAX} scripts per run, name it with \`/test ${script}\``);
+            if (include.length === 0) {
+              await sticky([
+                MARK, '### Proxmox script test', '',
+                'ℹ️ Nothing to build: this test builds `ct/` scripts (and changed `install/` scripts through their `ct/` script).', '',
+                ...(notBuilt.length ? notBuilt.map(n => `- ${n}`) : ['- this PR changes no `ct/` or `install/` script']),
+              ].join('\n'));
+              core.notice('No ct/ script to build');
+              return;
+            }
 
             const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
             const { data: check } = await github.rest.checks.create({
@@ -189,6 +207,7 @@ jobs:
             core.setOutput('repo', head.full_name);
             core.setOutput('sha', pr.head.sha);
             core.setOutput('check_id', String(check.id));
+            core.setOutput('not_built', JSON.stringify(notBuilt));
             // Who asked: the /test commenter, or whoever dispatched the run.
             core.setOutput('actor', context.actor);
 
@@ -196,6 +215,7 @@ jobs:
               MARK, '### Proxmox script test', '',
               `⏳ Building ${include.length} at ${pr.head.sha.slice(0, 7)} — [watch it live](${runUrl}) (open the \`test\` job)`, '',
               ...include.map(i => `- \`${i.script}\`${i.os ? ` (${i.os})` : ''}`),
+              ...(notBuilt.length ? ['', '**Not built:**', ...notBuilt.map(n => `- ${n}`)] : []),
             ].join('\n'));
 
   test:
@@ -262,6 +282,7 @@ jobs:
           CHECK_ID: ${{ needs.gate.outputs.check_id }}
           TEST_RESULT: ${{ needs.test.result }}
           ACTOR: ${{ needs.gate.outputs.actor }}
+          NOT_BUILT: ${{ needs.gate.outputs.not_built }}
         with:
           script: |
             const fs = require('fs');
@@ -415,6 +436,7 @@ jobs:
               `${headline} at \`${process.env.SHA.slice(0, 7)}\``, '',
               table, '',
               ...shots, '',
+              ...(() => { try { const n = JSON.parse(process.env.NOT_BUILT || '[]'); return n.length ? ['**Not built:**', ...n.map(x => `- ${x}`), ''] : []; } catch (e) { return []; } })(),
               ...logs, '',
               `Full logs: [workflow run](${runUrl}) (artifacts \`result-*\`). Comment \`/test\` to build again.`,
             ].join('\n');
