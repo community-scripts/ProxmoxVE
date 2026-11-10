@@ -45,7 +45,7 @@ function update_script() {
     msg_info "Running Post-Update Tasks"
     cd /opt/writefreely
     $STD ./writefreely db migrate
-    ln -s /opt/writefreely/writefreely /usr/local/bin/writefreely
+    ln -sf /opt/writefreely/writefreely /usr/local/bin/writefreely
     msg_ok "Ran Post-Update Tasks"
 
     msg_info "Starting Services"
