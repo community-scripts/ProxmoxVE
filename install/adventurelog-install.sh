@@ -20,6 +20,9 @@ $STD apt install -y \
   git \
   memcached \
   libmemcached-tools
+# Debian's memcached also listens on ::1 and does not start when IPv6 is disabled
+sed -i '/^-l ::1$/d' /etc/memcached.conf
+systemctl restart memcached
 msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.13" setup_uv
