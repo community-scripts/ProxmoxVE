@@ -598,7 +598,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 📂 Github
 
-  - Build PR scripts on a Proxmox test host via /test [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#18594](https://github.com/community-scripts/ProxmoxVE/pull/18594))
+  - pr-script-test: pre-answer prompt variables built in a loop [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#18596](https://github.com/community-scripts/ProxmoxVE/pull/18596))
+- Build PR scripts on a Proxmox test host via /test [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#18594](https://github.com/community-scripts/ProxmoxVE/pull/18594))
 
 ## 2026-11-09
 
