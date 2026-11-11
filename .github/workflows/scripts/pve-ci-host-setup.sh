@@ -192,9 +192,11 @@ if [[ $# -eq 2 ]]; then
   # --no-default-labels: without it the runner also answers to `self-hosted`,
   # and any other workflow with `runs-on: self-hosted` (and its secrets) could
   # land on this host.
+  # Named after this host: with --replace, a fixed name would make a second
+  # test host take over the first one's registration instead of adding to it.
   RUNNER_ALLOW_RUNASROOT=1 ./config.sh --unattended --replace --no-default-labels \
     --url "https://github.com/${repo}" --token "$token" \
-    --name "pve-ci-${repo#*/}" --labels proxmox-test --work _work
+    --name "$(hostname -s)-${repo#*/}" --labels proxmox-test --work _work
   ./svc.sh install root >/dev/null
   ./svc.sh start >/dev/null
   echo "runner for ${repo} registered"
