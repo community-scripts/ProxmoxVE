@@ -13,8 +13,7 @@ setting_up_container
 network_check
 update_os
 
-# Releases moved from GitHub to the author's own host in October 2026
-RELEASE=$(curl -fsSL "https://ganigeorgiev.com/api/collections/releases/records?filter=channel.repository.name%3D%22pocketbase%22%20%26%26%20channel.name%3D%22default%22&sort=-semver&skipTotal=1&perPage=1" | jq -r '.items[0].tag' | sed 's/^v//')
+RELEASE=$(curl_with_retry "https://ganigeorgiev.com/api/collections/releases/records?filter=channel.repository.name%3D%22pocketbase%22%20%26%26%20channel.name%3D%22default%22&sort=-semver&skipTotal=1&perPage=1" "-" | jq -r '.items[0].tag' | sed 's/^v//')
 fetch_and_deploy_from_url "https://ganigeorgiev.com/meta/pocketbase/pocketbase/download/v${RELEASE}/pocketbase_${RELEASE}_linux_$(arch_resolve).zip" "/opt/pocketbase"
 echo "${RELEASE}" >~/.pocketbase
 

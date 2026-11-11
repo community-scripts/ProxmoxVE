@@ -29,7 +29,7 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  RELEASE=$(curl -fsSL "https://ganigeorgiev.com/api/collections/releases/records?filter=channel.repository.name%3D%22pocketbase%22%20%26%26%20channel.name%3D%22default%22&sort=-semver&skipTotal=1&perPage=1" | jq -r '.items[0].tag' | sed 's/^v//')
+  RELEASE=$(curl_with_retry "https://ganigeorgiev.com/api/collections/releases/records?filter=channel.repository.name%3D%22pocketbase%22%20%26%26%20channel.name%3D%22default%22&sort=-semver&skipTotal=1&perPage=1" "-" | jq -r '.items[0].tag' | sed 's/^v//')
   if [[ -n "$RELEASE" && "$RELEASE" != "$(cat ~/.pocketbase 2>/dev/null)" ]]; then
     msg_info "Stopping Service"
     systemctl stop pocketbase
