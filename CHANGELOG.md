@@ -581,6 +581,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-11-11
+
+### 💾 Core
+
+  - feat: let setup_deb822_repo use a keyring already on the system [@MickLesk](https://github.com/MickLesk) ([core#227](https://github.com/community-scripts/core/pull/227))
+
 ## 2026-11-10
 
 ### 🚀 Updated Scripts
