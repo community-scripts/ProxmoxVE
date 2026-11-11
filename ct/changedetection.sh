@@ -21,18 +21,6 @@ variables
 color
 catch_errors
 
-wait_http() {
-  local -r url="$1" timeout="${2:-30}"
-  local -r deadline=$((SECONDS + timeout))
-  local code
-  while ((SECONDS < deadline)); do
-    code="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 5 "$url" 2>/dev/null)" || code="000"
-    [[ "$code" =~ ^([23][0-9][0-9]|401|403)$ ]] && return 0
-    sleep 2
-  done
-  return 1
-}
-
 function update_script() {
   header_info
   check_container_storage
@@ -146,8 +134,9 @@ EOF
     systemctl disable --now browserless 2>/dev/null || true
   fi
 
-  if ! safe_service_restart sockpuppet || ! wait_http "$SOCKPUPPET_STATS" 30 ||
-    ! curl -sS --max-time 5 "$SOCKPUPPET_STATS" | grep -qE '"chrome_version":[[:space:]]*"Google Chrome'; then
+  if ! safe_service_restart sockpuppet ||
+    ! curl -sS --retry 15 --retry-delay 2 --retry-connrefused --retry-max-time 30 --max-time 5 \
+      "$SOCKPUPPET_STATS" | grep -qE '"chrome_version":[[:space:]]*"Google Chrome'; then
     msg_error "Sockpuppet failed to start"
     systemctl status sockpuppet --no-pager -l | head -20 || true
     systemctl disable --now sockpuppet 2>/dev/null || true
@@ -173,7 +162,9 @@ EOF
   fi
 
   msg_info "Starting Change Detection"
-  if ! safe_service_restart changedetection || ! wait_http "$CDIO_URL" 30; then
+  if ! safe_service_restart changedetection ||
+    ! curl -sS --retry 15 --retry-delay 2 --retry-connrefused --retry-max-time 30 --max-time 5 \
+      -o /dev/null -w '%{http_code}' "$CDIO_URL" | grep -qE '^([23][0-9][0-9]|401|403)$'; then
     msg_error "changedetection failed to start"
     systemctl status changedetection --no-pager -l | head -20 || true
     exit 1

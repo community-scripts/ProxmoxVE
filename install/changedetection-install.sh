@@ -13,18 +13,6 @@ setting_up_container
 network_check
 update_os
 
-wait_http() {
-  local -r url="$1" timeout="${2:-30}"
-  local -r deadline=$((SECONDS + timeout))
-  local code
-  while ((SECONDS < deadline)); do
-    code="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 5 "$url" 2>/dev/null)" || code="000"
-    [[ "$code" =~ ^([23][0-9][0-9]|401|403)$ ]] && return 0
-    sleep 2
-  done
-  return 1
-}
-
 msg_info "Installing Dependencies"
 $STD apt install -y \
   build-essential \
@@ -171,8 +159,8 @@ systemctl enable -q --now changedetection
 msg_ok "Created Services"
 
 msg_info "Verifying Sockpuppet"
-if ! wait_http "http://127.0.0.1:8080/stats" 30 ||
-  ! curl -sS --max-time 5 "http://127.0.0.1:8080/stats" | grep -qE '"chrome_version":[[:space:]]*"Google Chrome'; then
+if ! curl -sS --retry 15 --retry-delay 2 --retry-connrefused --retry-max-time 30 --max-time 5 \
+  "http://127.0.0.1:8080/stats" | grep -qE '"chrome_version":[[:space:]]*"Google Chrome'; then
   msg_error "Sockpuppet failed to start"
   systemctl status sockpuppet --no-pager -l | head -20 || true
   exit 1
@@ -180,7 +168,8 @@ fi
 msg_ok "Verified Sockpuppet"
 
 msg_info "Verifying Change Detection"
-if ! wait_http "http://127.0.0.1:5000/" 30; then
+if ! curl -sS --retry 15 --retry-delay 2 --retry-connrefused --retry-max-time 30 --max-time 5 \
+  -o /dev/null -w '%{http_code}' "http://127.0.0.1:5000/" | grep -qE '^([23][0-9][0-9]|401|403)$'; then
   msg_error "Change Detection is not responding"
   systemctl status changedetection --no-pager -l | head -20 || true
   exit 1
