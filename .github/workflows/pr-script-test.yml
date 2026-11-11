@@ -342,6 +342,7 @@ jobs:
       # browser are set up on it for this one job.
       - name: Set up the ARM runner
         if: matrix.platform == 'arm'
+        timeout-minutes: 20 # about 2 when healthy; a hang must not hold the report
         run: sudo bash .github/workflows/scripts/arm-runner-setup.sh
 
       - name: Build and check ${{ matrix.script }}

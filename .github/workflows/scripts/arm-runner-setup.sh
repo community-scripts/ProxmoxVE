@@ -34,14 +34,17 @@ printf '%s\n' 'Enabled: yes' 'Types: deb' 'URIs: https://pkgs.zabbly.com/incus/l
   "Suites: $(. /etc/os-release && echo "$VERSION_CODENAME")" 'Components: main' \
   "Architectures: $(dpkg --print-architecture)" 'Signed-By: /etc/apt/keyrings/zabbly.asc' \
   >/etc/apt/sources.list.d/zabbly-incus-lts-6.0.sources
-apt-get update -qq
-DEBIAN_FRONTEND=noninteractive apt-get install -y -qq incus jq >/dev/null
+# Each slow step has its own limit, so a hang names itself in the log instead
+# of holding the PR report until the job times out.
+step() { local t=$1; shift; timeout "$t" "$@" || { echo "::error::'$*' failed or hung (limit ${t})"; return 1; }; }
+step 5m apt-get update -qq
+DEBIAN_FRONTEND=noninteractive step 10m apt-get install -y -qq incus jq >/dev/null
 
 # Docker on the runner sets the FORWARD policy to DROP, which cuts the Incus
 # containers off from the internet.
 iptables -P FORWARD ACCEPT
 
-incus admin init --preseed <<EOF
+step 2m incus admin init --preseed <<EOF
 networks:
 - name: incusbr0
   type: bridge
@@ -82,8 +85,9 @@ shots() {
   # runner (sandbox or not), so `chromium` here is a stand-in that takes the
   # harness's arguments and drives the browser through Playwright instead.
   mkdir -p /opt/pw
-  (cd /opt/pw && npm install --silent --no-audit --no-fund playwright-core@1.49.1 >/dev/null)
-  PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers /opt/pw/node_modules/.bin/playwright-core install --with-deps chromium >/dev/null
+  (cd /opt/pw && step 5m npm install --silent --no-audit --no-fund playwright-core@1.49.1 >/dev/null) || return 1
+  PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers DEBIAN_FRONTEND=noninteractive \
+    step 10m /opt/pw/node_modules/.bin/playwright-core install --with-deps chromium >/dev/null || return 1
   chmod -R a+rX /opt/pw /opt/pw-browsers
   cat >/opt/pw/shot.js <<'EOF'
 // node shot.js <url> <out.png> <width> <height>

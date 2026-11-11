@@ -68,6 +68,7 @@ jobs:
 
       - name: Set up Incus
         if: steps.plan.outputs.arm64 != 'no'
+        timeout-minutes: 20 # about 2 when healthy; a hang must not hold the report
         run: sudo bash .github/workflows/scripts/arm-runner-setup.sh
 
       - name: Build and check ${{ inputs.script }}
