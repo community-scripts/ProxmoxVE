@@ -589,6 +589,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Immich: bump to 3.4.0 [@MickLesk](https://github.com/MickLesk) ([#18600](https://github.com/community-scripts/ProxmoxVE/pull/18600))
 
+  - #### 💥 Breaking Changes
+
+    - Pocketbase: install and update from the new host (removed in github) [@MickLesk](https://github.com/MickLesk) ([#18609](https://github.com/community-scripts/ProxmoxVE/pull/18609))
+
 ### 💾 Core
 
   - core: drop the SUDO_ variables an update through sudo carries [@MickLesk](https://github.com/MickLesk) ([core#229](https://github.com/community-scripts/core/pull/229))
