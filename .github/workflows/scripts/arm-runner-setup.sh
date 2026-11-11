@@ -37,7 +37,30 @@ printf '%s\n' 'Enabled: yes' 'Types: deb' 'URIs: https://pkgs.zabbly.com/incus/l
 # Each slow step has its own limit, so a hang names itself in the log instead
 # of holding the PR report until the job times out.
 step() { local t=$1; shift; timeout "$t" "$@" || { echo "::error::'$*' failed or hung (limit ${t})"; return 1; }; }
-step 5m apt-get update -qq
+# What the runner's network looks like when apt can't get through.
+netdiag() {
+  echo "::group::Network on this runner"
+  resolvectl status 2>&1 | grep -E 'DNS Servers|Current DNS|resolv.conf mode' || cat /etc/resolv.conf
+  local h
+  for h in ports.ubuntu.com pkgs.zabbly.com github.com; do
+    echo "$h -> $(timeout 10 getent ahostsv4 "$h" | awk '{print $1; exit}')"
+    timeout 15 curl -s -o /dev/null -w "  http %{http_code} in %{time_total}s\n" "http://$h/" || echo "  no answer"
+  done
+  echo "::endgroup::"
+}
+# The runner's resolver (Azure's 168.63.129.16) stopped resolving the arm64
+# mirror on 2026-11-11 while every other name worked. Then the name is
+# looked up over DNS-over-HTTPS and pinned in /etc/hosts for this job.
+for h in ports.ubuntu.com; do
+  timeout 10 getent ahostsv4 "$h" >/dev/null && continue
+  ip=$(curl -fsS --max-time 10 -H 'accept: application/dns-json' "https://1.1.1.1/dns-query?name=$h&type=A" |
+    jq -r '[.Answer[]? | select(.type == 1) | .data][0] // empty')
+  if [[ "$ip" =~ ^[0-9]+(\.[0-9]+){3}$ ]]; then
+    echo "$ip $h" >>/etc/hosts
+    echo "::warning::the runner's DNS can't resolve $h; using $ip from 1.1.1.1"
+  fi
+done
+step 5m apt-get -o Acquire::Retries=3 -o Acquire::http::Timeout=30 update -qq || { netdiag; exit 1; }
 DEBIAN_FRONTEND=noninteractive step 10m apt-get install -y -qq incus jq >/dev/null
 
 # Docker on the runner sets the FORWARD policy to DROP, which cuts the Incus
