@@ -4,7 +4,7 @@ source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_
 # Copyright (c) 2021-2026 tteck
 # Author: tteck (tteckster)
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://pocketbase.io/ | Github: https://github.com/pocketbase/pocketbase
+# Source: https://pocketbase.io/ | Repo: https://ganigeorgiev.com/pocketbase/pocketbase
 
 APP="Pocketbase"
 var_tags="${var_tags:-database}"
@@ -29,20 +29,21 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  if check_for_gh_release "pocketbase" "pocketbase/pocketbase"; then
+  RELEASE=$(curl_with_retry "https://ganigeorgiev.com/api/collections/releases/records?filter=channel.repository.name%3D%22pocketbase%22%20%26%26%20channel.name%3D%22default%22&sort=-semver&skipTotal=1&perPage=1" "-" | jq -r '.items[0].tag' | sed 's/^v//')
+  if [[ -n "$RELEASE" && "$RELEASE" != "$(cat ~/.pocketbase 2>/dev/null)" ]]; then
     msg_info "Stopping Service"
     systemctl stop pocketbase
     msg_ok "Stopped Service"
 
-    msg_info "Updating ${APP}"
-    /opt/pocketbase/pocketbase update
-    echo "${CHECK_UPDATE_RELEASE}" >~/.pocketbase
-    msg_ok "Updated ${APP}"
+    fetch_and_deploy_from_url "https://ganigeorgiev.com/meta/pocketbase/pocketbase/download/v${RELEASE}/pocketbase_${RELEASE}_linux_$(arch_resolve).zip" "/opt/pocketbase"
+    echo "${RELEASE}" >~/.pocketbase
 
     msg_info "Starting Service"
     systemctl start pocketbase
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
+  else
+    msg_ok "No update required. ${APP} is already at v${RELEASE}"
   fi
   exit
 }
