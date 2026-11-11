@@ -583,9 +583,16 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-11
 
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Immich: bump to 3.4.0 [@MickLesk](https://github.com/MickLesk) ([#18600](https://github.com/community-scripts/ProxmoxVE/pull/18600))
+
 ### 💾 Core
 
-  - feat: let setup_deb822_repo use a keyring already on the system [@MickLesk](https://github.com/MickLesk) ([core#227](https://github.com/community-scripts/core/pull/227))
+  - core: drop the SUDO_ variables an update through sudo carries [@MickLesk](https://github.com/MickLesk) ([core#229](https://github.com/community-scripts/core/pull/229))
+- feat: let setup_deb822_repo use a keyring already on the system [@MickLesk](https://github.com/MickLesk) ([core#227](https://github.com/community-scripts/core/pull/227))
 
 ## 2026-11-10
 
