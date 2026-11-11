@@ -43,7 +43,25 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
+WHISPARR_PASS=$(random_password 20)
+mkdir -p /etc/systemd/system/whisparr-eros.service.d
+cat <<EOF >/etc/systemd/system/whisparr-eros.service.d/initial-user.conf
+[Service]
+Environment=WHISPARR__AUTH__INITIALPASSWORD=${WHISPARR_PASS}
+EOF
 systemctl enable -q --now whisparr-eros
+for _ in {1..60}; do
+  grep -qs "created 'whisparr' with the configured password" /var/lib/whisparr-eros/logs/whisparr.txt && break
+  sleep 2
+done
+rm -rf /etc/systemd/system/whisparr-eros.service.d
+systemctl daemon-reload
+{
+  echo "Whisparr-Eros Credentials"
+  echo "Username: whisparr"
+  echo "Password: ${WHISPARR_PASS}"
+} >~/whisparr-eros.creds
+chmod 600 ~/whisparr-eros.creds
 msg_ok "Created Service"
 
 motd_ssh
