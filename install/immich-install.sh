@@ -68,13 +68,9 @@ msg_info "Installing dependencies"
 $STD apt install --no-install-recommends -y \
   git \
   redis \
-  autoconf \
   build-essential \
   python3-dev \
-  automake \
-  cmake \
   jq \
-  libtool \
   libltdl-dev \
   libgdk-pixbuf-2.0-dev \
   libbrotli-dev \
@@ -95,8 +91,6 @@ $STD apt install --no-install-recommends -y \
   libltdl7 \
   libopenjp2-7 \
   libopenjp2-7-dev \
-  meson \
-  ninja-build \
   pkg-config \
   mesa-utils \
   mesa-va-drivers \
@@ -113,8 +107,7 @@ $STD apt install --no-install-recommends -y \
   libhwy-dev \
   libwebp-dev \
   libaom-dev \
-  unzip \
-  ccache
+  unzip
 
 setup_deb822_repo \
   "jellyfin" \
@@ -201,10 +194,6 @@ sed -i "s/^#shared_preload.*/shared_preload_libraries = 'vchord.so'/" /etc/postg
 systemctl restart postgresql.service
 PG_DB_NAME="immich" PG_DB_USER="immich" PG_DB_GRANT_SUPERUSER="true" PG_DB_SKIP_ALTER_ROLE="true" setup_postgresql_db
 
-msg_info "Installing GCC-13 (available as fallback compiler)"
-$STD apt install -y gcc-13 g++-13
-msg_ok "Installed GCC-13"
-
 LD_LIBRARY_PATH=/usr/local/lib
 export LD_RUN_PATH=/usr/local/lib
 
@@ -277,6 +266,11 @@ if [[ "$PREBUILT_LIBS" -ne 1 ]]; then
   BASE_REPO="https://github.com/immich-app/base-images"
   BASE_DIR=${STAGING_DIR}/base-images
   SOURCE_DIR=${STAGING_DIR}/image-source
+  msg_info "Installing toolchain for compiling image-processing libraries"
+  $STD apt install -y --no-install-recommends autoconf automake libtool cmake meson ninja-build gcc-13 g++-13
+  msg_ok "Installed build toolchain"
+  $STD git clone -b main "$BASE_REPO" "$BASE_DIR"
+  mkdir -p "$SOURCE_DIR"
 
   msg_info "(1/6) Compiling libjxl"
   cd "$STAGING_DIR"
