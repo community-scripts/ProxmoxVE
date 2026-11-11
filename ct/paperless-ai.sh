@@ -49,12 +49,12 @@ function update_script() {
     $STD npm prune --omit=dev --ignore-scripts --no-audit --no-fund
     msg_ok "Updated Paperless-AI"
 
-    # 3.x ran a second Python service and read data/.env as its environment;
-    # 4.x migrates that file itself and locks every setting passed as a variable.
-    if [[ -f /etc/systemd/system/paperless-rag.service ]]; then
+    if ! grep -q "dist/server/index.js" /etc/systemd/system/paperless-ai.service; then
       msg_info "Migrating services to Paperless-AI 4"
-      systemctl disable -q paperless-rag
-      rm -f /etc/systemd/system/paperless-rag.service
+      if [[ -f /etc/systemd/system/paperless-rag.service ]]; then
+        systemctl disable -q paperless-rag
+        rm -f /etc/systemd/system/paperless-rag.service
+      fi
       cat <<EOF >/etc/systemd/system/paperless-ai.service
 [Unit]
 Description=PaperlessAI Service
@@ -89,7 +89,7 @@ start
 build_container
 description
 
-msg_ok "Completed successfully!\n"
+msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW}Access it using the following URL:${CL}"
-echo -e "${GATEWAY}${BGN}http://${IP}:3000${CL}"
+echo -e "${INFO}${YW} Access it using the following URL:${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"
