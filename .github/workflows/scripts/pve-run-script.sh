@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
-# Build one ct/ script from a pull request on this Proxmox host, check that the
-# container really works, destroy it, and leave a result.json behind.
+# Build one ct/ or vm/ script from a pull request on this test host, check
+# that the container or VM really works, destroy it, and leave a result.json
+# behind. The vm/ part lives in pve-run-vm.sh, sourced from here.
+#
+# PLATFORM says what this host is: pve (Proxmox VE, pct) or incus. The ct/
+# scripts are the same for both; community-scripts/core picks its Incus
+# backend by itself when it finds incus instead of pveversion. Only the way
+# this harness reaches into the container differs (guest_* below).
 #
 # Runs on the self-hosted runner, which *is* the disposable test host. The
 # harness comes from the default branch; only the script under test comes from
@@ -17,10 +23,17 @@ set -uo pipefail
 
 : "${PR_REPO:?}" "${PR_SHA:?}" "${SCRIPT:?}" "${UPSTREAM:?}" "${CTID_BASE:?}" "${OUT_DIR:?}"
 OS="${OS:-}"
+PLATFORM="${PLATFORM:-pve}"
 CTID_COUNT="${CTID_COUNT:-50}"
 SERVE_ROOT="${SERVE_ROOT:-/srv/ci}"
-SERVE_URL="${SERVE_URL:-http://10.99.0.1:18080}"
-BRIDGE="${BRIDGE:-vmbr1}"
+# The containers' own network: vmbr1 + dnsmasq on Proxmox, incusbr0 on Incus.
+if [[ "$PLATFORM" == "incus" ]]; then
+  SERVE_URL="${SERVE_URL:-http://10.98.0.1:18080}"
+  BRIDGE="${BRIDGE:-incusbr0}"
+else
+  SERVE_URL="${SERVE_URL:-http://10.99.0.1:18080}"
+  BRIDGE="${BRIDGE:-vmbr1}"
+fi
 BUILD_TIMEOUT="${BUILD_TIMEOUT:-45m}"
 URL_WAIT="${URL_WAIT:-120}"
 
@@ -28,8 +41,10 @@ URL_WAIT="${URL_WAIT:-120}"
 [[ "$PR_REPO" =~ ^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$ ]] || { echo "bad PR_REPO" >&2; exit 2; }
 [[ "$UPSTREAM" =~ ^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$ ]] || { echo "bad UPSTREAM" >&2; exit 2; }
 [[ "$PR_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "bad PR_SHA" >&2; exit 2; }
-[[ "$SCRIPT" =~ ^ct/[A-Za-z0-9._-]+\.sh$ ]] || { echo "bad SCRIPT" >&2; exit 2; }
+[[ "$SCRIPT" =~ ^(ct|vm)/[A-Za-z0-9._-]+\.sh$ ]] || { echo "bad SCRIPT" >&2; exit 2; }
 [[ -z "$OS" || "$OS" =~ ^(debian|ubuntu|alpine)$ ]] || { echo "bad OS" >&2; exit 2; }
+[[ "$PLATFORM" =~ ^(pve|incus)$ ]] || { echo "bad PLATFORM" >&2; exit 2; }
+[[ "$PLATFORM" == "pve" || "$SCRIPT" == ct/* ]] || { echo "vm/ scripts run on pve only" >&2; exit 2; }
 [[ "$CTID_BASE" =~ ^[0-9]+$ ]] || { echo "bad CTID_BASE" >&2; exit 2; }
 
 mkdir -p "$OUT_DIR"
@@ -41,8 +56,9 @@ UPDATE_RAW="$OUT_DIR/update.raw.log"
 UPDATE_LOG="$OUT_DIR/update.log"
 UPDATE_TIMEOUT="${UPDATE_TIMEOUT:-30m}"
 
+kind="${SCRIPT%%/*}" # ct or vm
 app=$(basename "$SCRIPT" .sh)
-job="${GITHUB_RUN_ID:-local}-${GITHUB_RUN_ATTEMPT:-1}-${app}-${OS:-default}"
+job="${GITHUB_RUN_ID:-local}-${GITHUB_RUN_ATTEMPT:-1}-${PLATFORM}-${kind}-${app}-${OS:-default}"
 tree="$SERVE_ROOT/$job"
 base="$SERVE_URL/$job"
 started=$(date +%s)
@@ -50,7 +66,30 @@ started=$(date +%s)
 status="fail"
 step=""
 exit_code=""
-ctid=""
+ctid="" # the guest's ID (pve: 9000, incus: ci-9000), container or VM
+
+# The container, whatever the platform. ctid is set once a slot is reserved.
+guest_exec() {
+  if [[ "$PLATFORM" == "incus" ]]; then incus exec "$ctid" -- "$@"; else pct exec "$ctid" -- "$@"; fi
+}
+guest_exists() {
+  if [[ "$PLATFORM" == "incus" ]]; then incus info "$ctid" &>/dev/null; else pct status "$ctid" &>/dev/null; fi
+}
+guest_running() {
+  if [[ "$PLATFORM" == "incus" ]]; then
+    [[ "$(incus list "^${ctid}\$" -c s -f csv 2>/dev/null)" == "RUNNING" ]]
+  else
+    pct status "$ctid" 2>/dev/null | grep -q running
+  fi
+}
+guest_destroy() {
+  if [[ "$PLATFORM" == "incus" ]]; then
+    incus delete "$ctid" --force &>/dev/null || true
+  else
+    pct stop "$ctid" --skiplock 1 &>/dev/null || true
+    pct destroy "$ctid" --purge 1 --force 1 &>/dev/null || true
+  fi
+}
 ct_ip=""
 url=""
 http_code=""
@@ -60,8 +99,13 @@ failed_units=""
 update_status=""
 update_step=""
 
+# Spinner frames: the engine redraws "⠋ Starting VM" a few times a second
+# without a tty too. An alternation, not a bracket: these are multibyte and
+# the runner's locale may be C.
+SPINNER_RE='^\s*(⠋|⠙|⠹|⠸|⠼|⠴|⠦|⠧|⠇|⠏)'
+
 strip_ansi() {
-  sed -E 's/\x1B\[[0-9;?]*[A-Za-z]//g; s/\x1B[()][A-Z0-9]//g; s/\r/\n/g' | grep -vE '^\s*$'
+  sed -E 's/\x1B\[[0-9;?]*[A-Za-z]//g; s/\x1B[()][A-Z0-9]//g; s/\r/\n/g' | grep -vE '^\s*$' | grep -vE "$SPINNER_RE"
 }
 
 # The install script's own output: everything $STD hides from the build log.
@@ -71,11 +115,12 @@ strip_ansi() {
 collect_install_log() {
   [[ -n "$ctid" ]] || return 0
   # Exactly one build ran in this container, so the newest install log is ours.
-  if pct status "$ctid" &>/dev/null &&
-    pct exec "$ctid" -- sh -c 'cat "$(ls -t /root/.install-*.log 2>/dev/null | head -n1)"' 2>/dev/null |
+  if guest_exists &&
+    guest_exec sh -c 'cat "$(ls -t /root/.install-*.log 2>/dev/null | head -n1)"' 2>/dev/null |
     strip_ansi >"$INSTALL_LOG_OUT" && [[ -s "$INSTALL_LOG_OUT" ]]; then
     return 0
   fi
+  [[ "$PLATFORM" == "pve" ]] || { rm -f "$INSTALL_LOG_OUT"; return 0; }
   # The engine names its host-side files after the session: pct_create_<ctid>_<date>_<session>.log
   local sid f
   sid=$(find /tmp -maxdepth 1 -name "pct_create_${ctid}_*.log" -newer "$RAW_LOG.start" -printf '%f\n' 2>/dev/null |
@@ -120,15 +165,15 @@ finish() {
   [[ -f "$UPDATE_RAW" ]] && strip_ansi <"$UPDATE_RAW" >"$UPDATE_LOG"
   rm -f "$UPDATE_RAW"
   jq -n \
-    --arg script "$SCRIPT" --arg os "${OS:-default}" --arg status "$status" \
+    --arg script "$SCRIPT" --arg kind "$kind" --arg platform "$PLATFORM" --arg os "${OS:-default}" --arg status "$status" \
     --arg step "$step" --arg exit_code "$exit_code" --arg sha "$PR_SHA" \
     --arg ctid "$ctid" --arg url "$url" --arg http_code "$http_code" \
-    --arg failed_units "$failed_units" \
+    --arg failed_units "$failed_units" --arg ip "$ct_ip" \
     --arg update_status "$update_status" --arg update_step "$update_step" \
     --argjson duration "$(($(date +%s) - started))" \
     --arg tail "$([[ -f "$LOG" ]] && tail -n 60 "$LOG")" \
-    '{script: $script, os: $os, status: $status, step: $step, exit_code: $exit_code,
-      sha: $sha, ctid: $ctid, url: $url, http_code: $http_code,
+    '{script: $script, kind: $kind, platform: $platform, os: $os, status: $status, step: $step, exit_code: $exit_code,
+      sha: $sha, ctid: $ctid, ip: $ip, url: $url, http_code: $http_code,
       failed_units: $failed_units, update_status: $update_status, update_step: $update_step,
       duration: $duration, log_tail: $tail}' >"$RESULT"
   echo "::group::result"
@@ -150,7 +195,7 @@ install_pid=""
 
 # Colours stay, cursor movement and spinner redraws go.
 live_filter() {
-  sed -u -E 's/\r/\n/g; s/\x1B\[[0-9;?]*[ABCDEFGHJKSTfhilnsu]//g' | sed -u -E '/^\s*$/d'
+  sed -u -E 's/\r/\n/g; s/\x1B\[[0-9;?]*[ABCDEFGHJKSTfhilnsu]//g' | sed -u -E "/^\s*\$/d; /${SPINNER_RE}/d"
 }
 
 start_streams() {
@@ -158,17 +203,21 @@ start_streams() {
   echo "::stop-commands::${stream_token}"
   tail -n +1 -F --pid="$build_pid" "$RAW_LOG" 2>/dev/null > >(live_filter) &
   log_pid=$!
+  # A VM has no install log to follow: its script runs on this host only.
+  [[ "$kind" == "ct" ]] || return 0
   # setsid: its own process group, so stop_streams can take down the
-  # pct exec / tail pair inside it in one go.
+  # pct/incus exec + tail pair inside it in one go.
   setsid bash -c '
+    gx() { if [ "$2" = incus ]; then incus exec "$1" -- "${@:3}"; else pct exec "$1" -- "${@:3}"; fi; }
     for _ in $(seq 1 900); do
-      f=$(pct exec "$1" -- sh -c "ls -t /root/.install-*.log 2>/dev/null | head -n1" 2>/dev/null)
+      f=$(gx "$1" "$2" sh -c "ls -t /root/.install-*.log 2>/dev/null | head -n1" 2>/dev/null)
       if [ -n "$f" ]; then
         echo "──────── install log of CT $1 (live) ────────"
+        if [ "$2" = incus ]; then exec incus exec "$1" -- tail -n +1 -F "$f"; fi
         exec pct exec "$1" -- tail -n +1 -F "$f"
       fi
       sleep 2
-    done' _ "$ctid" 2>/dev/null > >(live_filter | sed -u 's/^/  │ /') &
+    done' _ "$ctid" "$PLATFORM" 2>/dev/null > >(live_filter | sed -u 's/^/  │ /') &
   install_pid=$!
 }
 
@@ -195,15 +244,14 @@ cleanup() {
     kill -TERM "$pid" &>/dev/null || true
     sleep 2
   done
-  if [[ -n "$ctid" ]]; then
-    if pct status "$ctid" &>/dev/null; then
-      pct stop "$ctid" --skiplock 1 &>/dev/null || true
-      pct destroy "$ctid" --purge 1 --force 1 &>/dev/null || true
-    fi
+  if [[ -n "$ctid" && "$kind" == "vm" ]]; then
+    vm_cleanup
+  elif [[ -n "$ctid" ]]; then
+    guest_exists && guest_destroy
     rm -f "/run/ci-jobs/$ctid"
     # What the engine leaves on the host for this container and its session.
     local f sid
-    for f in /tmp/pct_create_"${ctid}"_*.log; do
+    [[ "$PLATFORM" == "pve" ]] && for f in /tmp/pct_create_"${ctid}"_*.log; do
       [[ -f "$f" && "$f" -nt "$RAW_LOG.start" ]] || continue
       sid=$(sed -E 's/.*_([0-9a-f]+)\.log$/\1/' <<<"$f")
       rm -f -- "$f" /tmp/create-lxc-"${sid}".log /tmp/*-"${ctid}"-"${sid}".log
@@ -245,19 +293,33 @@ setup_error() {
 # --- Reserve a container ID ---------------------------------------------------
 # A lock file per ID, not just "first free one", because the engine only creates
 # the container minutes later and two jobs would otherwise pick the same ID.
+# VMs take the range 100 above the containers' (DevScripts 9100-9149,
+# ProxmoxVE 9150-9199).
 mkdir -p /run/ci-jobs
+if [[ "$kind" == "vm" ]]; then
+  source "$(dirname "$0")/pve-run-vm.sh"
+  CTID_BASE=$((CTID_BASE + 100))
+  vm_wait_turn
+fi
 exec 9>/run/ci-jobs/.lock
 flock 9
+# On Incus the ID is an instance name: var_ctid=ci-9000 names the container.
 for ((id = CTID_BASE; id < CTID_BASE + CTID_COUNT; id++)); do
-  [[ -e "/run/ci-jobs/$id" ]] && continue
-  pvesh get /cluster/nextid --vmid "$id" &>/dev/null || continue
-  echo "$job" >"/run/ci-jobs/$id"
-  ctid=$id
+  name=$id
+  [[ "$PLATFORM" == "incus" ]] && name="ci-$id"
+  [[ -e "/run/ci-jobs/$name" ]] && continue
+  if [[ "$PLATFORM" == "incus" ]]; then
+    incus info "$name" &>/dev/null && continue
+  else
+    pvesh get /cluster/nextid --vmid "$id" &>/dev/null || continue
+  fi
+  echo "$job" >"/run/ci-jobs/$name"
+  ctid=$name
   break
 done
 flock -u 9
 exec 9>&-
-[[ -n "$ctid" ]] || setup_error "no free container ID in ${CTID_BASE}-$((CTID_BASE + CTID_COUNT - 1))"
+[[ -n "$ctid" ]] || setup_error "no free ${kind} ID in ${CTID_BASE}-$((CTID_BASE + CTID_COUNT - 1))"
 
 # --- Fetch the approved commit and point it at ourselves ------------------------
 mkdir -p "$tree"
@@ -269,17 +331,26 @@ upstream_re="https://raw\.githubusercontent\.com/${UPSTREAM//./\\.}/(refs/heads/
 grep -rlE "$upstream_re" "$tree" --include='*.sh' --include='*.func' |
   xargs -r sed -i -E "s#${upstream_re}#${base}#g"
 
+if [[ "$kind" == "vm" ]]; then
+  vm_build_and_check
+  exit 0
+fi
+
 # --- Build ----------------------------------------------------------------------
-echo "Building ${SCRIPT} (${OS:-default OS}) as CT ${ctid} from ${PR_REPO}@${PR_SHA:0:7}"
+echo "Building ${SCRIPT} (${OS:-default OS}) on ${PLATFORM} as CT ${ctid} from ${PR_REPO}@${PR_SHA:0:7}"
 hostname_safe="ci-$(tr -c 'a-z0-9-\n' '-' <<<"${app,,}" | cut -c1-50)"
 build_env=(
   PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
   HOME=/root TERM=dumb LANG=C.UTF-8
   mode=default MODE=default PHS_SILENT=1 DIAGNOSTICS=no
-  var_ctid="$ctid" var_hostname="$hostname_safe"
-  var_container_storage=local var_template_storage=local var_brg="$BRIDGE"
+  var_ctid="$ctid" var_hostname="$hostname_safe" var_brg="$BRIDGE"
   "dev_mode=timing,keep" COMMUNITY_SCRIPTS_URL="$base"
 )
+if [[ "$PLATFORM" == "incus" ]]; then
+  build_env+=(var_container_storage=default)
+else
+  build_env+=(var_container_storage=local var_template_storage=local)
+fi
 touch "$RAW_LOG.start"
 [[ -n "$OS" ]] && build_env+=(var_os="$OS")
 # Both engines turn var_github_token into GITHUB_TOKEN inside the container.
@@ -414,9 +485,9 @@ fi
 grep -qi 'completed successfully' "$RAW_LOG" || fail "build exited 0 but never reported success"
 
 # --- Checks ---------------------------------------------------------------------
-pct status "$ctid" 2>/dev/null | grep -q running || fail "container ${ctid} is not running"
+guest_running || fail "container ${ctid} is not running"
 
-ct_ip=$(pct exec "$ctid" -- sh -c "ip -4 -o addr show dev eth0 | awk '{print \$4}' | cut -d/ -f1" 2>/dev/null | head -n1)
+ct_ip=$(guest_exec sh -c "ip -4 -o addr show dev eth0 | awk '{print \$4}' | cut -d/ -f1" 2>/dev/null | head -n1)
 
 # What the app's page looks like, for the PR comment. Chromium runs as its own
 # unprivileged user with its sandbox on: the page is served by code under test.
@@ -450,11 +521,11 @@ health_problem=""
 check_health() {
   health_problem=""
   failed_units=""
-  if pct exec "$ctid" -- sh -c 'command -v systemctl' &>/dev/null; then
+  if guest_exec sh -c 'command -v systemctl' &>/dev/null; then
     sleep 10
-    failed_units=$(pct exec "$ctid" -- systemctl --failed --no-legend --plain 2>/dev/null | awk '{print $1}' | paste -sd, -)
-  elif pct exec "$ctid" -- sh -c 'command -v rc-status' &>/dev/null; then
-    failed_units=$(pct exec "$ctid" -- rc-status --crashed 2>/dev/null | awk '{print $1}' | paste -sd, -)
+    failed_units=$(guest_exec systemctl --failed --no-legend --plain 2>/dev/null | awk '{print $1}' | paste -sd, -)
+  elif guest_exec sh -c 'command -v rc-status' &>/dev/null; then
+    failed_units=$(guest_exec rc-status --crashed 2>/dev/null | awk '{print $1}' | paste -sd, -)
   fi
   [[ -z "$failed_units" ]] || { health_problem="failed services: ${failed_units}"; return 1; }
   [[ -n "$url" ]] || return 0
@@ -486,14 +557,14 @@ update_fail() {
   fail "update: $1"
 }
 
-version_files=$(pct exec "$ctid" -- sh -c '
+version_files=$(guest_exec sh -c '
   for f in /root/.*; do
     [ -f "$f" ] || continue
     case "$f" in */.install-* | *.pending | *.bak | */.bash* | */.profile | */.hushlogin | */.viminfo | */.lesshst | */.wget-hsts | */.selected_editor) continue ;; esac
     [ "$(wc -l <"$f")" -le 1 ] && grep -qE "^v?[0-9]+(\.[0-9A-Za-z_+-]+)+$" "$f" && echo "$f"
   done' 2>/dev/null | grep -E '^/root/\.[A-Za-z0-9._-]+$')
 for f in $version_files; do
-  pct exec "$ctid" -- sh -c "echo '$UPDATE_FAKE' > '$f'; rm -f '$f.pending'" ||
+  guest_exec sh -c "echo '$UPDATE_FAKE' > '$f'; rm -f '$f.pending'" ||
     update_fail "could not reset $f"
 done
 [[ -n "$version_files" ]] && echo "Update test: set back $(tr '\n' ' ' <<<"$version_files")to ${UPDATE_FAKE}"
@@ -502,7 +573,9 @@ done
 update_token=$(head -c 16 /dev/urandom | od -An -tx1 | tr -d ' \n')
 echo "──────── update test (live) ────────"
 echo "::stop-commands::${update_token}"
-timeout --kill-after=1m "$UPDATE_TIMEOUT" pct exec "$ctid" -- env PHS_SILENT=1 mode=default MODE=default \
+# timeout runs a program, not a shell function, so spell out the exec here.
+if [[ "$PLATFORM" == "incus" ]]; then guest_cmd=(incus exec "$ctid" --); else guest_cmd=(pct exec "$ctid" --); fi
+timeout --kill-after=1m "$UPDATE_TIMEOUT" "${guest_cmd[@]}" env PHS_SILENT=1 mode=default MODE=default \
   TERM=dumb DIAGNOSTICS=no var_ignore_breaking_changes=yes ${GH_API_TOKEN:+GITHUB_TOKEN="$GH_API_TOKEN"} update </dev/null \
   > >(tee "$UPDATE_RAW" | live_filter) 2>&1 &
 update_pid=$!
@@ -538,7 +611,7 @@ fi
 if strip_ansi <"$UPDATE_RAW" | grep -qi 'updated successfully'; then
   update_status="updated"
   for f in $version_files; do
-    [[ "$(pct exec "$ctid" -- cat "$f" 2>/dev/null)" != "$UPDATE_FAKE" ]] ||
+    [[ "$(guest_exec cat "$f" 2>/dev/null)" != "$UPDATE_FAKE" ]] ||
       update_fail "reported success, but $f is still ${UPDATE_FAKE}"
   done
 else

@@ -1,6 +1,6 @@
 name: PR script test
 
-# Builds the ct/ scripts a pull request touches on a real Proxmox host and
+# Builds the ct/ and vm/ scripts a pull request touches on real Proxmox and Incus hosts and
 # reports the outcome on the PR, as a check run and as one comment kept up to
 # date.
 #
@@ -16,7 +16,8 @@ name: PR script test
 # even one that lands in the seconds before this job runs.
 #
 #   gate    ubuntu-latest   who asked, which scripts, which commit
-#   test    proxmox-test    build + checks, one matrix job per script/OS
+#   test    proxmox-test /  build + checks, one matrix job per script, platform
+#           incus-test      (pve or incus) and OS
 #   report  ubuntu-latest   check run + PR comment
 #
 # The test job gets a read-only token and never sees a secret: the host it runs
@@ -46,7 +47,7 @@ on:
         required: false
         type: string
       scripts:
-        description: "Space-separated ct/ paths (empty = everything the PR touches)"
+        description: "Space-separated ct/ or vm/ paths (empty = everything the PR touches)"
         required: false
         type: string
 
@@ -171,8 +172,9 @@ jobs:
               core.notice(why);
             };
             if (isIssue) {
-              // App names (bark-server) or ct/ paths; the default branch is trusted.
-              entries = tokens.map(t => /^ct\/[A-Za-z0-9._-]+\.sh$/.test(t) ? t
+              // App names (bark-server) or ct/ and vm/ paths; the default branch
+              // is trusted. A name without a ct/ script falls back to vm/ below.
+              entries = tokens.map(t => /^(ct|vm)\/[A-Za-z0-9._-]+\.sh$/.test(t) ? t
                 : /^[A-Za-z0-9._-]+$/.test(t) ? `ct/${t.replace(/\.sh$/, '')}.sh` : t);
               if (entries.length === 0) {
                 await refuse('In an issue, `/test` needs to know which app.', 'Comment `/test <app>`, for example `/test bark-server` (the name of its `ct/` script).');
@@ -202,10 +204,10 @@ jobs:
                 return;
               }
             }
-            if (entries.some(e => !/^ct\/[A-Za-z0-9._-]+\.sh$/.test(e))) {
+            if (entries.some(e => !/^(ct|vm)\/[A-Za-z0-9._-]+\.sh$/.test(e))) {
               await refuse(
-                isIssue ? 'Only app names (as in `ct/<app>.sh`) can be tested.' : 'Only `ct/<name>.sh` paths can be requested.',
-                isIssue ? 'For example: `/test bark-server`' : 'For example: `/test ct/bark-server.sh`, or just `/test`.');
+                isIssue ? 'Only app names (as in `ct/<app>.sh` or `vm/<name>.sh`) can be tested.' : 'Only `ct/<name>.sh` and `vm/<name>.sh` paths can be requested.',
+                isIssue ? 'For example: `/test bark-server` or `/test debian-vm`' : 'For example: `/test ct/bark-server.sh`, or just `/test`.');
               return;
             }
             // Everything the PR changes that this test cannot build is named in
@@ -219,29 +221,48 @@ jobs:
                 if (f.status === 'removed') continue;
                 let m;
                 if ((m = f.filename.match(/^install\/([A-Za-z0-9._-]+)-install\.sh$/))) set.add(`ct/${m[1]}.sh`);
-                else if (/^ct\/[A-Za-z0-9._-]+\.sh$/.test(f.filename)) set.add(f.filename);
-                else if (/^vm\/.*\.sh$/.test(f.filename)) notBuilt.push(`${code(f.filename)}: \`vm/\` scripts are not covered`);
-                else if (/^(tools|turnkey)\/.*\.sh$/.test(f.filename)) notBuilt.push(`${code(f.filename)}: only \`ct/\` scripts are built`);
+                else if (/^(ct|vm)\/[A-Za-z0-9._-]+\.sh$/.test(f.filename)) set.add(f.filename);
+                else if (/^(tools|turnkey)\/.*\.sh$/.test(f.filename)) notBuilt.push(`${code(f.filename)}: only \`ct/\` and \`vm/\` scripts are built`);
               }
               entries = [...set].sort();
             }
 
             const include = [];
-            for (const script of entries.slice(0, MAX)) {
-              let text;
+            const fetchScript = async p => {
               try {
-                const res = await github.rest.repos.getContent({ owner: head.owner.login, repo: head.name, path: script, ref: headSha });
-                text = Buffer.from(res.data.content || '', 'base64').toString('utf8');
-              } catch (e) {
+                const res = await github.rest.repos.getContent({ owner: head.owner.login, repo: head.name, path: p, ref: headSha });
+                return Buffer.from(res.data.content || '', 'base64').toString('utf8');
+              } catch (e) { return null; }
+            };
+            for (let script of entries.slice(0, MAX)) {
+              let text = await fetchScript(script);
+              // /test debian-vm in an issue: there is no ct/debian-vm.sh, but a vm/ one.
+              if (text === null && isIssue && script.startsWith('ct/')) {
+                const vm = `vm/${script.slice(3)}`;
+                if ((text = await fetchScript(vm)) !== null) script = vm;
+              }
+              if (text === null) {
                 notBuilt.push(isIssue
-                  ? `\`${script}\` does not exist on the default branch`
+                  ? (script.startsWith('ct/') ? `${code(script.slice(3, -3))}: neither \`ct/\` nor \`vm/\` has it on the default branch` : `${code(script)} does not exist on the default branch`)
                   : `\`${script}\` does not exist in this PR (an \`install/\` script is built through the \`ct/\` script of the same name)`);
                 continue;
               }
+              const isVm = script.startsWith('vm/');
+              // The test hosts are amd64; an ARM-only VM script refuses to run there.
+              if (isVm && /^\s*vm_require_arch\s+arm64\b/m.test(text)) {
+                notBuilt.push(`${code(script)}: ARM64 only, the test hosts are amd64`);
+                continue;
+              }
               // Scripts that ask for the OS get built once per OS.
-              const oses = /msg_menu\s+"Choose the container OS"/.test(text) ? ['debian', 'alpine'] : [''];
-              const name = script.slice(3, -3);
-              for (const os of oses) include.push({ script, os, name: os ? `${name}-${os}` : name });
+              const oses = !isVm && /msg_menu\s+"Choose the container OS"/.test(text) ? ['debian', 'alpine'] : [''];
+              const name = isVm ? `vm-${script.slice(3, -3)}` : script.slice(3, -3);
+              // Every ct/ script on every platform: the same files run on Proxmox
+              // and, through community-scripts/core's Incus backend, on Incus.
+              // VMs are Proxmox only.
+              const platforms = isVm ? ['pve'] : ['pve', 'incus'];
+              for (const platform of platforms) {
+                for (const os of oses) include.push({ script, os, platform, name: `${os ? `${name}-${os}` : name}-${platform}` });
+              }
             }
             for (const script of entries.slice(MAX)) notBuilt.push(`\`${script}\`: at most ${MAX} scripts per run, name it with \`/test ${script}\``);
             if (include.length === 0) {
@@ -249,10 +270,10 @@ jobs:
                 MARK, '### Proxmox script test', '',
                 isIssue
                   ? 'ℹ️ Nothing to build:'
-                  : 'ℹ️ Nothing to build: this test builds `ct/` scripts (and changed `install/` scripts through their `ct/` script).', '',
-                ...(notBuilt.length ? notBuilt.map(n => `- ${n}`) : ['- this PR changes no `ct/` or `install/` script']),
+                  : 'ℹ️ Nothing to build: this test builds `ct/` and `vm/` scripts (and changed `install/` scripts through their `ct/` script).', '',
+                ...(notBuilt.length ? notBuilt.map(n => `- ${n}`) : ['- this PR changes no `ct/`, `vm/` or `install/` script']),
               ].join('\n'));
-              core.notice('No ct/ script to build');
+              core.notice('No ct/ or vm/ script to build');
               return;
             }
 
@@ -263,7 +284,7 @@ jobs:
               const { data: check } = await github.rest.checks.create({
                 owner, repo, name: 'Proxmox script test', head_sha: headSha, status: 'in_progress',
                 details_url: runUrl,
-                output: { title: `Building ${include.length} on Proxmox`, summary: include.map(i => `- \`${i.script}\` ${i.os}`).join('\n') },
+                output: { title: `Building ${include.length}`, summary: include.map(i => `- \`${i.script}\` ${[i.platform, i.os].filter(Boolean).join(' · ')}`).join('\n') },
               });
               checkId = String(check.id);
             }
@@ -280,7 +301,7 @@ jobs:
             await sticky([
               MARK, '### Proxmox script test', '',
               `⏳ Building ${include.length} at ${headSha.slice(0, 7)}${isIssue ? ' (default branch)' : ''} — [watch it live](${runUrl}) (open the \`test\` job)`, '',
-              ...include.map(i => `- \`${i.script}\`${i.os ? ` (${i.os})` : ''}`),
+              ...include.map(i => `- \`${i.script}\` (${[i.platform, i.os].filter(Boolean).join(' · ')})`),
               ...(notBuilt.length ? ['', '**Not built:**', ...notBuilt.map(n => `- ${n}`)] : []),
             ].join('\n'));
 
@@ -289,7 +310,7 @@ jobs:
     if: needs.gate.outputs.matrix != '[]' && needs.gate.outputs.matrix != ''
     # Only `proxmox-test`, never `self-hosted`: the runner is registered without
     # default labels so that no other workflow can be scheduled onto it.
-    runs-on: proxmox-test
+    runs-on: ${{ matrix.platform == 'incus' && 'incus-test' || 'proxmox-test' }}
     permissions:
       contents: read
     timeout-minutes: 90 # install (45) + update (30) + checks
@@ -311,6 +332,7 @@ jobs:
           PR_SHA: ${{ needs.gate.outputs.sha }}
           SCRIPT: ${{ matrix.script }}
           OS: ${{ matrix.os }}
+          PLATFORM: ${{ matrix.platform }}
           UPSTREAM: ${{ github.repository }}
           CTID_BASE: ${{ github.repository == 'community-scripts/ProxmoxVE' && '9050' || '9000' }}
           # Only so release lookups are not rate limited: unauthenticated, all
@@ -390,7 +412,10 @@ jobs:
                     r.update_log = fs.existsSync(ulog) ? fs.readFileSync(ulog, 'utf8') : '';
                     const ushot = path.join(dir, 'screenshot-update.png');
                     r.shot_update_file = fs.existsSync(ushot) ? ushot : '';
-                    found.set(`${r.script}|${r.os}`, r);
+                    // Only the two platforms this workflow knows; an unknown one would
+                    // never match a matrix row anyway.
+                    if (!['pve', 'incus'].includes(r.platform)) r.platform = 'pve';
+                    found.set(`${r.script}|${r.platform}|${r.os}`, r);
                   } catch (err) { core.warning(`unreadable ${p}: ${err.message}`); }
                 }
               }
@@ -398,12 +423,15 @@ jobs:
             walk('results');
 
             // A job that died before writing result.json still gets a row.
-            const rows = matrix.map(m => ({ ...(found.get(`${m.script}|${m.os || 'default'}`) || {
-              script: m.script, os: m.os || 'default',
+            const rows = matrix.map(m => ({ ...(found.get(`${m.script}|${m.platform || 'pve'}|${m.os || 'default'}`) || {
+              script: m.script, os: m.os || 'default', platform: m.platform || 'pve',
               status: process.env.TEST_RESULT === 'cancelled' ? 'cancelled' : 'error',
               step: 'no result (runner or job failure)', duration: 0, log_tail: '', install_log: '', shot_file: '',
               update_status: '', update_log: '', shot_update_file: '',
             }), name: m.name }));
+            // Where a row ran: "pve", "incus · alpine", or "VM" (Proxmox only).
+            const isVm = r => r.script.startsWith('vm/');
+            const where = r => isVm(r) ? 'VM' : r.os && r.os !== 'default' ? `${r.platform} · ${r.os}` : r.platform;
 
             // Screenshots go to an orphan branch, because a comment can only show
             // an image that has a URL. One file per PR and script, overwritten on
@@ -434,7 +462,7 @@ jobs:
                   catch (e) { if (e.status !== 404) throw e; }
                   const { data } = await github.rest.repos.createOrUpdateFileContents({
                     owner, repo, branch: BRANCH, path: file, sha, content: buf.toString('base64'),
-                    message: `Screenshot: ${r.script} (${r.os})${suffix} for #${prNum} at ${process.env.SHA.slice(0, 7)}`,
+                    message: `Screenshot: ${r.script} (${where(r)})${suffix} for #${prNum} at ${process.env.SHA.slice(0, 7)}`,
                   });
                   return `https://raw.githubusercontent.com/${owner}/${repo}/${data.commit.sha}/${file}`;
                 } catch (e) {
@@ -482,13 +510,15 @@ jobs:
             const updateIcon = { updated: '✅', 'no-update': '➖', fail: '❌', error: '⚠️' };
             const detail = r => {
               if (r.status !== 'pass') return clean(r.step);
+              const ip = /^[0-9.]{7,15}$/.test(r.ip || '') ? r.ip : '';
+              if (isVm(r) && !r.url) return ip ? `booted, got ${ip}` : 'booted, no DHCP lease (an installer ISO, or no network)';
               const reach = r.url ? `${clean(r.url)} → ${r.http_code}` : 'no URL to check';
               return r.update_status === 'no-update' ? `${reach}; update: nothing to update${r.update_step ? ` (${clean(r.update_step)})` : ''}` : reach;
             };
             const table = [
-              '| Script | OS | Install | Update | Duration | Detail |',
+              '| Script | Platform | Install | Update | Duration | Detail |',
               '|---|---|---|---|---|---|',
-              ...rows.map(r => `| \`${r.script}\` | ${r.os} | ${r.update_status ? '✅' : icon[r.status] || '❔'} | ${updateIcon[r.update_status] || '–'} | ${dur(r.duration || 0)} | ${detail(r)} |`),
+              ...rows.map(r => `| \`${r.script}\` | ${where(r)} | ${r.update_status ? '✅' : icon[r.status] || '❔'} | ${updateIcon[r.update_status] || '–'} | ${dur(r.duration || 0)} | ${detail(r)} |`),
             ].join('\n');
 
             // A comment holds 65536 characters. Each script gets an equal share
@@ -510,25 +540,27 @@ jobs:
             const logs = rows.map(r => {
               const parts = [];
               const failed = r.status !== 'pass';
-              const buildShare = failed && r.log_tail ? Math.min(r.log_tail.length, Math.floor(budget / 3)) : 0;
-              if (buildShare) parts.push(details(`${icon[r.status] || '❔'} ${r.script} (${r.os}) — build log`, r.log_tail, buildShare));
+              // A VM script's own output is all there is: no install log inside.
+              const buildShare = (failed || isVm(r)) && r.log_tail ? Math.min(r.log_tail.length, Math.floor(budget / 3)) : 0;
+              if (buildShare) parts.push(details(`${icon[r.status] || '❔'} ${r.script} (${where(r)}) — build log`, r.log_tail, buildShare));
+              if (isVm(r)) return parts.join('\n\n');
               // The update log gets up to a third of what is left, the install log the rest.
               const updateShare = r.update_log ? Math.min(r.update_log.length, Math.floor((budget - buildShare) / 3)) : 0;
               if (r.install_log) {
                 const lines = r.install_log.trimEnd().split('\n').length;
-                parts.push(details(`📄 ${r.script} (${r.os}) — install log (${lines} lines)`, r.install_log, budget - buildShare - updateShare - 400));
+                parts.push(details(`📄 ${r.script} (${where(r)}) — install log (${lines} lines)`, r.install_log, budget - buildShare - updateShare - 400));
               } else if (!buildShare) {
-                parts.push(`<sub>${r.script} (${r.os}): no install log was captured</sub>`);
+                parts.push(`<sub>${r.script} (${where(r)}): no install log was captured</sub>`);
               }
               if (updateShare) {
                 const lines = r.update_log.trimEnd().split('\n').length;
-                parts.push(details(`🔄 ${r.script} (${r.os}) — update log (${lines} lines)`, r.update_log, updateShare));
+                parts.push(details(`🔄 ${r.script} (${where(r)}) — update log (${lines} lines)`, r.update_log, updateShare));
               }
               return parts.join('\n\n');
             });
 
             const shots = rows.filter(r => r.shot_url || r.shot_update_url).map(r => [
-              `<details open><summary>📸 ${r.script} (${r.os}) — ${clean(r.url)}${r.shot_url && r.shot_update_url ? ': after install / after update' : r.shot_update_url ? ': after update' : ''}</summary>`, '',
+              `<details open><summary>📸 ${r.script} (${where(r)}) — ${r.url ? clean(r.url) : 'console'}${r.shot_url && r.shot_update_url ? ': after install / after update' : r.shot_update_url ? ': after update' : ''}</summary>`, '',
               [r.shot_url, r.shot_update_url].filter(Boolean)
                 .map((u, i, all) => `<img src="${u}" width="${all.length > 1 ? 420 : 640}" alt="Screenshot of ${r.script}">`).join(' '),
               '', '</details>',
@@ -638,7 +670,7 @@ jobs:
                   owner, repo, pull_number: pr, commit_id: process.env.SHA, event: 'REQUEST_CHANGES',
                   body: [
                     REVIEW_MARK, `**Proxmox script test failed** at \`${sha7}\`:`, '',
-                    ...failedRows.map(r => `- \`${r.script}\` (${r.os}): ${clean(r.step)}`), '',
+                    ...failedRows.map(r => `- \`${r.script}\` (${where(r)}): ${clean(r.step)}`), '',
                     `Logs and details: [test result](${posted.html_url}). Push a fix, then ask for \`/test\` again.`,
                   ].join('\n'),
                 });

@@ -102,8 +102,9 @@ systemctl restart dnsmasq
   echo Europe/Vienna >/etc/timezone
 }
 
-# Containers live on the root filesystem; there is no LVM in a cloud-image PVE.
-pvesm set local --content iso,vztmpl,backup,rootdir,images
+# Containers and VM disks live on the root filesystem; there is no LVM in a
+# cloud-image PVE. Snippets hold the Cloud-Init configs some vm/ scripts write.
+pvesm set local --content iso,vztmpl,backup,rootdir,images,snippets
 
 # Templates are fetched once here rather than on every first build.
 pveam update >/dev/null
@@ -130,12 +131,26 @@ EOF
 # Leftovers of a job that was killed before its cleanup trap ran.
 cat >/usr/local/sbin/ci-sweep <<'EOF'
 #!/usr/bin/env bash
-# Destroy CI containers (9000-9099) that no running job holds, and stale trees.
+# Destroy CI containers (9000-9099) and VMs (9100-9199) that no running job
+# holds, and stale trees.
+# A job holds its guest with /run/ci-jobs/<id>. A job killed outright (runner
+# restart, timeout) never removes it, so a lock older than any job can run
+# (90 minutes) holds nothing.
+held() { [[ -e "/run/ci-jobs/$1" && -z "$(find "/run/ci-jobs/$1" -mmin +180)" ]]; }
 for id in $(pct list | awk 'NR>1 && $1>=9000 && $1<=9099 {print $1}'); do
-  [[ -e "/run/ci-jobs/$id" ]] && continue
+  held "$id" && continue
   pct stop "$id" --skiplock 1 &>/dev/null || true
   pct destroy "$id" --purge 1 --force 1 &>/dev/null && echo "swept CT $id"
 done
+for id in $(qm list | awk 'NR>1 && $1>=9100 && $1<=9199 {print $1}'); do
+  held "$id" && continue
+  qm stop "$id" --skiplock 1 --timeout 30 &>/dev/null || true
+  qm destroy "$id" --purge 1 --destroy-unreferenced-disks 1 --skiplock 1 &>/dev/null && echo "swept VM $id"
+done
+# VM images and ISOs are cached between builds; drop the ones no build used
+# for a week. Container templates (*.tar.*) stay.
+find /var/lib/vz/template/cache /var/lib/vz/template/iso -maxdepth 1 -type f ! -name '*.tar.*' -atime +7 -delete 2>/dev/null
+find /run/ci-jobs -maxdepth 1 -type f ! -name ".*" -mmin +180 -delete 2>/dev/null
 find /srv/ci -mindepth 1 -maxdepth 1 -type d -mmin +180 -exec rm -rf {} +
 # Engine logs that a killed job never got to remove.
 find /tmp -maxdepth 1 -type f \( -name 'create-lxc-*.log' -o -name 'pct_create_*.log' \
