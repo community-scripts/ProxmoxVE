@@ -13,11 +13,21 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies (Patience)"
+wait_http() {
+  local -r url="$1" timeout="${2:-30}"
+  local -r deadline=$((SECONDS + timeout))
+  local code
+  while ((SECONDS < deadline)); do
+    code="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 5 "$url" 2>/dev/null)" || code="000"
+    [[ "$code" =~ ^([23][0-9][0-9]|401|403)$ ]] && return 0
+    sleep 2
+  done
+  return 1
+}
+
+msg_info "Installing Dependencies"
 $STD apt install -y \
-  git \
   build-essential \
-  dumb-init \
   libjpeg-dev \
   libatk-bridge2.0-0 \
   libasound2 \
@@ -38,7 +48,7 @@ $STD apt install -y \
   qpdf \
   xdg-utils \
   xvfb \
-  ca-certificates \
+  xauth \
   locales \
   poppler-utils \
   file
@@ -52,37 +62,37 @@ done
 $STD locale-gen
 msg_ok "Generated Locales"
 
+# sockpuppet runs as the non-root chrome user, so uv's Python must live outside /root (mode 700).
+export UV_PYTHON_INSTALL_DIR=/opt/uv-python
 PYTHON_VERSION="3.13" setup_uv
-
-NODE_VERSION="24" setup_nodejs
 
 msg_info "Installing Change Detection"
 mkdir -p /opt/changedetection
 $STD uv venv --clear /opt/changedetection/.venv
 $STD /opt/changedetection/.venv/bin/python -m ensurepip --upgrade
 $STD /opt/changedetection/.venv/bin/python -m pip install --upgrade pip
-$STD /opt/changedetection/.venv/bin/python -m pip install changedetection.io
+$STD /opt/changedetection/.venv/bin/python -m pip install changedetection.io playwright
 cat <<EOF >/opt/changedetection/.env
-WEBDRIVER_URL=http://127.0.0.1:4444/wd/hub
-PLAYWRIGHT_DRIVER_URL=ws://localhost:3000/chrome?launch=eyJkZWZhdWx0Vmlld3BvcnQiOnsiaGVpZ2h0Ijo3MjAsIndpZHRoIjoxMjgwfSwiaGVhZGxlc3MiOmZhbHNlLCJzdGVhbHRoIjp0cnVlfQ==&blockAds=true
+PLAYWRIGHT_DRIVER_URL=ws://127.0.0.1:3000/?headful=true&--window-size=1920,1080
 LC_ALL=en_US.UTF-8
 EOF
 msg_ok "Installed Change Detection"
 
-msg_info "Installing Browserless & Playwright"
-mkdir /opt/browserless
-$STD /opt/changedetection/.venv/bin/python -m pip install playwright
-$STD git clone https://github.com/browserless/chrome /opt/browserless
-$STD npm ci --include=optional --include=dev --prefix /opt/browserless
-$STD npm install --save-exact playwright-core@1.62.1 --prefix /opt/browserless
-$STD /opt/browserless/node_modules/playwright-core/cli.js install --with-deps &>/dev/null
-$STD /opt/browserless/node_modules/playwright-core/cli.js install --force chrome &>/dev/null
-$STD /opt/browserless/node_modules/playwright-core/cli.js install chromium firefox webkit &>/dev/null
-$STD /opt/browserless/node_modules/playwright-core/cli.js install --force msedge
-$STD npm run build --prefix /opt/browserless
-$STD npm run build:function --prefix /opt/browserless
-$STD npm prune production --prefix /opt/browserless
-msg_ok "Installed Browserless & Playwright"
+msg_info "Installing Chrome"
+setup_deb822_repo "google-chrome" \
+  "https://dl.google.com/linux/linux_signing_key.pub" \
+  "https://dl.google.com/linux/chrome/deb/" "stable"
+$STD apt install -y google-chrome-stable
+msg_ok "Installed Chrome"
+
+msg_info "Creating Chrome User"
+groupadd -f chrome 2>/dev/null || true
+id -u chrome >/dev/null 2>&1 || useradd --system --create-home --shell /usr/sbin/nologin -g chrome chrome
+msg_ok "Created Chrome User"
+
+fetch_and_deploy_gh_branch "sockpuppet" "dgtlmoon/sockpuppetbrowser" "master"
+$STD uv venv --python 3.12 /opt/sockpuppet/.venv
+$STD uv pip install --python /opt/sockpuppet/.venv/bin/python -r /opt/sockpuppet/requirements.txt
 
 msg_info "Installing Font Packages"
 $STD apt install -y \
@@ -121,8 +131,8 @@ cat <<EOF >/etc/systemd/system/changedetection.service
 [Unit]
 Description=Change Detection
 After=network-online.target
-After=network.target browserless.service
-Wants=browserless.service
+After=network.target sockpuppet.service
+Wants=sockpuppet.service
 
 [Service]
 Type=simple
@@ -134,23 +144,48 @@ ExecStart=/opt/changedetection/.venv/bin/changedetection.io -d /opt/changedetect
 WantedBy=multi-user.target
 EOF
 
-cat <<EOF >/etc/systemd/system/browserless.service
+cat <<EOF >/etc/systemd/system/sockpuppet.service
 [Unit]
-Description=browserless service
+Description=sockpuppetbrowser service
 After=network.target
+StartLimitIntervalSec=60
+StartLimitBurst=3
 
 [Service]
-Environment=CONNECTION_TIMEOUT=60000
-WorkingDirectory=/opt/browserless
-ExecStart=/opt/browserless/scripts/start.sh
-SyslogIdentifier=browserless
+User=chrome
+Group=chrome
+WorkingDirectory=/opt/sockpuppet/backend
+Environment=CHROME_BIN=/usr/bin/google-chrome-stable
+Environment=CHROME_HEADFUL=true
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/opt/sockpuppet/.venv/bin/python server.py --host 127.0.0.1 --port 3000 --sport 8080
+Restart=on-failure
+RestartSec=5
+SyslogIdentifier=sockpuppet
 
 [Install]
 WantedBy=default.target
 EOF
-systemctl enable -q --now browserless
+systemctl enable -q --now sockpuppet
 systemctl enable -q --now changedetection
 msg_ok "Created Services"
+
+msg_info "Verifying Sockpuppet"
+if ! wait_http "http://127.0.0.1:8080/stats" 30 ||
+  ! curl -sS --max-time 5 "http://127.0.0.1:8080/stats" | grep -qE '"chrome_version":[[:space:]]*"Google Chrome'; then
+  msg_error "Sockpuppet failed to start"
+  systemctl status sockpuppet --no-pager -l | head -20 || true
+  exit 1
+fi
+msg_ok "Verified Sockpuppet"
+
+msg_info "Verifying Change Detection"
+if ! wait_http "http://127.0.0.1:5000/" 30; then
+  msg_error "Change Detection is not responding"
+  systemctl status changedetection --no-pager -l | head -20 || true
+  exit 1
+fi
+msg_ok "Verified Change Detection"
 
 motd_ssh
 customize
