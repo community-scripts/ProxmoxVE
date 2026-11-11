@@ -205,167 +205,230 @@ msg_info "Installing GCC-13 (available as fallback compiler)"
 $STD apt install -y gcc-13 g++-13
 msg_ok "Installed GCC-13"
 
-msg_warn "Compiling Custom Photo-processing Libraries (can take anywhere from 15min to 2h)"
 LD_LIBRARY_PATH=/usr/local/lib
 export LD_RUN_PATH=/usr/local/lib
-STAGING_DIR=/opt/staging
-BASE_REPO="https://github.com/immich-app/base-images"
-BASE_DIR=${STAGING_DIR}/base-images
-SOURCE_DIR=${STAGING_DIR}/image-source
-$STD git clone -b main "$BASE_REPO" "$BASE_DIR"
-mkdir -p "$SOURCE_DIR"
 
-msg_info "(1/6) Compiling libjxl"
-cd "$STAGING_DIR"
-SOURCE=${SOURCE_DIR}/libjxl
-LIBJXL_REVISION="$(jq -cr '.revision' "$BASE_DIR"/server/sources/libjxl.json)"
-$STD git clone https://github.com/libjxl/libjxl.git "$SOURCE"
-cd "$SOURCE"
-$STD git reset --hard "$LIBJXL_REVISION"
-$STD git submodule update --init --recursive --depth 1 --recommend-shallow -- third_party
-mkdir build
-cd build
-$STD cmake \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DBUILD_TESTING=OFF \
-  -DJPEGXL_ENABLE_DOXYGEN=OFF \
-  -DJPEGXL_ENABLE_MANPAGES=OFF \
-  -DJPEGXL_ENABLE_BENCHMARK=OFF \
-  -DJPEGXL_ENABLE_EXAMPLES=OFF \
-  -DJPEGXL_FORCE_SYSTEM_BROTLI=ON \
-  -DJPEGXL_FORCE_SYSTEM_HWY=ON \
-  -DJPEGXL_ENABLE_HWY_AVX3=ON \
-  -DJPEGXL_ENABLE_HWY_AVX3_ZEN4=ON \
-  -DJPEGXL_ENABLE_HWY_SVE=OFF \
-  -DJPEGXL_ENABLE_HWY_SVE2=OFF \
-  -DJPEGXL_ENABLE_HWY_SVE2_128=ON \
-  -DJPEGXL_ENABLE_PLUGINS=ON \
-  ..
-$STD cmake --build . -- -j"$(nproc)"
-$STD cmake --install .
-ldconfig /usr/local/lib
-$STD make clean
-cd "$STAGING_DIR"
-rm -rf "$SOURCE"/{build,third_party}
-msg_ok "(1/6) Compiled libjxl"
+# Immich ships the custom photo-processing libraries (libjxl, jpegli, libheif,
+# libraw, ImageMagick, libvips) prebuilt inside its own OCI base image - the exact
+# artifacts the from-source path below spends 15min-2h compiling. Pull that image's
+# /usr/local with daemonless tooling (skopeo + umoci), pinned to the digest the
+# Immich release references, and reuse it. Any failure - or IMMICH_LIBS_FROM_SOURCE=1
+# - falls back to compiling from source.
+PREBUILT_LIBS=0
+if [[ "${IMMICH_LIBS_FROM_SOURCE:-0}" != "1" ]]; then
+  msg_info "Deploying prebuilt image-processing libraries"
+  BASE_REF="$(curl -fsSL "https://raw.githubusercontent.com/immich-app/immich/${RELEASE}/server/Dockerfile" 2>/dev/null | awk '/^FROM ghcr.io\/immich-app\/base-server-dev/ {print $2; exit}')"
+  if [[ -n "$BASE_REF" ]]; then
+    BASE_TAG="${BASE_REF#*base-server-dev:}"
+    BASE_TAG="${BASE_TAG%@*}"
+    if [[ "$BASE_REF" == *@sha256:* ]]; then
+      BASE_IMAGE="ghcr.io/immich-app/base-server-dev@${BASE_REF#*@}"
+    else
+      BASE_IMAGE="$BASE_REF"
+    fi
+    OCI_DIR="$(mktemp -d)"
+    OCI_BUNDLE="$(mktemp -d)"
+    if { command -v skopeo && command -v umoci; } >/dev/null 2>&1 ||
+      $STD apt install -y --no-install-recommends skopeo umoci; then
+      if $STD skopeo copy --override-os linux --override-arch "$(arch_resolve amd64 arm64)" "docker://${BASE_IMAGE}" "oci:${OCI_DIR}:img" &&
+        $STD umoci unpack --image "${OCI_DIR}:img" "$OCI_BUNDLE"; then
+        # Copy the compiled libraries, headers and ImageMagick data, but not the node
+        # runtime, global node modules or ffmpeg shipped by the node base image - this
+        # script provides those separately.
+        tar -C "${OCI_BUNDLE}/rootfs/usr/local" \
+          --exclude=./bin/node --exclude=./bin/npm --exclude=./bin/npx --exclude=./bin/corepack \
+          --exclude=./bin/ffmpeg --exclude=./bin/ffprobe \
+          --exclude=./lib/node_modules --exclude=./include/node \
+          -cf - . 2>/dev/null | tar -C /usr/local -xf - 2>/dev/null
+        export LD_LIBRARY_PATH=/usr/local/lib
+        ldconfig /usr/local/lib
+        # Only commit to the prebuilt path if the libraries are actually usable;
+        # otherwise fall through to compiling from source rather than failing later
+        # during the sharp build.
+        if command -v vips >/dev/null 2>&1 && vips --version >/dev/null 2>&1 && pkg-config --exists vips 2>/dev/null; then
+          # Record the revisions the prebuilt libraries were built from (matched to
+          # the base image tag) so the update script does not needlessly recompile
+          # them. libraw uses the revision both install and update hardcode.
+          SRC_REV="https://raw.githubusercontent.com/immich-app/base-images/${BASE_TAG}/server/sources"
+          cat <<EOF >~/.immich_library_revisions
+imagemagick: $(curl -fsSL "${SRC_REV}/imagemagick.json" 2>/dev/null | jq -cr '.revision // "unknown"' 2>/dev/null || echo "unknown")
+jpegli: $(curl -fsSL "${SRC_REV}/jpegli.json" 2>/dev/null | jq -cr '.revision // "unknown"' 2>/dev/null || echo "unknown")
+libheif: $(curl -fsSL "${SRC_REV}/libheif.json" 2>/dev/null | jq -cr '.revision // "unknown"' 2>/dev/null || echo "unknown")
+libjxl: $(curl -fsSL "${SRC_REV}/libjxl.json" 2>/dev/null | jq -cr '.revision // "unknown"' 2>/dev/null || echo "unknown")
+libraw: e419de08001de28ae6988ecb22df47e52b9c5eaa
+libvips: $(curl -fsSL "${SRC_REV}/libvips.json" 2>/dev/null | jq -cr '.revision // "unknown"' 2>/dev/null || echo "unknown")
+EOF
+          PREBUILT_LIBS=1
+        fi
+      fi
+    fi
+    rm -rf "$OCI_DIR" "$OCI_BUNDLE"
+  fi
+  if [[ "$PREBUILT_LIBS" -eq 1 ]]; then
+    msg_ok "Deployed prebuilt image-processing libraries (base-images ${BASE_TAG})"
+  else
+    msg_warn "Prebuilt image-processing libraries unavailable - falling back to source"
+  fi
+fi
 
-msg_info "(2/6) Compiling jpegli"
-SOURCE=${SOURCE_DIR}/jpegli
-JPEGLI_LIBJPEG_LIBRARY_SOVERSION="62"
-JPEGLI_LIBJPEG_LIBRARY_VERSION="62.3.0"
-JPEGLI_REVISION="$(jq -cr '.revision' "$BASE_DIR"/server/sources/jpegli.json)"
-$STD git clone https://github.com/google/jpegli.git "$SOURCE"
-cd "$SOURCE"
-$STD git reset --hard "$JPEGLI_REVISION"
-$STD git submodule update --init --depth 1 --recommend-shallow third_party/libjpeg-turbo
-$STD git apply -3 "$BASE_DIR"/server/sources/jpegli-patches/jpegli-empty-dht-marker.patch
-$STD git apply -3 "$BASE_DIR"/server/sources/jpegli-patches/jpegli-icc-warning.patch
-mkdir build
-cd build
-$STD cmake \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DBUILD_TESTING=OFF \
-  -DJPEGLI_ENABLE_DOXYGEN=OFF \
-  -DJPEGLI_ENABLE_MANPAGES=OFF \
-  -DJPEGLI_ENABLE_BENCHMARK=OFF \
-  -DJPEGLI_ENABLE_TOOLS=OFF \
-  -DJPEGLI_ENABLE_DEVTOOLS=OFF \
-  -DJPEGLI_ENABLE_FUZZERS=OFF \
-  -DJPEGLI_ENABLE_JNI=OFF \
-  -DJPEGLI_ENABLE_OPENEXR=OFF \
-  -DJPEGLI_ENABLE_SJPEG=OFF \
-  -DJPEGLI_ENABLE_SKCMS=OFF \
-  -DJPEGLI_FORCE_SYSTEM_HWY=ON \
-  -DJPEGLI_FORCE_SYSTEM_LCMS2=ON \
-  -DJPEGLI_ENABLE_JPEGLI_LIBJPEG=ON \
-  -DJPEGLI_INSTALL_JPEGLI_LIBJPEG=ON \
-  -DJPEGLI_ENABLE_HWY_AVX3=ON \
-  -DJPEGLI_ENABLE_HWY_AVX3_ZEN4=ON \
-  -DJPEGLI_ENABLE_HWY_SVE=OFF \
-  -DJPEGLI_ENABLE_HWY_SVE2=OFF \
-  -DJPEGLI_ENABLE_HWY_SVE2_128=ON \
-  -DJPEGLI_LIBJPEG_LIBRARY_SOVERSION="$JPEGLI_LIBJPEG_LIBRARY_SOVERSION" \
-  -DJPEGLI_LIBJPEG_LIBRARY_VERSION="$JPEGLI_LIBJPEG_LIBRARY_VERSION" \
-  -DLIBJPEG_TURBO_VERSION_NUMBER=2001005 \
-  ..
-$STD cmake --build . -- -j"$(nproc)"
-$STD cmake --install .
-ldconfig /usr/local/lib
-$STD make clean
-cd "$STAGING_DIR"
-rm -rf "$SOURCE"/{build,third_party}
-msg_ok "(2/6) Compiled jpegli"
+if [[ "$PREBUILT_LIBS" -ne 1 ]]; then
+  msg_warn "Compiling Custom Photo-processing Libraries (can take anywhere from 15min to 2h)"
+  STAGING_DIR=/opt/staging
+  BASE_REPO="https://github.com/immich-app/base-images"
+  BASE_DIR=${STAGING_DIR}/base-images
+  SOURCE_DIR=${STAGING_DIR}/image-source
 
-msg_info "(3/6) Compiling libheif"
-SOURCE=${SOURCE_DIR}/libheif
-LIBHEIF_REVISION="$(jq -cr '.revision' "$BASE_DIR"/server/sources/libheif.json)"
-$STD git clone https://github.com/strukturag/libheif.git "$SOURCE"
-cd "$SOURCE"
-$STD git reset --hard "$LIBHEIF_REVISION"
-mkdir build
-cd build
-$STD cmake --preset=release-noplugins \
-  -DWITH_DAV1D=ON \
-  -DENABLE_PARALLEL_TILE_DECODING=ON \
-  -DWITH_LIBSHARPYUV=ON \
-  -DWITH_LIBDE265=ON \
-  -DWITH_AOM_DECODER=OFF \
-  -DWITH_AOM_ENCODER=ON \
-  -DWITH_X265=OFF \
-  -DWITH_EXAMPLES=OFF \
-  ..
-$STD make install -j"$(nproc)"
-ldconfig /usr/local/lib
-$STD make clean
-cd "$STAGING_DIR"
-rm -rf "$SOURCE"/build
-msg_ok "(3/6) Compiled libheif"
+  msg_info "(1/6) Compiling libjxl"
+  cd "$STAGING_DIR"
+  SOURCE=${SOURCE_DIR}/libjxl
+  LIBJXL_REVISION="$(jq -cr '.revision' "$BASE_DIR"/server/sources/libjxl.json)"
+  $STD git clone https://github.com/libjxl/libjxl.git "$SOURCE"
+  cd "$SOURCE"
+  $STD git reset --hard "$LIBJXL_REVISION"
+  $STD git submodule update --init --recursive --depth 1 --recommend-shallow -- third_party
+  mkdir build
+  cd build
+  $STD cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_TESTING=OFF \
+    -DJPEGXL_ENABLE_DOXYGEN=OFF \
+    -DJPEGXL_ENABLE_MANPAGES=OFF \
+    -DJPEGXL_ENABLE_BENCHMARK=OFF \
+    -DJPEGXL_ENABLE_EXAMPLES=OFF \
+    -DJPEGXL_FORCE_SYSTEM_BROTLI=ON \
+    -DJPEGXL_FORCE_SYSTEM_HWY=ON \
+    -DJPEGXL_ENABLE_HWY_AVX3=ON \
+    -DJPEGXL_ENABLE_HWY_AVX3_ZEN4=ON \
+    -DJPEGXL_ENABLE_HWY_SVE=OFF \
+    -DJPEGXL_ENABLE_HWY_SVE2=OFF \
+    -DJPEGXL_ENABLE_HWY_SVE2_128=ON \
+    -DJPEGXL_ENABLE_PLUGINS=ON \
+    ..
+  $STD cmake --build . -- -j"$(nproc)"
+  $STD cmake --install .
+  ldconfig /usr/local/lib
+  $STD make clean
+  cd "$STAGING_DIR"
+  rm -rf "$SOURCE"/{build,third_party}
+  msg_ok "(1/6) Compiled libjxl"
 
-msg_info "(4/6) Compiling libraw"
-SOURCE=${SOURCE_DIR}/libraw
-LIBRAW_REVISION="e419de08001de28ae6988ecb22df47e52b9c5eaa"
-# : "${LIBRAW_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libraw.json)}"
-$STD git clone https://github.com/LibRaw/LibRaw.git "$SOURCE"
-cd "$SOURCE"
-$STD git reset --hard "$LIBRAW_REVISION"
-$STD autoreconf --install
-$STD ./configure --disable-examples
-$STD make -j"$(nproc)"
-$STD make install
-ldconfig /usr/local/lib
-$STD make clean
-cd "$STAGING_DIR"
-msg_ok "(4/6) Compiled libraw"
+  msg_info "(2/6) Compiling jpegli"
+  SOURCE=${SOURCE_DIR}/jpegli
+  JPEGLI_LIBJPEG_LIBRARY_SOVERSION="62"
+  JPEGLI_LIBJPEG_LIBRARY_VERSION="62.3.0"
+  JPEGLI_REVISION="$(jq -cr '.revision' "$BASE_DIR"/server/sources/jpegli.json)"
+  $STD git clone https://github.com/google/jpegli.git "$SOURCE"
+  cd "$SOURCE"
+  $STD git reset --hard "$JPEGLI_REVISION"
+  $STD git submodule update --init --depth 1 --recommend-shallow third_party/libjpeg-turbo
+  $STD git apply -3 "$BASE_DIR"/server/sources/jpegli-patches/jpegli-empty-dht-marker.patch
+  $STD git apply -3 "$BASE_DIR"/server/sources/jpegli-patches/jpegli-icc-warning.patch
+  mkdir build
+  cd build
+  $STD cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_TESTING=OFF \
+    -DJPEGLI_ENABLE_DOXYGEN=OFF \
+    -DJPEGLI_ENABLE_MANPAGES=OFF \
+    -DJPEGLI_ENABLE_BENCHMARK=OFF \
+    -DJPEGLI_ENABLE_TOOLS=OFF \
+    -DJPEGLI_ENABLE_DEVTOOLS=OFF \
+    -DJPEGLI_ENABLE_FUZZERS=OFF \
+    -DJPEGLI_ENABLE_JNI=OFF \
+    -DJPEGLI_ENABLE_OPENEXR=OFF \
+    -DJPEGLI_ENABLE_SJPEG=OFF \
+    -DJPEGLI_ENABLE_SKCMS=OFF \
+    -DJPEGLI_FORCE_SYSTEM_HWY=ON \
+    -DJPEGLI_FORCE_SYSTEM_LCMS2=ON \
+    -DJPEGLI_ENABLE_JPEGLI_LIBJPEG=ON \
+    -DJPEGLI_INSTALL_JPEGLI_LIBJPEG=ON \
+    -DJPEGLI_ENABLE_HWY_AVX3=ON \
+    -DJPEGLI_ENABLE_HWY_AVX3_ZEN4=ON \
+    -DJPEGLI_ENABLE_HWY_SVE=OFF \
+    -DJPEGLI_ENABLE_HWY_SVE2=OFF \
+    -DJPEGLI_ENABLE_HWY_SVE2_128=ON \
+    -DJPEGLI_LIBJPEG_LIBRARY_SOVERSION="$JPEGLI_LIBJPEG_LIBRARY_SOVERSION" \
+    -DJPEGLI_LIBJPEG_LIBRARY_VERSION="$JPEGLI_LIBJPEG_LIBRARY_VERSION" \
+    -DLIBJPEG_TURBO_VERSION_NUMBER=2001005 \
+    ..
+  $STD cmake --build . -- -j"$(nproc)"
+  $STD cmake --install .
+  ldconfig /usr/local/lib
+  $STD make clean
+  cd "$STAGING_DIR"
+  rm -rf "$SOURCE"/{build,third_party}
+  msg_ok "(2/6) Compiled jpegli"
 
-msg_info "(5/6) Compiling imagemagick"
-SOURCE=$SOURCE_DIR/imagemagick
-: "${IMAGEMAGICK_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/imagemagick.json)}"
-$STD git clone https://github.com/ImageMagick/ImageMagick.git "$SOURCE"
-cd "$SOURCE"
-$STD git reset --hard "$IMAGEMAGICK_REVISION"
-$STD ./configure --with-modules CPPFLAGS="-DMAGICK_LIBRAW_VERSION_TAIL=202502"
-$STD make -j"$(nproc)"
-$STD make install
-ldconfig /usr/local/lib
-$STD make clean
-cd "$STAGING_DIR"
-msg_ok "(5/6) Compiled imagemagick"
+  msg_info "(3/6) Compiling libheif"
+  SOURCE=${SOURCE_DIR}/libheif
+  LIBHEIF_REVISION="$(jq -cr '.revision' "$BASE_DIR"/server/sources/libheif.json)"
+  $STD git clone https://github.com/strukturag/libheif.git "$SOURCE"
+  cd "$SOURCE"
+  $STD git reset --hard "$LIBHEIF_REVISION"
+  mkdir build
+  cd build
+  $STD cmake --preset=release-noplugins \
+    -DWITH_DAV1D=ON \
+    -DENABLE_PARALLEL_TILE_DECODING=ON \
+    -DWITH_LIBSHARPYUV=ON \
+    -DWITH_LIBDE265=ON \
+    -DWITH_AOM_DECODER=OFF \
+    -DWITH_AOM_ENCODER=ON \
+    -DWITH_X265=OFF \
+    -DWITH_EXAMPLES=OFF \
+    ..
+  $STD make install -j"$(nproc)"
+  ldconfig /usr/local/lib
+  $STD make clean
+  cd "$STAGING_DIR"
+  rm -rf "$SOURCE"/build
+  msg_ok "(3/6) Compiled libheif"
 
-msg_info "(6/6) Compiling libvips"
-SOURCE=$SOURCE_DIR/libvips
-LIBVIPS_REVISION="$(jq -cr '.revision' "$BASE_DIR"/server/sources/libvips.json)"
-$STD git clone https://github.com/libvips/libvips.git "$SOURCE"
-cd "$SOURCE"
-$STD git reset --hard "$LIBVIPS_REVISION"
-$STD git apply "$BASE_DIR"/server/sources/libvips-patches/0001-put-other-loaders-ahead-of-dcrawload.patch
-$STD meson setup build --buildtype=release --libdir=lib -Dintrospection=disabled -Dtiff=disabled
-cd build
-$STD ninja install
-ldconfig /usr/local/lib
-cd "$STAGING_DIR"
-rm -rf "$SOURCE"/build
-msg_ok "(6/6) Compiled libvips"
-cat <<EOF >~/.immich_library_revisions
+  msg_info "(4/6) Compiling libraw"
+  SOURCE=${SOURCE_DIR}/libraw
+  LIBRAW_REVISION="e419de08001de28ae6988ecb22df47e52b9c5eaa"
+  # : "${LIBRAW_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/libraw.json)}"
+  $STD git clone https://github.com/LibRaw/LibRaw.git "$SOURCE"
+  cd "$SOURCE"
+  $STD git reset --hard "$LIBRAW_REVISION"
+  $STD autoreconf --install
+  $STD ./configure --disable-examples
+  $STD make -j"$(nproc)"
+  $STD make install
+  ldconfig /usr/local/lib
+  $STD make clean
+  cd "$STAGING_DIR"
+  msg_ok "(4/6) Compiled libraw"
+
+  msg_info "(5/6) Compiling imagemagick"
+  SOURCE=$SOURCE_DIR/imagemagick
+  : "${IMAGEMAGICK_REVISION:=$(jq -cr '.revision' $BASE_DIR/server/sources/imagemagick.json)}"
+  $STD git clone https://github.com/ImageMagick/ImageMagick.git "$SOURCE"
+  cd "$SOURCE"
+  $STD git reset --hard "$IMAGEMAGICK_REVISION"
+  $STD ./configure --with-modules CPPFLAGS="-DMAGICK_LIBRAW_VERSION_TAIL=202502"
+  $STD make -j"$(nproc)"
+  $STD make install
+  ldconfig /usr/local/lib
+  $STD make clean
+  cd "$STAGING_DIR"
+  msg_ok "(5/6) Compiled imagemagick"
+
+  msg_info "(6/6) Compiling libvips"
+  SOURCE=$SOURCE_DIR/libvips
+  LIBVIPS_REVISION="$(jq -cr '.revision' "$BASE_DIR"/server/sources/libvips.json)"
+  $STD git clone https://github.com/libvips/libvips.git "$SOURCE"
+  cd "$SOURCE"
+  $STD git reset --hard "$LIBVIPS_REVISION"
+  $STD git apply "$BASE_DIR"/server/sources/libvips-patches/0001-put-other-loaders-ahead-of-dcrawload.patch
+  $STD meson setup build --buildtype=release --libdir=lib -Dintrospection=disabled -Dtiff=disabled
+  cd build
+  $STD ninja install
+  ldconfig /usr/local/lib
+  cd "$STAGING_DIR"
+  rm -rf "$SOURCE"/build
+  msg_ok "(6/6) Compiled libvips"
+  cat <<EOF >~/.immich_library_revisions
 imagemagick: $IMAGEMAGICK_REVISION
 jpegli: $JPEGLI_REVISION
 libheif: $LIBHEIF_REVISION
@@ -373,7 +436,8 @@ libjxl: $LIBJXL_REVISION
 libraw: $LIBRAW_REVISION
 libvips: $LIBVIPS_REVISION
 EOF
-msg_ok "Custom Photo-processing Libraries Compiled Successfully"
+  msg_ok "Custom Photo-processing Libraries Compiled Successfully"
+fi
 
 fetch_and_deploy_gh_release "Immich" "immich-app/immich" "tarball" "${RELEASE}" "$SRC_DIR"
 PNPM_VERSION="$(jq -r '.packageManager | split("@")[1] | split("+")[0]' ${SRC_DIR}/package.json)"
