@@ -38,12 +38,20 @@ function update_script() {
     exit
   fi
 
-  if ! grep -qE '(^|[[:space:]])testing([[:space:]]|$)' /etc/apt/sources.list.d/debian.sources 2>/dev/null; then
+  if ! grep -qsE '^[[:space:]]*Suites:.*(^|[[:space:]])testing([[:space:]]|$)' /etc/apt/sources.list.d/*.sources; then
     msg_info "Adding Debian Testing repo"
     if grep -q "trixie-updates" /etc/apt/sources.list.d/debian.sources 2>/dev/null; then
       sed -i 's/ trixie-updates/ trixie-updates testing/g' /etc/apt/sources.list.d/debian.sources
-    else
+    elif grep -qsE '^[[:space:]]*Suites:.*trixie' /etc/apt/sources.list.d/debian.sources; then
       sed -i '/^[[:space:]]*Suites:.*trixie/ s/$/ testing/' /etc/apt/sources.list.d/debian.sources
+    else
+      cat <<EOF >/etc/apt/sources.list.d/testing.sources
+Types: deb
+URIs: http://deb.debian.org/debian
+Suites: testing
+Components: main
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+EOF
     fi
     cat <<EOF >/etc/apt/preferences.d/preferences
 Package: *
