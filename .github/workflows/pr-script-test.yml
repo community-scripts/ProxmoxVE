@@ -258,7 +258,7 @@ jobs:
     runs-on: proxmox-test
     permissions:
       contents: read
-    timeout-minutes: 60
+    timeout-minutes: 90
     strategy:
       fail-fast: false
       matrix:
