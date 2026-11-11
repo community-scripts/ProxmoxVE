@@ -37,6 +37,9 @@ RAW_LOG="$OUT_DIR/build.raw.log"
 LOG="$OUT_DIR/build.log"
 RESULT="$OUT_DIR/result.json"
 INSTALL_LOG_OUT="$OUT_DIR/install.log"
+UPDATE_RAW="$OUT_DIR/update.raw.log"
+UPDATE_LOG="$OUT_DIR/update.log"
+UPDATE_TIMEOUT="${UPDATE_TIMEOUT:-30m}"
 
 app=$(basename "$SCRIPT" .sh)
 job="${GITHUB_RUN_ID:-local}-${GITHUB_RUN_ATTEMPT:-1}-${app}-${OS:-default}"
@@ -52,6 +55,10 @@ ct_ip=""
 url=""
 http_code=""
 failed_units=""
+# updated: a real update ran; no-update: update ran, nothing to update;
+# fail: the update broke; empty: not attempted (the install failed).
+update_status=""
+update_step=""
 
 strip_ansi() {
   sed -E 's/\x1B\[[0-9;?]*[A-Za-z]//g; s/\x1B[()][A-Z0-9]//g; s/\r/\n/g' | grep -vE '^\s*$'
@@ -110,16 +117,20 @@ classify_cpu_failure() {
 finish() {
   [[ -f "$RAW_LOG" ]] && strip_ansi <"$RAW_LOG" >"$LOG"
   [[ -f "$RAW_LOG" ]] && collect_install_log
+  [[ -f "$UPDATE_RAW" ]] && strip_ansi <"$UPDATE_RAW" >"$UPDATE_LOG"
+  rm -f "$UPDATE_RAW"
   jq -n \
     --arg script "$SCRIPT" --arg os "${OS:-default}" --arg status "$status" \
     --arg step "$step" --arg exit_code "$exit_code" --arg sha "$PR_SHA" \
     --arg ctid "$ctid" --arg url "$url" --arg http_code "$http_code" \
     --arg failed_units "$failed_units" \
+    --arg update_status "$update_status" --arg update_step "$update_step" \
     --argjson duration "$(($(date +%s) - started))" \
     --arg tail "$([[ -f "$LOG" ]] && tail -n 60 "$LOG")" \
     '{script: $script, os: $os, status: $status, step: $step, exit_code: $exit_code,
       sha: $sha, ctid: $ctid, url: $url, http_code: $http_code,
-      failed_units: $failed_units, duration: $duration, log_tail: $tail}' >"$RESULT"
+      failed_units: $failed_units, update_status: $update_status, update_step: $update_step,
+      duration: $duration, log_tail: $tail}' >"$RESULT"
   echo "::group::result"
   jq 'del(.log_tail)' "$RESULT"
   echo "::endgroup::"
@@ -174,13 +185,16 @@ stop_streams() {
 }
 
 build_pid=""
+update_pid=""
 cleanup() {
   stop_streams
-  if [[ -n "$build_pid" ]]; then
-    pkill -TERM -P "$build_pid" &>/dev/null || true
-    kill -TERM "$build_pid" &>/dev/null || true
+  local pid
+  for pid in "$build_pid" "$update_pid"; do
+    [[ -n "$pid" ]] || continue
+    pkill -TERM -P "$pid" &>/dev/null || true
+    kill -TERM "$pid" &>/dev/null || true
     sleep 2
-  fi
+  done
   if [[ -n "$ctid" ]]; then
     if pct status "$ctid" &>/dev/null; then
       pct stop "$ctid" --skiplock 1 &>/dev/null || true
@@ -268,6 +282,8 @@ build_env=(
 )
 touch "$RAW_LOG.start"
 [[ -n "$OS" ]] && build_env+=(var_os="$OS")
+# Both engines turn var_github_token into GITHUB_TOKEN inside the container.
+[[ -n "${GH_API_TOKEN:-}" ]] && build_env+=(var_github_token="$GH_API_TOKEN")
 
 # --- Answers for the script's questions ------------------------------------------
 # Nobody types into CI, so anything the install asks has to be answered up front.
@@ -276,7 +292,7 @@ touch "$RAW_LOG.start"
 # CI value here. The names come from json/<app>.json app_vars (DevScripts) and
 # from the read/prompt_ lines of the install script (both repos). A bare `read`
 # that ignores its variable still fails, and the report says why.
-ENGINE_VARS=" var_ctid var_hostname var_os var_version var_cpu var_ram var_disk var_brg var_net var_container_storage var_template_storage var_unprivileged var_tags var_arm64 var_testurl var_verbose var_timezone var_http_proxy var_http_no_proxy var_appversion "
+ENGINE_VARS=" var_ctid var_hostname var_os var_version var_cpu var_ram var_disk var_brg var_net var_container_storage var_template_storage var_unprivileged var_tags var_arm64 var_testurl var_verbose var_timezone var_http_proxy var_http_no_proxy var_appversion var_github_token "
 host_app=$(tr -c 'a-z0-9-\n' '-' <<<"${app,,}")
 ci_value() {
   case "${1,,}" in
@@ -402,18 +418,11 @@ pct status "$ctid" 2>/dev/null | grep -q running || fail "container ${ctid} is n
 
 ct_ip=$(pct exec "$ctid" -- sh -c "ip -4 -o addr show dev eth0 | awk '{print \$4}' | cut -d/ -f1" 2>/dev/null | head -n1)
 
-if pct exec "$ctid" -- sh -c 'command -v systemctl' &>/dev/null; then
-  sleep 10
-  failed_units=$(pct exec "$ctid" -- systemctl --failed --no-legend --plain 2>/dev/null | awk '{print $1}' | paste -sd, -)
-elif pct exec "$ctid" -- sh -c 'command -v rc-status' &>/dev/null; then
-  failed_units=$(pct exec "$ctid" -- rc-status --crashed 2>/dev/null | awk '{print $1}' | paste -sd, -)
-fi
-[[ -z "$failed_units" ]] || fail "failed services: ${failed_units}"
-
 # What the app's page looks like, for the PR comment. Chromium runs as its own
 # unprivileged user with its sandbox on: the page is served by code under test.
 # ci-shot-firewall (pve-ci-host-setup.sh) keeps that user off this host and the
 # lab network; without it there is no screenshot rather than an unguarded one.
+# $1: file name in OUT_DIR (screenshot.png after install, -update after update).
 take_screenshot() {
   command -v chromium >/dev/null && id ci-shot &>/dev/null || return 0
   iptables -w -S CI_SHOT 2>/dev/null | grep -q -- '-d 10.0.0.0/8 .*REJECT' || return 0
@@ -426,26 +435,120 @@ take_screenshot() {
   # Only a plausible PNG leaves this function.
   if [[ -s "$dir/shot.png" && $(stat -c %s "$dir/shot.png") -lt 3000000 ]] &&
     [[ "$(head -c 8 "$dir/shot.png" | od -An -tx1 | tr -d ' \n')" == "89504e470d0a1a0a" ]]; then
-    cp "$dir/shot.png" "$OUT_DIR/screenshot.png"
+    cp "$dir/shot.png" "$OUT_DIR/${1:-screenshot.png}"
   fi
   rm -rf -- "$dir"
 }
 
-# The URL the script tells the user to open, e.g. http://${IP}:1337/admin, has
-# to answer 200 (after redirects, so a jump to /login is fine). A script that
-# prints no URL has no web UI to check.
+# Is the app up? No failed services, and the URL the script tells the user to
+# open, e.g. http://${IP}:1337/admin, answers 200 (after redirects, so a jump
+# to /login is fine). A script that prints no URL has no web UI to check.
+# Run after the install and again after the update. Sets health_problem.
 pattern=$(grep -oE 'https?://\$\{IP\}(:[0-9]+)?(/[A-Za-z0-9._~/?=&%-]*)?' "$tree/$SCRIPT" | head -n1)
-if [[ -n "$pattern" && -n "$ct_ip" ]]; then
-  url="${pattern/\$\{IP\}/$ct_ip}"
+[[ -n "$pattern" && -n "$ct_ip" ]] && url="${pattern/\$\{IP\}/$ct_ip}"
+health_problem=""
+check_health() {
+  health_problem=""
+  failed_units=""
+  if pct exec "$ctid" -- sh -c 'command -v systemctl' &>/dev/null; then
+    sleep 10
+    failed_units=$(pct exec "$ctid" -- systemctl --failed --no-legend --plain 2>/dev/null | awk '{print $1}' | paste -sd, -)
+  elif pct exec "$ctid" -- sh -c 'command -v rc-status' &>/dev/null; then
+    failed_units=$(pct exec "$ctid" -- rc-status --crashed 2>/dev/null | awk '{print $1}' | paste -sd, -)
+  fi
+  [[ -z "$failed_units" ]] || { health_problem="failed services: ${failed_units}"; return 1; }
+  [[ -n "$url" ]] || return 0
+  local waited
   for ((waited = 0; waited < URL_WAIT; waited += 5)); do
     http_code=$(curl -sk -L --max-redirs 5 -o /dev/null -w '%{http_code}' --max-time 10 "$url" || true)
     [[ "$http_code" =~ ^2[0-9][0-9]$ ]] && break
     sleep 5
   done
   # Also when the check fails: an error page explains more than a status code.
-  [[ "$http_code" =~ ^[1-5][0-9][0-9]$ ]] && take_screenshot
-  [[ "$http_code" =~ ^2[0-9][0-9]$ ]] || fail "${url} answered ${http_code/#000/nothing} instead of 200 within ${URL_WAIT}s"
+  [[ "$http_code" =~ ^[1-5][0-9][0-9]$ ]] && take_screenshot "$1"
+  [[ "$http_code" =~ ^2[0-9][0-9]$ ]] ||
+    { health_problem="${url} answered ${http_code/#000/nothing} instead of 200 within ${URL_WAIT}s"; return 1; }
+}
+
+check_health screenshot.png || fail "$health_problem"
+
+# --- Update -------------------------------------------------------------------------
+# A fresh install is already on the latest release, so a plain `update` would
+# only say "No update available" and never run update_script's real path. The
+# version files the install wrote (~/.<app>, one per fetch_and_deploy_gh_release)
+# are set back to 0.0.0-ci first; check_for_gh_release then sees an update and
+# runs it all. `update` is the /usr/bin/update the install generated: it pulls
+# ct/<app>.sh from the URL this container was built from, i.e. the PR's tree.
+UPDATE_FAKE="0.0.0-ci"
+update_fail() {
+  update_status="fail"
+  update_step="$1"
+  fail "update: $1"
+}
+
+version_files=$(pct exec "$ctid" -- sh -c '
+  for f in /root/.*; do
+    [ -f "$f" ] || continue
+    case "$f" in */.install-* | *.pending | *.bak | */.bash* | */.profile | */.hushlogin | */.viminfo | */.lesshst | */.wget-hsts | */.selected_editor) continue ;; esac
+    [ "$(wc -l <"$f")" -le 1 ] && grep -qE "^v?[0-9]+(\.[0-9A-Za-z_+-]+)+$" "$f" && echo "$f"
+  done' 2>/dev/null | grep -E '^/root/\.[A-Za-z0-9._-]+$')
+for f in $version_files; do
+  pct exec "$ctid" -- sh -c "echo '$UPDATE_FAKE' > '$f'; rm -f '$f.pending'" ||
+    update_fail "could not reset $f"
+done
+[[ -n "$version_files" ]] && echo "Update test: set back $(tr '\n' ' ' <<<"$version_files")to ${UPDATE_FAKE}"
+
+: >"$UPDATE_RAW"
+update_token=$(head -c 16 /dev/urandom | od -An -tx1 | tr -d ' \n')
+echo "──────── update test (live) ────────"
+echo "::stop-commands::${update_token}"
+timeout --kill-after=1m "$UPDATE_TIMEOUT" pct exec "$ctid" -- env PHS_SILENT=1 mode=default MODE=default \
+  TERM=dumb DIAGNOSTICS=no var_ignore_breaking_changes=yes ${GH_API_TOKEN:+GITHUB_TOKEN="$GH_API_TOKEN"} update </dev/null \
+  > >(tee "$UPDATE_RAW" | live_filter) 2>&1 &
+update_pid=$!
+wait "$update_pid"
+update_rc=$?
+update_pid=""
+sleep 1
+echo "::${update_token}::"
+
+update_failure_line() {
+  strip_ansi <"$UPDATE_RAW" | grep -E '✖|\[ERROR\]|error:' | tail -n 1 | sed -E 's/^\s*(✖️?|\s)*//' | cut -c1-180
+}
+if ((update_rc == 124 || update_rc == 137)); then
+  update_fail "timed out after ${UPDATE_TIMEOUT}"
+elif ((update_rc != 0)); then
+  last=$(update_failure_line)
+  update_fail "exited ${update_rc}${last:+: $last}"
 fi
+# The engine can report an error and still exit 0 (bark-server: "github: rate
+# limit reached", then "Cleaned"). A rate limit is ours, not the PR's: the
+# update could not be tested. Any other error line is a failed update.
+update_error=$(strip_ansi <"$UPDATE_RAW" | grep -E '✖|\[ERROR\]' | tail -n 1 | sed -E 's/^\s*(✖️?|\s)*//' | cut -c1-180)
+if [[ -n "$update_error" ]]; then
+  if [[ "${update_error,,}" == *"rate limit"* ]]; then
+    update_status="error"
+    update_step="could not be tested: ${update_error}"
+    status="pass"
+    finish
+    exit 0
+  fi
+  update_fail "$update_error"
+fi
+if strip_ansi <"$UPDATE_RAW" | grep -qi 'updated successfully'; then
+  update_status="updated"
+  for f in $version_files; do
+    [[ "$(pct exec "$ctid" -- cat "$f" 2>/dev/null)" != "$UPDATE_FAKE" ]] ||
+      update_fail "reported success, but $f is still ${UPDATE_FAKE}"
+  done
+else
+  # Ran cleanly without updating anything: no version file to fake (apt/npm
+  # based), or an update_script that decides differently. Not a failure.
+  update_status="no-update"
+  update_step=$(strip_ansi <"$UPDATE_RAW" | grep -iE 'no update|up to date|up-to-date|already' | tail -n 1 | sed -E 's/^\s*(✔️?|ℹ️?|\s)*//' | cut -c1-160)
+fi
+
+check_health screenshot-update.png || update_fail "after the update: $health_problem"
 
 status="pass"
 finish

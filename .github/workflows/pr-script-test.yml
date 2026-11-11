@@ -56,7 +56,7 @@ jobs:
   gate:
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'issue_comment' && github.event.issue.pull_request && startsWith(github.event.comment.body, '/test')) ||
+      (github.event_name == 'issue_comment' && startsWith(github.event.comment.body, '/test')) ||
       (github.event_name == 'pull_request_target' && !github.event.pull_request.draft &&
        github.event.pull_request.user.login == 'push-app-to-main[bot]' &&
        github.event.pull_request.head.repo.full_name == github.repository)
@@ -76,6 +76,7 @@ jobs:
       actor: ${{ steps.plan.outputs.actor }}
       not_built: ${{ steps.plan.outputs.not_built }}
       trusted: ${{ steps.plan.outputs.trusted }}
+      kind: ${{ steps.plan.outputs.kind }}
     steps:
       - id: plan
         uses: actions/github-script@v8
@@ -118,14 +119,28 @@ jobs:
               requested = body.split('\n')[0].slice('/test'.length);
             }
 
-            const { data: pr } = await github.rest.pulls.get({ owner, repo, pull_number: prNumber });
-            if (pr.state !== 'open' || !pr.head.repo) { core.notice('PR is closed or its fork is gone'); return; }
-            const head = pr.head.repo;
-            if (context.eventName === 'pull_request_target' && pr.head.sha !== requested) {
-              core.notice('Pushed to again since; the newer push has its own run');
-              return;
+            // `/test <app>` in an issue (not a PR) builds that app from the
+            // default branch as it is right now, e.g. to see whether a reported
+            // error reproduces. No PR, so no check run, no review, no approval.
+            const isIssue = context.eventName === 'issue_comment' && !context.payload.issue.pull_request;
+            let pr = null, head, headSha;
+            if (isIssue) {
+              const { data: info } = await github.rest.repos.get({ owner, repo });
+              const { data: branch } = await github.rest.repos.getBranch({ owner, repo, branch: info.default_branch });
+              headSha = branch.commit.sha;
+              head = { owner: { login: owner }, name: repo, full_name: `${owner}/${repo}` };
+            } else {
+              ({ data: pr } = await github.rest.pulls.get({ owner, repo, pull_number: prNumber }));
+              if (pr.state !== 'open' || !pr.head.repo) { core.notice('PR is closed or its fork is gone'); return; }
+              head = pr.head.repo;
+              headSha = pr.head.sha;
+              if (context.eventName === 'pull_request_target' && headSha !== requested) {
+                core.notice('Pushed to again since; the newer push has its own run');
+                return;
+              }
             }
-            core.setOutput('trusted', isTrusted(pr) ? 'true' : 'false');
+            core.setOutput('kind', isIssue ? 'issue' : 'pr');
+            core.setOutput('trusted', !isIssue && isTrusted(pr) ? 'true' : 'false');
             const MARK = '<!-- pr-script-test -->';
             const sticky = async body => {
               const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number: prNumber });
@@ -149,25 +164,33 @@ jobs:
             //                write access, who could build anything anyway.
             const tokens = requested.split(/\s+/).filter(Boolean);
             const isSha = t => /^[0-9a-f]{7,40}$/.test(t);
-            const approved = tokens.filter(isSha);
-            let entries = tokens.filter(t => !isSha(t));
+            const approved = isIssue ? [] : tokens.filter(isSha);
+            let entries = isIssue ? [] : tokens.filter(t => !isSha(t));
             const refuse = async (why, retry) => {
               await sticky([MARK, '### Proxmox script test', '', `⚠️ ${why} Nothing was built.`, '', retry].join('\n'));
               core.notice(why);
             };
-            if (approved.length > 1) {
+            if (isIssue) {
+              // App names (bark-server) or ct/ paths; the default branch is trusted.
+              entries = tokens.map(t => /^ct\/[A-Za-z0-9._-]+\.sh$/.test(t) ? t
+                : /^[A-Za-z0-9._-]+$/.test(t) ? `ct/${t.replace(/\.sh$/, '')}.sh` : t);
+              if (entries.length === 0) {
+                await refuse('In an issue, `/test` needs to know which app.', 'Comment `/test <app>`, for example `/test bark-server` (the name of its `ct/` script).');
+                return;
+              }
+            } else if (approved.length > 1) {
               await refuse('`/test` takes at most one commit.', 'Comment `/test` to build the latest commit.');
               return;
             }
-            if (approved.length === 1 && approved[0] !== pr.head.sha) {
+            if (approved.length === 1 && approved[0] !== headSha) {
               await refuse(
-                approved[0].length !== 40 && pr.head.sha.startsWith(approved[0])
+                approved[0].length !== 40 && headSha.startsWith(approved[0])
                   ? 'A short SHA is not enough, it has to be all 40 characters.'
                   : `\`${approved[0]}\` is not the head of this PR (any more).`,
                 'Comment `/test` to build the latest commit.');
               return;
             }
-            if (approved.length === 0 && head.full_name !== `${owner}/${repo}`) {
+            if (!isIssue && approved.length === 0 && head.full_name !== `${owner}/${repo}`) {
               const askedAt = context.eventName === 'workflow_dispatch'
                 ? (await github.rest.actions.getWorkflowRun({ owner, repo, run_id: context.runId })).data.created_at
                 : context.payload.comment.created_at;
@@ -180,7 +203,9 @@ jobs:
               }
             }
             if (entries.some(e => !/^ct\/[A-Za-z0-9._-]+\.sh$/.test(e))) {
-              core.setFailed(`Only ct/<name>.sh paths can be requested, got: ${requested}`);
+              await refuse(
+                isIssue ? 'Only app names (as in `ct/<app>.sh`) can be tested.' : 'Only `ct/<name>.sh` paths can be requested.',
+                isIssue ? 'For example: `/test bark-server`' : 'For example: `/test ct/bark-server.sh`, or just `/test`.');
               return;
             }
             // Everything the PR changes that this test cannot build is named in
@@ -205,10 +230,12 @@ jobs:
             for (const script of entries.slice(0, MAX)) {
               let text;
               try {
-                const res = await github.rest.repos.getContent({ owner: head.owner.login, repo: head.name, path: script, ref: pr.head.sha });
+                const res = await github.rest.repos.getContent({ owner: head.owner.login, repo: head.name, path: script, ref: headSha });
                 text = Buffer.from(res.data.content || '', 'base64').toString('utf8');
               } catch (e) {
-                notBuilt.push(`\`${script}\` does not exist in this PR (an \`install/\` script is built through the \`ct/\` script of the same name)`);
+                notBuilt.push(isIssue
+                  ? `\`${script}\` does not exist on the default branch`
+                  : `\`${script}\` does not exist in this PR (an \`install/\` script is built through the \`ct/\` script of the same name)`);
                 continue;
               }
               // Scripts that ask for the OS get built once per OS.
@@ -220,7 +247,9 @@ jobs:
             if (include.length === 0) {
               await sticky([
                 MARK, '### Proxmox script test', '',
-                'ℹ️ Nothing to build: this test builds `ct/` scripts (and changed `install/` scripts through their `ct/` script).', '',
+                isIssue
+                  ? 'ℹ️ Nothing to build:'
+                  : 'ℹ️ Nothing to build: this test builds `ct/` scripts (and changed `install/` scripts through their `ct/` script).', '',
                 ...(notBuilt.length ? notBuilt.map(n => `- ${n}`) : ['- this PR changes no `ct/` or `install/` script']),
               ].join('\n'));
               core.notice('No ct/ script to build');
@@ -228,24 +257,29 @@ jobs:
             }
 
             const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
-            const { data: check } = await github.rest.checks.create({
-              owner, repo, name: 'Proxmox script test', head_sha: pr.head.sha, status: 'in_progress',
-              details_url: runUrl,
-              output: { title: `Building ${include.length} on Proxmox`, summary: include.map(i => `- \`${i.script}\` ${i.os}`).join('\n') },
-            });
+            // A check run belongs to a PR's commit; an issue has none.
+            let checkId = '';
+            if (!isIssue) {
+              const { data: check } = await github.rest.checks.create({
+                owner, repo, name: 'Proxmox script test', head_sha: headSha, status: 'in_progress',
+                details_url: runUrl,
+                output: { title: `Building ${include.length} on Proxmox`, summary: include.map(i => `- \`${i.script}\` ${i.os}`).join('\n') },
+              });
+              checkId = String(check.id);
+            }
 
             core.setOutput('matrix', JSON.stringify(include));
             core.setOutput('pr', String(prNumber));
             core.setOutput('repo', head.full_name);
-            core.setOutput('sha', pr.head.sha);
-            core.setOutput('check_id', String(check.id));
+            core.setOutput('sha', headSha);
+            core.setOutput('check_id', checkId);
             core.setOutput('not_built', JSON.stringify(notBuilt));
             // Who asked: the /test commenter, or whoever dispatched the run.
             core.setOutput('actor', context.actor);
 
             await sticky([
               MARK, '### Proxmox script test', '',
-              `⏳ Building ${include.length} at ${pr.head.sha.slice(0, 7)} — [watch it live](${runUrl}) (open the \`test\` job)`, '',
+              `⏳ Building ${include.length} at ${headSha.slice(0, 7)}${isIssue ? ' (default branch)' : ''} — [watch it live](${runUrl}) (open the \`test\` job)`, '',
               ...include.map(i => `- \`${i.script}\`${i.os ? ` (${i.os})` : ''}`),
               ...(notBuilt.length ? ['', '**Not built:**', ...notBuilt.map(n => `- ${n}`)] : []),
             ].join('\n'));
@@ -258,7 +292,7 @@ jobs:
     runs-on: proxmox-test
     permissions:
       contents: read
-    timeout-minutes: 90
+    timeout-minutes: 90 # install (45) + update (30) + checks
     strategy:
       fail-fast: false
       matrix:
@@ -279,6 +313,10 @@ jobs:
           OS: ${{ matrix.os }}
           UPSTREAM: ${{ github.repository }}
           CTID_BASE: ${{ github.repository == 'community-scripts/ProxmoxVE' && '9050' || '9000' }}
+          # Only so release lookups are not rate limited: unauthenticated, all
+          # test containers share the lab's one public IP and 60 calls an hour.
+          # This job's token can read public contents and expires with the job.
+          GH_API_TOKEN: ${{ github.token }}
           OUT_DIR: ${{ runner.temp }}/result
         run: bash .github/workflows/scripts/pve-run-script.sh
 
@@ -316,6 +354,7 @@ jobs:
           ACTOR: ${{ needs.gate.outputs.actor }}
           NOT_BUILT: ${{ needs.gate.outputs.not_built }}
           TRUSTED: ${{ needs.gate.outputs.trusted }}
+          KIND: ${{ needs.gate.outputs.kind }}
         with:
           script: |
             const fs = require('fs');
@@ -343,6 +382,14 @@ jobs:
                     r.install_log = fs.existsSync(log) ? fs.readFileSync(log, 'utf8') : '';
                     const shot = path.join(dir, 'screenshot.png');
                     r.shot_file = fs.existsSync(shot) ? shot : '';
+                    if (!['updated', 'no-update', 'fail', 'error', ''].includes(r.update_status || '')) r.update_status = '';
+                    // Installed fine, but the update could not be tested (e.g. a
+                    // GitHub rate limit): not a pass, and not the PR's fault.
+                    if (r.status === 'pass' && r.update_status === 'error') { r.status = 'error'; r.step = `update ${r.update_step}`; }
+                    const ulog = path.join(dir, 'update.log');
+                    r.update_log = fs.existsSync(ulog) ? fs.readFileSync(ulog, 'utf8') : '';
+                    const ushot = path.join(dir, 'screenshot-update.png');
+                    r.shot_update_file = fs.existsSync(ushot) ? ushot : '';
                     found.set(`${r.script}|${r.os}`, r);
                   } catch (err) { core.warning(`unreadable ${p}: ${err.message}`); }
                 }
@@ -355,6 +402,7 @@ jobs:
               script: m.script, os: m.os || 'default',
               status: process.env.TEST_RESULT === 'cancelled' ? 'cancelled' : 'error',
               step: 'no result (runner or job failure)', duration: 0, log_tail: '', install_log: '', shot_file: '',
+              update_status: '', update_log: '', shot_update_file: '',
             }), name: m.name }));
 
             // Screenshots go to an orphan branch, because a comment can only show
@@ -374,11 +422,11 @@ jobs:
               const { data: commit } = await github.rest.git.createCommit({ owner, repo, message: 'Start ci-screenshots', tree: tree.sha, parents: [] });
               await github.rest.git.createRef({ owner, repo, ref: `refs/heads/${BRANCH}`, sha: commit.sha });
             };
-            for (const r of rows.filter(r => r.shot_file)) {
-              const buf = fs.readFileSync(r.shot_file);
-              if (!isPng(buf)) { core.warning(`${r.script}: screenshot is not a plausible PNG, skipped`); continue; }
-              const file = `pr-${prNum}/${r.name}.png`;
-              for (let attempt = 1; attempt <= 3 && !r.shot_url; attempt++) {
+            const uploadShot = async (r, local, suffix) => {
+              const buf = fs.readFileSync(local);
+              if (!isPng(buf)) { core.warning(`${r.script}: screenshot is not a plausible PNG, skipped`); return ''; }
+              const file = `${process.env.KIND === 'issue' ? 'issue' : 'pr'}-${prNum}/${r.name}${suffix}.png`;
+              for (let attempt = 1; attempt <= 3; attempt++) {
                 try {
                   await ensureBranch();
                   let sha;
@@ -386,15 +434,20 @@ jobs:
                   catch (e) { if (e.status !== 404) throw e; }
                   const { data } = await github.rest.repos.createOrUpdateFileContents({
                     owner, repo, branch: BRANCH, path: file, sha, content: buf.toString('base64'),
-                    message: `Screenshot: ${r.script} (${r.os}) for #${prNum} at ${process.env.SHA.slice(0, 7)}`,
+                    message: `Screenshot: ${r.script} (${r.os})${suffix} for #${prNum} at ${process.env.SHA.slice(0, 7)}`,
                   });
-                  r.shot_url = `https://raw.githubusercontent.com/${owner}/${repo}/${data.commit.sha}/${file}`;
+                  return `https://raw.githubusercontent.com/${owner}/${repo}/${data.commit.sha}/${file}`;
                 } catch (e) {
                   // Two reports at once race on the branch head; try again.
                   core.warning(`${r.script}: screenshot upload attempt ${attempt} failed: ${e.message}`);
                   await new Promise(res => setTimeout(res, 2000 * attempt));
                 }
               }
+              return '';
+            };
+            for (const r of rows) {
+              if (r.shot_file) r.shot_url = await uploadShot(r, r.shot_file, '');
+              if (r.shot_update_file) r.shot_update_url = await uploadShot(r, r.shot_update_file, '-after-update');
             }
 
             // unsupported: the script needs a CPU feature the test host lacks
@@ -424,10 +477,18 @@ jobs:
                   ? `🖥️ ${of}, ${untestable} need${untestable === 1 ? 's' : ''} a newer CPU than the test host has (nothing failed)`
                   : `✅ ${of}`;
 
+            // Update: the installed app is set back a version and updated with
+            // the PR's update_script. ➖ = it ran but had nothing to update.
+            const updateIcon = { updated: '✅', 'no-update': '➖', fail: '❌', error: '⚠️' };
+            const detail = r => {
+              if (r.status !== 'pass') return clean(r.step);
+              const reach = r.url ? `${clean(r.url)} → ${r.http_code}` : 'no URL to check';
+              return r.update_status === 'no-update' ? `${reach}; update: nothing to update${r.update_step ? ` (${clean(r.update_step)})` : ''}` : reach;
+            };
             const table = [
-              '| Script | OS | Result | Duration | Detail |',
-              '|---|---|---|---|---|',
-              ...rows.map(r => `| \`${r.script}\` | ${r.os} | ${icon[r.status] || '❔'} | ${dur(r.duration || 0)} | ${r.status === 'pass' ? (r.url ? `${clean(r.url)} → ${r.http_code}` : 'no URL to check') : clean(r.step)} |`),
+              '| Script | OS | Install | Update | Duration | Detail |',
+              '|---|---|---|---|---|---|',
+              ...rows.map(r => `| \`${r.script}\` | ${r.os} | ${r.update_status ? '✅' : icon[r.status] || '❔'} | ${updateIcon[r.update_status] || '–'} | ${dur(r.duration || 0)} | ${detail(r)} |`),
             ].join('\n');
 
             // A comment holds 65536 characters. Each script gets an equal share
@@ -451,18 +512,26 @@ jobs:
               const failed = r.status !== 'pass';
               const buildShare = failed && r.log_tail ? Math.min(r.log_tail.length, Math.floor(budget / 3)) : 0;
               if (buildShare) parts.push(details(`${icon[r.status] || '❔'} ${r.script} (${r.os}) — build log`, r.log_tail, buildShare));
+              // The update log gets up to a third of what is left, the install log the rest.
+              const updateShare = r.update_log ? Math.min(r.update_log.length, Math.floor((budget - buildShare) / 3)) : 0;
               if (r.install_log) {
                 const lines = r.install_log.trimEnd().split('\n').length;
-                parts.push(details(`📄 ${r.script} (${r.os}) — install log (${lines} lines)`, r.install_log, budget - buildShare - 300));
+                parts.push(details(`📄 ${r.script} (${r.os}) — install log (${lines} lines)`, r.install_log, budget - buildShare - updateShare - 400));
               } else if (!buildShare) {
                 parts.push(`<sub>${r.script} (${r.os}): no install log was captured</sub>`);
+              }
+              if (updateShare) {
+                const lines = r.update_log.trimEnd().split('\n').length;
+                parts.push(details(`🔄 ${r.script} (${r.os}) — update log (${lines} lines)`, r.update_log, updateShare));
               }
               return parts.join('\n\n');
             });
 
-            const shots = rows.filter(r => r.shot_url).map(r => [
-              `<details open><summary>📸 ${r.script} (${r.os}) — ${clean(r.url)}</summary>`, '',
-              `<img src="${r.shot_url}" width="640" alt="Screenshot of ${r.script}">`, '', '</details>',
+            const shots = rows.filter(r => r.shot_url || r.shot_update_url).map(r => [
+              `<details open><summary>📸 ${r.script} (${r.os}) — ${clean(r.url)}${r.shot_url && r.shot_update_url ? ': after install / after update' : r.shot_update_url ? ': after update' : ''}</summary>`, '',
+              [r.shot_url, r.shot_update_url].filter(Boolean)
+                .map((u, i, all) => `<img src="${u}" width="${all.length > 1 ? 420 : 640}" alt="Screenshot of ${r.script}">`).join(' '),
+              '', '</details>',
             ].join('\n'));
 
             const summary = [
@@ -471,16 +540,19 @@ jobs:
               ...shots, '',
               ...(() => { try { const n = JSON.parse(process.env.NOT_BUILT || '[]'); return n.length ? ['**Not built:**', ...n.map(x => `- ${x}`), ''] : []; } catch (e) { return []; } })(),
               ...logs, '',
-              `Full logs: [workflow run](${runUrl}) (artifacts \`result-*\`). Comment \`/test\` to build again.`,
+              `Full logs: [workflow run](${runUrl}) (artifacts \`result-*\`). Comment \`/test${process.env.KIND === 'issue' ? ' ' + [...new Set(rows.map(r => r.script.slice(3, -3)))].join(' ') : ''}\` to build again.`,
             ].join('\n');
 
-            await github.rest.checks.update({
-              owner, repo, check_run_id: Number(process.env.CHECK_ID), status: 'completed',
-              // Untestable here is "test it by hand", not a pass: action_required,
-              // because a required check would count neutral as passed.
-              conclusion: cancelled ? 'cancelled' : allPass ? 'success' : broken ? 'failure' : 'action_required',
-              output: { title: `${passed}/${rows.length} passed`, summary: summary.slice(0, 65000) },
-            });
+            // Issues have no check run (there is no PR commit to attach it to).
+            if (process.env.CHECK_ID) {
+              await github.rest.checks.update({
+                owner, repo, check_run_id: Number(process.env.CHECK_ID), status: 'completed',
+                // Untestable here is "test it by hand", not a pass: action_required,
+                // because a required check would count neutral as passed.
+                conclusion: cancelled ? 'cancelled' : allPass ? 'success' : broken ? 'failure' : 'action_required',
+                output: { title: `${passed}/${rows.length} passed`, summary: summary.slice(0, 65000) },
+              });
+            }
 
             // The result pings whoever started the test. A mention added by
             // editing a comment does not reliably notify, so the old comment
@@ -488,7 +560,10 @@ jobs:
             // thread where it is looked for.
             // Whoever started the test and the PR's author, once each; no bots.
             const pr = Number(process.env.PR);
-            const { data: prInfo } = await github.rest.pulls.get({ owner, repo, pull_number: pr });
+            const isIssue = process.env.KIND === 'issue';
+            const { data: prInfo } = isIssue
+              ? await github.rest.issues.get({ owner, repo, issue_number: pr })
+              : await github.rest.pulls.get({ owner, repo, pull_number: pr });
             const author = prInfo.user && prInfo.user.type === 'User' ? prInfo.user.login : '';
             const login = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/;
             const ping = [...new Set([process.env.ACTOR || '', author])].filter(l => login.test(l)).map(l => `@${l} `).join('');
@@ -499,6 +574,8 @@ jobs:
               await github.rest.issues.deleteComment({ owner, repo, comment_id: c.id });
             }
             const { data: posted } = await github.rest.issues.createComment({ owner, repo, issue_number: pr, body });
+            // An issue has nothing to review or approve: the comment is all.
+            if (isIssue) return;
 
             // A real failure requests changes on the tested commit. Untestable
             // (CPU), runner errors and cancelled runs are not the PR's fault and
