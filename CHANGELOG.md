@@ -585,13 +585,22 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - TrueNas: Fixing isolookup and dialog [@juronja](https://github.com/juronja) ([#18578](https://github.com/community-scripts/ProxmoxVE/pull/18578))
+
   - #### ✨ New Features
 
+    - Immich: bump to 3.4.1 [@MickLesk](https://github.com/MickLesk) ([#18619](https://github.com/community-scripts/ProxmoxVE/pull/18619))
     - Immich: bump to 3.4.0 [@MickLesk](https://github.com/MickLesk) ([#18600](https://github.com/community-scripts/ProxmoxVE/pull/18600))
 
   - #### 💥 Breaking Changes
 
     - Pocketbase: install and update from the new host (removed in github) [@MickLesk](https://github.com/MickLesk) ([#18609](https://github.com/community-scripts/ProxmoxVE/pull/18609))
+
+  - #### 🔧 Refactor
+
+    - Paperless-AI: install and update to 4.0 [@MickLesk](https://github.com/MickLesk) ([#18620](https://github.com/community-scripts/ProxmoxVE/pull/18620))
 
 ### 💾 Core
 
