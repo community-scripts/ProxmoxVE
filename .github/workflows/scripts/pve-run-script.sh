@@ -44,6 +44,10 @@ URL_WAIT="${URL_WAIT:-120}"
 [[ "$SCRIPT" =~ ^(ct|vm)/[A-Za-z0-9._-]+\.sh$ ]] || { echo "bad SCRIPT" >&2; exit 2; }
 [[ -z "$OS" || "$OS" =~ ^(debian|ubuntu|alpine)$ ]] || { echo "bad OS" >&2; exit 2; }
 [[ "$PLATFORM" =~ ^(pve|incus)$ ]] || { echo "bad PLATFORM" >&2; exit 2; }
+# yes: build with var_arm64=yes. On arm64 the engine refuses to guess for a
+# script that leaves var_arm64 unset; the ARM run builds those anyway, to see.
+VAR_ARM64="${VAR_ARM64:-}"
+[[ -z "$VAR_ARM64" || "$VAR_ARM64" == "yes" ]] || { echo "bad VAR_ARM64" >&2; exit 2; }
 [[ "$PLATFORM" == "pve" || "$SCRIPT" == ct/* ]] || { echo "vm/ scripts run on pve only" >&2; exit 2; }
 [[ "$CTID_BASE" =~ ^[0-9]+$ ]] || { echo "bad CTID_BASE" >&2; exit 2; }
 
@@ -168,11 +172,11 @@ finish() {
     --arg script "$SCRIPT" --arg kind "$kind" --arg platform "$PLATFORM" --arg os "${OS:-default}" --arg status "$status" \
     --arg step "$step" --arg exit_code "$exit_code" --arg sha "$PR_SHA" \
     --arg ctid "$ctid" --arg url "$url" --arg http_code "$http_code" \
-    --arg failed_units "$failed_units" --arg ip "$ct_ip" \
+    --arg failed_units "$failed_units" --arg ip "$ct_ip" --arg arch "$(uname -m)" \
     --arg update_status "$update_status" --arg update_step "$update_step" \
     --argjson duration "$(($(date +%s) - started))" \
     --arg tail "$([[ -f "$LOG" ]] && tail -n 60 "$LOG")" \
-    '{script: $script, kind: $kind, platform: $platform, os: $os, status: $status, step: $step, exit_code: $exit_code,
+    '{script: $script, kind: $kind, platform: $platform, arch: $arch, os: $os, status: $status, step: $step, exit_code: $exit_code,
       sha: $sha, ctid: $ctid, ip: $ip, url: $url, http_code: $http_code,
       failed_units: $failed_units, update_status: $update_status, update_step: $update_step,
       duration: $duration, log_tail: $tail}' >"$RESULT"
@@ -353,6 +357,7 @@ else
 fi
 touch "$RAW_LOG.start"
 [[ -n "$OS" ]] && build_env+=(var_os="$OS")
+[[ -n "$VAR_ARM64" ]] && build_env+=(var_arm64=yes)
 # Both engines turn var_github_token into GITHUB_TOKEN inside the container.
 [[ -n "${GH_API_TOKEN:-}" ]] && build_env+=(var_github_token="$GH_API_TOKEN")
 
@@ -500,7 +505,9 @@ take_screenshot() {
   local dir
   dir=$(mktemp -d)
   chown ci-shot "$dir"
-  runuser -u ci-shot -- timeout 60 chromium --headless=new --disable-gpu --hide-scrollbars \
+  # HOME: runuser keeps root's, which ci-shot cannot write; Playwright's
+  # Chromium (the ARM runner) then crashes in its crash handler.
+  runuser -u ci-shot -- env HOME="$dir" timeout 60 chromium --headless=new --disable-gpu --hide-scrollbars \
     --ignore-certificate-errors --no-first-run --window-size=1280,800 --virtual-time-budget=10000 \
     --user-data-dir="$dir/profile" --screenshot="$dir/shot.png" "$url" &>/dev/null
   # Only a plausible PNG leaves this function.
@@ -547,7 +554,7 @@ check_health screenshot.png || fail "$health_problem"
 # A fresh install is already on the latest release, so a plain `update` would
 # only say "No update available" and never run update_script's real path. The
 # version files the install wrote (~/.<app>, one per fetch_and_deploy_gh_release)
-# are set back to 0.0.0-ci first; check_for_gh_release then sees an update and
+# that update_script checks are set back to 0.0.0-ci first; check_for_gh_release then sees an update and
 # runs it all. `update` is the /usr/bin/update the install generated: it pulls
 # ct/<app>.sh from the URL this container was built from, i.e. the PR's tree.
 UPDATE_FAKE="0.0.0-ci"
@@ -563,6 +570,15 @@ version_files=$(guest_exec sh -c '
     case "$f" in */.install-* | *.pending | *.bak | */.bash* | */.profile | */.hushlogin | */.viminfo | */.lesshst | */.wget-hsts | */.selected_editor) continue ;; esac
     [ "$(wc -l <"$f")" -le 1 ] && grep -qE "^v?[0-9]+(\.[0-9A-Za-z_+-]+)+$" "$f" && echo "$f"
   done' 2>/dev/null | grep -E '^/root/\.[A-Za-z0-9._-]+$')
+# Only set back what update_script checks: the names it passes to
+# check_for_*release. The install can also deploy helpers the update never
+# touches (immich: ~/.mise); those would stay 0.0.0-ci and fail the run. A
+# name that is a variable can't be read here, so then all of them are set back.
+tracked=$(grep -oE 'check_for_[a-z]*_?release[[:space:]]+("[^"]*"|[^[:space:]]+)' "$tree/$SCRIPT" |
+  sed -E 's/^check_for_[a-z]*_?release[[:space:]]+//; s/^"(.*)"$/\1/' | tr -d ' ' | tr '[:upper:]' '[:lower:]' | sort -u)
+if [[ -n "$tracked" && "$tracked" != *'$'* ]]; then
+  version_files=$(grep -xF -f <(sed 's|^|/root/.|' <<<"$tracked") <<<"$version_files" || true)
+fi
 for f in $version_files; do
   guest_exec sh -c "echo '$UPDATE_FAKE' > '$f'; rm -f '$f.pending'" ||
     update_fail "could not reset $f"

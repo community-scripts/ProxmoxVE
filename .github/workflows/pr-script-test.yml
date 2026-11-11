@@ -17,7 +17,8 @@ name: PR script test
 #
 #   gate    ubuntu-latest   who asked, which scripts, which commit
 #   test    proxmox-test /  build + checks, one matrix job per script, platform
-#           incus-test      (pve or incus) and OS
+#           incus-test /    (pve, incus, arm) and OS; arm runs on GitHub's
+#           ubuntu-24.04-arm arm64 runner and is information only
 #   report  ubuntu-latest   check run + PR comment
 #
 # The test job gets a read-only token and never sees a secret: the host it runs
@@ -258,10 +259,15 @@ jobs:
               const name = isVm ? `vm-${script.slice(3, -3)}` : script.slice(3, -3);
               // Every ct/ script on every platform: the same files run on Proxmox
               // and, through community-scripts/core's Incus backend, on Incus.
-              // VMs are Proxmox only.
-              const platforms = isVm ? ['pve'] : ['pve', 'incus'];
+              // VMs are Proxmox only. ARM (Incus on GitHub's arm64 runner) is
+              // information only and never decides the result; a script that
+              // says var_arm64=no is not built there. Unset is built with
+              // var_arm64=yes, to see whether it would work.
+              const arm = (text.match(/^[ \t]*var_arm64="\$\{var_arm64:-(yes|no)\}"/m) || [])[1] || 'unset';
+              const platforms = isVm ? ['pve'] : arm === 'no' ? ['pve', 'incus'] : ['pve', 'incus', 'arm'];
+              if (!isVm && arm === 'no') notBuilt.push(`${code(script)} on ARM64: the script sets \`var_arm64=no\``);
               for (const platform of platforms) {
-                for (const os of oses) include.push({ script, os, platform, name: `${os ? `${name}-${os}` : name}-${platform}` });
+                for (const os of oses) include.push({ script, os, platform, arm64: platform === 'arm' ? arm : '', name: `${os ? `${name}-${os}` : name}-${platform}` });
               }
             }
             for (const script of entries.slice(MAX)) notBuilt.push(`\`${script}\`: at most ${MAX} scripts per run, name it with \`/test ${script}\``);
@@ -308,9 +314,15 @@ jobs:
   test:
     needs: gate
     if: needs.gate.outputs.matrix != '[]' && needs.gate.outputs.matrix != ''
-    # Only `proxmox-test`, never `self-hosted`: the runner is registered without
-    # default labels so that no other workflow can be scheduled onto it.
-    runs-on: ${{ matrix.platform == 'incus' && 'incus-test' || 'proxmox-test' }}
+    # Only `proxmox-test` / `incus-test`, never `self-hosted`: the runners are
+    # registered without default labels so that no other workflow can be
+    # scheduled onto them. ARM runs on GitHub's own arm64 runner, a fresh VM
+    # per job (free for public repositories).
+    runs-on: ${{ matrix.platform == 'arm' && 'ubuntu-24.04-arm' || matrix.platform == 'incus' && 'incus-test' || 'proxmox-test' }}
+    # ARM is information only: a failed or missing ARM job (no runner, no
+    # minutes left, ...) never turns the run red. The report leaves it out of
+    # the result as well.
+    continue-on-error: ${{ matrix.platform == 'arm' }}
     permissions:
       contents: read
     timeout-minutes: 90 # install (45) + update (30) + checks
@@ -326,13 +338,21 @@ jobs:
           sparse-checkout: .github/workflows/scripts
           persist-credentials: false
 
+      # The arm64 runner is a plain Ubuntu VM: Incus and the screenshot
+      # browser are set up on it for this one job.
+      - name: Set up the ARM runner
+        if: matrix.platform == 'arm'
+        run: sudo bash .github/workflows/scripts/arm-runner-setup.sh
+
       - name: Build and check ${{ matrix.script }}
         env:
           PR_REPO: ${{ needs.gate.outputs.repo }}
           PR_SHA: ${{ needs.gate.outputs.sha }}
           SCRIPT: ${{ matrix.script }}
           OS: ${{ matrix.os }}
-          PLATFORM: ${{ matrix.platform }}
+          # ARM is the Incus harness on another machine.
+          PLATFORM: ${{ matrix.platform == 'arm' && 'incus' || matrix.platform }}
+          VAR_ARM64: ${{ matrix.platform == 'arm' && 'yes' || '' }}
           UPSTREAM: ${{ github.repository }}
           CTID_BASE: ${{ github.repository == 'community-scripts/ProxmoxVE' && '9050' || '9000' }}
           # Only so release lookups are not rate limited: unauthenticated, all
@@ -340,7 +360,14 @@ jobs:
           # This job's token can read public contents and expires with the job.
           GH_API_TOKEN: ${{ github.token }}
           OUT_DIR: ${{ runner.temp }}/result
-        run: bash .github/workflows/scripts/pve-run-script.sh
+        # The self-hosted runners run as root; the GitHub one needs sudo (pct
+        # and incus do).
+        run: >-
+          ${{ matrix.platform == 'arm' && 'sudo --preserve-env=PR_REPO,PR_SHA,SCRIPT,OS,PLATFORM,VAR_ARM64,UPSTREAM,CTID_BASE,GH_API_TOKEN,OUT_DIR,GITHUB_RUN_ID,GITHUB_RUN_ATTEMPT' || '' }}
+          bash .github/workflows/scripts/pve-run-script.sh
+
+      - if: always() && matrix.platform == 'arm'
+        run: sudo chmod -R a+rX "$RUNNER_TEMP/result" 2>/dev/null || true
 
       - if: always()
         uses: actions/upload-artifact@v4
@@ -412,9 +439,11 @@ jobs:
                     r.update_log = fs.existsSync(ulog) ? fs.readFileSync(ulog, 'utf8') : '';
                     const ushot = path.join(dir, 'screenshot-update.png');
                     r.shot_update_file = fs.existsSync(ushot) ? ushot : '';
-                    // Only the two platforms this workflow knows; an unknown one would
-                    // never match a matrix row anyway.
-                    if (!['pve', 'incus'].includes(r.platform)) r.platform = 'pve';
+                    // ARM runs the Incus harness on an arm64 machine; result.json
+                    // says so in arch. Only the platforms this workflow knows: an
+                    // unknown one would never match a matrix row anyway.
+                    if (r.arch === 'aarch64') r.platform = 'arm';
+                    else if (!['pve', 'incus'].includes(r.platform)) r.platform = 'pve';
                     found.set(`${r.script}|${r.platform}|${r.os}`, r);
                   } catch (err) { core.warning(`unreadable ${p}: ${err.message}`); }
                 }
@@ -429,9 +458,18 @@ jobs:
               step: 'no result (runner or job failure)', duration: 0, log_tail: '', install_log: '', shot_file: '',
               update_status: '', update_log: '', shot_update_file: '',
             }), name: m.name }));
-            // Where a row ran: "pve", "incus · alpine", or "VM" (Proxmox only).
+            // Where a row ran: "pve", "incus · alpine", "arm64", or "VM" (Proxmox only).
             const isVm = r => r.script.startsWith('vm/');
-            const where = r => isVm(r) ? 'VM' : r.os && r.os !== 'default' ? `${r.platform} · ${r.os}` : r.platform;
+            const isArm = r => r.platform === 'arm';
+            const where = r => {
+              if (isVm(r)) return 'VM';
+              const p = isArm(r) ? 'arm64' : r.platform;
+              return r.os && r.os !== 'default' ? `${p} · ${r.os}` : p;
+            };
+            // ARM is information only: shown, never counted. The result, the
+            // check, the review and the approval come from Proxmox and Incus.
+            const coreRows = rows.filter(r => !isArm(r));
+            const armRows = rows.filter(isArm);
 
             // Screenshots go to an orphan branch, because a comment can only show
             // an image that has a URL. One file per PR and script, overwritten on
@@ -489,14 +527,18 @@ jobs:
 
             // fail: the app broke, the PR's business. error/cancelled: our test
             // setup did, not the PR's. unsupported: the host's CPU is too old.
-            const count = s => rows.filter(r => r.status === s).length;
+            const count = s => coreRows.filter(r => r.status === s).length;
             const passed = count('pass');
             const untestable = count('unsupported');
             const broken = count('fail');
             const setupTrouble = count('error') + count('cancelled');
-            const allPass = passed === rows.length;
-            const cancelled = rows.every(r => r.status === 'cancelled');
-            const of = `**${passed}/${rows.length} passed**`;
+            const allPass = passed === coreRows.length;
+            const cancelled = coreRows.every(r => r.status === 'cancelled');
+            const of = `**${passed}/${coreRows.length} passed**`;
+            const armPassed = armRows.filter(r => r.status === 'pass').length;
+            const armLine = armRows.length
+              ? `ARM64 (information only, not counted): ${armPassed}/${armRows.length} passed${armPassed < armRows.length ? `; failures there do not block this PR` : ''}.`
+              : '';
             const headline = broken
               ? `❌ ${of}`
               : setupTrouble
@@ -569,6 +611,7 @@ jobs:
             const summary = [
               `${headline} at \`${process.env.SHA.slice(0, 7)}\``, '',
               table, '',
+              ...(armLine ? [`<sub>${armLine}</sub>`, ''] : []),
               ...shots, '',
               ...(() => { try { const n = JSON.parse(process.env.NOT_BUILT || '[]'); return n.length ? ['**Not built:**', ...n.map(x => `- ${x}`), ''] : []; } catch (e) { return []; } })(),
               ...logs, '',
@@ -582,7 +625,7 @@ jobs:
                 // Untestable here is "test it by hand", not a pass: action_required,
                 // because a required check would count neutral as passed.
                 conclusion: cancelled ? 'cancelled' : allPass ? 'success' : broken ? 'failure' : 'action_required',
-                output: { title: `${passed}/${rows.length} passed`, summary: summary.slice(0, 65000) },
+                output: { title: `${passed}/${coreRows.length} passed${armRows.length ? ` (+ ARM ${armPassed}/${armRows.length}, not counted)` : ''}`, summary: summary.slice(0, 65000) },
               });
             }
 
@@ -614,7 +657,7 @@ jobs:
             // leave the review state alone. Our previous "changes requested" is
             // always dismissed first: a pass lifts it, a new failure replaces it.
             const REVIEW_MARK = '<!-- pr-script-test-review -->';
-            const failedRows = cancelled ? [] : rows.filter(r => r.status === 'fail');
+            const failedRows = cancelled ? [] : coreRows.filter(r => r.status === 'fail');
             const sha7 = process.env.SHA.slice(0, 7);
             // Trusted PRs (scripts moving over from DevScripts) are approved when
             // every script passes -- not on untestable or setup trouble, which
