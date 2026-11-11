@@ -23,7 +23,7 @@ if [[ "$(arch_resolve)" == "amd64" ]] && ! grep -qm1 sse4_2 /proc/cpuinfo; then
   exit 236
 fi
 
-RELEASE="v3.3.6"
+RELEASE="v3.4.0"
 if lscpu | grep -q 'GenuineIntel'; then
   echo ""
   echo ""
@@ -68,6 +68,7 @@ msg_info "Installing dependencies"
 $STD apt install --no-install-recommends -y \
   git \
   redis \
+  pigz \
   autoconf \
   build-essential \
   python3-dev \
@@ -415,7 +416,7 @@ cp -a web/build "$APP_DIR"/www
 cp LICENSE "$APP_DIR"
 cd "$SRC_DIR"
 export MISE_TRUSTED_CONFIG_PATHS="$SRC_DIR"/mise.toml
-export MISE_DISABLE_TOOLS=github:jellyfin/jellyfin-ffmpeg,java,terragrunt,opentofu,npm:@openapitools/openapi-generator-cli
+export MISE_DISABLE_TOOLS=github:jellyfin/jellyfin-ffmpeg,java,terragrunt,opentofu,restic,npm:@openapitools/openapi-generator-cli
 export MISE_LOCKFILE_MODE=merge MISE_LOCKFILE_PLATFORMS="linux-$(arch_resolve x64 arm64)"
 mise_ok=0
 for i in 1 2 3; do
@@ -433,7 +434,8 @@ if ! command -v extism-js >/dev/null 2>&1; then
   # fetch_and_deploy_gh_release cannot deploy (singlefile leaves it compressed,
   # prebuild only handles zip/tar). Fetch + gunzip it directly.
   EXTISM_ARCH="$(arch_resolve x86_64 aarch64)"
-  curl_download /tmp/extism-js.gz "https://github.com/extism/js-pdk/releases/download/v1.6.0/extism-js-${EXTISM_ARCH}-linux-v1.6.0.gz"
+  EXTISM_VERSION="$(grep -oP '"github:extism/js-pdk"\s*=\s*"\K[^"]+' "$SRC_DIR"/mise.toml)"
+  curl_download /tmp/extism-js.gz "https://github.com/extism/js-pdk/releases/download/${EXTISM_VERSION}/extism-js-${EXTISM_ARCH}-linux-${EXTISM_VERSION}.gz"
   gunzip -f /tmp/extism-js.gz
   install -m 0755 /tmp/extism-js /usr/local/bin/extism-js
   rm -f /tmp/extism-js
@@ -444,6 +446,25 @@ mkdir -p "$PLUGIN_DIR"
 cp -r ./packages/plugin-core/dist "$PLUGIN_DIR"/dist
 cp ./packages/plugin-core/manifest.json "$PLUGIN_DIR"
 msg_ok "Installed Immich Server, Web and Plugin Components"
+
+RESTIC_REF="$(grep -oP 'futo-org/restic:sha-\K[0-9a-f]+' "$SRC_DIR"/server/Dockerfile)"
+RESTIC_PROXY_REF="$(grep -oP 'futo-org/backups/restic-proxy:\K[^@]+' "$SRC_DIR"/server/Dockerfile)"
+FUTO_DIR=/opt/staging/futo
+rm -rf "$FUTO_DIR"
+$STD git clone --filter=blob:none --no-checkout https://github.com/futo-org/restic "$FUTO_DIR"/restic
+$STD git -C "$FUTO_DIR"/restic checkout "$RESTIC_REF"
+$STD git clone --depth 1 --filter=blob:none --sparse -b "$RESTIC_PROXY_REF" https://github.com/futo-org/backups "$FUTO_DIR"/backups
+$STD git -C "$FUTO_DIR"/backups sparse-checkout set packages/restic-proxy
+GO_VERSION="$(awk '/^go /{print $2}' "$FUTO_DIR"/backups/packages/restic-proxy/go.mod)" setup_go
+msg_info "Building restic for FUTO Backups"
+cd "$FUTO_DIR"/restic
+$STD env CGO_ENABLED=0 go build -o /usr/local/bin/restic ./cmd/restic
+cd "$FUTO_DIR"/backups/packages/restic-proxy
+$STD env CGO_ENABLED=0 go build -o /usr/local/bin/restic-proxy .
+cd "$SRC_DIR"
+rm -rf "$FUTO_DIR"
+echo "${RESTIC_REF} ${RESTIC_PROXY_REF}" >~/.immich_restic
+msg_ok "Built restic for FUTO Backups"
 
 cd "$SRC_DIR"/machine-learning
 $STD useradd -U -s /usr/sbin/nologin -r -M -d "$INSTALL_DIR" immich
