@@ -230,7 +230,7 @@ jobs:
 
             for (const slug of slugs) {
               const filter = "(slug='" + slug.replace(/'/g, "''") + "')";
-              const listRes = await request(recordsUrl + '?filter=' + encodeURIComponent(filter) + '&perPage=1', {
+              const listRes = await request(recordsUrl + '?filter=' + encodeURIComponent(filter) + '&perPage=1&expand=type', {
                 headers: { 'Authorization': token }
               });
               const list = JSON.parse(listRes.body);
@@ -239,14 +239,21 @@ jobs:
                 console.log('Slug not in DB, skipping: ' + slug);
                 continue;
               }
+              const patch = {
+                name: record.name || record.slug,
+                last_update_commit: prUrl,
+                is_dev: false
+              };
+              // Containers in ProxmoxVE are synced to Incus from here on.
+              const recordType = record.expand && record.expand.type && record.expand.type.type;
+              const platforms = Array.isArray(record.platforms) ? record.platforms : [];
+              if (recordType === 'lxc' && !platforms.includes('incus')) patch.platforms = ['pve', 'incus'];
+              else if (!platforms.length) patch.platforms = ['pve'];
+              if (!Array.isArray(record.architectures) || !record.architectures.length) patch.architectures = ['amd64'];
               const patchRes = await request(recordsUrl + '/' + record.id, {
                 method: 'PATCH',
                 headers: { 'Authorization': token, 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  name: record.name || record.slug,
-                  last_update_commit: prUrl,
-                  is_dev: false
-                })
+                body: JSON.stringify(patch)
               });
               if (!patchRes.ok) {
                 console.warn('PATCH failed for slug ' + slug + ': ' + patchRes.body);
