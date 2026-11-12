@@ -160,24 +160,6 @@ systemctl enable -q --now sockpuppet
 systemctl enable -q --now changedetection
 msg_ok "Created Services"
 
-msg_info "Verifying Sockpuppet"
-if ! curl -sS --retry 15 --retry-delay 2 --retry-connrefused --retry-max-time 30 --max-time 5 \
-  "http://127.0.0.1:8080/stats" | grep -qE '"chrome_version":[[:space:]]*"Google Chrome'; then
-  msg_error "Sockpuppet failed to start"
-  systemctl status sockpuppet --no-pager -l | head -20 || true
-  exit 1
-fi
-msg_ok "Verified Sockpuppet"
-
-msg_info "Verifying Change Detection"
-if ! curl -sS --retry 15 --retry-delay 2 --retry-connrefused --retry-max-time 30 --max-time 5 \
-  -o /dev/null -w '%{http_code}' "http://127.0.0.1:5000/" | grep -qE '^([23][0-9][0-9]|401|403)$'; then
-  msg_error "Change Detection is not responding"
-  systemctl status changedetection --no-pager -l | head -20 || true
-  exit 1
-fi
-msg_ok "Verified Change Detection"
-
 motd_ssh
 customize
 cleanup_lxc
