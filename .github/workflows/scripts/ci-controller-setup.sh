@@ -62,6 +62,7 @@ EOF
 }
 conf 200 10.201.146.232 pve-ci     proxmox-test community-scripts/DevScripts
 conf 201 10.201.146.231 pve-ci-2   proxmox-test community-scripts/ProxmoxVE
+conf 204 10.201.146.235 pve-ci-3   proxmox-test community-scripts/ProxmoxVE
 conf 202 10.201.146.233 incus-ci   incus-test   community-scripts/DevScripts
 conf 203 10.201.146.234 incus-ci-2 incus-test   community-scripts/ProxmoxVE
 

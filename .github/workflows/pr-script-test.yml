@@ -259,19 +259,30 @@ jobs:
             }
 
             const include = [];
-            // Upgrade test: a ct/ script that already exists on the PR's base
-            // branch is also installed from there and then updated with the PR,
-            // as a user who installed before the merge would. New scripts have
-            // nothing to upgrade from. Proxmox only, once per script.
+            // Upgrade test: install the ct/ script from the PR's base branch,
+            // then update with the PR, as a user who installed before the merge
+            // would. Only in ProxmoxVE, where users have installed it, and only
+            // when the PR changes update_script(): with the same update code an
+            // existing install updates exactly as it does today. New scripts
+            // have nothing to upgrade from. Proxmox only, once per script.
+            const UPGRADE_REPO = 'community-scripts/ProxmoxVE';
             let baseSha = '';
-            if (!isIssue) {
+            if (!isIssue && `${owner}/${repo}` === UPGRADE_REPO) {
               const { data: b } = await github.rest.repos.getBranch({ owner, repo, branch: pr.base.ref });
               baseSha = b.commit.sha;
             }
-            const onBase = async p => {
+            // From `function update_script() {` to the first `}` at the start of
+            // a line; null without one.
+            const updateCode = t => ((t || '').match(/^(function[ \t]+)?update_script[ \t]*\(\)[ \t]*\{[\s\S]*?^\}/m) || [null])[0];
+            const updateChanged = async (p, headText) => {
               if (!baseSha) return false;
-              try { await github.rest.repos.getContent({ owner, repo, path: p, ref: baseSha }); return true; }
-              catch (e) { return false; }
+              let baseText;
+              try {
+                const res = await github.rest.repos.getContent({ owner, repo, path: p, ref: baseSha });
+                baseText = Buffer.from(res.data.content || '', 'base64').toString('utf8');
+              } catch (e) { return false; }
+              const before = updateCode(baseText), after = updateCode(headText);
+              return before !== null && after !== null && before !== after;
             };
             const fetchScript = async p => {
               try {
@@ -319,7 +330,7 @@ jobs:
               for (const platform of platforms) {
                 for (const os of oses) include.push({ script, os, platform, arm64: platform === 'arm' ? arm : '', mode: '', name: `${os ? `${name}-${os}` : name}-${platform}` });
               }
-              if (!isVm && platforms.includes('pve') && await onBase(script)) {
+              if (!isVm && platforms.includes('pve') && await updateChanged(script, text)) {
                 const os = oses[0];
                 include.push({ script, os, platform: 'pve', arm64: '', mode: 'upgrade', name: `${os ? `${name}-${os}` : name}-pve-upgrade` });
               }
