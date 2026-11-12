@@ -97,6 +97,7 @@ msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/kestrel-aspnetapi.service
 [Unit]
 Description=.NET Web API App running on Linux
+ConditionPathExists=/var/www/html/$var_project_name.dll
 
 [Service]
 WorkingDirectory=/var/www/html
@@ -112,7 +113,18 @@ Environment=DOTNET_NOLOGO=true
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now kestrel-aspnetapi
+cat <<EOF >/etc/systemd/system/kestrel-aspnetapi.path
+[Unit]
+Description=Start the .NET Web API App once it is deployed
+
+[Path]
+PathExists=/var/www/html/$var_project_name.dll
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable -q kestrel-aspnetapi
+systemctl enable -q --now kestrel-aspnetapi.path
 msg_ok "Created Service"
 
 motd_ssh
