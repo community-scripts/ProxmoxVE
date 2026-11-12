@@ -25,9 +25,6 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "restic" "restic/restic" "singlefile" "latest" "/usr/local/bin" "restic_*_linux_$(arch_resolve).bz2"
-mv /usr/local/bin/restic /usr/local/bin/restic.bz2
-bzip2 -d /usr/local/bin/restic.bz2
-chmod +x /usr/local/bin/restic
 
 fetch_and_deploy_gh_release "rclone" "rclone/rclone" "prebuild" "latest" "/opt/rclone" "rclone-*-linux-$(arch_resolve).zip"
 ln -sf /opt/rclone/rclone /usr/local/bin/rclone
