@@ -14,39 +14,36 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-apt_update_safe
 $STD apt install -y \
   vsftpd \
   nginx
-  
-fetch_and_deploy_from_url "https://packages.microsoft.com/config/debian/13/packages-microsoft-prod.deb" ""
-
 msg_ok "Installed Dependencies"
 
-if [[ -z "${var_dotnet_version:-}" ]]; then
-	read -r -p "${TAB3}What dotnet version would you like to target? <8/9/10> " var_dotnet_version
+setup_deb822_repo \
+  "microsoft" \
+  "https://packages.microsoft.com/keys/microsoft.asc" \
+  "https://packages.microsoft.com/debian/13/prod" \
+  "trixie" \
+  "main"
+
+if [[ -z "${var_dotnet_version:-}" && -t 0 ]]; then
+  read -r -t 60 -p "${TAB3}.NET SDK version, 10 (LTS) or 11 [10]: " var_dotnet_version || echo
 fi
 var_dotnet_version="${var_dotnet_version:-10}"
+var_dotnet_version="${var_dotnet_version%%.*}"
+if ! apt-cache show "dotnet-sdk-${var_dotnet_version}.0" &>/dev/null; then
+  msg_warn ".NET SDK ${var_dotnet_version} is not available for this system, using 10"
+  var_dotnet_version="10"
+fi
 
-if [[ -z "${var_project_name:-}" ]]; then
-	read -r -p "${TAB3}Type the assembly name of the project: " var_project_name
+if [[ -z "${var_project_name:-}" && -t 0 ]]; then
+  read -r -t 60 -p "${TAB3}Assembly name of the project [testproject]: " var_project_name || echo
 fi
 var_project_name="${var_project_name:-testproject}"
 
-msg_info "Installing Dotnet"
-
-if [[ ${var_dotnet_version,,} =~ ^(8)$ ]]; then
-	$STD apt install -y dotnet-sdk-8.0
-elif [[ ${var_dotnet_version,,} =~ ^(9)$ ]]; then
-	$STD apt install -y dotnet-sdk-9.0
-elif [[ ${var_dotnet_version,,} =~ ^(10)$ ]]; then
-	$STD apt install -y dotnet-sdk-10.0
-else
-	msg_error "Please select a valid dotnet version!"; 
-	exit 64;
-fi
-
-msg_ok "Dotnet installed!"
+msg_info "Installing .NET SDK ${var_dotnet_version}"
+$STD apt install -y "dotnet-sdk-${var_dotnet_version}.0"
+msg_ok "Installed .NET SDK ${var_dotnet_version}"
 
 msg_info "Setting up FTP Server"
 useradd ftpuser
