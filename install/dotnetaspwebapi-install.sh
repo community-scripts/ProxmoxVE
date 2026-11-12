@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Kristian Skov
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-9.0&tabs=linux-ubuntu
+# Source: https://learn.microsoft.com/en-us/dotnet/core/install/linux-debian
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -16,19 +16,37 @@ update_os
 msg_info "Installing Dependencies"
 apt_update_safe
 $STD apt install -y \
-  ssh \
-  software-properties-common
-
-$STD add-apt-repository -y ppa:dotnet/backports
-$STD apt install -y \
-  dotnet-sdk-9.0 \
   vsftpd \
   nginx
+  
+$STD wget https://packages.microsoft.com/config/debian/13/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+$STD dpkg -i packages-microsoft-prod.deb
+rm packages-microsoft-prod.deb
+
+apt_update_safe
 msg_ok "Installed Dependencies"
+
+var_dotnet_version="${var_dotnet_version:-}"
+[[ -n "$var_dotnet_version" ]] || read -r -p "${TAB3}What dotnet version would you like to target? <8/9/10> " var_dotnet_version || true
 
 var_project_name="${var_project_name:-}"
 [[ -n "$var_project_name" ]] || read -r -p "${TAB3}Type the assembly name of the project: " var_project_name || true
 [[ -n "$var_project_name" ]] || { msg_error "No assembly name given; set var_project_name or answer the prompt"; exit 64; }
+
+msg_info "Installing Dotnet"
+
+if [[ ${var_dotnet_version,,} =~ ^(8)$ ]]; then
+	$STD apt install -y dotnet-sdk-8.0
+elif [[ ${var_dotnet_version,,} =~ ^(9)$ ]]; then
+	$STD apt install -y dotnet-sdk-9.0
+elif [[ ${var_dotnet_version,,} =~ ^(10)$ ]]; then
+	$STD apt install -y dotnet-sdk-10.0
+else
+	msg_error "Please select a valid dotnet version!"; 
+	exit 64;
+fi
+
+msg_ok "Dotnet installed!"
 
 msg_info "Setting up FTP Server"
 useradd ftpuser
