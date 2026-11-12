@@ -39,7 +39,7 @@ jobs:
     timeout-minutes: 120
     steps:
       # The harness from the default branch, as in pr-script-test.yml.
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           sparse-checkout: .github/workflows/scripts
           persist-credentials: false
@@ -106,7 +106,7 @@ jobs:
           } >>"$GITHUB_STEP_SUMMARY"
 
       - if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: result-arm
           path: ${{ runner.temp }}/result
