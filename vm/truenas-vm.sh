@@ -37,42 +37,37 @@ function truenas_iso_lookup() {
 
   declare -A latest_stables
   local pre_releases=()
+  local excluded_codenames="(Angelfish|Bluefin|Cobia|Dragonfish|ElectricEel|Fangtooth)"
 
   local all_paths=$(
     curl -fsSL "${_CS_CURL_RETRY[@]}" --max-time 90 "$BASE_URL" |
       grep -oE 'href="[^"]+\.iso"' |
       sed 's/href="//; s/"$//' |
-      grep -vE '(MASTER|ALPHA)' |
+      grep -vE '(MASTER|ALPHA|BETA)' |
       grep -E "$year_pattern"
   )
 
   while read -r path; do
     [[ -n "$path" ]] || continue
     local filename=$(basename "$path")
-    local version=$(echo "$filename" | sed -E 's/.*TrueNAS-SCALE-([0-9]{2}\.[0-9]{2}(\.[0-9]+)*(-RC[0-9]|-BETA[0-9])?)\.iso.*/\1/')
-    if [[ "$version" =~ (RC|BETA) ]]; then
-      pre_releases+=("$path")
+    [[ "$filename" =~ ^TrueNAS-(SCALE-)?([0-9]+\.[0-9]+(\.[0-9]+)*)\.iso$ ]] || continue
+    local version="${BASH_REMATCH[2]}"
+    local major_version=$(echo "$version" | cut -d'.' -f1,2)
+    local current_stored_path=${latest_stables["$major_version"]:-}
+
+    if [[ -z "$current_stored_path" ]]; then
+      latest_stables["$major_version"]="$path"
     else
-      local major_version=$(echo "$version" | cut -d'.' -f1,2)
-      local current_stored_path=${latest_stables["$major_version"]:-}
-      if [[ -z "$current_stored_path" ]]; then
+      local stored_version=$(basename "$current_stored_path" | sed -E 's/.*TrueNAS-(SCALE-)?([0-9]+\.[0-9]+(\.[0-9]+)*)\.iso.*/\2/')
+      if printf '%s\n' "$version" "$stored_version" | sort -V | tail -n 1 | grep -qxF "$version"; then
         latest_stables["$major_version"]="$path"
-      else
-        local stored_version=$(basename "$current_stored_path" | sed -E 's/.*TrueNAS-SCALE-([0-9]{2}\.[0-9]{2}(\.[0-9]+)*)\.iso.*/\1/')
-        if printf '%s\n' "$version" "$stored_version" | sort -V | tail -n 1 | grep -q "$version"; then
-          latest_stables["$major_version"]="$path"
-        fi
       fi
     fi
   done <<<"$all_paths"
 
-  for key in "${!latest_stables[@]}"; do
+  for key in $(printf '%s\n' "${!latest_stables[@]}" | sort -V); do
     echo "${latest_stables[$key]#/}"
   done
-
-  for pre in "${pre_releases[@]}"; do
-    echo "${pre#/}"
-  done | sort -V
 }
 
 TEMP_DIR=$(mktemp -d)
@@ -115,6 +110,35 @@ function advanced_settings() {
   vm_prompt_mtu
   vm_prompt_verbose "no"
 
+  ISOARRAY=()
+  mapfile -t ALL_ISOS < <(truenas_iso_lookup)
+  ISO_COUNT=${#ALL_ISOS[@]}
+
+  if [ $ISO_COUNT -eq 0 ]; then
+    msg_error "Could not find any TrueNAS ISOs."
+    exit 115
+  fi
+
+  for i in "${!ALL_ISOS[@]}"; do
+    ISOPATH="${ALL_ISOS[$i]}"
+    FILENAME=$(basename "$ISOPATH")
+
+    # The newest stable release is preselected
+    if [[ "$i" -eq "$((ISO_COUNT - 1))" ]]; then
+      ISOARRAY+=("$ISOPATH" "$FILENAME" "ON")
+    else
+      ISOARRAY+=("$ISOPATH" "$FILENAME" "OFF")
+    fi
+  done
+
+  if vm_dialog radiolist "SELECT ISO TO INSTALL" --notags --cancel-button Exit-Script \
+    "\nSelect version (Latest stable preselected):" 20 58 12 "${ISOARRAY[@]}"; then
+    SELECTED_ISO="$VM_DIALOG_RESULT"
+    echo -e "${ISO}${BOLD}${DGN}ISO Chosen: ${BGN}$(basename "$SELECTED_ISO")${CL}"
+  else
+    exit_script
+  fi
+
   if vm_dialog yesno "IMPORT ONBOARD DISKS" --defaultno "Would you like to import onboard disks?" 10 58; then
     IMPORT_DISKS="yes"
   else
@@ -140,7 +164,7 @@ post_to_api_vm
 vm_select_storage "$HN"
 
 if [ -z "${SELECTED_ISO:-}" ]; then
-  SELECTED_ISO=$(truenas_iso_lookup | grep -vE 'RC|BETA' | sort -V | tail -n 1) || true
+  SELECTED_ISO=$(truenas_iso_lookup | tail -n 1) || true
 
   if [ -z "$SELECTED_ISO" ]; then
     msg_error "Could not find a stable ISO for fallback."

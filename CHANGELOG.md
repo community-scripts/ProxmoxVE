@@ -581,18 +581,57 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-11-12
+
+### 🆕 New Scripts
+
+  - Pixelfed ([#18523](https://github.com/community-scripts/ProxmoxVE/pull/18523))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - dotnetaspwebapi: start the service only once an app is deployed [@MickLesk](https://github.com/MickLesk) ([#18639](https://github.com/community-scripts/ProxmoxVE/pull/18639))
+    - Whisparr-eros: set the first login and save it [@MickLesk](https://github.com/MickLesk) ([#18617](https://github.com/community-scripts/ProxmoxVE/pull/18617))
+
+  - #### 💥 Breaking Changes
+
+    - Updated ASP.NET Web App script to Debian and adds a .Net selection [@kris701](https://github.com/kris701) ([#18628](https://github.com/community-scripts/ProxmoxVE/pull/18628))
+
+### 📚 Documentation
+
+  - github: bump workflow actions to their current majors [@MickLesk](https://github.com/MickLesk) ([#18637](https://github.com/community-scripts/ProxmoxVE/pull/18637))
+- pocketbase-bot: apply website metadata requests from Accept/Decline boxes [@MickLesk](https://github.com/MickLesk) ([#18631](https://github.com/community-scripts/ProxmoxVE/pull/18631))
+
 ## 2026-11-11
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - TrueNas: Fixing isolookup and dialog [@juronja](https://github.com/juronja) ([#18578](https://github.com/community-scripts/ProxmoxVE/pull/18578))
+
   - #### ✨ New Features
 
+    - Immich: bump to 3.4.1 [@MickLesk](https://github.com/MickLesk) ([#18619](https://github.com/community-scripts/ProxmoxVE/pull/18619))
     - Immich: bump to 3.4.0 [@MickLesk](https://github.com/MickLesk) ([#18600](https://github.com/community-scripts/ProxmoxVE/pull/18600))
+
+  - #### 💥 Breaking Changes
+
+    - Pocketbase: install and update from the new host (removed in github) [@MickLesk](https://github.com/MickLesk) ([#18609](https://github.com/community-scripts/ProxmoxVE/pull/18609))
+
+  - #### 🔧 Refactor
+
+    - Paperless-AI: install and update to 4.0 [@MickLesk](https://github.com/MickLesk) ([#18620](https://github.com/community-scripts/ProxmoxVE/pull/18620))
 
 ### 💾 Core
 
   - core: drop the SUDO_ variables an update through sudo carries [@MickLesk](https://github.com/MickLesk) ([core#229](https://github.com/community-scripts/core/pull/229))
 - feat: let setup_deb822_repo use a keyring already on the system [@MickLesk](https://github.com/MickLesk) ([core#227](https://github.com/community-scripts/core/pull/227))
+
+### 📚 Documentation
+
+  - Fill platforms when a script moves from DevScripts [@MickLesk](https://github.com/MickLesk) ([#18611](https://github.com/community-scripts/ProxmoxVE/pull/18611))
 
 ## 2026-11-10
 

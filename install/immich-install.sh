@@ -23,7 +23,7 @@ if [[ "$(arch_resolve)" == "amd64" ]] && ! grep -qm1 sse4_2 /proc/cpuinfo; then
   exit 236
 fi
 
-RELEASE="v3.4.0"
+RELEASE="v3.4.1"
 if lscpu | grep -q 'GenuineIntel'; then
   echo ""
   echo ""

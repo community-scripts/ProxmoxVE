@@ -32,36 +32,52 @@ function update_script() {
 
   if check_for_gh_release "paperless-ai" "clusterzx/paperless-ai"; then
     msg_info "Stopping Service"
-    systemctl stop paperless-ai paperless-rag
+    systemctl stop paperless-ai
+    if [[ -f /etc/systemd/system/paperless-rag.service ]]; then
+      systemctl stop paperless-rag
+    fi
     msg_ok "Stopped Service"
 
-    msg_info "Backing up data"
-    cp -r /opt/paperless-ai/data /opt/paperless-ai-data-backup
-    msg_ok "Backed up data"
-
-    fetch_and_deploy_gh_release "paperless-ai" "clusterzx/paperless-ai" "tarball"
-
-    msg_info "Restoring data"
-    cp -r /opt/paperless-ai-data-backup/* /opt/paperless-ai/data/
-    rm -rf /opt/paperless-ai-data-backup
-    msg_ok "Restored data"
+    NODE_VERSION="22" setup_nodejs
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="data" fetch_and_deploy_gh_release "paperless-ai" "clusterzx/paperless-ai" "tarball"
 
     msg_info "Updating Paperless-AI"
     cd /opt/paperless-ai
-    if [[ ! -d /opt/paperless-ai/venv ]]; then
-      msg_info "Recreating Python venv"
-      $STD python3 -m venv /opt/paperless-ai/venv
-    fi
-    source /opt/paperless-ai/venv/bin/activate
-    $STD pip install --upgrade pip
-    $STD pip install --no-cache-dir -r requirements.txt
-    mkdir -p data/chromadb
-    $STD npm ci --only=production
+    export ONNXRUNTIME_NODE_INSTALL=skip PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+    $STD npm ci --ignore-scripts --no-audit --no-fund
+    $STD npm run build
+    $STD npm prune --omit=dev --ignore-scripts --no-audit --no-fund
     msg_ok "Updated Paperless-AI"
 
+    if ! grep -q "dist/server/index.js" /etc/systemd/system/paperless-ai.service; then
+      msg_info "Migrating services to Paperless-AI 4"
+      if [[ -f /etc/systemd/system/paperless-rag.service ]]; then
+        systemctl disable -q paperless-rag
+        rm -f /etc/systemd/system/paperless-rag.service
+      fi
+      cat <<EOF >/etc/systemd/system/paperless-ai.service
+[Unit]
+Description=PaperlessAI Service
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/paperless-ai
+Environment="NODE_ENV=production"
+Environment="PAPERLESS_AI_PORT=3000"
+Environment="PAPERLESS_AI_DATA_DIR=/opt/paperless-ai/data"
+Environment="HF_HUB_DISABLE_TELEMETRY=1"
+ExecStart=/usr/bin/node dist/server/index.js
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+      systemctl daemon-reload
+      msg_ok "Migrated services to Paperless-AI 4"
+      msg_warn "Settings and history from 3.x are migrated on first start. If this instance was reachable from the internet, read 'Upgrading from 3.x' in the upstream README first."
+    fi
+
     msg_info "Starting Service"
-    systemctl start paperless-rag
-    sleep 3
     systemctl start paperless-ai
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
@@ -73,7 +89,7 @@ start
 build_container
 description
 
-msg_ok "Completed successfully!\n"
+msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW}Access it using the following URL:${CL}"
-echo -e "${GATEWAY}${BGN}http://${IP}:3000${CL}"
+echo -e "${INFO}${YW} Access it using the following URL:${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}http://${IP}:3000${CL}"

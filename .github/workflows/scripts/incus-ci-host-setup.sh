@@ -6,6 +6,8 @@
 #
 #   incus-ci-host-setup.sh                       host only
 #   incus-ci-host-setup.sh <owner/repo> <token>  host + a runner for that repo
+#   incus-ci-host-setup.sh <owner/repo> jit      host + runner software only, for
+#                                                ci-vm-controller.sh (single-use host)
 #
 # The token is a runner *registration* token (valid one hour):
 #   gh api -X POST repos/<owner/repo>/actions/runners/registration-token --jq .token
@@ -175,6 +177,13 @@ if [[ $# -eq 2 ]]; then
   if [[ ! -x ./config.sh ]]; then
     curl -fsSL "https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz" | tar -xz
     ./bin/installdependencies.sh >/dev/null
+  fi
+  # `jit`: a single-use host. ci-vm-controller.sh on the hypervisor registers
+  # a fresh runner for every job and resets the VM afterwards, so only the
+  # runner software goes on it, and the 'clean' snapshot is taken after this.
+  if [[ "$token" == jit ]]; then
+    echo "runner software for ${repo} installed; ci-vm-controller.sh registers a runner per job"
+    exit 0
   fi
   if [[ -f .runner ]]; then
     ./svc.sh stop >/dev/null 2>&1 || true
