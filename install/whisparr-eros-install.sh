@@ -27,6 +27,7 @@ chmod 775 /var/lib/whisparr-eros/ /opt/Whisparr-Eros/
 msg_ok "Configured Whisparr-Eros"
 
 msg_info "Creating Service"
+WHISPARR_PASS=$(random_password 20)
 cat <<EOF >/etc/systemd/system/whisparr-eros.service
 [Unit]
 Description=Whisparr-Eros Daemon
@@ -35,6 +36,7 @@ After=syslog.target network.target
 [Service]
 UMask=0002
 Type=simple
+Environment=WHISPARR__AUTH__INITIALPASSWORD=${WHISPARR_PASS}
 ExecStart=/opt/Whisparr-Eros/Whisparr -nobrowser -data=/var/lib/whisparr-eros/
 TimeoutStopSec=20
 KillMode=process
@@ -44,6 +46,18 @@ Restart=on-failure
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now whisparr-eros
+for _ in {1..60}; do
+  grep -qs "created 'whisparr' with the configured password" /var/lib/whisparr-eros/logs/whisparr.txt && break
+  sleep 2
+done
+sed -i '/WHISPARR__AUTH__INITIALPASSWORD/d' /etc/systemd/system/whisparr-eros.service
+systemctl daemon-reload
+cat <<EOF >~/whisparr-eros.creds
+Whisparr-Eros Credentials
+Username: whisparr
+Password: ${WHISPARR_PASS}
+EOF
+chmod 600 ~/whisparr-eros.creds
 msg_ok "Created Service"
 
 motd_ssh
