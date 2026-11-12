@@ -2,7 +2,7 @@ name: PocketBase Bot
 
 on:
   issue_comment:
-    types: [created]
+    types: [created, edited]
 
 permissions:
   issues: write
@@ -25,6 +25,9 @@ jobs:
           POCKETBASE_ADMIN_PASSWORD: ${{ secrets.POCKETBASE_ADMIN_PASSWORD }}
           COMMENT_BODY: ${{ github.event.comment.body }}
           COMMENT_ID: ${{ github.event.comment.id }}
+          EVENT_ACTION: ${{ github.event.action }}
+          SENDER: ${{ github.event.sender.login }}
+          PREVIOUS_BODY: ${{ github.event.changes.body.from }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           IS_PR_COMMENT: ${{ github.event.issue.pull_request && 'true' || 'false' }}
           REPO_OWNER: ${{ github.repository_owner }}
@@ -87,7 +90,7 @@ jobs:
             const issueNumber = parseInt(process.env.ISSUE_NUMBER, 10);
             const isPrComment = process.env.IS_PR_COMMENT === 'true';
             const commentId = parseInt(process.env.COMMENT_ID, 10);
-            const actor = process.env.ACTOR;
+            let actor = process.env.ACTOR;
 
             function ghRequest(path, method, body) {
               const headers = {
@@ -278,7 +281,65 @@ jobs:
             // Accept /pocketbase at the start of ANY line (leading whitespace ok),
             // so the command works even when preceded by other text. Mid-sentence
             // mentions and blockquoted ("> ...") examples are ignored.
-            const commentBody = process.env.COMMENT_BODY || '';
+            let commentBody = process.env.COMMENT_BODY || '';
+
+            // ── Metadata requests from the website ─────────────────────────────
+            // One comment per requested change, each with Accept/Decline boxes.
+            // Ticking one edits the comment; that edit is the only event handled.
+            const REQUEST_MARKER = '<!-- pb-request -->';
+            const DONE_MARKER = '<!-- pb-request:done -->';
+            const isRequest = commentBody.includes(REQUEST_MARKER);
+            let decidedBy = null;
+            if (process.env.EVENT_ACTION === 'edited' && !isRequest) process.exit(0);
+            if (isRequest) {
+              if (process.env.EVENT_ACTION !== 'edited' || commentBody.includes(DONE_MARKER)) process.exit(0);
+              const ticked = (body, word) =>
+                new RegExp('^[ \\t]*[-*] \\[[xX]\\] ' + word + '[ \\t]*\\r?$', 'm').test(body);
+              const previous = process.env.PREVIOUS_BODY || '';
+              const accept = ticked(commentBody, 'Accept') && !ticked(previous, 'Accept');
+              const decline = ticked(commentBody, 'Decline') && !ticked(previous, 'Decline');
+              if (accept === decline) process.exit(0);
+
+              const sender = process.env.SENDER;
+              const permRes = await ghRequest(
+                '/repos/' + owner + '/' + repo + '/collaborators/' + encodeURIComponent(sender) + '/permission'
+              );
+              const level = permRes.ok ? JSON.parse(permRes.body).permission : 'none';
+              if (level !== 'admin' && level !== 'write') {
+                await postComment(
+                  '❌ **PocketBase Bot**: @' + sender + ' is not authorized to decide metadata requests.\n' +
+                  'Only maintainers with write access can accept or decline them.'
+                );
+                process.exit(0);
+              }
+
+              const heading = (commentBody.match(/^### (.+)$/m) || [])[1] || 'this change';
+              const command = commentBody.match(/<!-- pb-command -->\r?\n([\s\S]*?)\r?\n<!-- \/pb-command -->/);
+              const decided = commentBody
+                .replace(/^[ \t]*[-*] \[[ xX]\] (Accept|Decline)[ \t]*\r?\n?/gm, '')
+                .replace(
+                  REQUEST_MARKER,
+                  '**' + (accept ? '✅ Accepted' : '❌ Declined') + '** by @' + sender + '\n\n' +
+                  REQUEST_MARKER + '\n' + DONE_MARKER
+                );
+              const markRes = await ghRequest(
+                '/repos/' + owner + '/' + repo + '/issues/comments/' + commentId, 'PATCH', { body: decided }
+              );
+              if (!markRes.ok) console.warn('Could not mark the request as decided:', markRes.body);
+
+              if (decline) {
+                await postComment('❌ **PocketBase Bot**: **' + heading + '** declined by @' + sender + '.');
+                process.exit(0);
+              }
+              if (!command) {
+                await postComment('❌ **PocketBase Bot**: no command found in the request for **' + heading + '**.');
+                process.exit(0);
+              }
+              commentBody = command[1];
+              decidedBy = sender;
+              actor = sender;
+            }
+
             const cmdLine = commentBody
               .split('\n')
               .map(l => l.trim())
@@ -292,7 +353,7 @@ jobs:
 
             // ── Permission check ───────────────────────────────────────────────
             const association = process.env.ACTOR_ASSOCIATION;
-            if (association !== 'OWNER' && association !== 'MEMBER') {
+            if (!decidedBy && association !== 'OWNER' && association !== 'MEMBER') {
               await addReaction('-1');
               await postComment(
                 '❌ **PocketBase Bot**: @' + actor + ' is not authorized to use this command.\n' +
@@ -957,6 +1018,35 @@ jobs:
                   );
                   process.exit(0);
                 }
+                if (fieldName === 'app_vars') {
+                  const TYPES = ['text', 'password', 'number', 'boolean', 'select'];
+                  const problems = [];
+                  if (!Array.isArray(parsedJson)) problems.push('must be a JSON array');
+                  else parsedJson.forEach(function (v, i) {
+                    const at = 'entry ' + (i + 1) + ': ';
+                    if (!v || typeof v !== 'object' || Array.isArray(v)) { problems.push(at + 'must be an object'); return; }
+                    if (typeof v.name !== 'string' || !/^var_[a-z0-9_]+$/.test(v.name)) problems.push(at + '`name` must look like `var_example`');
+                    if (typeof v.label !== 'string' || !v.label.trim()) problems.push(at + '`label` is required');
+                    if (TYPES.indexOf(v.type) === -1) problems.push(at + '`type` must be one of ' + TYPES.join(', '));
+                    if (v.default !== undefined && typeof v.default !== 'string') problems.push(at + '`default` must be a string');
+                    if (v.type === 'select') {
+                      const opts = v.options;
+                      if (!Array.isArray(opts) || opts.length === 0 || opts.some(function (o) { return typeof o !== 'string' || !o; })) {
+                        problems.push(at + 'a select needs `options`, a non-empty array of strings');
+                      } else if (v.default !== undefined && opts.indexOf(v.default) === -1) {
+                        problems.push(at + '`default` must be one of its options');
+                      }
+                    }
+                    ['required', 'secret'].forEach(function (k) {
+                      if (v[k] !== undefined && typeof v[k] !== 'boolean') problems.push(at + '`' + k + '` must be true or false');
+                    });
+                  });
+                  if (problems.length > 0) {
+                    await addReaction('-1');
+                    await postComment('❌ **PocketBase Bot**: `app_vars` was not saved.\n\n- ' + problems.join('\n- '));
+                    process.exit(0);
+                  }
+                }
                 setPayload[fieldName] = parsedJson;
               } else {
                 setPayload[fieldName] = codeBlockValue;
@@ -1232,6 +1322,61 @@ jobs:
             console.log('Done.');
           })().catch(function (e) {
             console.error('Fatal error:', e.message || e);
+            process.exit(1);
+          });
+          ENDSCRIPT
+        shell: bash
+
+      - name: Close a metadata request once every change is decided
+        if: always() && github.event.action == 'edited' && contains(github.event.comment.body, '<!-- pb-request -->')
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node << 'ENDSCRIPT'
+          (async function () {
+            const api = 'https://api.github.com/repos/' + process.env.REPO + '/issues/' + process.env.ISSUE_NUMBER;
+            const headers = {
+              'Authorization': 'Bearer ' + process.env.GITHUB_TOKEN,
+              'Accept': 'application/vnd.github+json',
+              'Content-Type': 'application/json',
+              'User-Agent': 'pocketbase-bot'
+            };
+            const https = require('https');
+            function call(method, url, body) {
+              return new Promise(function (resolve, reject) {
+                const req = https.request(url, { method: method, headers: headers }, function (res) {
+                  let data = '';
+                  res.on('data', function (d) { data += d; });
+                  res.on('end', function () { resolve({ ok: res.statusCode < 300, status: res.statusCode, body: data }); });
+                });
+                req.on('error', reject);
+                if (body) req.write(JSON.stringify(body));
+                req.end();
+              });
+            }
+            const requests = [];
+            for (let page = 1; page <= 10; page++) {
+              const res = await call('GET', api + '/comments?per_page=100&page=' + page);
+              if (!res.ok) throw new Error('Could not list comments: ' + res.status);
+              const comments = JSON.parse(res.body);
+              for (const c of comments) {
+                if ((c.body || '').includes('<!-- pb-request -->')) requests.push(c.body);
+              }
+              if (comments.length < 100) break;
+            }
+            const open = requests.filter(function (b) { return !b.includes('<!-- pb-request:done -->'); });
+            if (requests.length === 0 || open.length > 0) {
+              console.log(open.length + ' of ' + requests.length + ' changes still undecided.');
+              return;
+            }
+            const accepted = requests.filter(function (b) { return b.includes('✅ Accepted'); }).length;
+            const res = await call('PATCH', api, { state: 'closed', state_reason: accepted > 0 ? 'completed' : 'not_planned' });
+            if (!res.ok) throw new Error('Could not close the issue: ' + res.status);
+            console.log('Closed: ' + accepted + ' accepted, ' + (requests.length - accepted) + ' declined.');
+          })().catch(function (e) {
+            console.error(e.message || e);
             process.exit(1);
           });
           ENDSCRIPT
