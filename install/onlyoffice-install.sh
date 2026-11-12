@@ -65,6 +65,7 @@ echo onlyoffice-documentserver onlyoffice/rabbitmq-user string $RMQ_USER | debco
 echo onlyoffice-documentserver onlyoffice/rabbitmq-pwd password $RMQ_PASS | debconf-set-selections
 echo onlyoffice-documentserver onlyoffice/jwt-enabled boolean true | debconf-set-selections
 echo onlyoffice-documentserver onlyoffice/jwt-secret password $JWT_SECRET | debconf-set-selections
+echo onlyoffice-documentserver onlyoffice/listenaddress string 0.0.0.0:80 | debconf-set-selections
 
 cat <<EOF >>~/onlyoffice.creds
 
@@ -81,6 +82,8 @@ $STD apt install -y ttf-mscorefonts-installer
 msg_ok "Installed Microsoft Core Fonts"
 
 msg_info "Installing ONLYOFFICE Docs"
+rm -f /etc/nginx/sites-enabled/default
+systemctl stop nginx
 $STD apt install -y onlyoffice-documentserver
 msg_ok "ONLYOFFICE Docs Installed"
 
