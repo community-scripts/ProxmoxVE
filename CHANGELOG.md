@@ -591,6 +591,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - dotnetaspwebapi: start the service only once an app is deployed [@MickLesk](https://github.com/MickLesk) ([#18639](https://github.com/community-scripts/ProxmoxVE/pull/18639))
     - Whisparr-eros: set the first login and save it [@MickLesk](https://github.com/MickLesk) ([#18617](https://github.com/community-scripts/ProxmoxVE/pull/18617))
 
   - #### 💥 Breaking Changes
