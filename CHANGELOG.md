@@ -599,6 +599,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Updated ASP.NET Web App script to Debian and adds a .Net selection [@kris701](https://github.com/kris701) ([#18628](https://github.com/community-scripts/ProxmoxVE/pull/18628))
 
+### 💾 Core
+
+  - Deploy a release by moving it, and stop on a full disk² [@MickLesk](https://github.com/MickLesk) ([core#233](https://github.com/community-scripts/core/pull/233))
+- core: say when pct create fails because timedatectl does not answer [@MickLesk](https://github.com/MickLesk) ([core#237](https://github.com/community-scripts/core/pull/237))
+- ref: stop calling every exit 255 a dpkg error [@MickLesk](https://github.com/MickLesk) ([core#238](https://github.com/community-scripts/core/pull/238))
+- Write uv's shell completions without STD [@MickLesk](https://github.com/MickLesk) ([core#241](https://github.com/community-scripts/core/pull/241))
+- Generate database passwords with random_password / Keep the database helpers' credentials files private [@MickLesk](https://github.com/MickLesk) ([core#242](https://github.com/community-scripts/core/pull/242))
+
 ### 📚 Documentation
 
   - github: bump workflow actions to their current majors [@MickLesk](https://github.com/MickLesk) ([#18637](https://github.com/community-scripts/ProxmoxVE/pull/18637))
