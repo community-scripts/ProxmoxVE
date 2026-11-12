@@ -657,6 +657,15 @@ jobs:
             // and a log that does not fit loses its beginning: the end is where
             // a failure shows.
             const budget = Math.floor(52000 / rows.length);
+            // A check run summary holds 65535 BYTES, not characters, and log
+            // emoji take 3-4 bytes each. Cut at a character boundary and close
+            // a ~~~~ block left open.
+            const fitBytes = (text, max) => {
+              if (Buffer.byteLength(text) <= max) return text;
+              let cut = Buffer.from(text).subarray(0, max - 300).toString('utf8').replace(/�+$/, '');
+              if ((cut.match(/^~~~~/gm) || []).length % 2) cut += '\n~~~~';
+              return `${cut}\n\n… cut to fit GitHub's size limit; the full report is in the PR comment and the logs in the run artifacts.`;
+            };
             const tail = (text, max) => {
               text = fence(text).trimEnd();
               if (text.length <= max) return text;
@@ -739,7 +748,7 @@ jobs:
                   title: armOnly
                     ? `ARM64 ${armPassed}/${armRows.length} passed (information only)`
                     : `${passed}/${coreRows.length} passed${armRows.length ? ` (+ ARM ${armPassed}/${armRows.length}, not counted)` : ''}`,
-                  summary: summary.slice(0, 65000),
+                  summary: fitBytes(summary, 65000),
                 },
               });
             }
