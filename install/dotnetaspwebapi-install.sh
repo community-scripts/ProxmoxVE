@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: Kristian Skov
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/linux-nginx?view=aspnetcore-9.0&tabs=linux-ubuntu
+# Source: https://learn.microsoft.com/en-us/dotnet/core/install/linux-debian
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color
@@ -14,21 +14,36 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-apt_update_safe
 $STD apt install -y \
-  ssh \
-  software-properties-common
-
-$STD add-apt-repository -y ppa:dotnet/backports
-$STD apt install -y \
-  dotnet-sdk-9.0 \
   vsftpd \
   nginx
 msg_ok "Installed Dependencies"
 
-var_project_name="${var_project_name:-}"
-[[ -n "$var_project_name" ]] || read -r -p "${TAB3}Type the assembly name of the project: " var_project_name || true
-[[ -n "$var_project_name" ]] || { msg_error "No assembly name given; set var_project_name or answer the prompt"; exit 64; }
+setup_deb822_repo \
+  "microsoft" \
+  "https://packages.microsoft.com/keys/microsoft-2025.asc" \
+  "https://packages.microsoft.com/debian/13/prod/" \
+  "trixie" \
+  "main"
+
+if [[ -z "${var_dotnet_version:-}" && -t 0 ]]; then
+  read -r -t 60 -p "${TAB3}.NET SDK version, 10 (LTS) or 11 [10]: " var_dotnet_version || echo
+fi
+var_dotnet_version="${var_dotnet_version:-10}"
+var_dotnet_version="${var_dotnet_version%%.*}"
+if ! apt-cache show "dotnet-sdk-${var_dotnet_version}.0" &>/dev/null; then
+  msg_warn ".NET SDK ${var_dotnet_version} is not available for this system, using 10"
+  var_dotnet_version="10"
+fi
+
+if [[ -z "${var_project_name:-}" && -t 0 ]]; then
+  read -r -t 60 -p "${TAB3}Assembly name of the project [testproject]: " var_project_name || echo
+fi
+var_project_name="${var_project_name:-testproject}"
+
+msg_info "Installing .NET SDK ${var_dotnet_version}"
+$STD apt install -y "dotnet-sdk-${var_dotnet_version}.0"
+msg_ok "Installed .NET SDK ${var_dotnet_version}"
 
 msg_info "Setting up FTP Server"
 useradd ftpuser
@@ -55,7 +70,7 @@ msg_ok "FTP server setup completed"
 msg_info "Setting up Nginx Server"
 rm -f /var/www/html/index.nginx-debian.html
 
-sed "s/\$var_project_name/$var_project_name/g" >myfile <<'EOF' >/etc/nginx/sites-available/default
+sed "s/\$var_project_name/$var_project_name/g" <<'EOF' >/etc/nginx/sites-available/default
 map $http_connection $connection_upgrade {
   "~*Upgrade" $http_connection;
   default keep-alive;
@@ -87,7 +102,6 @@ Description=.NET Web API App running on Linux
 WorkingDirectory=/var/www/html
 ExecStart=/usr/bin/dotnet /var/www/html/$var_project_name.dll
 Restart=always
-# Restart service after 10 seconds if the dotnet service crashes:
 RestartSec=10
 KillSignal=SIGINT
 SyslogIdentifier=dotnet-${var_project_name}
