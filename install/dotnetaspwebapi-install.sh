@@ -23,10 +23,14 @@ fetch_and_deploy_from_url "https://packages.microsoft.com/config/debian/13/packa
 
 msg_ok "Installed Dependencies"
 
-[[ -n "$var_dotnet_version" ]] || read -r -p "${TAB3}What dotnet version would you like to target? <8/9/10> " var_dotnet_version || true
+if [[ -z "${var_dotnet_version:-}" ]]; then
+	read -r -p "${TAB3}What dotnet version would you like to target? <8/9/10> " var_dotnet_version
+fi
 var_dotnet_version="${var_dotnet_version:-10}"
 
-[[ -n "$var_project_name" ]] || read -r -p "${TAB3}Type the assembly name of the project: " var_project_name || true
+if [[ -z "${var_project_name:-}" ]]; then
+	read -r -p "${TAB3}Type the assembly name of the project: " var_project_name
+fi
 var_project_name="${var_project_name:-testproject}"
 
 msg_info "Installing Dotnet"
