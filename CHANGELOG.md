@@ -591,6 +591,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - OnlyOffice: change ct port to 8083 [@MickLesk](https://github.com/MickLesk) ([#18642](https://github.com/community-scripts/ProxmoxVE/pull/18642))
     - dotnetaspwebapi: start the service only once an app is deployed [@MickLesk](https://github.com/MickLesk) ([#18639](https://github.com/community-scripts/ProxmoxVE/pull/18639))
     - Whisparr-eros: set the first login and save it [@MickLesk](https://github.com/MickLesk) ([#18617](https://github.com/community-scripts/ProxmoxVE/pull/18617))
 
