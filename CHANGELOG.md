@@ -583,6 +583,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-12
 
+### 🆕 New Scripts
+
+  - Pixelfed ([#18523](https://github.com/community-scripts/ProxmoxVE/pull/18523))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
