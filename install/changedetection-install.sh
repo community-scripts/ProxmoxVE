@@ -50,7 +50,6 @@ done
 $STD locale-gen
 msg_ok "Generated Locales"
 
-# sockpuppet runs as the non-root chrome user, so uv's Python must live outside /root (mode 700).
 export UV_PYTHON_INSTALL_DIR=/opt/uv-python
 PYTHON_VERSION="3.13" setup_uv
 
@@ -69,7 +68,8 @@ msg_ok "Installed Change Detection"
 msg_info "Installing Chrome"
 setup_deb822_repo "google-chrome" \
   "https://dl.google.com/linux/linux_signing_key.pub" \
-  "https://dl.google.com/linux/chrome/deb/" "stable"
+  "https://dl.google.com/linux/chrome/deb/" \
+  "stable"
 $STD apt install -y google-chrome-stable
 msg_ok "Installed Chrome"
 
@@ -78,9 +78,11 @@ groupadd -f chrome 2>/dev/null || true
 id -u chrome >/dev/null 2>&1 || useradd --system --create-home --shell /usr/sbin/nologin -g chrome chrome
 msg_ok "Created Chrome User"
 
+msg_info "Installing Sockpuppet"
 fetch_and_deploy_gh_branch "sockpuppet" "dgtlmoon/sockpuppetbrowser" "master"
 $STD uv venv --python 3.12 /opt/sockpuppet/.venv
 $STD uv pip install --python /opt/sockpuppet/.venv/bin/python -r /opt/sockpuppet/requirements.txt
+msg_ok "Installed Sockpuppet"
 
 msg_info "Installing Font Packages"
 $STD apt install -y \
