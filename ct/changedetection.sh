@@ -26,19 +26,7 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  local -r CDIO_DIR="/opt/changedetection"
-  local -r CDIO_ENV="${CDIO_DIR}/.env"
-  local -r CDIO_VENV="${CDIO_DIR}/.venv"
-  local -r CDIO_BIN="${CDIO_VENV}/bin/changedetection.io"
   local -r CDIO_UNIT="/etc/systemd/system/changedetection.service"
-  local -r CDIO_URL="http://127.0.0.1:5000/"
-
-  local -r SOCKPUPPET_DIR="/opt/sockpuppet"
-  local -r SOCKPUPPET_UNIT="/etc/systemd/system/sockpuppet.service"
-  local -r SOCKPUPPET_STATS="http://127.0.0.1:8080/stats"
-
-  local -r BROWSERLESS_UNIT="/etc/systemd/system/browserless.service"
-
   if [[ ! -f "$CDIO_UNIT" ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
@@ -52,6 +40,8 @@ function update_script() {
     sed -i "s/^# *${l}.UTF-8 UTF-8/${l}.UTF-8 UTF-8/" /etc/locale.gen
   done
   $STD locale-gen
+  local -r CDIO_DIR="/opt/changedetection"
+  local -r CDIO_ENV="${CDIO_DIR}/.env"
   if ! grep -q "^LC_ALL=" "$CDIO_ENV" 2>/dev/null; then
     echo "LC_ALL=en_US.UTF-8" >>"$CDIO_ENV"
   fi
@@ -61,6 +51,8 @@ function update_script() {
   export UV_PYTHON_INSTALL_DIR=/opt/uv-python
   PYTHON_VERSION="3.13" setup_uv
 
+  local -r CDIO_VENV="${CDIO_DIR}/.venv"
+  local -r CDIO_BIN="${CDIO_VENV}/bin/changedetection.io"
   if [[ ! -d "$CDIO_VENV" || ! -x "$CDIO_BIN" ]]; then
     msg_info "Migrating to uv/venv"
     rm -rf "$CDIO_VENV"
@@ -97,13 +89,16 @@ function update_script() {
   id -u chrome >/dev/null 2>&1 ||
     useradd --system --create-home --shell /usr/sbin/nologin -g chrome chrome
 
+  local -r SOCKPUPPET_DIR="/opt/sockpuppet"
+  local -r SOCKPUPPET_VENV="${SOCKPUPPET_DIR}/.venv"
   if check_for_gh_branch "sockpuppet" "dgtlmoon/sockpuppetbrowser" "master"; then
     systemctl stop sockpuppet 2>/dev/null || true
     fetch_and_deploy_gh_branch "sockpuppet" "dgtlmoon/sockpuppetbrowser" "master"
-    $STD uv venv --clear --python 3.12 "${SOCKPUPPET_DIR}/.venv"
-    $STD uv pip install --python "${SOCKPUPPET_DIR}/.venv/bin/python" -r "${SOCKPUPPET_DIR}/requirements.txt"
+    $STD uv venv --clear --python 3.12 "$SOCKPUPPET_VENV"
+    $STD uv pip install --python "$SOCKPUPPET_VENV/bin/python" -r "${SOCKPUPPET_DIR}/requirements.txt"
   fi
 
+  local -r SOCKPUPPET_UNIT="/etc/systemd/system/sockpuppet.service"
   if [[ ! -f "$SOCKPUPPET_UNIT" ]]; then
     cat <<EOF >"$SOCKPUPPET_UNIT"
 [Unit]
@@ -119,7 +114,7 @@ WorkingDirectory=${SOCKPUPPET_DIR}/backend
 Environment=CHROME_BIN=/usr/bin/google-chrome-stable
 Environment=CHROME_HEADFUL=true
 Environment=PYTHONDONTWRITEBYTECODE=1
-ExecStart=${SOCKPUPPET_DIR}/.venv/bin/python server.py --host 127.0.0.1 --port 3000 --sport 8080
+ExecStart=${SOCKPUPPET_VENV}/bin/python server.py --host 127.0.0.1 --port 3000 --sport 8080
 Restart=on-failure
 RestartSec=5
 SyslogIdentifier=sockpuppet
@@ -130,13 +125,14 @@ EOF
   fi
   systemctl enable -q sockpuppet
 
+  local -r BROWSERLESS_UNIT="/etc/systemd/system/browserless.service"
   if [[ -f "$BROWSERLESS_UNIT" ]]; then
     systemctl disable --now browserless 2>/dev/null || true
   fi
 
   if ! safe_service_restart sockpuppet ||
     ! curl -sS --retry 15 --retry-delay 2 --retry-connrefused --retry-max-time 30 --max-time 5 \
-      "$SOCKPUPPET_STATS" | grep -qE '"chrome_version":[[:space:]]*"Google Chrome'; then
+      "http://127.0.0.1:8080/stats" | grep -qE '"chrome_version":[[:space:]]*"Google Chrome'; then
     msg_error "Sockpuppet failed to start"
     systemctl status sockpuppet --no-pager -l | head -20 || true
     systemctl disable --now sockpuppet 2>/dev/null || true
@@ -164,7 +160,7 @@ EOF
   msg_info "Starting Change Detection"
   if ! safe_service_restart changedetection ||
     ! curl -sS --retry 15 --retry-delay 2 --retry-connrefused --retry-max-time 30 --max-time 5 \
-      -o /dev/null -w '%{http_code}' "$CDIO_URL" | grep -qE '^([23][0-9][0-9]|401|403)$'; then
+      -o /dev/null -w '%{http_code}' "http://127.0.0.1:5000/" | grep -qE '^([23][0-9][0-9]|401|403)$'; then
     msg_error "changedetection failed to start"
     systemctl status changedetection --no-pager -l | head -20 || true
     exit 1
