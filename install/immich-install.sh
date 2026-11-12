@@ -220,16 +220,17 @@ if [[ "${IMMICH_LIBS_FROM_SOURCE:-0}" != "1" ]]; then
     OCI_BUNDLE="$(mktemp -d)"
     if { command -v skopeo && command -v umoci; } >/dev/null 2>&1 ||
       $STD apt install -y --no-install-recommends skopeo umoci; then
+      # Copy the compiled libraries, headers and ImageMagick data, but not the node
+      # runtime, global node modules or ffmpeg shipped by the node base image - this
+      # script provides those separately. The copy is part of the condition so a
+      # failed or partial unpack falls back to compiling instead of aborting.
       if $STD skopeo copy --override-os linux --override-arch "$(arch_resolve amd64 arm64)" "docker://${BASE_IMAGE}" "oci:${OCI_DIR}:img" &&
-        $STD umoci unpack --image "${OCI_DIR}:img" "$OCI_BUNDLE"; then
-        # Copy the compiled libraries, headers and ImageMagick data, but not the node
-        # runtime, global node modules or ffmpeg shipped by the node base image - this
-        # script provides those separately.
+        $STD umoci unpack --image "${OCI_DIR}:img" "$OCI_BUNDLE" &&
         tar -C "${OCI_BUNDLE}/rootfs/usr/local" \
           --exclude=./bin/node --exclude=./bin/npm --exclude=./bin/npx --exclude=./bin/corepack \
           --exclude=./bin/ffmpeg --exclude=./bin/ffprobe \
           --exclude=./lib/node_modules --exclude=./include/node \
-          -cf - . 2>/dev/null | tar -C /usr/local -xf - 2>/dev/null
+          -cf - . 2>/dev/null | tar -C /usr/local -xf - 2>/dev/null; then
         export LD_LIBRARY_PATH=/usr/local/lib
         ldconfig /usr/local/lib
         # Only commit to the prebuilt path if the libraries are actually usable;
