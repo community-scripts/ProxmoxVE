@@ -593,6 +593,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Whisparr-eros: set the first login and save it [@MickLesk](https://github.com/MickLesk) ([#18617](https://github.com/community-scripts/ProxmoxVE/pull/18617))
 
+  - #### 💥 Breaking Changes
+
+    - Updated ASP.NET Web App script to Debian and adds a .Net selection [@kris701](https://github.com/kris701) ([#18628](https://github.com/community-scripts/ProxmoxVE/pull/18628))
+
 ### 📚 Documentation
 
   - pocketbase-bot: apply website metadata requests from Accept/Decline boxes [@MickLesk](https://github.com/MickLesk) ([#18631](https://github.com/community-scripts/ProxmoxVE/pull/18631))
