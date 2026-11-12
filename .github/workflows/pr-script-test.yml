@@ -11,7 +11,7 @@ name: PR script test
 # tested there; only writers can push to such a branch). Those are built
 # automatically and approved when every script passes. Everything else waits
 # for someone with write access to comment `/test` (optionally followed by a
-# full SHA to pin, and the ct/ paths to build). Only a commit that existed when
+# full SHA to pin, the scripts to build, and the platforms to build on). Only a commit that existed when
 # the comment was written gets built: a push after it is never covered, not
 # even one that lands in the seconds before this job runs.
 #
@@ -48,7 +48,7 @@ on:
         required: false
         type: string
       scripts:
-        description: "Space-separated ct/ or vm/ paths (empty = everything the PR touches)"
+        description: "Space-separated app names, ct/ or vm/ paths, and platforms (pve, incus, arm); empty = everything the PR touches, everywhere"
         required: false
         type: string
 
@@ -79,6 +79,7 @@ jobs:
       not_built: ${{ steps.plan.outputs.not_built }}
       trusted: ${{ steps.plan.outputs.trusted }}
       kind: ${{ steps.plan.outputs.kind }}
+      platforms: ${{ steps.plan.outputs.platforms }}
     steps:
       - id: plan
         uses: actions/github-script@v8
@@ -164,19 +165,33 @@ jobs:
             //                and read after the PR, so a push in between shows up.
             //                Branches of this repository belong to people with
             //                write access, who could build anything anyway.
-            const tokens = requested.split(/\s+/).filter(Boolean);
+            const words = requested.split(/\s+/).filter(Boolean);
+            // Platform words pick where to build: `/test arm`, `/test pve incus
+            // bark-server`. None means every platform. A run on only some of
+            // them is reported under its own check name and never approves.
+            const PLATFORM = { pve: 'pve', proxmox: 'pve', incus: 'incus', arm: 'arm', arm64: 'arm', aarch64: 'arm' };
+            const platformOf = t => PLATFORM[t.toLowerCase()];
+            const only = new Set(words.map(platformOf).filter(Boolean));
+            const onlyList = ['pve', 'incus', 'arm'].filter(p => only.has(p));
+            const tokens = words.filter(t => !platformOf(t));
             const isSha = t => /^[0-9a-f]{7,40}$/.test(t);
+            // App names (bark-server) become ct/ paths; such a name without a
+            // ct/ script falls back to vm/ below.
+            const bare = new Set();
+            const toPath = t => {
+              if (/^(ct|vm)\/[A-Za-z0-9._-]+\.sh$/.test(t) || !/^[A-Za-z0-9._-]+$/.test(t)) return t;
+              const p = `ct/${t.replace(/\.sh$/, '')}.sh`;
+              bare.add(p);
+              return p;
+            };
             const approved = isIssue ? [] : tokens.filter(isSha);
-            let entries = isIssue ? [] : tokens.filter(t => !isSha(t));
+            let entries = (isIssue ? tokens : tokens.filter(t => !isSha(t))).map(toPath);
             const refuse = async (why, retry) => {
               await sticky([MARK, '### Proxmox script test', '', `⚠️ ${why} Nothing was built.`, '', retry].join('\n'));
               core.notice(why);
             };
             if (isIssue) {
-              // App names (bark-server) or ct/ and vm/ paths; the default branch
-              // is trusted. A name without a ct/ script falls back to vm/ below.
-              entries = tokens.map(t => /^(ct|vm)\/[A-Za-z0-9._-]+\.sh$/.test(t) ? t
-                : /^[A-Za-z0-9._-]+$/.test(t) ? `ct/${t.replace(/\.sh$/, '')}.sh` : t);
+              // The default branch is trusted; only which app is needed.
               if (entries.length === 0) {
                 await refuse('In an issue, `/test` needs to know which app.', 'Comment `/test <app>`, for example `/test bark-server` (the name of its `ct/` script).');
                 return;
@@ -207,8 +222,8 @@ jobs:
             }
             if (entries.some(e => !/^(ct|vm)\/[A-Za-z0-9._-]+\.sh$/.test(e))) {
               await refuse(
-                isIssue ? 'Only app names (as in `ct/<app>.sh` or `vm/<name>.sh`) can be tested.' : 'Only `ct/<name>.sh` and `vm/<name>.sh` paths can be requested.',
-                isIssue ? 'For example: `/test bark-server` or `/test debian-vm`' : 'For example: `/test ct/bark-server.sh`, or just `/test`.');
+                isIssue ? 'Only app names (as in `ct/<app>.sh` or `vm/<name>.sh`) and platforms (`pve`, `incus`, `arm`) can be requested.' : 'Only app names, `ct/<name>.sh` and `vm/<name>.sh` paths, platforms (`pve`, `incus`, `arm`) and the commit can be requested.',
+                isIssue ? 'For example: `/test bark-server`, `/test arm bark-server` or `/test debian-vm`' : 'For example: `/test`, `/test arm`, or `/test pve incus bark-server`.');
               return;
             }
             // Everything the PR changes that this test cannot build is named in
@@ -238,13 +253,15 @@ jobs:
             for (let script of entries.slice(0, MAX)) {
               let text = await fetchScript(script);
               // /test debian-vm in an issue: there is no ct/debian-vm.sh, but a vm/ one.
-              if (text === null && isIssue && script.startsWith('ct/')) {
+              const wasBare = isIssue || bare.has(script);
+              if (text === null && wasBare && script.startsWith('ct/')) {
                 const vm = `vm/${script.slice(3)}`;
                 if ((text = await fetchScript(vm)) !== null) script = vm;
               }
               if (text === null) {
-                notBuilt.push(isIssue
-                  ? (script.startsWith('ct/') ? `${code(script.slice(3, -3))}: neither \`ct/\` nor \`vm/\` has it on the default branch` : `${code(script)} does not exist on the default branch`)
+                const where = isIssue ? 'on the default branch' : 'in this PR';
+                notBuilt.push(wasBare
+                  ? (script.startsWith('ct/') ? `${code(script.slice(3, -3))}: neither \`ct/\` nor \`vm/\` has it ${where}` : `${code(script)} does not exist ${where}`)
                   : `\`${script}\` does not exist in this PR (an \`install/\` script is built through the \`ct/\` script of the same name)`);
                 continue;
               }
@@ -264,8 +281,12 @@ jobs:
               // says var_arm64=no is not built there. Unset is built with
               // var_arm64=yes, to see whether it would work.
               const arm = (text.match(/^[ \t]*var_arm64="\$\{var_arm64:-(yes|no)\}"/m) || [])[1] || 'unset';
-              const platforms = isVm ? ['pve'] : arm === 'no' ? ['pve', 'incus'] : ['pve', 'incus', 'arm'];
-              if (!isVm && arm === 'no') notBuilt.push(`${code(script)} on ARM64: the script sets \`var_arm64=no\``);
+              let platforms = isVm ? ['pve'] : arm === 'no' ? ['pve', 'incus'] : ['pve', 'incus', 'arm'];
+              if (!isVm && arm === 'no' && (!only.size || only.has('arm'))) notBuilt.push(`${code(script)} on ARM64: the script sets \`var_arm64=no\``);
+              if (only.size) {
+                if (isVm && !only.has('pve')) notBuilt.push(`${code(script)}: VM scripts are built on \`pve\` only`);
+                platforms = platforms.filter(p => only.has(p));
+              }
               for (const platform of platforms) {
                 for (const os of oses) include.push({ script, os, platform, arm64: platform === 'arm' ? arm : '', name: `${os ? `${name}-${os}` : name}-${platform}` });
               }
@@ -274,8 +295,8 @@ jobs:
             if (include.length === 0) {
               await sticky([
                 MARK, '### Proxmox script test', '',
-                isIssue
-                  ? 'ℹ️ Nothing to build:'
+                isIssue || onlyList.length
+                  ? `ℹ️ Nothing to build${onlyList.length ? ` on ${onlyList.join(', ')}` : ''}:`
                   : 'ℹ️ Nothing to build: this test builds `ct/` and `vm/` scripts (and changed `install/` scripts through their `ct/` script).', '',
                 ...(notBuilt.length ? notBuilt.map(n => `- ${n}`) : ['- this PR changes no `ct/`, `vm/` or `install/` script']),
               ].join('\n'));
@@ -288,7 +309,9 @@ jobs:
             let checkId = '';
             if (!isIssue) {
               const { data: check } = await github.rest.checks.create({
-                owner, repo, name: 'Proxmox script test', head_sha: headSha, status: 'in_progress',
+                // A partial run gets its own name: it must not stand in for the
+                // full test, e.g. as a required check.
+                owner, repo, name: `Proxmox script test${onlyList.length ? ` (${onlyList.join(', ')} only)` : ''}`, head_sha: headSha, status: 'in_progress',
                 details_url: runUrl,
                 output: { title: `Building ${include.length}`, summary: include.map(i => `- \`${i.script}\` ${[i.platform, i.os].filter(Boolean).join(' · ')}`).join('\n') },
               });
@@ -301,12 +324,13 @@ jobs:
             core.setOutput('sha', headSha);
             core.setOutput('check_id', checkId);
             core.setOutput('not_built', JSON.stringify(notBuilt));
+            core.setOutput('platforms', onlyList.join(' '));
             // Who asked: the /test commenter, or whoever dispatched the run.
             core.setOutput('actor', context.actor);
 
             await sticky([
               MARK, '### Proxmox script test', '',
-              `⏳ Building ${include.length} at ${headSha.slice(0, 7)}${isIssue ? ' (default branch)' : ''} — [watch it live](${runUrl}) (open the \`test\` job)`, '',
+              `⏳ Building ${include.length} at ${headSha.slice(0, 7)}${isIssue ? ' (default branch)' : ''}${onlyList.length ? `, only on ${onlyList.join(', ')}` : ''} — [watch it live](${runUrl}) (open the \`test\` job)`, '',
               ...include.map(i => `- \`${i.script}\` (${[i.platform, i.os].filter(Boolean).join(' · ')})`),
               ...(notBuilt.length ? ['', '**Not built:**', ...notBuilt.map(n => `- ${n}`)] : []),
             ].join('\n'));
@@ -405,6 +429,7 @@ jobs:
           NOT_BUILT: ${{ needs.gate.outputs.not_built }}
           TRUSTED: ${{ needs.gate.outputs.trusted }}
           KIND: ${{ needs.gate.outputs.kind }}
+          PLATFORMS: ${{ needs.gate.outputs.platforms }}
         with:
           script: |
             const fs = require('fs');
@@ -534,13 +559,22 @@ jobs:
             const broken = count('fail');
             const setupTrouble = count('error') + count('cancelled');
             const allPass = passed === coreRows.length;
-            const cancelled = coreRows.every(r => r.status === 'cancelled');
+            // `/test arm`: nothing that counts was built, so the result is
+            // information only as a whole.
+            const armOnly = coreRows.length === 0;
+            // Built on only some platforms (`/test pve`): a pass there says
+            // nothing about the others, so it neither approves nor lifts an
+            // earlier "changes requested". A failure is still a failure.
+            const partial = !!process.env.PLATFORMS;
+            const cancelled = (armOnly ? rows : coreRows).every(r => r.status === 'cancelled');
             const of = `**${passed}/${coreRows.length} passed**`;
             const armPassed = armRows.filter(r => r.status === 'pass').length;
-            const armLine = armRows.length
+            const armLine = armRows.length && !armOnly
               ? `ARM64 (information only, not counted): ${armPassed}/${armRows.length} passed${armPassed < armRows.length ? `; failures there do not block this PR` : ''}.`
               : '';
-            const headline = broken
+            const headline = armOnly
+              ? `ℹ️ ARM64 only, information only: **${armPassed}/${armRows.length} passed**`
+              : broken
               ? `❌ ${of}`
               : setupTrouble
                 ? `⚠️ ${of}, ${setupTrouble} could not be tested because of a problem with the test setup (not the PR)`
@@ -613,10 +647,11 @@ jobs:
               `${headline} at \`${process.env.SHA.slice(0, 7)}\``, '',
               table, '',
               ...(armLine ? [`<sub>${armLine}</sub>`, ''] : []),
+              ...(partial ? [`<sub>Built only on ${process.env.PLATFORMS.split(' ').join(', ')}; comment \`/test\` for every platform.</sub>`, ''] : []),
               ...shots, '',
               ...(() => { try { const n = JSON.parse(process.env.NOT_BUILT || '[]'); return n.length ? ['**Not built:**', ...n.map(x => `- ${x}`), ''] : []; } catch (e) { return []; } })(),
               ...logs, '',
-              `Full logs: [workflow run](${runUrl}) (artifacts \`result-*\`). Comment \`/test${process.env.KIND === 'issue' ? ' ' + [...new Set(rows.map(r => r.script.slice(3, -3)))].join(' ') : ''}\` to build again.`,
+              `Full logs: [workflow run](${runUrl}) (artifacts \`result-*\`). Comment \`/test${partial ? ` ${process.env.PLATFORMS}` : ''}${process.env.KIND === 'issue' ? ' ' + [...new Set(rows.map(r => r.script.slice(3, -3)))].join(' ') : ''}\` to build again.`,
             ].join('\n');
 
             // Issues have no check run (there is no PR commit to attach it to).
@@ -625,8 +660,13 @@ jobs:
                 owner, repo, check_run_id: Number(process.env.CHECK_ID), status: 'completed',
                 // Untestable here is "test it by hand", not a pass: action_required,
                 // because a required check would count neutral as passed.
-                conclusion: cancelled ? 'cancelled' : allPass ? 'success' : broken ? 'failure' : 'action_required',
-                output: { title: `${passed}/${coreRows.length} passed${armRows.length ? ` (+ ARM ${armPassed}/${armRows.length}, not counted)` : ''}`, summary: summary.slice(0, 65000) },
+                conclusion: cancelled ? 'cancelled' : armOnly ? 'neutral' : allPass ? 'success' : broken ? 'failure' : 'action_required',
+                output: {
+                  title: armOnly
+                    ? `ARM64 ${armPassed}/${armRows.length} passed (information only)`
+                    : `${passed}/${coreRows.length} passed${armRows.length ? ` (+ ARM ${armPassed}/${armRows.length}, not counted)` : ''}`,
+                  summary: summary.slice(0, 65000),
+                },
               });
             }
 
@@ -670,7 +710,9 @@ jobs:
             // what a migration contains: ct/ and install/ scripts. A PR that
             // also changes anything else (workflows, misc/, ...) is tested but
             // never approved.
-            let approve = process.env.TRUSTED === 'true' && allPass;
+            let approve = process.env.TRUSTED === 'true' && allPass && !partial;
+            // A partial run that passed leaves every review as it is.
+            const leaveReviews = partial && !failedRows.length;
             let noApproveWhy = '';
             if (approve) {
               const changed = await github.paginate(github.rest.pulls.listFiles, { owner, repo, pull_number: pr });
@@ -686,13 +728,13 @@ jobs:
             try {
               const reviews = await github.paginate(github.rest.pulls.listReviews, { owner, repo, pull_number: pr });
               const ours = state => reviews.filter(v => v.user && v.user.type === 'Bot' && v.state === state && (v.body || '').includes(REVIEW_MARK));
-              for (const v of ours('CHANGES_REQUESTED')) {
+              for (const v of leaveReviews ? [] : ours('CHANGES_REQUESTED')) {
                 await github.rest.pulls.dismissReview({
                   owner, repo, pull_number: pr, review_id: v.id,
                   message: failedRows.length ? 'Replaced by a newer Proxmox script test.' : `Proxmox script test passed at ${sha7}.`,
                 });
               }
-              if (!approve && !cancelled) {
+              if (!approve && !cancelled && !leaveReviews) {
                 for (const v of ours('APPROVED')) {
                   await github.rest.pulls.dismissReview({
                     owner, repo, pull_number: pr, review_id: v.id,
