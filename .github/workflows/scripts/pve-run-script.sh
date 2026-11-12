@@ -654,10 +654,10 @@ check_health screenshot.png || fail "$health_problem"
 # A fresh install is already on the latest release, so a plain `update` would
 # only say "No update available" and never run update_script's real path. The
 # version files the install wrote (~/.<app>, one per fetch_and_deploy_gh_release)
-# that update_script checks are set back to 0.0.0-ci first; check_for_gh_release then sees an update and
-# runs it all. Apps deployed from a branch (fetch_and_deploy_gh_branch, checked
-# with check_for_gh_branch) store a commit hash instead of a version; the
-# engine compares both as plain strings, so 0.0.0-ci works for them too. `update` is the /usr/bin/update the install generated: it pulls
+# that update_script checks are set back first (see below); check_for_gh_release
+# then sees an update and runs it all. Apps deployed from a branch
+# (fetch_and_deploy_gh_branch, checked with check_for_gh_branch) store a commit
+# hash instead of a version. `update` is the /usr/bin/update the install generated: it pulls
 # ct/<app>.sh from the URL this container was built from, i.e. the PR's tree.
 UPDATE_FAKE="0.0.0-ci"
 update_fail() {
@@ -681,11 +681,23 @@ tracked=$(grep -oE 'check_for_[a-z]*_?release[[:space:]]+("[^"]*"|[^[:space:]]+)
 if [[ -n "$tracked" && "$tracked" != *'$'* ]]; then
   version_files=$(grep -xF -f <(sed 's|^|/root/.|' <<<"$tracked") <<<"$version_files" || true)
 fi
+# A version keeps its digits and gets "-dev" (6.7.16.0 -> 6.7.16.0-dev): the
+# engine ranks that below the release, so the update runs, and an
+# update_script that reads the installed series (shopware: composer
+# "~6.7.0" from ~/.shopware) still gets the real one. 0.0.0-ci broke that.
+# A commit hash (or a bare number) has no series and gets 0.0.0-ci.
+declare -A update_fake=()
 for f in $version_files; do
-  guest_exec sh -c "echo '$UPDATE_FAKE' > '$f'; rm -f '$f.pending'" ||
+  cur=$(guest_exec cat "$f" 2>/dev/null | tr -d '\r\n')
+  if [[ "$cur" =~ ^v?[0-9]+(\.[0-9A-Za-z_+-]+)+$ ]]; then
+    update_fake[$f]="${cur}-dev"
+  else
+    update_fake[$f]="$UPDATE_FAKE"
+  fi
+  guest_exec sh -c "echo '${update_fake[$f]}' > '$f'; rm -f '$f.pending'" ||
     update_fail "could not reset $f"
+  echo "Update test: set back $f from ${cur} to ${update_fake[$f]}"
 done
-[[ -n "$version_files" ]] && echo "Update test: set back $(tr '\n' ' ' <<<"$version_files")to ${UPDATE_FAKE}"
 
 phase="update"
 # Upgrade test: the container pulls its update from where it was installed
@@ -746,8 +758,8 @@ fi
 if strip_ansi <"$UPDATE_RAW" | grep -qi 'updated successfully'; then
   update_status="updated"
   for f in $version_files; do
-    [[ "$(guest_exec cat "$f" 2>/dev/null)" != "$UPDATE_FAKE" ]] ||
-      update_fail "reported success, but $f is still ${UPDATE_FAKE}"
+    [[ "$(guest_exec cat "$f" 2>/dev/null)" != "${update_fake[$f]}" ]] ||
+      update_fail "reported success, but $f is still ${update_fake[$f]}"
   done
 else
   # Ran cleanly without updating anything: no version file to fake (apt/npm
