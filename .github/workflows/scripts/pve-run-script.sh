@@ -48,6 +48,16 @@ URL_WAIT="${URL_WAIT:-120}"
 # script that leaves var_arm64 unset; the ARM run builds those anyway, to see.
 VAR_ARM64="${VAR_ARM64:-}"
 [[ -z "$VAR_ARM64" || "$VAR_ARM64" == "yes" ]] || { echo "bad VAR_ARM64" >&2; exit 2; }
+# upgrade: install the script as it is on the base branch (BASE_SHA of
+# UPSTREAM), then update with the PR. That is what a user does who installed
+# before the PR is merged and runs `update` after it. Empty: install and
+# update both from the PR.
+TEST_MODE="${TEST_MODE:-}"
+[[ -z "$TEST_MODE" || "$TEST_MODE" == "upgrade" ]] || { echo "bad TEST_MODE" >&2; exit 2; }
+if [[ -n "$TEST_MODE" ]]; then
+  [[ "${BASE_SHA:-}" =~ ^[0-9a-f]{40}$ ]] || { echo "bad BASE_SHA" >&2; exit 2; }
+  [[ "$SCRIPT" == ct/* ]] || { echo "upgrade tests are for ct/ scripts" >&2; exit 2; }
+fi
 [[ "$PLATFORM" == "pve" || "$SCRIPT" == ct/* ]] || { echo "vm/ scripts run on pve only" >&2; exit 2; }
 [[ "$CTID_BASE" =~ ^[0-9]+$ ]] || { echo "bad CTID_BASE" >&2; exit 2; }
 
@@ -59,12 +69,17 @@ INSTALL_LOG_OUT="$OUT_DIR/install.log"
 UPDATE_RAW="$OUT_DIR/update.raw.log"
 UPDATE_LOG="$OUT_DIR/update.log"
 UPDATE_TIMEOUT="${UPDATE_TIMEOUT:-30m}"
+UPDATE2_RAW="$OUT_DIR/update2.raw.log"
+UPDATE2_LOG="$OUT_DIR/update2.log"
+# How long the app has to keep running without a service restarting.
+STABLE_WAIT="${STABLE_WAIT:-60}"
 
 kind="${SCRIPT%%/*}" # ct or vm
 app=$(basename "$SCRIPT" .sh)
-job="${GITHUB_RUN_ID:-local}-${GITHUB_RUN_ATTEMPT:-1}-${PLATFORM}-${kind}-${app}-${OS:-default}"
+job="${GITHUB_RUN_ID:-local}-${GITHUB_RUN_ATTEMPT:-1}-${PLATFORM}-${kind}-${app}-${OS:-default}${TEST_MODE:+-$TEST_MODE}"
 tree="$SERVE_ROOT/$job"
 base="$SERVE_URL/$job"
+src_tree="$tree" # what gets installed; the base branch's tree in an upgrade test
 started=$(date +%s)
 
 status="fail"
@@ -102,6 +117,16 @@ failed_units=""
 # fail: the update broke; empty: not attempted (the install failed).
 update_status=""
 update_step=""
+# install: building and checking what was installed; update: from the first
+# update on. In an upgrade test a failure while installing is the base
+# branch's, not the PR's.
+phase="install"
+# Findings that do not fail the build, shown under the table on the PR.
+notes=()
+# Disk, RAM and OOM kills of the container, measured at the end.
+resources=""
+# Second `update` right after the first: no-update, updated-again, or empty.
+update2_status=""
 
 # Spinner frames: the engine redraws "⠋ Starting VM" a few times a second
 # without a tty too. An alternation, not a bracket: these are multibyte and
@@ -163,13 +188,56 @@ classify_cpu_failure() {
   step="needs a newer CPU than the test host has (no ${feature}): ${line}"
 }
 
+# Disk used against var_disk, RAM in use at rest (anonymous memory, without
+# the page cache that fills any limit) against the limit, and how often the
+# kernel killed something for lack of memory, over the container's whole life,
+# the build included. The size of a dir-backed Incus root is the host's, so
+# then the script's var_disk is the size to compare with.
+measure_resources() {
+  local out disk_size disk_used anon limit oom want_disk want_ram line=()
+  out=$(guest_exec sh -c 'df -Pm / | awk "NR==2 {print \$2, \$3}"
+    awk "/^anon / {print int(\$2 / 1048576)}" /sys/fs/cgroup/memory.stat 2>/dev/null || echo -
+    cat /sys/fs/cgroup/memory.max 2>/dev/null || echo -
+    awk "/^oom_kill / {print \$2}" /sys/fs/cgroup/memory.events 2>/dev/null || echo -' 2>/dev/null) || return 0
+  read -r disk_size disk_used <<<"$(sed -n 1p <<<"$out")"
+  anon=$(sed -n 2p <<<"$out"); limit=$(sed -n 3p <<<"$out"); oom=$(sed -n 4p <<<"$out")
+  want_disk=$(grep -m1 -oE 'var_disk="\$\{var_disk:-[0-9]+\}"' "$src_tree/$SCRIPT" | grep -oE '[0-9]+' | head -n1)
+  want_ram=$(grep -m1 -oE 'var_ram="\$\{var_ram:-[0-9]+\}"' "$src_tree/$SCRIPT" | grep -oE '[0-9]+' | head -n1)
+  [[ "$disk_size" =~ ^[0-9]+$ && "$disk_used" =~ ^[0-9]+$ ]] || return 0
+  if [[ -n "$want_disk" ]] && ((disk_size > want_disk * 1024 * 3 / 2)); then disk_size=$((want_disk * 1024)); fi
+  line+=("disk $(awk -v u="$disk_used" 'BEGIN {printf "%.1f", u / 1024}') of $(awk -v s="$disk_size" 'BEGIN {printf "%.0f", s / 1024}') GB")
+  if ((disk_used * 100 >= disk_size * 90)); then
+    notes+=("disk ${disk_used} of ${disk_size} MB used after the install: var_disk may be too small")
+  fi
+  [[ "$limit" =~ ^[0-9]+$ ]] && limit=$((limit / 1048576)) || limit="${want_ram:-}"
+  if [[ "$anon" =~ ^[0-9]+$ ]]; then
+    line+=("RAM at rest ${anon}${limit:+ of ${limit}} MB")
+    if [[ "$limit" =~ ^[0-9]+$ ]] && ((anon * 100 >= limit * 80)); then
+      notes+=("${anon} of ${limit} MB RAM in use at rest: var_ram may be too small")
+    fi
+  fi
+  if [[ "$oom" =~ ^[0-9]+$ ]]; then
+    line+=("OOM kills ${oom}")
+    ((oom > 0)) && notes+=("the kernel killed ${oom} process(es) for lack of memory: var_ram is too small for the build or the app")
+  fi
+  resources=$(
+    IFS='|'
+    echo "${line[*]}"
+  )
+  resources=${resources//|/ · }
+}
+
 finish() {
   [[ -f "$RAW_LOG" ]] && strip_ansi <"$RAW_LOG" >"$LOG"
   [[ -f "$RAW_LOG" ]] && collect_install_log
   [[ -f "$UPDATE_RAW" ]] && strip_ansi <"$UPDATE_RAW" >"$UPDATE_LOG"
-  rm -f "$UPDATE_RAW"
+  [[ -f "$UPDATE2_RAW" ]] && strip_ansi <"$UPDATE2_RAW" >"$UPDATE2_LOG"
+  rm -f "$UPDATE_RAW" "$UPDATE2_RAW"
+  [[ "$kind" == ct && -n "$ctid" && -z "$resources" ]] && guest_running && measure_resources
   jq -n \
     --arg script "$SCRIPT" --arg kind "$kind" --arg platform "$PLATFORM" --arg os "${OS:-default}" --arg status "$status" \
+    --arg mode "$TEST_MODE" --arg resources "$resources" --arg update2_status "$update2_status" \
+    --arg notes "$(printf '%s\n' "${notes[@]}")" \
     --arg step "$step" --arg exit_code "$exit_code" --arg sha "$PR_SHA" \
     --arg ctid "$ctid" --arg url "$url" --arg http_code "$http_code" \
     --arg failed_units "$failed_units" --arg ip "$ct_ip" --arg arch "$(uname -m)" \
@@ -179,6 +247,8 @@ finish() {
     '{script: $script, kind: $kind, platform: $platform, arch: $arch, os: $os, status: $status, step: $step, exit_code: $exit_code,
       sha: $sha, ctid: $ctid, ip: $ip, url: $url, http_code: $http_code,
       failed_units: $failed_units, update_status: $update_status, update_step: $update_step,
+      mode: $mode, resources: $resources, update2_status: $update2_status,
+      notes: ($notes | split("\n") | map(select(. != ""))),
       duration: $duration, log_tail: $tail}' >"$RESULT"
   echo "::group::result"
   jq 'del(.log_tail)' "$RESULT"
@@ -262,7 +332,7 @@ cleanup() {
     done
   fi
   rm -f "$RAW_LOG.start"
-  rm -rf -- "$tree"
+  rm -rf -- "$tree" "$tree-base"
 }
 trap cleanup EXIT
 # A cancelled job sends TERM; without this the EXIT trap would not run.
@@ -281,6 +351,10 @@ fail() {
   step="$1"
   status="${2:-fail}"
   [[ "$status" == "unsupported" ]] || status="fail"
+  if [[ "$TEST_MODE" == "upgrade" && "$phase" == "install" && "$status" == "fail" ]]; then
+    status="error"
+    step="the install before this PR (${UPSTREAM}@${BASE_SHA:0:7}) failed, so the upgrade was not tested: $1"
+  fi
   finish
   echo "::warning title=${SCRIPT}::${step}"
   exit 0
@@ -335,20 +409,37 @@ upstream_re="https://raw\.githubusercontent\.com/${UPSTREAM//./\\.}/(refs/heads/
 grep -rlE "$upstream_re" "$tree" --include='*.sh' --include='*.func' |
   xargs -r sed -i -E "s#${upstream_re}#${base}#g"
 
+# What gets installed: the PR, or in an upgrade test the base branch.
+src_tree="$tree"
+src_base="$base"
+if [[ "$TEST_MODE" == "upgrade" ]]; then
+  src_tree="$tree-base"
+  src_base="$base-base"
+  mkdir -p "$src_tree"
+  curl -fsSL --retry 3 "https://codeload.github.com/${UPSTREAM}/tar.gz/${BASE_SHA}" |
+    tar -xz -C "$src_tree" --strip-components=1 || setup_error "could not download ${UPSTREAM}@${BASE_SHA:0:7}"
+  [[ -f "$src_tree/$SCRIPT" ]] || fail "${SCRIPT} does not exist at ${UPSTREAM}@${BASE_SHA:0:7}"
+  grep -rlE "$upstream_re" "$src_tree" --include='*.sh' --include='*.func' |
+    xargs -r sed -i -E "s#${upstream_re}#${src_base}#g"
+fi
+
 if [[ "$kind" == "vm" ]]; then
   vm_build_and_check
   exit 0
 fi
 
 # --- Build ----------------------------------------------------------------------
-echo "Building ${SCRIPT} (${OS:-default OS}) on ${PLATFORM} as CT ${ctid} from ${PR_REPO}@${PR_SHA:0:7}"
+if [[ "$TEST_MODE" == "upgrade" ]]; then
+  echo "Upgrade test: installing ${SCRIPT} from ${UPSTREAM}@${BASE_SHA:0:7} (before this PR), then updating with ${PR_REPO}@${PR_SHA:0:7}"
+fi
+echo "Building ${SCRIPT} (${OS:-default OS}) on ${PLATFORM} as CT ${ctid} from $([[ "$TEST_MODE" == upgrade ]] && echo "${UPSTREAM}@${BASE_SHA:0:7}" || echo "${PR_REPO}@${PR_SHA:0:7}")"
 hostname_safe="ci-$(tr -c 'a-z0-9-\n' '-' <<<"${app,,}" | cut -c1-50)"
 build_env=(
   PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
   HOME=/root TERM=dumb LANG=C.UTF-8
   mode=default MODE=default PHS_SILENT=1 DIAGNOSTICS=no
   var_ctid="$ctid" var_hostname="$hostname_safe" var_brg="$BRIDGE"
-  "dev_mode=timing,keep" COMMUNITY_SCRIPTS_URL="$base"
+  "dev_mode=timing,keep" COMMUNITY_SCRIPTS_URL="$src_base"
 )
 if [[ "$PLATFORM" == "incus" ]]; then
   build_env+=(var_container_storage=default)
@@ -387,7 +478,7 @@ ci_value() {
   esac
 }
 declare -A answers=()
-json="$tree/json/${app}.json"
+json="$src_tree/json/${app}.json"
 if [[ -f "$json" ]]; then
   while IFS=$'\t' read -r name default; do
     answers[$name]="$default"
@@ -419,8 +510,8 @@ expand_templates() {
 
 # The engine names the install script after APP (lower case, no spaces), which
 # need not match the ct/ file name: ct/bluesky-pds.sh -> blueskypds-install.sh.
-nsapp=$(grep -m1 -oE '^APP="[^"]+"' "$tree/$SCRIPT" | cut -d'"' -f2 | tr -d ' ' | tr '[:upper:]' '[:lower:]')
-for f in "$tree/install/${app}-install.sh" "$tree/install/${nsapp}-install.sh" "$tree/$SCRIPT"; do
+nsapp=$(grep -m1 -oE '^APP="[^"]+"' "$src_tree/$SCRIPT" | cut -d'"' -f2 | tr -d ' ' | tr '[:upper:]' '[:lower:]')
+for f in "$src_tree/install/${app}-install.sh" "$src_tree/install/${nsapp}-install.sh" "$src_tree/$SCRIPT"; do
   [[ -f "$f" ]] || continue
   while read -r name; do
     [[ -v "answers[$name]" ]] || answers[$name]=""
@@ -443,7 +534,7 @@ done
 # In the background so that a TERM from a cancelled job is handled at once:
 # bash defers traps until a foreground command returns.
 env -i "${build_env[@]}" timeout --kill-after=1m "$BUILD_TIMEOUT" \
-  bash -c 'bash -c "$(curl -fsSL "$1")"' _ "$base/$SCRIPT" </dev/null >"$RAW_LOG" 2>&1 &
+  bash -c 'bash -c "$(curl -fsSL "$1")"' _ "$src_base/$SCRIPT" </dev/null >"$RAW_LOG" 2>&1 &
 build_pid=$!
 start_streams
 wait "$build_pid"
@@ -522,8 +613,12 @@ take_screenshot() {
 # open, e.g. http://${IP}:1337/admin, answers 200 (after redirects, so a jump
 # to /login is fine). A script that prints no URL has no web UI to check.
 # Run after the install and again after the update. Sets health_problem.
-pattern=$(grep -oE 'https?://\$\{IP\}(:[0-9]+)?(/[A-Za-z0-9._~/?=&%-]*)?' "$tree/$SCRIPT" | head -n1)
-[[ -n "$pattern" && -n "$ct_ip" ]] && url="${pattern/\$\{IP\}/$ct_ip}"
+app_url() { # the URL the script at $1 tells the user to open
+  local pattern
+  pattern=$(grep -oE 'https?://\$\{IP\}(:[0-9]+)?(/[A-Za-z0-9._~/?=&%-]*)?' "$1" | head -n1)
+  [[ -n "$pattern" && -n "$ct_ip" ]] && echo "${pattern/\$\{IP\}/$ct_ip}"
+}
+url=$(app_url "$src_tree/$SCRIPT")
 health_problem=""
 check_health() {
   health_problem=""
@@ -587,24 +682,41 @@ for f in $version_files; do
 done
 [[ -n "$version_files" ]] && echo "Update test: set back $(tr '\n' ' ' <<<"$version_files")to ${UPDATE_FAKE}"
 
-: >"$UPDATE_RAW"
-update_token=$(head -c 16 /dev/urandom | od -An -tx1 | tr -d ' \n')
-echo "──────── update test (live) ────────"
-echo "::stop-commands::${update_token}"
-# timeout runs a program, not a shell function, so spell out the exec here.
-if [[ "$PLATFORM" == "incus" ]]; then guest_cmd=(incus exec "$ctid" --); else guest_cmd=(pct exec "$ctid" --); fi
-timeout --kill-after=1m "$UPDATE_TIMEOUT" "${guest_cmd[@]}" env PHS_SILENT=1 mode=default MODE=default \
-  TERM=dumb DIAGNOSTICS=no var_ignore_breaking_changes=yes ${GH_API_TOKEN:+GITHUB_TOKEN="$GH_API_TOKEN"} update </dev/null \
-  > >(tee "$UPDATE_RAW" | live_filter) 2>&1 &
-update_pid=$!
-wait "$update_pid"
-update_rc=$?
-update_pid=""
-sleep 1
-echo "::${update_token}::"
+phase="update"
+# Upgrade test: the container pulls its update from where it was installed
+# from (COMMUNITY_SCRIPTS_URL in /usr/bin/update); point that at the PR, as
+# merging it would.
+if [[ "$TEST_MODE" == "upgrade" ]]; then
+  guest_exec sed -i -E "s#^export COMMUNITY_SCRIPTS_URL=.*#export COMMUNITY_SCRIPTS_URL=\"${base}\"#" /usr/bin/update &&
+    guest_exec grep -qxF "export COMMUNITY_SCRIPTS_URL=\"${base}\"" /usr/bin/update ||
+    setup_error "could not point /usr/bin/update at the PR"
+  echo "Upgrade test: /usr/bin/update now pulls from ${PR_REPO}@${PR_SHA:0:7}"
+fi
+
+# run_update <raw log> <title>: runs `update` in the container, live in the
+# job log; sets update_rc.
+run_update() {
+  local raw=$1 token
+  : >"$raw"
+  token=$(head -c 16 /dev/urandom | od -An -tx1 | tr -d ' \n')
+  echo "──────── $2 (live) ────────"
+  echo "::stop-commands::${token}"
+  # timeout runs a program, not a shell function, so spell out the exec here.
+  if [[ "$PLATFORM" == "incus" ]]; then guest_cmd=(incus exec "$ctid" --); else guest_cmd=(pct exec "$ctid" --); fi
+  timeout --kill-after=1m "$UPDATE_TIMEOUT" "${guest_cmd[@]}" env PHS_SILENT=1 mode=default MODE=default \
+    TERM=dumb DIAGNOSTICS=no var_ignore_breaking_changes=yes ${GH_API_TOKEN:+GITHUB_TOKEN="$GH_API_TOKEN"} update </dev/null \
+    > >(tee "$raw" | live_filter) 2>&1 &
+  update_pid=$!
+  wait "$update_pid"
+  update_rc=$?
+  update_pid=""
+  sleep 1
+  echo "::${token}::"
+}
+run_update "$UPDATE_RAW" "update test"
 
 update_failure_line() {
-  strip_ansi <"$UPDATE_RAW" | grep -E '✖|\[ERROR\]|error:' | tail -n 1 | sed -E 's/^\s*(✖️?|\s)*//' | cut -c1-180
+  strip_ansi <"${1:-$UPDATE_RAW}" | grep -E '✖|\[ERROR\]|error:' | tail -n 1 | sed -E 's/^\s*(✖️?|\s)*//' | cut -c1-180
 }
 if ((update_rc == 124 || update_rc == 137)); then
   update_fail "timed out after ${UPDATE_TIMEOUT}"
@@ -639,7 +751,66 @@ else
   update_step=$(strip_ansi <"$UPDATE_RAW" | grep -iE 'no update|up to date|up-to-date|already' | tail -n 1 | sed -E 's/^\s*(✔️?|ℹ️?|\s)*//' | cut -c1-160)
 fi
 
+url=$(app_url "$tree/$SCRIPT")
 check_health screenshot-update.png || update_fail "after the update: $health_problem"
+
+# --- Second update ------------------------------------------------------------------
+# Right after an update, `update` has nothing to do: it must say so and leave
+# the app alone. One that breaks on a second run breaks for every user on
+# their next update; one that updates again although nothing changed
+# rebuilds on every run (often a version file it never writes).
+if [[ "$update_status" == "updated" ]]; then
+  run_update "$UPDATE2_RAW" "second update (must have nothing to do)"
+  if ((update_rc == 124 || update_rc == 137)); then
+    update_fail "second run timed out after ${UPDATE_TIMEOUT}"
+  elif ((update_rc != 0)); then
+    last=$(update_failure_line "$UPDATE2_RAW")
+    update_fail "second run exited ${update_rc}${last:+: $last}"
+  fi
+  update_error=$(strip_ansi <"$UPDATE2_RAW" | grep -E '✖|\[ERROR\]' | tail -n 1 | sed -E 's/^\s*(✖️?|\s)*//' | cut -c1-180)
+  if [[ -n "$update_error" && "${update_error,,}" != *"rate limit"* ]]; then
+    update_fail "second run: $update_error"
+  fi
+  if strip_ansi <"$UPDATE2_RAW" | grep -qi 'updated successfully'; then
+    update2_status="updated-again"
+    notes+=("a second \`update\` right after the first updated again: update_script does not notice it is current (e.g. a version file it never writes)")
+  else
+    update2_status="no-update"
+  fi
+  check_health screenshot-update.png || update_fail "after the second update: $health_problem"
+fi
+
+# --- Does it stay up? -----------------------------------------------------------
+# A service that crash-loops can be "active" at every single look. Count the
+# restarts of every service (and Docker container) over STABLE_WAIT seconds:
+# any that went up was restarted while nobody touched the container.
+restart_counts() {
+  guest_exec sh -c '
+    if command -v systemctl >/dev/null; then
+      systemctl list-units --type=service --all --no-legend --plain | awk "{print \$1}" |
+        while read -r u; do echo "$u $(systemctl show -p NRestarts --value "$u" 2>/dev/null)"; done
+    fi
+    if command -v docker >/dev/null; then
+      docker ps -aq | xargs -r docker inspect -f "docker:{{.Name}} {{.RestartCount}}" 2>/dev/null
+    fi' 2>/dev/null | awk '$2 ~ /^[0-9]+$/' | sort
+}
+before=$(restart_counts)
+sleep "$STABLE_WAIT"
+after=$(restart_counts)
+restarting=$(join <(echo "$before") <(echo "$after") | awk '$3 > $2 {printf "%s%s (+%d)", sep, $1, $3 - $2; sep=", "}')
+[[ -z "$restarting" ]] || fail "not stable: restarted within ${STABLE_WAIT}s without anyone touching it: ${restarting}"
+check_health screenshot-update.png || fail "not stable: ${STABLE_WAIT}s later, ${health_problem}"
+
+# Error lines in the journal since boot: often harmless, sometimes the reason
+# a feature is broken. Information only.
+if guest_exec sh -c 'command -v journalctl' &>/dev/null; then
+  journal_errors=$(guest_exec journalctl -b -p err -q -o cat --no-pager 2>/dev/null | grep -vE '^\s*$' | sort | uniq -c | sort -rn)
+  if [[ -n "$journal_errors" ]]; then
+    n=$(awk '{s += $1} END {print s}' <<<"$journal_errors")
+    top=$(head -n 2 <<<"$journal_errors" | sed -E 's/^\s*[0-9]+\s+//' | cut -c1-120 | paste -sd'|' - | sed 's/|/; /g')
+    notes+=("${n} error line(s) in the journal since boot, e.g. ${top}")
+  fi
+fi
 
 status="pass"
 finish

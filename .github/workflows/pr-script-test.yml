@@ -95,6 +95,7 @@ jobs:
       trusted: ${{ steps.plan.outputs.trusted }}
       kind: ${{ steps.plan.outputs.kind }}
       platforms: ${{ steps.plan.outputs.platforms }}
+      base_sha: ${{ steps.plan.outputs.base_sha }}
     steps:
       - id: plan
         uses: actions/github-script@v8
@@ -258,6 +259,20 @@ jobs:
             }
 
             const include = [];
+            // Upgrade test: a ct/ script that already exists on the PR's base
+            // branch is also installed from there and then updated with the PR,
+            // as a user who installed before the merge would. New scripts have
+            // nothing to upgrade from. Proxmox only, once per script.
+            let baseSha = '';
+            if (!isIssue) {
+              const { data: b } = await github.rest.repos.getBranch({ owner, repo, branch: pr.base.ref });
+              baseSha = b.commit.sha;
+            }
+            const onBase = async p => {
+              if (!baseSha) return false;
+              try { await github.rest.repos.getContent({ owner, repo, path: p, ref: baseSha }); return true; }
+              catch (e) { return false; }
+            };
             const fetchScript = async p => {
               try {
                 const res = await github.rest.repos.getContent({ owner: head.owner.login, repo: head.name, path: p, ref: headSha });
@@ -302,7 +317,11 @@ jobs:
                 platforms = platforms.filter(p => only.has(p));
               }
               for (const platform of platforms) {
-                for (const os of oses) include.push({ script, os, platform, arm64: platform === 'arm' ? arm : '', name: `${os ? `${name}-${os}` : name}-${platform}` });
+                for (const os of oses) include.push({ script, os, platform, arm64: platform === 'arm' ? arm : '', mode: '', name: `${os ? `${name}-${os}` : name}-${platform}` });
+              }
+              if (!isVm && platforms.includes('pve') && await onBase(script)) {
+                const os = oses[0];
+                include.push({ script, os, platform: 'pve', arm64: '', mode: 'upgrade', name: `${os ? `${name}-${os}` : name}-pve-upgrade` });
               }
             }
             for (const script of entries.slice(MAX)) notBuilt.push(`\`${script}\`: at most ${MAX} scripts per run, name it with \`/test ${script}\``);
@@ -327,7 +346,7 @@ jobs:
                 // full test, e.g. as a required check.
                 owner, repo, name: `Proxmox script test${onlyList.length ? ` (${onlyList.join(', ')} only)` : ''}`, head_sha: headSha, status: 'in_progress',
                 details_url: runUrl,
-                output: { title: `Building ${include.length}`, summary: include.map(i => `- \`${i.script}\` ${[i.platform, i.os].filter(Boolean).join(' · ')}`).join('\n') },
+                output: { title: `Building ${include.length}`, summary: include.map(i => `- \`${i.script}\` ${[i.platform, i.os, i.mode].filter(Boolean).join(' · ')}`).join('\n') },
               });
               checkId = String(check.id);
             }
@@ -339,13 +358,14 @@ jobs:
             core.setOutput('check_id', checkId);
             core.setOutput('not_built', JSON.stringify(notBuilt));
             core.setOutput('platforms', onlyList.join(' '));
+            core.setOutput('base_sha', baseSha);
             // Who asked: the /test commenter, or whoever dispatched the run.
             core.setOutput('actor', context.actor);
 
             await sticky([
               MARK, '### Proxmox script test', '',
               `⏳ Building ${include.length} at ${headSha.slice(0, 7)}${isIssue ? ' (default branch)' : ''}${onlyList.length ? `, only on ${onlyList.join(', ')}` : ''} — [watch it live](${runUrl}) (open the \`test\` job)`, '',
-              ...include.map(i => `- \`${i.script}\` (${[i.platform, i.os].filter(Boolean).join(' · ')})`),
+              ...include.map(i => `- \`${i.script}\` (${[i.platform, i.os, i.mode && 'upgrade from the base branch'].filter(Boolean).join(' · ')})`),
               ...(notBuilt.length ? ['', '**Not built:**', ...notBuilt.map(n => `- ${n}`)] : []),
             ].join('\n'));
 
@@ -363,7 +383,7 @@ jobs:
     continue-on-error: ${{ matrix.platform == 'arm' }}
     permissions:
       contents: read
-    timeout-minutes: 90 # install (45) + update (30) + checks
+    timeout-minutes: 120 # install (45) + update (30) + second update + checks
     strategy:
       fail-fast: false
       matrix:
@@ -392,6 +412,9 @@ jobs:
           # ARM is the Incus harness on another machine.
           PLATFORM: ${{ matrix.platform == 'arm' && 'incus' || matrix.platform }}
           VAR_ARM64: ${{ matrix.platform == 'arm' && 'yes' || '' }}
+          # upgrade: install from the base branch, update with the PR.
+          TEST_MODE: ${{ matrix.mode || '' }}
+          BASE_SHA: ${{ needs.gate.outputs.base_sha }}
           UPSTREAM: ${{ github.repository }}
           CTID_BASE: ${{ github.repository == 'community-scripts/ProxmoxVE' && '9050' || '9000' }}
           # Only so release lookups are not rate limited: unauthenticated, all
@@ -402,7 +425,7 @@ jobs:
         # The self-hosted runners run as root; the GitHub one needs sudo (pct
         # and incus do).
         run: >-
-          ${{ matrix.platform == 'arm' && 'sudo --preserve-env=PR_REPO,PR_SHA,SCRIPT,OS,PLATFORM,VAR_ARM64,UPSTREAM,CTID_BASE,GH_API_TOKEN,OUT_DIR,GITHUB_RUN_ID,GITHUB_RUN_ATTEMPT' || '' }}
+          ${{ matrix.platform == 'arm' && 'sudo --preserve-env=PR_REPO,PR_SHA,SCRIPT,OS,PLATFORM,VAR_ARM64,TEST_MODE,BASE_SHA,UPSTREAM,CTID_BASE,GH_API_TOKEN,OUT_DIR,GITHUB_RUN_ID,GITHUB_RUN_ATTEMPT' || '' }}
           bash .github/workflows/scripts/pve-run-script.sh
 
       - if: always() && matrix.platform == 'arm'
@@ -477,6 +500,12 @@ jobs:
                     if (r.status === 'pass' && r.update_status === 'error') { r.status = 'error'; r.step = `update ${r.update_step}`; }
                     const ulog = path.join(dir, 'update.log');
                     r.update_log = fs.existsSync(ulog) ? fs.readFileSync(ulog, 'utf8') : '';
+                    const u2log = path.join(dir, 'update2.log');
+                    r.update2_log = fs.existsSync(u2log) ? fs.readFileSync(u2log, 'utf8') : '';
+                    if (!['upgrade', ''].includes(r.mode || '')) r.mode = '';
+                    r.mode = r.mode || '';
+                    r.notes = Array.isArray(r.notes) ? r.notes.filter(n => typeof n === 'string').slice(0, 8) : [];
+                    r.resources = typeof r.resources === 'string' ? r.resources : '';
                     const ushot = path.join(dir, 'screenshot-update.png');
                     r.shot_update_file = fs.existsSync(ushot) ? ushot : '';
                     // ARM runs the Incus harness on an arm64 machine; result.json
@@ -484,7 +513,7 @@ jobs:
                     // unknown one would never match a matrix row anyway.
                     if (r.arch === 'aarch64') r.platform = 'arm';
                     else if (!['pve', 'incus'].includes(r.platform)) r.platform = 'pve';
-                    found.set(`${r.script}|${r.platform}|${r.os}`, r);
+                    found.set(`${r.script}|${r.platform}|${r.os}|${r.mode}`, r);
                   } catch (err) { core.warning(`unreadable ${p}: ${err.message}`); }
                 }
               }
@@ -492,19 +521,20 @@ jobs:
             walk('results');
 
             // A job that died before writing result.json still gets a row.
-            const rows = matrix.map(m => ({ ...(found.get(`${m.script}|${m.platform || 'pve'}|${m.os || 'default'}`) || {
-              script: m.script, os: m.os || 'default', platform: m.platform || 'pve',
+            const rows = matrix.map(m => ({ ...(found.get(`${m.script}|${m.platform || 'pve'}|${m.os || 'default'}|${m.mode || ''}`) || {
+              script: m.script, os: m.os || 'default', platform: m.platform || 'pve', mode: m.mode || '', notes: [], resources: '', update2_log: '',
               status: process.env.TEST_RESULT === 'cancelled' ? 'cancelled' : 'error',
               step: 'no result (runner or job failure)', duration: 0, log_tail: '', install_log: '', shot_file: '',
               update_status: '', update_log: '', shot_update_file: '',
             }), name: m.name }));
-            // Where a row ran: "pve", "incus · alpine", "arm64", or "VM" (Proxmox only).
+            // Where a row ran: "pve", "incus · alpine", "arm64", "pve · upgrade", or "VM" (Proxmox only).
             const isVm = r => r.script.startsWith('vm/');
             const isArm = r => r.platform === 'arm';
             const where = r => {
               if (isVm(r)) return 'VM';
               const p = isArm(r) ? 'arm64' : r.platform;
-              return r.os && r.os !== 'default' ? `${p} · ${r.os}` : p;
+              const w = r.os && r.os !== 'default' ? `${p} · ${r.os}` : p;
+              return r.mode === 'upgrade' ? `${w} · upgrade` : w;
             };
             // ARM is information only: shown, never counted. The result, the
             // check, the review and the approval come from Proxmox and Incus.
@@ -647,6 +677,9 @@ jobs:
                 const lines = r.update_log.trimEnd().split('\n').length;
                 parts.push(details(`🔄 ${r.script} (${where(r)}) — update log (${lines} lines)`, r.update_log, updateShare));
               }
+              if (r.update2_log) {
+                parts.push(details(`🔁 ${r.script} (${where(r)}) — second update log`, r.update2_log, Math.min(r.update2_log.length, Math.floor(budget / 8))));
+              }
               return parts.join('\n\n');
             });
 
@@ -661,6 +694,22 @@ jobs:
               `${headline} at \`${process.env.SHA.slice(0, 7)}\``, '',
               table, '',
               ...(armLine ? [`<sub>${armLine}</sub>`, ''] : []),
+              ...(rows.some(r => r.mode === 'upgrade')
+                ? ['<sub>`upgrade`: installed from the base branch as it is now, then updated with this PR, as a user who installed before the merge would.</sub>', '']
+                : []),
+              ...(() => {
+                const noted = rows.filter(r => r.notes.length);
+                return noted.length
+                  ? ['**Notes** (information only, not counted):', ...noted.flatMap(r => r.notes.map(n => `- \`${r.script}\` (${where(r)}): ${clean(n)}`)), '']
+                  : [];
+              })(),
+              ...(() => {
+                const measured = rows.filter(r => r.resources);
+                return measured.length
+                  ? ['<details><summary>📊 Resources</summary>', '', '| Script | Platform | Usage |', '|---|---|---|',
+                     ...measured.map(r => `| \`${r.script}\` | ${where(r)} | ${clean(r.resources)} |`), '', '</details>', '']
+                  : [];
+              })(),
               ...(partial ? [`<sub>Built only on ${process.env.PLATFORMS.split(' ').join(', ')}; comment \`/test\` for every platform.</sub>`, ''] : []),
               ...shots, '',
               ...(() => { try { const n = JSON.parse(process.env.NOT_BUILT || '[]'); return n.length ? ['**Not built:**', ...n.map(x => `- ${x}`), ''] : []; } catch (e) { return []; } })(),
