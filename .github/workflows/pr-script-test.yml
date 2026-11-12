@@ -98,7 +98,7 @@ jobs:
       base_sha: ${{ steps.plan.outputs.base_sha }}
     steps:
       - id: plan
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const { owner, repo } = context.repo;
@@ -402,7 +402,7 @@ jobs:
     name: test (${{ matrix.name }})
     steps:
       # The default branch, never the PR: the harness itself must be trusted.
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           sparse-checkout: .github/workflows/scripts
           persist-credentials: false
@@ -443,7 +443,7 @@ jobs:
         run: sudo chmod -R a+rX "$RUNNER_TEMP/result" 2>/dev/null || true
 
       - if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: result-${{ matrix.name }}
           path: ${{ runner.temp }}/result
@@ -461,12 +461,12 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v8
         with:
           pattern: result-*
           path: results
 
-      - uses: actions/github-script@v8
+      - uses: actions/github-script@v9
         env:
           MATRIX: ${{ needs.gate.outputs.matrix }}
           PR: ${{ needs.gate.outputs.pr }}
