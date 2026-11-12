@@ -601,7 +601,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Fall back to public DNS for Alpine containers too [@MickLesk](https://github.com/MickLesk) ([core#231](https://github.com/community-scripts/core/pull/231))
+  - github: bump workflow actions to their current majors [@MickLesk](https://github.com/MickLesk) ([core#240](https://github.com/community-scripts/core/pull/240))
+- Say what the host sees when a container gets no address [@MickLesk](https://github.com/MickLesk) ([core#230](https://github.com/community-scripts/core/pull/230))
+- Fall back to public DNS for Alpine containers too [@MickLesk](https://github.com/MickLesk) ([core#231](https://github.com/community-scripts/core/pull/231))
 - Do not fail a finished install over the monitoring service [@MickLesk](https://github.com/MickLesk) ([core#232](https://github.com/community-scripts/core/pull/232))
 - Deploy a release by moving it, and stop on a full disk² [@MickLesk](https://github.com/MickLesk) ([core#233](https://github.com/community-scripts/core/pull/233))
 - core: say when pct create fails because timedatectl does not answer [@MickLesk](https://github.com/MickLesk) ([core#237](https://github.com/community-scripts/core/pull/237))
