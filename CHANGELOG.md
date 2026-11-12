@@ -599,7 +599,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 📚 Documentation
 
-  - pocketbase-bot: apply website metadata requests from Accept/Decline boxes [@MickLesk](https://github.com/MickLesk) ([#18631](https://github.com/community-scripts/ProxmoxVE/pull/18631))
+  - github: bump workflow actions to their current majors [@MickLesk](https://github.com/MickLesk) ([#18637](https://github.com/community-scripts/ProxmoxVE/pull/18637))
+- pocketbase-bot: apply website metadata requests from Accept/Decline boxes [@MickLesk](https://github.com/MickLesk) ([#18631](https://github.com/community-scripts/ProxmoxVE/pull/18631))
 
 ## 2026-11-11
 
