@@ -23,12 +23,11 @@ fetch_and_deploy_from_url "https://packages.microsoft.com/config/debian/13/packa
 
 msg_ok "Installed Dependencies"
 
-var_dotnet_version="${var_dotnet_version:-10}"
 [[ -n "$var_dotnet_version" ]] || read -r -p "${TAB3}What dotnet version would you like to target? <8/9/10> " var_dotnet_version || true
+var_dotnet_version="${var_dotnet_version:-10}"
 
-var_project_name="${var_project_name:-testproject}"
 [[ -n "$var_project_name" ]] || read -r -p "${TAB3}Type the assembly name of the project: " var_project_name || true
-[[ -n "$var_project_name" ]] || { msg_error "No assembly name given; set var_project_name or answer the prompt"; exit 64; }
+var_project_name="${var_project_name:-testproject}"
 
 msg_info "Installing Dotnet"
 
