@@ -21,7 +21,6 @@ $STD apt install -y \
   
 fetch_and_deploy_from_url "https://packages.microsoft.com/config/debian/13/packages-microsoft-prod.deb" ""
 
-apt_update_safe
 msg_ok "Installed Dependencies"
 
 var_dotnet_version="${var_dotnet_version:-}"
