@@ -593,6 +593,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Whisparr-eros: set the first login and save it [@MickLesk](https://github.com/MickLesk) ([#18617](https://github.com/community-scripts/ProxmoxVE/pull/18617))
 
+### 📚 Documentation
+
+  - pocketbase-bot: apply website metadata requests from Accept/Decline boxes [@MickLesk](https://github.com/MickLesk) ([#18631](https://github.com/community-scripts/ProxmoxVE/pull/18631))
+
 ## 2026-11-11
 
 ### 🚀 Updated Scripts
