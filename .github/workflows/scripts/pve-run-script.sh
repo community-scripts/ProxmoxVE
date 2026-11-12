@@ -555,7 +555,9 @@ check_health screenshot.png || fail "$health_problem"
 # only say "No update available" and never run update_script's real path. The
 # version files the install wrote (~/.<app>, one per fetch_and_deploy_gh_release)
 # that update_script checks are set back to 0.0.0-ci first; check_for_gh_release then sees an update and
-# runs it all. `update` is the /usr/bin/update the install generated: it pulls
+# runs it all. Apps deployed from a branch (fetch_and_deploy_gh_branch, checked
+# with check_for_gh_branch) store a commit hash instead of a version; the
+# engine compares both as plain strings, so 0.0.0-ci works for them too. `update` is the /usr/bin/update the install generated: it pulls
 # ct/<app>.sh from the URL this container was built from, i.e. the PR's tree.
 UPDATE_FAKE="0.0.0-ci"
 update_fail() {
@@ -568,7 +570,7 @@ version_files=$(guest_exec sh -c '
   for f in /root/.*; do
     [ -f "$f" ] || continue
     case "$f" in */.install-* | *.pending | *.bak | */.bash* | */.profile | */.hushlogin | */.viminfo | */.lesshst | */.wget-hsts | */.selected_editor) continue ;; esac
-    [ "$(wc -l <"$f")" -le 1 ] && grep -qE "^v?[0-9]+(\.[0-9A-Za-z_+-]+)+$" "$f" && echo "$f"
+    [ "$(wc -l <"$f")" -le 1 ] && grep -qE "^(v?[0-9]+(\.[0-9A-Za-z_+-]+)+|[0-9a-f]{7,40})$" "$f" && echo "$f"
   done' 2>/dev/null | grep -E '^/root/\.[A-Za-z0-9._-]+$')
 # Only set back what update_script checks: the names it passes to
 # check_for_*release. The install can also deploy helpers the update never
