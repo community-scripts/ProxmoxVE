@@ -191,8 +191,9 @@ classify_cpu_failure() {
 # Disk used against var_disk, RAM in use at rest (anonymous memory, without
 # the page cache that fills any limit) against the limit, and how often the
 # kernel killed something for lack of memory, over the container's whole life,
-# the build included. The size of a dir-backed Incus root is the host's, so
-# then the script's var_disk is the size to compare with.
+# the build included. A dir-backed Incus root has no size of its own: df shows
+# the host's disk. Then what the container holds is counted with du, and the
+# script's var_disk is the size to compare with.
 measure_resources() {
   local out disk_size disk_used anon limit oom want_disk want_ram line=()
   out=$(guest_exec sh -c 'df -Pm / | awk "NR==2 {print \$2, \$3}"
@@ -204,7 +205,11 @@ measure_resources() {
   want_disk=$(grep -m1 -oE 'var_disk="\$\{var_disk:-[0-9]+\}"' "$src_tree/$SCRIPT" | grep -oE '[0-9]+' | head -n1)
   want_ram=$(grep -m1 -oE 'var_ram="\$\{var_ram:-[0-9]+\}"' "$src_tree/$SCRIPT" | grep -oE '[0-9]+' | head -n1)
   [[ "$disk_size" =~ ^[0-9]+$ && "$disk_used" =~ ^[0-9]+$ ]] || return 0
-  if [[ -n "$want_disk" ]] && ((disk_size > want_disk * 1024 * 3 / 2)); then disk_size=$((want_disk * 1024)); fi
+  if [[ -n "$want_disk" ]] && ((disk_size > want_disk * 1024 * 3 / 2)); then
+    disk_size=$((want_disk * 1024))
+    disk_used=$(guest_exec sh -c 'du -sxm / 2>/dev/null | cut -f1' 2>/dev/null)
+    [[ "$disk_used" =~ ^[0-9]+$ ]] || return 0
+  fi
   line+=("disk $(awk -v u="$disk_used" 'BEGIN {printf "%.1f", u / 1024}') of $(awk -v s="$disk_size" 'BEGIN {printf "%.0f", s / 1024}') GB")
   if ((disk_used * 100 >= disk_size * 90)); then
     notes+=("disk ${disk_used} of ${disk_size} MB used after the install: var_disk may be too small")
@@ -804,7 +809,10 @@ check_health screenshot-update.png || fail "not stable: ${STABLE_WAIT}s later, $
 # Error lines in the journal since boot: often harmless, sometimes the reason
 # a feature is broken. Information only.
 if guest_exec sh -c 'command -v journalctl' &>/dev/null; then
-  journal_errors=$(guest_exec journalctl -b -p err -q -o cat --no-pager 2>/dev/null | grep -vE '^\s*$' | sort | uniq -c | sort -rn)
+  # Without the noise every container produces: udev may not trigger devices
+  # in an unprivileged container, and logind finds no VTs.
+  journal_errors=$(guest_exec journalctl -b -p err -q -o cat --no-pager 2>/dev/null | grep -vE '^\s*$' |
+    grep -vE "Failed to write 'add' to '/sys/.*/uevent'|Seat has no VTs but VT number not 0" | sort | uniq -c | sort -rn)
   if [[ -n "$journal_errors" ]]; then
     n=$(awk '{s += $1} END {print s}' <<<"$journal_errors")
     top=$(head -n 2 <<<"$journal_errors" | sed -E 's/^\s*[0-9]+\s+//' | cut -c1-120 | paste -sd'|' - | sed 's/|/; /g')
