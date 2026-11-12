@@ -583,6 +583,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-12
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Whisparr-eros: set the first login and save it [@MickLesk](https://github.com/MickLesk) ([#18617](https://github.com/community-scripts/ProxmoxVE/pull/18617))
+
 ## 2026-11-11
 
 ### 🚀 Updated Scripts
