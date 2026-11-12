@@ -4,16 +4,20 @@ name: PR script test
 # reports the outcome on the PR, as a check run and as one comment kept up to
 # date.
 #
-# A self-hosted runner that executes pull request code as root is only
-# acceptable if a human decides what runs on it. So it starts on a push only
-# for trusted PRs: those the push-app-to-main app opens on a branch of this
-# repository when a script moves over from DevScripts (already reviewed and
-# tested there; only writers can push to such a branch). Those are built
-# automatically and approved when every script passes. Everything else waits
-# for someone with write access to comment `/test` (optionally followed by a
-# full SHA to pin, the scripts to build, and the platforms to build on). Only a commit that existed when
-# the comment was written gets built: a push after it is never covered, not
-# even one that lands in the seconds before this job runs.
+# Every push to a non-draft PR is built automatically, forks included: the
+# maintainers decided (2026-11-12) that the lab hosts run contributors' code
+# unattended. They are isolated, hold no secret, and are treated as
+# compromised anyway; the sweeper and fresh guests per build keep them usable.
+# Someone with write access can also comment `/test` (optionally followed by
+# a full SHA to pin, the scripts to build, and the platforms to build on) to
+# build again or pick what to build. Only a commit that existed when the
+# comment was written gets built: a push after it is never covered, not even
+# one that lands in the seconds before this job runs.
+#
+# Approval stays narrow: only PRs the push-app-to-main app opens on a branch
+# of this repository (a script moving over from DevScripts, reviewed and
+# tested there) are approved when every script passes. Every other PR gets
+# the report, the check, and "changes requested" on a real failure.
 #
 #   gate    ubuntu-latest   who asked, which scripts, which commit
 #   test    proxmox-test /  build + checks, one matrix job per script, platform
@@ -30,13 +34,14 @@ name: PR script test
 on:
   issue_comment:
     types: [created]
-  # Trusted PRs only, see above. pull_request_target runs this file from main,
-  # never the PR's copy of it.
+  # Every PR, see above. pull_request_target runs this file from main, never
+  # the PR's copy of it, and does not wait for "approve and run" on forks.
   pull_request_target:
     types: [opened, reopened, synchronize, ready_for_review]
     paths:
       - "ct/**"
       - "install/**"
+      - "vm/**"
   workflow_dispatch:
     inputs:
       pr:
@@ -54,14 +59,24 @@ on:
 
 permissions: {}
 
+# One queue per PR. A newer push replaces a run that is still waiting (its
+# gate would skip anyway: the head moved), but never kills one that is
+# building: a cancelled job leaves its guest behind until the sweeper. Any
+# comment starts this workflow; one that is not a /test gets a group of its
+# own, so it cannot push a waiting test out of the queue.
+concurrency:
+  group: >-
+    pr-script-test-${{ github.event_name == 'issue_comment' && !startsWith(github.event.comment.body, '/test')
+    && format('noop-{0}', github.run_id)
+    || github.event.pull_request.number || github.event.issue.number || inputs.pr }}
+  cancel-in-progress: false
+
 jobs:
   gate:
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'issue_comment' && startsWith(github.event.comment.body, '/test')) ||
-      (github.event_name == 'pull_request_target' && !github.event.pull_request.draft &&
-       github.event.pull_request.user.login == 'push-app-to-main[bot]' &&
-       github.event.pull_request.head.repo.full_name == github.repository)
+      (github.event_name == 'pull_request_target' && !github.event.pull_request.draft)
     runs-on: ubuntu-latest
     permissions:
       actions: read # when the run was dispatched, for a /test without SHA
@@ -98,7 +113,6 @@ jobs:
             let prNumber, requested = '';
             if (context.eventName === 'pull_request_target') {
               const p = context.payload.pull_request;
-              if (!isTrusted(p)) return;
               prNumber = p.number;
               // Exactly the pushed commit; a later push starts its own run.
               requested = p.head.sha;
