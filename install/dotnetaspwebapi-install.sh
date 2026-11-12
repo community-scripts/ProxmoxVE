@@ -21,8 +21,8 @@ msg_ok "Installed Dependencies"
 
 setup_deb822_repo \
   "microsoft" \
-  "https://packages.microsoft.com/keys/microsoft.asc" \
-  "https://packages.microsoft.com/debian/13/prod" \
+  "https://packages.microsoft.com/keys/microsoft-2025.asc" \
+  "https://packages.microsoft.com/debian/13/prod/" \
   "trixie" \
   "main"
 
@@ -70,7 +70,7 @@ msg_ok "FTP server setup completed"
 msg_info "Setting up Nginx Server"
 rm -f /var/www/html/index.nginx-debian.html
 
-sed "s/\$var_project_name/$var_project_name/g" >myfile <<'EOF' >/etc/nginx/sites-available/default
+sed "s/\$var_project_name/$var_project_name/g" <<'EOF' >/etc/nginx/sites-available/default
 map $http_connection $connection_upgrade {
   "~*Upgrade" $http_connection;
   default keep-alive;
@@ -102,7 +102,6 @@ Description=.NET Web API App running on Linux
 WorkingDirectory=/var/www/html
 ExecStart=/usr/bin/dotnet /var/www/html/$var_project_name.dll
 Restart=always
-# Restart service after 10 seconds if the dotnet service crashes:
 RestartSec=10
 KillSignal=SIGINT
 SyslogIdentifier=dotnet-${var_project_name}
