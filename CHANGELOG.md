@@ -612,7 +612,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - forge: find a pinned tag whether or not it is written with its v [@MickLesk](https://github.com/MickLesk) ([core#249](https://github.com/community-scripts/core/pull/249))
+  - tools: Issue self-signed certificates for 825 days and renew expiring ones [@MickLesk](https://github.com/MickLesk) ([core#251](https://github.com/community-scripts/core/pull/251))
+- core: start and restart a .deb's services after binary mode installs it [@MickLesk](https://github.com/MickLesk) ([core#250](https://github.com/community-scripts/core/pull/250))
+- forge: find a pinned tag whether or not it is written with its v [@MickLesk](https://github.com/MickLesk) ([core#249](https://github.com/community-scripts/core/pull/249))
 - core: unpack a compressed single binary in singlefile mode [@MickLesk](https://github.com/MickLesk) ([core#248](https://github.com/community-scripts/core/pull/248))
 - forge: skip pre-release tags in get_latest_gh_tag [@MickLesk](https://github.com/MickLesk) ([core#263](https://github.com/community-scripts/core/pull/263))
 - tools: use MySQL's current signing key and the trixie suite [@MickLesk](https://github.com/MickLesk) ([core#262](https://github.com/community-scripts/core/pull/262))
