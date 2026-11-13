@@ -468,6 +468,9 @@ fi
 touch "$RAW_LOG.start"
 [[ -n "$OS" ]] && build_env+=(var_os="$OS")
 [[ -n "$VAR_ARM64" ]] && build_env+=(var_arm64=yes)
+# A script that hands over to upstream's own installer (run_external_installer)
+# asks first; nobody can answer in CI, and testing the script means running it.
+build_env+=(var_external_installer=yes)
 # Both engines turn var_github_token into GITHUB_TOKEN inside the container.
 [[ -n "${GH_API_TOKEN:-}" ]] && build_env+=(var_github_token="$GH_API_TOKEN")
 # How much API quota this build starts with, with the token and without (the
@@ -596,7 +599,8 @@ if ((exit_code != 0)); then
 fi
 # With dev_mode=keep (needed to read the install log) the engine carries on
 # after a failed install and still prints "Completed Successfully", exit 0.
-install_exit=$(strip_ansi <"$RAW_LOG" | grep -oE 'Installation failed in container [0-9]+ \(exit code: [0-9]+\)' |
+# The container is a number on Proxmox (9000) and a name on Incus (ci-9000).
+install_exit=$(strip_ansi <"$RAW_LOG" | grep -oE 'Installation failed in container [A-Za-z0-9._-]+ \(exit code: [0-9]+\)' |
   grep -oE '[0-9]+\)$' | tr -d ')' | tail -n 1)
 if [[ -n "$install_exit" ]]; then
   last=$(failure_line)
@@ -743,7 +747,7 @@ run_update() {
   # timeout runs a program, not a shell function, so spell out the exec here.
   if [[ "$PLATFORM" == "incus" ]]; then guest_cmd=(incus exec "$ctid" --); else guest_cmd=(pct exec "$ctid" --); fi
   timeout --kill-after=1m "$UPDATE_TIMEOUT" "${guest_cmd[@]}" env PHS_SILENT=1 mode=default MODE=default \
-    TERM=dumb DIAGNOSTICS=no var_ignore_breaking_changes=yes ${GH_API_TOKEN:+GITHUB_TOKEN="$GH_API_TOKEN"} update </dev/null \
+    TERM=dumb DIAGNOSTICS=no var_ignore_breaking_changes=yes var_external_installer=yes ${GH_API_TOKEN:+GITHUB_TOKEN="$GH_API_TOKEN"} update </dev/null \
     > >(tee "$raw" | live_filter) 2>&1 &
   update_pid=$!
   wait "$update_pid"
