@@ -22,12 +22,10 @@ PG_VERSION="17" setup_postgresql
 PG_DB_NAME="wiki" PG_DB_USER="wikijs_user" setup_postgresql_db
 fetch_and_deploy_gh_release "wikijs" "requarks/wiki" "prebuild" "latest" "/opt/wikijs" "wiki-js.tar.gz"
 
-if [[ "$(arch_resolve)" == "arm64" ]]; then
-  msg_info "Building Wiki.js Dependencies"
-  cd /opt/wikijs/backend
-  $STD npm ci --omit=dev
-  msg_ok "Built Wiki.js Dependencies"
-fi
+msg_info "Installing Wiki.js Dependencies"
+cd /opt/wikijs/backend
+$STD npm ci --omit=dev
+msg_ok "Installed Wiki.js Dependencies"
 
 msg_info "Configuring Wiki.js"
 mkdir -p /opt/wikijs_data

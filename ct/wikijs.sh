@@ -45,11 +45,9 @@ function update_script() {
       restore_backup
 
       cd /opt/wikijs/backend
-      if [[ "$(arch_resolve)" == "arm64" ]]; then
-        msg_info "Building Wiki.js Dependencies"
-        $STD npm ci --omit=dev
-        msg_ok "Built Wiki.js Dependencies"
-      fi
+      msg_info "Installing Wiki.js Dependencies"
+      $STD npm ci --omit=dev
+      msg_ok "Installed Wiki.js Dependencies"
       if [[ "$PUPPETEER_INSTALLED" == "true" ]]; then
         msg_info "Reinstalling Puppeteer"
         $STD npm install --no-save --force --include=optional --no-ignore-scripts --no-audit --no-fund "puppeteer@$(sed -n 's/^installVersion: *//p' modules/extensions/puppeteer/definition.yml)"
