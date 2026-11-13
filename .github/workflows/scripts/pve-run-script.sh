@@ -478,10 +478,6 @@ gh_quota() {
     jq -r '.rate | "\(.remaining) of \(.limit) left, resets in \(((.reset - now) / 60) | floor) min"' 2>/dev/null || echo "unknown"
 }
 echo "GitHub API quota: token $(gh_quota "${GH_API_TOKEN:-}") · no token $(gh_quota "")"
-# Can the token read another owner's release, as every install does?
-[[ -n "${GH_API_TOKEN:-}" ]] && echo "Token reads another repo's release: $(curl -s --max-time 10 -o /tmp/gh-probe.$$ -w '%{http_code}' \
-  -H "Authorization: Bearer $GH_API_TOKEN" https://api.github.com/repos/cli/cli/releases/latest) $(jq -r '.message // .tag_name' /tmp/gh-probe.$$ 2>/dev/null)"
-rm -f /tmp/gh-probe.$$
 
 # --- Answers for the script's questions ------------------------------------------
 # Nobody types into CI, so anything the install asks has to be answered up front.
@@ -743,6 +739,10 @@ run_update() {
   : >"$raw"
   token=$(head -c 16 /dev/urandom | od -An -tx1 | tr -d ' \n')
   echo "──────── $2 (live) ────────"
+  if [[ "$PLATFORM" == "incus" ]]; then guest_cmd_probe=(incus exec "$ctid" --); else guest_cmd_probe=(pct exec "$ctid" --); fi
+  # Diagnosis: does the token reach a GitHub call inside the guest?
+  [[ -n "${GH_API_TOKEN:-}" ]] && echo "Token inside the guest: $("${guest_cmd_probe[@]}" env GITHUB_TOKEN="$GH_API_TOKEN" sh -c \
+    'printf "%s chars, " "${#GITHUB_TOKEN}"; curl -s --max-time 10 -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $GITHUB_TOKEN" https://api.github.com/repos/cli/cli/releases/latest' 2>&1)"
   echo "::stop-commands::${token}"
   # timeout runs a program, not a shell function, so spell out the exec here.
   if [[ "$PLATFORM" == "incus" ]]; then guest_cmd=(incus exec "$ctid" --); else guest_cmd=(pct exec "$ctid" --); fi
