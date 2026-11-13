@@ -478,6 +478,10 @@ gh_quota() {
     jq -r '.rate | "\(.remaining) of \(.limit) left, resets in \(((.reset - now) / 60) | floor) min"' 2>/dev/null || echo "unknown"
 }
 echo "GitHub API quota: token $(gh_quota "${GH_API_TOKEN:-}") · no token $(gh_quota "")"
+# Can the token read another owner's release, as every install does?
+[[ -n "${GH_API_TOKEN:-}" ]] && echo "Token reads another repo's release: $(curl -s --max-time 10 -o /tmp/gh-probe.$$ -w '%{http_code}' \
+  -H "Authorization: Bearer $GH_API_TOKEN" https://api.github.com/repos/cli/cli/releases/latest) $(jq -r '.message // .tag_name' /tmp/gh-probe.$$ 2>/dev/null)"
+rm -f /tmp/gh-probe.$$
 
 # --- Answers for the script's questions ------------------------------------------
 # Nobody types into CI, so anything the install asks has to be answered up front.
