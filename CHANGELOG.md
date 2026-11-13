@@ -583,6 +583,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-13
 
+### 🆕 New Scripts
+
+  - 9Router ([#18654](https://github.com/community-scripts/ProxmoxVE/pull/18654))
+
 ### 💾 Core
 
   - fetch the install script before the container is created [@MickLesk](https://github.com/MickLesk) ([core#236](https://github.com/community-scripts/core/pull/236))
