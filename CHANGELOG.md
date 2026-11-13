@@ -585,7 +585,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - AirConnect ([#18653](https://github.com/community-scripts/ProxmoxVE/pull/18653))
+  - Cypht ([#18659](https://github.com/community-scripts/ProxmoxVE/pull/18659))
+- AirConnect ([#18653](https://github.com/community-scripts/ProxmoxVE/pull/18653))
 - Bulwark ([#18656](https://github.com/community-scripts/ProxmoxVE/pull/18656))
 - Convex ([#18658](https://github.com/community-scripts/ProxmoxVE/pull/18658))
 - Chroma ([#18657](https://github.com/community-scripts/ProxmoxVE/pull/18657))
