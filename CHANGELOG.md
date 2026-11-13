@@ -612,7 +612,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - fix: take a Debian cloud image from the newest build that has it [@MickLesk](https://github.com/MickLesk) ([core#261](https://github.com/community-scripts/core/pull/261))
+  - fix: run Meilisearch --upgrade-db on patch updates too [@CrazyWolf13](https://github.com/CrazyWolf13) ([core#259](https://github.com/community-scripts/core/pull/259))
+- db: only chmod a database credentials file that is a regular file [@MickLesk](https://github.com/MickLesk) ([core#253](https://github.com/community-scripts/core/pull/253))
+- fix: take a Debian cloud image from the newest build that has it [@MickLesk](https://github.com/MickLesk) ([core#261](https://github.com/community-scripts/core/pull/261))
 - telemetry: always on for DevScripts, with a one-time notice [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([core#245](https://github.com/community-scripts/core/pull/245))
 - Shield pct start and the template check from a closed console [@MickLesk](https://github.com/MickLesk) ([core#239](https://github.com/community-scripts/core/pull/239))
 - core: say why a container stopped by itself during its setup [@MickLesk](https://github.com/MickLesk) ([core#234](https://github.com/community-scripts/core/pull/234))
