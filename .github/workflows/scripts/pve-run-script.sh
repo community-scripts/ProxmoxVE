@@ -373,6 +373,20 @@ setup_error() {
   exit 1
 }
 
+# Any answer means the app is up, unless it says it isn't: nothing at all,
+# 404/410 (the printed URL leads nowhere), 5xx (server error, proxy without
+# backend), or a 3xx left after 5 redirects (a loop). 401/403 are a login
+# wall (warpgate answers 401), 400 a quirk of the app: both pass.
+url_ok() { [[ "$1" =~ ^[1-4][0-9][0-9]$ && ! "$1" =~ ^(3[0-9][0-9]|404|410)$ ]]; }
+url_why() {
+  case "$1" in
+  404 | 410) echo "the printed URL leads nowhere" ;;
+  5??) echo "server error" ;;
+  3??) echo "still redirecting after 5 hops" ;;
+  *) echo "the app never answered" ;;
+  esac
+}
+
 # --- Reserve a container ID ---------------------------------------------------
 # A lock file per ID, not just "first free one", because the engine only creates
 # the container minutes later and two jobs would otherwise pick the same ID.
@@ -615,8 +629,8 @@ take_screenshot() {
 }
 
 # Is the app up? No failed services, and the URL the script tells the user to
-# open, e.g. http://${IP}:1337/admin, answers 200 (after redirects, so a jump
-# to /login is fine). A script that prints no URL has no web UI to check.
+# open, e.g. http://${IP}:1337/admin, answers without an error (see url_ok;
+# redirects are followed, so a jump to /login is fine). A script that prints no URL has no web UI to check.
 # Run after the install and again after the update. Sets health_problem.
 app_url() { # the URL the script at $1 tells the user to open
   local pattern
@@ -639,13 +653,13 @@ check_health() {
   local waited
   for ((waited = 0; waited < URL_WAIT; waited += 5)); do
     http_code=$(curl -sk -L --max-redirs 5 -o /dev/null -w '%{http_code}' --max-time 10 "$url" || true)
-    [[ "$http_code" =~ ^2[0-9][0-9]$ ]] && break
+    url_ok "$http_code" && break
     sleep 5
   done
   # Also when the check fails: an error page explains more than a status code.
   [[ "$http_code" =~ ^[1-5][0-9][0-9]$ ]] && take_screenshot "$1"
-  [[ "$http_code" =~ ^2[0-9][0-9]$ ]] ||
-    { health_problem="${url} answered ${http_code/#000/nothing} instead of 200 within ${URL_WAIT}s"; return 1; }
+  url_ok "$http_code" ||
+    { health_problem="${url} answered ${http_code/#000/nothing} within ${URL_WAIT}s ($(url_why "$http_code"))"; return 1; }
 }
 
 check_health screenshot.png || fail "$health_problem"

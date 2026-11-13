@@ -121,7 +121,7 @@ vm_build_and_check() {
     for ((waited = 0; waited < VM_URL_WAIT; waited += 10)); do
       vm_running || fail "VM ${ctid} stopped by itself while its web UI was awaited"
       http_code=$(curl -sk -L --max-redirs 5 -o /dev/null -w '%{http_code}' --max-time 10 "$url" || true)
-      [[ "$http_code" =~ ^2[0-9][0-9]$ ]] && break
+      url_ok "$http_code" && break
       sleep 10
     done
     [[ "$http_code" =~ ^[1-5][0-9][0-9]$ ]] && take_screenshot screenshot.png
@@ -130,8 +130,8 @@ vm_build_and_check() {
     sleep 20
   fi
   [[ -s "$OUT_DIR/screenshot.png" ]] || vm_console_shot
-  if [[ -n "$url" && ! "$http_code" =~ ^2[0-9][0-9]$ ]]; then
-    fail "${url} answered ${http_code/#000/nothing} instead of 200 within ${VM_URL_WAIT}s"
+  if [[ -n "$url" ]] && ! url_ok "$http_code"; then
+    fail "${url} answered ${http_code/#000/nothing} within ${VM_URL_WAIT}s"
   fi
   vm_running || fail "VM ${ctid} stopped by itself"
 
