@@ -585,7 +585,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Engram ([#18661](https://github.com/community-scripts/ProxmoxVE/pull/18661))
+  - Hatchet ([#18663](https://github.com/community-scripts/ProxmoxVE/pull/18663))
+- Engram ([#18661](https://github.com/community-scripts/ProxmoxVE/pull/18661))
 - Euro-Office ([#18660](https://github.com/community-scripts/ProxmoxVE/pull/18660))
 - Cypht ([#18659](https://github.com/community-scripts/ProxmoxVE/pull/18659))
 - AirConnect ([#18653](https://github.com/community-scripts/ProxmoxVE/pull/18653))
