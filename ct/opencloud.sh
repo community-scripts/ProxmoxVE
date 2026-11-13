@@ -40,7 +40,7 @@ function update_script() {
     msg_ok "Allowed OpenCloud to embed Collabora"
   fi
 
-  RELEASE="v8.1.0"
+  RELEASE="v9.0.0"
   if check_for_gh_release "OpenCloud" "opencloud-eu/opencloud" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
     OLD_VERSION="$(cat ~/.opencloud 2>/dev/null)"
     msg_info "Stopping services"
@@ -68,14 +68,29 @@ function update_script() {
 # STORAGE_USERS_POSIX_WATCH_PATH=<path-to-storage-or-bind-mount>' /etc/opencloud/opencloud.env
     fi
 
-    if ! sed -n '/^sharing:/,/^storage_users:/p' /etc/opencloud/opencloud.yaml | grep -q 'service_account'; then
-      ACCOUNT_ID="$(sed -n '/^activitylog:/,/*.$/p' /etc/opencloud/opencloud.yaml | awk -F'id:' '{print $2}' | tr -d '[:space:]')"
-      ACCOUNT_SECRET="$(sed -n '/^activitylog:/,/*.$/p' /etc/opencloud/opencloud.yaml | awk -F'secret:' '{print $2}' | tr -d '[:space:]')"
-      sed -i "/^sharing:/a\\
-  service_account:\\
-    service_account_id: $ACCOUNT_ID\\
-    service_account_secret: $ACCOUNT_SECRET" /etc/opencloud/opencloud.yaml
+    # Every OpenCloud service falls back to OC_SERVICE_ACCOUNT_ID/SECRET, so services that newly
+    # need the service account (sharing in 8.0, auth_guest in 9.0) work without editing opencloud.yaml
+    if ! grep -q '^OC_SERVICE_ACCOUNT_ID=' /etc/opencloud/opencloud.env; then
+      ACCOUNT_ID="$(awk '/service_account_id:/ {gsub(/["'\'']/, "", $2); print $2; exit}' /etc/opencloud/opencloud.yaml)"
+      ACCOUNT_SECRET="$(awk '/service_account_secret:/ {sub(/^[^:]*:[[:space:]]*/, ""); gsub(/^["'\'']|["'\'']$/, ""); print; exit}' /etc/opencloud/opencloud.yaml)"
+      if [[ -n "$ACCOUNT_ID" && -n "$ACCOUNT_SECRET" && "$ACCOUNT_SECRET" != *"'"* ]]; then
+        printf "OC_SERVICE_ACCOUNT_ID=%s\nOC_SERVICE_ACCOUNT_SECRET='%s'\n" "$ACCOUNT_ID" "$ACCOUNT_SECRET" |
+          sed -i '/^STORAGE_SYSTEM_OC_ROOT=/r /dev/stdin' /etc/opencloud/opencloud.env
+      else
+        msg_warn "Could not read the service account from opencloud.yaml; set OC_SERVICE_ACCOUNT_ID/SECRET in opencloud.env"
+      fi
     fi
+
+    if ! grep -q 'OC_ENABLE_GUEST_LINKS' /etc/opencloud/opencloud.env; then
+      sed -i '/^## Start additional services/i ## Guest links - share with external people by email\
+## Requires the SMTP settings above and notifications in OC_ADD_RUN_SERVICES\
+# OC_ENABLE_GUEST_LINKS=true\
+' /etc/opencloud/opencloud.env
+    fi
+
+    # 9.0: the default space quota is read only under its new name, and thumbnails are cached in thumbnails/cache
+    sed -i 's/^GRAPH_SPACES_DEFAULT_QUOTA=/OC_SPACES_DEFAULT_QUOTA=/' /etc/opencloud/opencloud.env
+    rm -rf /var/lib/opencloud/thumbnails/files
 
     msg_info "Starting services"
     systemctl start opencloud opencloud-wopi
