@@ -743,6 +743,8 @@ run_update() {
   # Diagnosis: does the token reach a GitHub call inside the guest?
   [[ -n "${GH_API_TOKEN:-}" ]] && echo "Token inside the guest: $("${guest_cmd_probe[@]}" env GITHUB_TOKEN="$GH_API_TOKEN" sh -c \
     'printf "%s chars, " "${#GITHUB_TOKEN}"; curl -s --max-time 10 -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $GITHUB_TOKEN" https://api.github.com/repos/cli/cli/releases/latest' 2>&1)"
+  [[ -n "${GH_API_TOKEN:-}" ]] && echo "Token after the guest's profile: $("${guest_cmd_probe[@]}" env GITHUB_TOKEN="$GH_API_TOKEN" bash -c \
+    'for f in /etc/profile.d/*.sh; do . "$f" >/dev/null 2>&1; done; . /root/.profile >/dev/null 2>&1; printf "%s chars; " "${#GITHUB_TOKEN}"; grep -rlsE "GITHUB_TOKEN|var_github_token" /etc/profile.d /root/.profile /root/.bashrc /etc/environment /etc/bash.bashrc | tr "\n" " "' 2>&1)"
   echo "::stop-commands::${token}"
   # timeout runs a program, not a shell function, so spell out the exec here.
   if [[ "$PLATFORM" == "incus" ]]; then guest_cmd=(incus exec "$ctid" --); else guest_cmd=(pct exec "$ctid" --); fi
