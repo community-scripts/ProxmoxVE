@@ -612,7 +612,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - fix: run Meilisearch --upgrade-db on patch updates too [@CrazyWolf13](https://github.com/CrazyWolf13) ([core#259](https://github.com/community-scripts/core/pull/259))
+  - tools: build Ruby on disk and without docs [@MickLesk](https://github.com/MickLesk) ([core#257](https://github.com/community-scripts/core/pull/257))
+- forge: rank a trailing letter as a revision in the version key [@MickLesk](https://github.com/MickLesk) ([core#256](https://github.com/community-scripts/core/pull/256))
+- fix: pin tag-only apps with var_appversion too [@MickLesk](https://github.com/MickLesk) ([core#255](https://github.com/community-scripts/core/pull/255))
+- tools: read the mounts once when emptying a target for a clean install [@MickLesk](https://github.com/MickLesk) ([core#254](https://github.com/community-scripts/core/pull/254))
+- forge: use the designated release for a tag prefix when it carries the prefix [@MickLesk](https://github.com/MickLesk) ([core#252](https://github.com/community-scripts/core/pull/252))
+- gpu / hwaccell: type GPUs by PCI ID and install the right NVIDIA packages on Ubuntu [@MickLesk](https://github.com/MickLesk) ([core#247](https://github.com/community-scripts/core/pull/247))
+- Clear yarn 1's root cache in cleanup_lxc [@MickLesk](https://github.com/MickLesk) ([core#246](https://github.com/community-scripts/core/pull/246))
+- fix: run Meilisearch --upgrade-db on patch updates too [@CrazyWolf13](https://github.com/CrazyWolf13) ([core#259](https://github.com/community-scripts/core/pull/259))
 - db: only chmod a database credentials file that is a regular file [@MickLesk](https://github.com/MickLesk) ([core#253](https://github.com/community-scripts/core/pull/253))
 - fix: take a Debian cloud image from the newest build that has it [@MickLesk](https://github.com/MickLesk) ([core#261](https://github.com/community-scripts/core/pull/261))
 - telemetry: always on for DevScripts, with a one-time notice [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([core#245](https://github.com/community-scripts/core/pull/245))
