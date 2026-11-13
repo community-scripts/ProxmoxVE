@@ -739,17 +739,27 @@ run_update() {
   : >"$raw"
   token=$(head -c 16 /dev/urandom | od -An -tx1 | tr -d ' \n')
   echo "──────── $2 (live) ────────"
-  # Diagnosis (temporary): every bash the update starts reads BASH_ENV
-  # and notes whether it still has GITHUB_TOKEN (its length, never the value).
+  # Diagnosis (temporary): what GitHub answers the token for the two calls
+  # check_for_gh_release makes, from inside the guest.
   if [[ "$PLATFORM" == "incus" ]]; then guest_cmd_probe=(incus exec "$ctid" --); else guest_cmd_probe=(pct exec "$ctid" --); fi
-  "${guest_cmd_probe[@]}" sh -c 'cat >/tmp/ci-env-probe.sh; : >/tmp/ci-env.log' <<'PROBE' 2>/dev/null || true
-{ printf 'pid=%s ppid=%s token=%s var=%s %s ' "$$" "$PPID" "${#GITHUB_TOKEN}" "${#var_github_token}" "$0"; printf '%s' "${BASH_EXECUTION_STRING:0:60}" | tr '\n' ' '; echo; } >>/tmp/ci-env.log
+  [[ -n "${GH_API_TOKEN:-}" ]] && "${guest_cmd_probe[@]}" env GITHUB_TOKEN="$GH_API_TOKEN" bash -s <<'PROBE' 2>&1 | sed 's/^/  probe: /' || true
+for p in releases/latest 'releases?per_page=100'; do
+  for auth in yes no; do
+    h=(-H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28")
+    [[ $auth == yes ]] && h+=(-H "Authorization: Bearer $GITHUB_TOKEN")
+    code=$(curl -sSL -o /tmp/p.json -D /tmp/p.h -w '%{http_code}' --max-time 20 "${h[@]}" "https://api.github.com/repos/marimo-team/marimo/$p")
+    msg=$(jq -r 'if type=="object" then (.message // .tag_name) else "list of \(length)" end' /tmp/p.json 2>/dev/null | head -c 120)
+    rl=$(grep -i '^x-ratelimit-remaining' /tmp/p.h | tr -d '\r')
+    echo "$p auth=$auth -> $code $msg ($rl)"
+  done
+done
+rm -f /tmp/p.json /tmp/p.h
 PROBE
   echo "::stop-commands::${token}"
   # timeout runs a program, not a shell function, so spell out the exec here.
   if [[ "$PLATFORM" == "incus" ]]; then guest_cmd=(incus exec "$ctid" --); else guest_cmd=(pct exec "$ctid" --); fi
   timeout --kill-after=1m "$UPDATE_TIMEOUT" "${guest_cmd[@]}" env PHS_SILENT=1 mode=default MODE=default \
-    TERM=dumb DIAGNOSTICS=no var_ignore_breaking_changes=yes BASH_ENV=/tmp/ci-env-probe.sh ${GH_API_TOKEN:+GITHUB_TOKEN="$GH_API_TOKEN"} update </dev/null \
+    TERM=dumb DIAGNOSTICS=no var_ignore_breaking_changes=yes ${GH_API_TOKEN:+GITHUB_TOKEN="$GH_API_TOKEN"} update </dev/null \
     > >(tee "$raw" | live_filter) 2>&1 &
   update_pid=$!
   wait "$update_pid"
@@ -757,8 +767,6 @@ PROBE
   update_pid=""
   sleep 1
   echo "::${token}::"
-  echo "Shells started by $2 (token length each saw):"
-  "${guest_cmd_probe[@]}" sh -c 'head -n 40 /tmp/ci-env.log; rm -f /tmp/ci-env.log /tmp/ci-env-probe.sh' 2>/dev/null | sed 's/^/  /' || true
 }
 run_update "$UPDATE_RAW" "update test"
 
