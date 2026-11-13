@@ -612,7 +612,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - tools: build Ruby on disk and without docs [@MickLesk](https://github.com/MickLesk) ([core#257](https://github.com/community-scripts/core/pull/257))
+  - forge: skip pre-release tags in get_latest_gh_tag [@MickLesk](https://github.com/MickLesk) ([core#263](https://github.com/community-scripts/core/pull/263))
+- tools: use MySQL's current signing key and the trixie suite [@MickLesk](https://github.com/MickLesk) ([core#262](https://github.com/community-scripts/core/pull/262))
+- tools: install a bare executable from a URL [@MickLesk](https://github.com/MickLesk) ([core#260](https://github.com/community-scripts/core/pull/260))
+- tools: match packageManager pins without their hash [@MickLesk](https://github.com/MickLesk) ([core#258](https://github.com/community-scripts/core/pull/258))
+- tools: build Ruby on disk and without docs [@MickLesk](https://github.com/MickLesk) ([core#257](https://github.com/community-scripts/core/pull/257))
 - forge: rank a trailing letter as a revision in the version key [@MickLesk](https://github.com/MickLesk) ([core#256](https://github.com/community-scripts/core/pull/256))
 - fix: pin tag-only apps with var_appversion too [@MickLesk](https://github.com/MickLesk) ([core#255](https://github.com/community-scripts/core/pull/255))
 - tools: read the mounts once when emptying a target for a clean install [@MickLesk](https://github.com/MickLesk) ([core#254](https://github.com/community-scripts/core/pull/254))
