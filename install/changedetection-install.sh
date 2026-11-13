@@ -51,11 +51,11 @@ $STD locale-gen
 msg_ok "Generated Locales"
 
 export UV_PYTHON_INSTALL_DIR=/opt/uv-python
-PYTHON_VERSION="3.13" setup_uv
+setup_uv
 
 msg_info "Installing Change Detection"
 mkdir -p /opt/changedetection
-$STD uv venv --clear /opt/changedetection/.venv
+$STD uv venv --clear --python 3.13 --managed-python /opt/changedetection/.venv
 $STD /opt/changedetection/.venv/bin/python -m ensurepip --upgrade
 $STD /opt/changedetection/.venv/bin/python -m pip install --upgrade pip
 $STD /opt/changedetection/.venv/bin/python -m pip install changedetection.io playwright
@@ -80,7 +80,7 @@ msg_ok "Created Chrome User"
 
 msg_info "Installing Sockpuppet"
 fetch_and_deploy_gh_branch "sockpuppet" "dgtlmoon/sockpuppetbrowser" "master"
-$STD uv venv --python 3.12 /opt/sockpuppet/.venv
+$STD uv venv --clear --python 3.12 --managed-python /opt/sockpuppet/.venv
 $STD uv pip install --python /opt/sockpuppet/.venv/bin/python -r /opt/sockpuppet/requirements.txt
 msg_ok "Installed Sockpuppet"
 

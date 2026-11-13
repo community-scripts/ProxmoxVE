@@ -47,14 +47,13 @@ function update_script() {
   msg_ok "Regenerated Locales"
 
   export UV_PYTHON_INSTALL_DIR=/opt/uv-python
-  PYTHON_VERSION="3.13" setup_uv
+  setup_uv
 
   readonly CDIO_VENV="${CDIO_DIR}/.venv"
   readonly CDIO_BIN="${CDIO_VENV}/bin/changedetection.io"
   if [[ ! -d "$CDIO_VENV" || ! -x "$CDIO_BIN" ]]; then
     msg_info "Migrating to uv/venv"
-    rm -rf "$CDIO_VENV"
-    $STD uv venv --clear "$CDIO_VENV"
+    $STD uv venv --clear --python 3.13 --managed-python "$CDIO_VENV"
     $STD "$CDIO_VENV/bin/python" -m ensurepip --upgrade
     $STD "$CDIO_VENV/bin/python" -m pip install --upgrade pip
     $STD "$CDIO_VENV/bin/python" -m pip install changedetection.io playwright
@@ -94,7 +93,7 @@ function update_script() {
   if check_for_gh_branch "sockpuppet" "dgtlmoon/sockpuppetbrowser" "master"; then
     systemctl stop sockpuppet 2>/dev/null || true
     fetch_and_deploy_gh_branch "sockpuppet" "dgtlmoon/sockpuppetbrowser" "master"
-    $STD uv venv --clear --python 3.12 "$SOCKPUPPET_VENV"
+    $STD uv venv --clear --python 3.12 --managed-python "$SOCKPUPPET_VENV"
     $STD uv pip install --python "$SOCKPUPPET_VENV/bin/python" -r "${SOCKPUPPET_DIR}/requirements.txt"
   fi
 
@@ -131,12 +130,12 @@ EOF
 
   msg_info "Starting Sockpuppet"
   if ! safe_service_restart sockpuppet ||
-    ! curl -sS --retry 15 --retry-delay 2 --retry-connrefused --retry-max-time 30 --max-time 5 \
+    ! curl -s --retry 15 --retry-delay 2 --retry-connrefused --retry-max-time 30 --max-time 5 \
       "http://127.0.0.1:8080/stats" | grep -qE '"chrome_version":[[:space:]]*"Google Chrome'; then
     msg_error "Sockpuppet failed to start"
     systemctl status sockpuppet --no-pager -l | head -20 || true
-    systemctl disable --now sockpuppet 2>/dev/null || true
     if [[ -f /etc/systemd/system/browserless.service ]]; then
+      systemctl disable --now sockpuppet 2>/dev/null || true
       systemctl enable --now browserless 2>/dev/null || true
       msg_warn "Restarted Browserless; changedetection was not switched"
     fi
@@ -159,7 +158,7 @@ EOF
 
   msg_info "Starting Change Detection"
   if ! safe_service_restart changedetection ||
-    ! curl -sS --retry 15 --retry-delay 2 --retry-connrefused --retry-max-time 30 --max-time 5 \
+    ! curl -s --retry 15 --retry-delay 2 --retry-connrefused --retry-max-time 30 --max-time 5 \
       -o /dev/null -w '%{http_code}' "http://127.0.0.1:5000/" | grep -qE '^([23][0-9][0-9]|401|403)$'; then
     msg_error "changedetection failed to start"
     systemctl status changedetection --no-pager -l | head -20 || true
