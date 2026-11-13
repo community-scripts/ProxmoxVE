@@ -585,7 +585,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Spacebot ([#18668](https://github.com/community-scripts/ProxmoxVE/pull/18668))
+  - Weaviate ([#18671](https://github.com/community-scripts/ProxmoxVE/pull/18671))
+- Spacebot ([#18668](https://github.com/community-scripts/ProxmoxVE/pull/18668))
 - New-API ([#18667](https://github.com/community-scripts/ProxmoxVE/pull/18667))
 - Martin ([#18666](https://github.com/community-scripts/ProxmoxVE/pull/18666))
 - Langflow ([#18665](https://github.com/community-scripts/ProxmoxVE/pull/18665))
