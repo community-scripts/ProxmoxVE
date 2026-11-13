@@ -585,7 +585,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Download a corrupt local template again instead of keeping it [@MickLesk](https://github.com/MickLesk) ([core#235](https://github.com/community-scripts/core/pull/235))
+  - fetch the install script before the container is created [@MickLesk](https://github.com/MickLesk) ([core#236](https://github.com/community-scripts/core/pull/236))
+- Download a corrupt local template again instead of keeping it [@MickLesk](https://github.com/MickLesk) ([core#235](https://github.com/community-scripts/core/pull/235))
 - core: say why a container stopped by itself during its setup [@MickLesk](https://github.com/MickLesk) ([core#234](https://github.com/community-scripts/core/pull/234))
 - Shield pct start and the template check from a closed console [@MickLesk](https://github.com/MickLesk) ([core#239](https://github.com/community-scripts/core/pull/239))
 
