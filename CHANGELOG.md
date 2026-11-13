@@ -611,7 +611,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Shield pct start and the template check from a closed console [@MickLesk](https://github.com/MickLesk) ([core#239](https://github.com/community-scripts/core/pull/239))
+  - telemetry: always on for DevScripts, with a one-time notice [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([core#245](https://github.com/community-scripts/core/pull/245))
+- Shield pct start and the template check from a closed console [@MickLesk](https://github.com/MickLesk) ([core#239](https://github.com/community-scripts/core/pull/239))
 - core: say why a container stopped by itself during its setup [@MickLesk](https://github.com/MickLesk) ([core#234](https://github.com/community-scripts/core/pull/234))
 - Download a corrupt local template again instead of keeping it [@MickLesk](https://github.com/MickLesk) ([core#235](https://github.com/community-scripts/core/pull/235))
 - fetch the install script before the container is created [@MickLesk](https://github.com/MickLesk) ([core#236](https://github.com/community-scripts/core/pull/236))
