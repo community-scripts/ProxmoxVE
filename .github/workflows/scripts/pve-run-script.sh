@@ -739,24 +739,17 @@ run_update() {
   : >"$raw"
   token=$(head -c 16 /dev/urandom | od -An -tx1 | tr -d ' \n')
   echo "──────── $2 (live) ────────"
-  # Diagnosis (temporary): a curl wrapper in the guest notes every
-  # api.github.com call and whether it carried a token (never the token).
+  # Diagnosis (temporary): every bash the update starts reads BASH_ENV
+  # and notes whether it still has GITHUB_TOKEN (its length, never the value).
   if [[ "$PLATFORM" == "incus" ]]; then guest_cmd_probe=(incus exec "$ctid" --); else guest_cmd_probe=(pct exec "$ctid" --); fi
-  "${guest_cmd_probe[@]}" sh -c 'cat >/usr/local/sbin/curl <<"W"
-#!/bin/sh
-case "$*" in *api.github.com*)
-  a=no; case "$*" in *"Authorization: Bearer "?*) a=yes ;; esac
-  u=$(printf "%s\n" "$@" | grep -m1 api.github.com)
-  echo "auth=$a env=${#GITHUB_TOKEN} $u" >>/tmp/ci-gh-calls.log ;;
-esac
-exec /usr/bin/curl "$@"
-W
-chmod 755 /usr/local/sbin/curl; : >/tmp/ci-gh-calls.log' 2>/dev/null || true
+  "${guest_cmd_probe[@]}" sh -c 'cat >/tmp/ci-env-probe.sh; : >/tmp/ci-env.log' <<'PROBE' 2>/dev/null || true
+{ printf 'pid=%s ppid=%s token=%s var=%s %s ' "$$" "$PPID" "${#GITHUB_TOKEN}" "${#var_github_token}" "$0"; printf '%s' "${BASH_EXECUTION_STRING:0:60}" | tr '\n' ' '; echo; } >>/tmp/ci-env.log
+PROBE
   echo "::stop-commands::${token}"
   # timeout runs a program, not a shell function, so spell out the exec here.
   if [[ "$PLATFORM" == "incus" ]]; then guest_cmd=(incus exec "$ctid" --); else guest_cmd=(pct exec "$ctid" --); fi
   timeout --kill-after=1m "$UPDATE_TIMEOUT" "${guest_cmd[@]}" env PHS_SILENT=1 mode=default MODE=default \
-    TERM=dumb DIAGNOSTICS=no var_ignore_breaking_changes=yes ${GH_API_TOKEN:+GITHUB_TOKEN="$GH_API_TOKEN"} update </dev/null \
+    TERM=dumb DIAGNOSTICS=no var_ignore_breaking_changes=yes BASH_ENV=/tmp/ci-env-probe.sh ${GH_API_TOKEN:+GITHUB_TOKEN="$GH_API_TOKEN"} update </dev/null \
     > >(tee "$raw" | live_filter) 2>&1 &
   update_pid=$!
   wait "$update_pid"
@@ -764,8 +757,8 @@ chmod 755 /usr/local/sbin/curl; : >/tmp/ci-gh-calls.log' 2>/dev/null || true
   update_pid=""
   sleep 1
   echo "::${token}::"
-  echo "GitHub API calls in the guest during $2:"
-  "${guest_cmd_probe[@]}" sh -c 'cat /tmp/ci-gh-calls.log; rm -f /usr/local/sbin/curl /tmp/ci-gh-calls.log' 2>/dev/null | sed 's/^/  /' || true
+  echo "Shells started by $2 (token length each saw):"
+  "${guest_cmd_probe[@]}" sh -c 'head -n 40 /tmp/ci-env.log; rm -f /tmp/ci-env.log /tmp/ci-env-probe.sh' 2>/dev/null | sed 's/^/  /' || true
 }
 run_update "$UPDATE_RAW" "update test"
 
