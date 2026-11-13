@@ -585,7 +585,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Unsloth ([#18697](https://github.com/community-scripts/ProxmoxVE/pull/18697))
+  - GoatCounter ([#18662](https://github.com/community-scripts/ProxmoxVE/pull/18662))
+- Unsloth ([#18697](https://github.com/community-scripts/ProxmoxVE/pull/18697))
 - colanode ([#18685](https://github.com/community-scripts/ProxmoxVE/pull/18685))
 - SimpleLogin ([#18680](https://github.com/community-scripts/ProxmoxVE/pull/18680))
 - Nightingale ([#18674](https://github.com/community-scripts/ProxmoxVE/pull/18674))
