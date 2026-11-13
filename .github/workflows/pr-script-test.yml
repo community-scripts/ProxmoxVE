@@ -34,6 +34,10 @@ name: PR script test
 on:
   issue_comment:
     types: [created]
+  # The "Ready For Testing" label on a script issue builds that app from the
+  # default branch, as `/test <app>` in the issue would.
+  issues:
+    types: [labeled]
   # Every PR, see above. pull_request_target runs this file from main, never
   # the PR's copy of it, and does not wait for "approve and run" on forks.
   pull_request_target:
@@ -62,11 +66,13 @@ permissions: {}
 # One queue per PR. A newer push replaces a run that is still waiting (its
 # gate would skip anyway: the head moved), but never kills one that is
 # building: a cancelled job leaves its guest behind until the sweeper. Any
-# comment starts this workflow; one that is not a /test gets a group of its
-# own, so it cannot push a waiting test out of the queue.
+# comment and any label starts this workflow; one that is not a /test (or
+# not the "Ready For Testing" label) gets a group of its own, so it cannot
+# push a waiting test out of the queue.
 concurrency:
   group: >-
-    pr-script-test-${{ github.event_name == 'issue_comment' && !startsWith(github.event.comment.body, '/test')
+    pr-script-test-${{ ((github.event_name == 'issue_comment' && !startsWith(github.event.comment.body, '/test'))
+    || (github.event_name == 'issues' && github.event.label.name != 'Ready For Testing'))
     && format('noop-{0}', github.run_id)
     || github.event.pull_request.number || github.event.issue.number || inputs.pr }}
   cancel-in-progress: false
@@ -76,6 +82,7 @@ jobs:
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'issue_comment' && startsWith(github.event.comment.body, '/test')) ||
+      (github.event_name == 'issues' && github.event.label.name == 'Ready For Testing' && !github.event.issue.pull_request) ||
       (github.event_name == 'pull_request_target' && !github.event.pull_request.draft)
     runs-on: ubuntu-latest
     permissions:
@@ -120,6 +127,25 @@ jobs:
             } else if (context.eventName === 'workflow_dispatch') {
               prNumber = Number(context.payload.inputs.pr);
               requested = `${context.payload.inputs.sha || ''} ${context.payload.inputs.scripts || ''}`;
+            } else if (context.eventName === 'issues') {
+              // "Ready For Testing" on a script issue: the app the issue form
+              // names, as `/test <app>` would. Only people who can triage set a
+              // label, and the default branch is what gets built.
+              const issue = context.payload.issue;
+              prNumber = issue.number;
+              const body = (issue.body || '').replace(/\r/g, '');
+              const field = name => {
+                const m = body.match(new RegExp(`^###[ \t]*${name}[ \t]*\n+([^\n#][^\n]*)`, 'm'));
+                return m && m[1].trim() !== '_No response_' ? m[1].trim() : '';
+              };
+              const type = field('Script Type');
+              if (type && !/^(CT|VM)\b/.test(type)) { core.notice(`${type}: only ct/ and vm/ scripts are built`); return; }
+              const path = field('Script path').replace(/^\/+/, '');
+              // Same slug rule as pr-merged-ready-for-testing.yml: the "Name of
+              // the Script" field, else the title, lowercased, spaces -> dashes.
+              const slug = (field('Name of the Script') || issue.title).trim().toLowerCase().replace(/\s+/g, '-');
+              requested = /^(ct|vm)\/[A-Za-z0-9._-]+\.sh$/.test(path) ? path : slug;
+              core.info(`Ready For Testing: building ${requested}`);
             } else {
               prNumber = context.payload.issue.number;
               const body = context.payload.comment.body.trim();
@@ -140,7 +166,7 @@ jobs:
             // `/test <app>` in an issue (not a PR) builds that app from the
             // default branch as it is right now, e.g. to see whether a reported
             // error reproduces. No PR, so no check run, no review, no approval.
-            const isIssue = context.eventName === 'issue_comment' && !context.payload.issue.pull_request;
+            const isIssue = ['issue_comment', 'issues'].includes(context.eventName) && !context.payload.issue.pull_request;
             let pr = null, head, headSha;
             if (isIssue) {
               const { data: info } = await github.rest.repos.get({ owner, repo });
