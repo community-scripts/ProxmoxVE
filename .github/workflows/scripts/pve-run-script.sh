@@ -470,6 +470,14 @@ touch "$RAW_LOG.start"
 [[ -n "$VAR_ARM64" ]] && build_env+=(var_arm64=yes)
 # Both engines turn var_github_token into GITHUB_TOKEN inside the container.
 [[ -n "${GH_API_TOKEN:-}" ]] && build_env+=(var_github_token="$GH_API_TOKEN")
+# How much API quota this build starts with, with the token and without (the
+# lab's one address). /rate_limit itself costs nothing. A "rate limit" in the
+# build is then easy to place.
+gh_quota() {
+  curl -s --max-time 10 ${1:+-H "Authorization: Bearer $1"} https://api.github.com/rate_limit 2>/dev/null |
+    jq -r '.rate | "\(.remaining) of \(.limit) left, resets in \(((.reset - now) / 60) | floor) min"' 2>/dev/null || echo "unknown"
+}
+echo "GitHub API quota: token $(gh_quota "${GH_API_TOKEN:-}") · no token $(gh_quota "")"
 
 # --- Answers for the script's questions ------------------------------------------
 # Nobody types into CI, so anything the install asks has to be answered up front.
@@ -761,6 +769,7 @@ fi
 update_error=$(strip_ansi <"$UPDATE_RAW" | grep -E '✖|\[ERROR\]' | tail -n 1 | sed -E 's/^\s*(✖️?|\s)*//' | cut -c1-180)
 if [[ -n "$update_error" ]]; then
   if [[ "${update_error,,}" == *"rate limit"* ]]; then
+    echo "GitHub API quota now: token $(gh_quota "${GH_API_TOKEN:-}") · no token $(gh_quota "")"
     update_status="error"
     update_step="could not be tested: ${update_error}"
     status="pass"
