@@ -585,7 +585,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Nightingale ([#18674](https://github.com/community-scripts/ProxmoxVE/pull/18674))
+  - SimpleLogin ([#18680](https://github.com/community-scripts/ProxmoxVE/pull/18680))
+- Nightingale ([#18674](https://github.com/community-scripts/ProxmoxVE/pull/18674))
 - Temporal ([#18670](https://github.com/community-scripts/ProxmoxVE/pull/18670))
 - TrailBase ([#18669](https://github.com/community-scripts/ProxmoxVE/pull/18669))
 - Weaviate ([#18671](https://github.com/community-scripts/ProxmoxVE/pull/18671))
