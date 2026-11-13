@@ -610,6 +610,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 - Bugsink ([#18655](https://github.com/community-scripts/ProxmoxVE/pull/18655))
 - 9Router ([#18654](https://github.com/community-scripts/ProxmoxVE/pull/18654))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - wikijs: fix missing backend deps on amd64 [@CrazyWolf13](https://github.com/CrazyWolf13) ([#18715](https://github.com/community-scripts/ProxmoxVE/pull/18715))
+
 ### 💾 Core
 
   - tools: Issue self-signed certificates for 825 days and renew expiring ones [@MickLesk](https://github.com/MickLesk) ([core#251](https://github.com/community-scripts/core/pull/251))
