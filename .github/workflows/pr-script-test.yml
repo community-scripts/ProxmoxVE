@@ -133,6 +133,16 @@ jobs:
               // label, and the default branch is what gets built.
               const issue = context.payload.issue;
               prNumber = issue.number;
+              // Triage can label too; building needs write, as for /test. The
+              // merge workflow labels through an app, i.e. a bot.
+              const sender = context.payload.sender;
+              if (sender.type !== 'Bot') {
+                const { data: perm } = await github.rest.repos.getCollaboratorPermissionLevel({ owner, repo, username: sender.login });
+                if (!['admin', 'maintain', 'write'].includes(perm.permission)) {
+                  core.notice(`${sender.login} has ${perm.permission} access; a test needs write`);
+                  return;
+                }
+              }
               const body = (issue.body || '').replace(/\r/g, '');
               const field = name => {
                 const m = body.match(new RegExp(`^###[ \t]*${name}[ \t]*\n+([^\n#][^\n]*)`, 'm'));
