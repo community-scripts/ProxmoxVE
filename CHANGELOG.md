@@ -585,7 +585,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Bugsink ([#18655](https://github.com/community-scripts/ProxmoxVE/pull/18655))
+  - Chroma ([#18657](https://github.com/community-scripts/ProxmoxVE/pull/18657))
+- Bugsink ([#18655](https://github.com/community-scripts/ProxmoxVE/pull/18655))
 - 9Router ([#18654](https://github.com/community-scripts/ProxmoxVE/pull/18654))
 
 ### 💾 Core
