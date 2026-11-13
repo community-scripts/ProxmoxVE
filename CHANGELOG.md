@@ -612,7 +612,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - forge: skip pre-release tags in get_latest_gh_tag [@MickLesk](https://github.com/MickLesk) ([core#263](https://github.com/community-scripts/core/pull/263))
+  - forge: find a pinned tag whether or not it is written with its v [@MickLesk](https://github.com/MickLesk) ([core#249](https://github.com/community-scripts/core/pull/249))
+- core: unpack a compressed single binary in singlefile mode [@MickLesk](https://github.com/MickLesk) ([core#248](https://github.com/community-scripts/core/pull/248))
+- forge: skip pre-release tags in get_latest_gh_tag [@MickLesk](https://github.com/MickLesk) ([core#263](https://github.com/community-scripts/core/pull/263))
 - tools: use MySQL's current signing key and the trixie suite [@MickLesk](https://github.com/MickLesk) ([core#262](https://github.com/community-scripts/core/pull/262))
 - tools: install a bare executable from a URL [@MickLesk](https://github.com/MickLesk) ([core#260](https://github.com/community-scripts/core/pull/260))
 - tools: match packageManager pins without their hash [@MickLesk](https://github.com/MickLesk) ([core#258](https://github.com/community-scripts/core/pull/258))
