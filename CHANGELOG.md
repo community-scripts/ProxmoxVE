@@ -591,6 +591,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Zerobyte: let the singlefile download unpack restic [@MickLesk](https://github.com/MickLesk) ([#18720](https://github.com/community-scripts/ProxmoxVE/pull/18720))
     - LibreNMS: default to an 8 GB disk [@MickLesk](https://github.com/MickLesk) ([#18723](https://github.com/community-scripts/ProxmoxVE/pull/18723))
 
 ## 2026-11-13
