@@ -587,6 +587,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   -  LibreDB Studio ([#18699](https://github.com/community-scripts/ProxmoxVE/pull/18699))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - LibreNMS: default to an 8 GB disk [@MickLesk](https://github.com/MickLesk) ([#18723](https://github.com/community-scripts/ProxmoxVE/pull/18723))
+
 ## 2026-11-13
 
 ### 🆕 New Scripts
