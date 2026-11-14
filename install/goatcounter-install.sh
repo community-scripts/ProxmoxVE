@@ -14,8 +14,6 @@ network_check
 update_os
 
 fetch_and_deploy_gh_release "goatcounter" "arp242/goatcounter" "singlefile" "latest" "/opt/goatcounter" "goatcounter-v*-linux-$(arch_resolve).gz"
-mv /opt/goatcounter/goatcounter /opt/goatcounter/goatcounter.gz
-gunzip -f /opt/goatcounter/goatcounter.gz
 
 msg_info "Configuring GoatCounter"
 ADMIN_EMAIL="${var_admin_email:-admin@goatcounter.local}"

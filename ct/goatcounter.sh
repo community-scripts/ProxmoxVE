@@ -41,8 +41,6 @@ function update_script() {
     msg_ok "Stopped GoatCounter"
 
     fetch_and_deploy_gh_release "goatcounter" "arp242/goatcounter" "singlefile" "latest" "/opt/goatcounter" "goatcounter-v*-linux-$(arch_resolve).gz"
-    mv /opt/goatcounter/goatcounter /opt/goatcounter/goatcounter.gz
-    gunzip -f /opt/goatcounter/goatcounter.gz
 
     msg_info "Starting GoatCounter"
     systemctl start goatcounter
