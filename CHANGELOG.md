@@ -581,6 +581,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-11-14
+
+### 🆕 New Scripts
+
+  -  LibreDB Studio ([#18699](https://github.com/community-scripts/ProxmoxVE/pull/18699))
+
 ## 2026-11-13
 
 ### 🆕 New Scripts
