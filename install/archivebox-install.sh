@@ -23,6 +23,7 @@ $STD apt install -y \
   procps \
   dnsutils \
   ripgrep \
+  libatomic1 \
   chromium
 msg_ok "Installed Dependencies"
 
