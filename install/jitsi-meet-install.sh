@@ -19,6 +19,8 @@ if [[ -z "${var_jitsi_domain:-}" ]]; then
   read -rp "${TAB3}Public hostname (FQDN, leave empty to use the container IP): " var_jitsi_domain || true
 fi
 var_jitsi_domain="${var_jitsi_domain:-$LOCAL_IP}"
+var_jitsi_domain="${var_jitsi_domain#*://}"
+var_jitsi_domain="${var_jitsi_domain%%/*}"
 
 if [[ "$var_jitsi_domain" != "$LOCAL_IP" ]]; then
   if [[ -z "${var_jitsi_le_email:-}" ]]; then
@@ -33,6 +35,10 @@ if [[ "$var_jitsi_domain" != "$LOCAL_IP" ]]; then
   if [[ -n "${var_jitsi_admin_user:-}" && -z "${var_jitsi_admin_pass:-}" ]]; then
     read -rsp "${TAB3}Admin password (leave empty to generate): " var_jitsi_admin_pass || true
     echo
+  fi
+  if [[ -n "${var_jitsi_admin_user:-}" && ! "$var_jitsi_admin_user" =~ ^[A-Za-z0-9._-]+$ ]]; then
+    msg_error "Admin user '${var_jitsi_admin_user}' is not a valid XMPP name (letters, digits, . _ - only)"
+    exit 64
   fi
 fi
 
