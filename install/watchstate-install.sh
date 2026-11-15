@@ -66,6 +66,7 @@ server {
         fastcgi_pass unix:${PHP_SOCK};
         fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
         include fastcgi_params;
+        fastcgi_param HTTP_HOST \$http_host;
         fastcgi_read_timeout 600;
     }
 }

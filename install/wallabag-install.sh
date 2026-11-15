@@ -114,6 +114,7 @@ server {
         fastcgi_pass unix:__PHP_SOCK__;
         fastcgi_split_path_info ^(.+\.php)(/.*)$;
         include fastcgi_params;
+        fastcgi_param HTTP_HOST $http_host;
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
         fastcgi_param DOCUMENT_ROOT $realpath_root;
         internal;

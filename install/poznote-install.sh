@@ -101,6 +101,7 @@ server {
 
     location ~ \.php$ {
         include fastcgi_params;
+        fastcgi_param HTTP_HOST \$http_host;
         fastcgi_pass unix:${PHP_SOCK};
         fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
         fastcgi_param DOCUMENT_ROOT \$document_root;
