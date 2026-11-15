@@ -590,6 +590,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - several scripts: keep the port in redirects of PHP apps behind nginx on a custom port [@MickLesk](https://github.com/MickLesk) ([#18732](https://github.com/community-scripts/ProxmoxVE/pull/18732))
     - NPMplus: offer the container's timezone as the default [@MickLesk](https://github.com/MickLesk) ([#18733](https://github.com/community-scripts/ProxmoxVE/pull/18733))
 
   - #### 🔧 Refactor
