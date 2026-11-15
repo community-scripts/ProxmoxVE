@@ -593,6 +593,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - several scripts: keep the port in redirects of PHP apps behind nginx on a custom port [@MickLesk](https://github.com/MickLesk) ([#18732](https://github.com/community-scripts/ProxmoxVE/pull/18732))
     - NPMplus: offer the container's timezone as the default [@MickLesk](https://github.com/MickLesk) ([#18733](https://github.com/community-scripts/ProxmoxVE/pull/18733))
 
+  - #### ✨ New Features
+
+    - OpenCloud: bump to v9.0.0, configure the service account through env [@SimKaiLong](https://github.com/SimKaiLong) ([#18586](https://github.com/community-scripts/ProxmoxVE/pull/18586))
+
   - #### 🔧 Refactor
 
     - Nginx Proxy Manager: fall back to Alpine's distfiles for the OpenResty source [@MickLesk](https://github.com/MickLesk) ([#18736](https://github.com/community-scripts/ProxmoxVE/pull/18736))
