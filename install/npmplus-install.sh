@@ -39,7 +39,12 @@ msg_ok "Fetched NPMplus"
 
 attempts=0
 TZ_INPUT="${var_npmplus_tz:-}"
+TZ_DEFAULT="$(cat /etc/timezone 2>/dev/null || true)"
 while true; do
+  if [[ -z "$TZ_INPUT" && -n "$TZ_DEFAULT" ]]; then
+    read -r -p "${TAB3}Enter your TZ Identifier [${TZ_DEFAULT}]: " TZ_INPUT || true
+    TZ_INPUT="${TZ_INPUT:-$TZ_DEFAULT}"
+  fi
   [[ -n "$TZ_INPUT" ]] || read -r -p "${TAB3}Enter your TZ Identifier (e.g., Europe/Berlin): " TZ_INPUT || { msg_error "No TZ identifier given; set var_npmplus_tz or answer the prompt"; exit 64; }
   if validate_tz "$TZ_INPUT"; then
     break
