@@ -132,6 +132,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 
+
+
+
 <details>
 <summary><h2>📜 History</h2></summary>
 
@@ -141,7 +144,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 <details>
-<summary><h4>November (7 entries)</h4></summary>
+<summary><h4>November (14 entries)</h4></summary>
 
 [View November 2026 Changelog](.github/changelogs/2026/11.md)
 
@@ -1413,164 +1416,3 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - Clean up after installs and updates again [@MickLesk](https://github.com/MickLesk) ([core#147](https://github.com/community-scripts/core/pull/147))
 - Fix apt_conffile_report exiting 1 when uutils comm sees locale-sorted input [@BadFlo](https://github.com/BadFlo) ([core#146](https://github.com/community-scripts/core/pull/146))
-
-## 2026-10-15
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - fix(apprise-api): copy static assets into the served directory [@brokentokin](https://github.com/brokentokin) ([#17940](https://github.com/community-scripts/ProxmoxVE/pull/17940))
-    - Bytestash: modify backup process | Update Resources [@MickLesk](https://github.com/MickLesk) ([#17935](https://github.com/community-scripts/ProxmoxVE/pull/17935))
-    - Zabbix: Add '-y' flag to apt install commands [@MickLesk](https://github.com/MickLesk) ([#17933](https://github.com/community-scripts/ProxmoxVE/pull/17933))
-    - karakeep: bump Node.js from 22 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17087](https://github.com/community-scripts/ProxmoxVE/pull/17087))
-
-### 💾 Core
-
-  - Keep VM release lookups working without system.func [@MickLesk](https://github.com/MickLesk) ([core#144](https://github.com/community-scripts/core/pull/144))
-- Stop calling exit 1 "Operation not permitted" at several steps [@MickLesk](https://github.com/MickLesk) ([core#140](https://github.com/community-scripts/core/pull/140))
-
-## 2026-10-14
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Paperclip: fall back to a non-frozen install when the release lockfile is stale [@MickLesk](https://github.com/MickLesk) ([#17922](https://github.com/community-scripts/ProxmoxVE/pull/17922))
-
-  - #### 🔧 Refactor
-
-    - Immich: rebuild the image libraries when the revision record is missing [@MickLesk](https://github.com/MickLesk) ([#17919](https://github.com/community-scripts/ProxmoxVE/pull/17919))
-
-### 💾 Core
-
-  - Show what the failing command printed, and keep verbose output in the log [@MickLesk](https://github.com/MickLesk) ([core#139](https://github.com/community-scripts/core/pull/139))
-- Install jq before the release lookup and show what a non-JSON answer was [@MickLesk](https://github.com/MickLesk) ([core#138](https://github.com/community-scripts/core/pull/138))
-- Refresh the NodeSource key before a same-major Node.js update [@MickLesk](https://github.com/MickLesk) ([core#137](https://github.com/community-scripts/core/pull/137))
-- github: say why a forge could not be reached instead of 'connection failed' [@MickLesk](https://github.com/MickLesk) ([core#136](https://github.com/community-scripts/core/pull/136))
-
-## 2026-10-13
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Fix URL for downloading OneDev latest release [@ryansully](https://github.com/ryansully) ([#17915](https://github.com/community-scripts/ProxmoxVE/pull/17915))
-    - LocalAI: pin the CPU backends when the container has no GPU runtime [@MickLesk](https://github.com/MickLesk) ([#17909](https://github.com/community-scripts/ProxmoxVE/pull/17909))
-    - [Gluetun] Update GitHub repository source install and update. [@CerberusStyle](https://github.com/CerberusStyle) ([#17899](https://github.com/community-scripts/ProxmoxVE/pull/17899))
-    - Immich: Bump to 3.3.1 and restore (failed) geodata/countryInfo.txt on update  [@MickLesk](https://github.com/MickLesk) ([#17894](https://github.com/community-scripts/ProxmoxVE/pull/17894))
-    - WikiJS: use v2 Repo until v3 is stable [@MickLesk](https://github.com/MickLesk) ([#17895](https://github.com/community-scripts/ProxmoxVE/pull/17895))
-
-  - #### 💥 Breaking Changes
-
-    - zammad: Debian 13, new apt repo, Elasticsearch 8 [@durzo](https://github.com/durzo) ([#17836](https://github.com/community-scripts/ProxmoxVE/pull/17836))
-
-### 💾 Core
-
-  - Keep the version key parseable by jq 1.6 [@MickLesk](https://github.com/MickLesk) ([core#134](https://github.com/community-scripts/core/pull/134))
-
-## 2026-10-12
-
-### 🆕 New Scripts
-
-  - WatchState ([#17881](https://github.com/community-scripts/ProxmoxVE/pull/17881))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - chore(ct): sync wazuh defaults with PocketBase [@github-actions[bot]](https://github.com/github-actions[bot]) ([#17889](https://github.com/community-scripts/ProxmoxVE/pull/17889))
-    - Wanderer: bring back the wanderer-pb wrapper [@MickLesk](https://github.com/MickLesk) ([#17874](https://github.com/community-scripts/ProxmoxVE/pull/17874))
-    - Tracearr: install only the server's production dependencies [@MickLesk](https://github.com/MickLesk) ([#17873](https://github.com/community-scripts/ProxmoxVE/pull/17873))
-    - Paperless-ngx: QoL restart crashed services | patch regex [@MickLesk](https://github.com/MickLesk) ([#17812](https://github.com/community-scripts/ProxmoxVE/pull/17812))
-    - Splunk Enterprise: start the service as the splunk user [@rcastley](https://github.com/rcastley) ([#17816](https://github.com/community-scripts/ProxmoxVE/pull/17816))
-
-### 💾 Core
-
-  - Draw a Community Scripts banner while a script has no header of its own [@MickLesk](https://github.com/MickLesk) ([core#133](https://github.com/community-scripts/core/pull/133))
-- Order pre-release labels when comparing versions [@MickLesk](https://github.com/MickLesk) ([core#132](https://github.com/community-scripts/core/pull/132))
-- gh: curl_download: wait between attempts [@MickLesk](https://github.com/MickLesk) ([core#131](https://github.com/community-scripts/core/pull/131))
-
-### 🧰 Tools
-
-  - #### ✨ New Features
-
-    - Immich Public Proxy: optional visitor upload service (v4 Release) [@MickLesk](https://github.com/MickLesk) ([#17875](https://github.com/community-scripts/ProxmoxVE/pull/17875))
-
-## 2026-10-11
-
-### 🆕 New Scripts
-
-  - Cinephage ([#17852](https://github.com/community-scripts/ProxmoxVE/pull/17852))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Immich: build libvips with JPEG 2000 support [@MickLesk](https://github.com/MickLesk) ([#17864](https://github.com/community-scripts/ProxmoxVE/pull/17864))
-    - hermesagent: match the relaunched root gateway regardless of interpreter [@MickLesk](https://github.com/MickLesk) ([#17847](https://github.com/community-scripts/ProxmoxVE/pull/17847))
-    - Radicale: install the bcrypt and argon2 extras [@MickLesk](https://github.com/MickLesk) ([#17813](https://github.com/community-scripts/ProxmoxVE/pull/17813))
-    - fix(zigbee2mqtt): preserve backup stream and prevent filename collisions [@petermnt](https://github.com/petermnt) ([#17751](https://github.com/community-scripts/ProxmoxVE/pull/17751))
-
-  - #### ✨ New Features
-
-    - QoL: let var_* answer the optional add-on prompts [@MickLesk](https://github.com/MickLesk) ([#17858](https://github.com/community-scripts/ProxmoxVE/pull/17858))
-    - QoL: Confirm third-party installers through confirm_external_installer [@MickLesk](https://github.com/MickLesk) ([#17857](https://github.com/community-scripts/ProxmoxVE/pull/17857))
-    - docker: take the lxcfs toggle, TCP socket and Compose choice from app variables [@MickLesk](https://github.com/MickLesk) ([#17850](https://github.com/community-scripts/ProxmoxVE/pull/17850))
-
-  - #### 🔧 Refactor
-
-    - RustDesk Server: run the official server, make the web UI optional [@MickLesk](https://github.com/MickLesk) ([#17854](https://github.com/community-scripts/ProxmoxVE/pull/17854))
-    - Caddy: install the .deb from GitHub instead of the Cloudsmith repo [@MickLesk](https://github.com/MickLesk) ([#17862](https://github.com/community-scripts/ProxmoxVE/pull/17862))
-
-### 💾 Core
-
-  - Add confirm_external_installer [@MickLesk](https://github.com/MickLesk) ([core#130](https://github.com/community-scripts/core/pull/130))
-- setup_docker: make LXC resource limits visible to nested containers [@andrebrait](https://github.com/andrebrait) ([core#9](https://github.com/community-scripts/core/pull/9))
-- Incus: fix ENABLE_FUSE / TUN vars [@MickLesk](https://github.com/MickLesk) ([core#127](https://github.com/community-scripts/core/pull/127))
-- Resolve a uv required-version range to the newest release inside it [@MickLesk](https://github.com/MickLesk) ([core#126](https://github.com/community-scripts/core/pull/126))
-- Upgrade MongoDB in place when an app package depends on it [@MickLesk](https://github.com/MickLesk) ([core#128](https://github.com/community-scripts/core/pull/128))
-
-## 2026-10-10
-
-### 🆕 New Scripts
-
-  - Weblate ([#17837](https://github.com/community-scripts/ProxmoxVE/pull/17837))
-- CertMate ([#17803](https://github.com/community-scripts/ProxmoxVE/pull/17803))
-- AnythingLLM ([#17802](https://github.com/community-scripts/ProxmoxVE/pull/17802))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - update endurain repo from codeberg to gh [@johanngrobe](https://github.com/johanngrobe) ([#17831](https://github.com/community-scripts/ProxmoxVE/pull/17831))
-    - Immich: download countryInfo.txt into the geodata directory on update [@claytonfaria](https://github.com/claytonfaria) ([#17823](https://github.com/community-scripts/ProxmoxVE/pull/17823))
-    - paperclip: keep root and skip /opt/paperclip-data chown when PAPERCLIP_HOME is custom [@austinpilz](https://github.com/austinpilz) ([#17825](https://github.com/community-scripts/ProxmoxVE/pull/17825))
-
-## 2026-10-09
-
-### 🆕 New Scripts
-
-  - FoldingAtHome ([#17799](https://github.com/community-scripts/ProxmoxVE/pull/17799))
-- LocalAI ([#17801](https://github.com/community-scripts/ProxmoxVE/pull/17801))
-- Tvheadend ([#17800](https://github.com/community-scripts/ProxmoxVE/pull/17800))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - OpenCloud: fix Collabora embedding with Collabora 26.04.4 [@SimKaiLong](https://github.com/SimKaiLong) ([#17810](https://github.com/community-scripts/ProxmoxVE/pull/17810))
-
-  - #### 🔧 Refactor
-
-    - Immich: survive an interrupted update and a failing ML build [@MickLesk](https://github.com/MickLesk) ([#17798](https://github.com/community-scripts/ProxmoxVE/pull/17798))
-
-### 💾 Core
-
-  - check_for_release: compare against the release marked as latest [@MickLesk](https://github.com/MickLesk) ([core#125](https://github.com/community-scripts/core/pull/125))
-
-### 🧰 Tools
-
-  - #### ✨ New Features
-
-    - FileBrowser Quantum: migrate the config and database to v2 [@MickLesk](https://github.com/MickLesk) ([#17815](https://github.com/community-scripts/ProxmoxVE/pull/17815))
