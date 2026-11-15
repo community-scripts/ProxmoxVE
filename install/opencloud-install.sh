@@ -14,6 +14,8 @@ network_check
 update_os
 
 MAX_ATTEMPTS=3
+# Each FQDN is read from var_opencloud_opencloud_fqdn, var_opencloud_collabora_fqdn and var_opencloud_wopi_fqdn when set.
+# Named literally here because the prompt below builds the name from $server, and unattended runs look for the literal names.
 servers=("opencloud" "collabora" "wopi")
 attempt=0
 for server in "${servers[@]}"; do
@@ -68,7 +70,7 @@ $STD sudo -u cool coolconfig set-admin-password --user=admin --password="$COOLPA
 echo "$COOLPASS" >~/.coolpass
 msg_ok "Installed Collabora Online"
 
-fetch_and_deploy_gh_release "OpenCloud" "opencloud-eu/opencloud" "singlefile" "v8.1.0" "/usr/bin" "opencloud-*-linux-$(arch_resolve)"
+fetch_and_deploy_gh_release "OpenCloud" "opencloud-eu/opencloud" "singlefile" "v9.0.0" "/usr/bin" "opencloud-*-linux-$(arch_resolve)"
 mv /usr/bin/OpenCloud /usr/bin/opencloud
 
 msg_info "Configuring OpenCloud"
@@ -127,6 +129,10 @@ COLLABORATION_JWT_SECRET=
 # NOTIFICATIONS_SMTP_ENCRYPTION=starttls
 ## Allow insecure connections. Defaults to false.
 # NOTIFICATIONS_SMTP_INSECURE=false
+
+## Guest links - share with external people by email
+## Requires the SMTP settings above and notifications in OC_ADD_RUN_SERVICES
+# OC_ENABLE_GUEST_LINKS=true
 
 ## Start additional services at runtime
 ## Examples: notifications, antivirus etc.
@@ -217,6 +223,14 @@ chown -R opencloud:opencloud "$CONFIG_DIR" "$DATA_DIR"
 sudo -u opencloud opencloud init --config-path "$CONFIG_DIR" --insecure no
 OPENCLOUD_SECRET="$(sed -n '/jwt/p' "$CONFIG_DIR"/opencloud.yaml | awk '{print $2}')"
 sed -i "s/JWT_SECRET=/&${OPENCLOUD_SECRET//&/\\&}/" "$ENV_FILE"
+ACCOUNT_ID="$(awk '/service_account_id:/ {gsub(/["'\'']/, "", $2); print $2; exit}' "$CONFIG_DIR"/opencloud.yaml)"
+ACCOUNT_SECRET="$(awk '/service_account_secret:/ {sub(/^[^:]*:[[:space:]]*/, ""); gsub(/^["'\'']|["'\'']$/, ""); print; exit}' "$CONFIG_DIR"/opencloud.yaml)"
+if [[ -n "$ACCOUNT_ID" && -n "$ACCOUNT_SECRET" && "$ACCOUNT_SECRET" != *"'"* ]]; then
+  printf "OC_SERVICE_ACCOUNT_ID=%s\nOC_SERVICE_ACCOUNT_SECRET='%s'\n" "$ACCOUNT_ID" "$ACCOUNT_SECRET" |
+    sed -i '/^STORAGE_SYSTEM_OC_ROOT=/r /dev/stdin' "$ENV_FILE"
+else
+  msg_warn "Could not read the service account from opencloud.yaml; set OC_SERVICE_ACCOUNT_ID/SECRET in opencloud.env"
+fi
 msg_ok "Configured OpenCloud"
 
 msg_info "Starting services"
