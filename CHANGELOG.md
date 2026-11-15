@@ -588,7 +588,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - BlissOS VM ([#18745](https://github.com/community-scripts/ProxmoxVE/pull/18745))
+  - vLLM ([#18744](https://github.com/community-scripts/ProxmoxVE/pull/18744))
+- BlissOS VM ([#18745](https://github.com/community-scripts/ProxmoxVE/pull/18745))
 
 ### 🚀 Updated Scripts
 
