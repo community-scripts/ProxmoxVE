@@ -588,7 +588,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - setup_rust: retry the rustup install [@MickLesk](https://github.com/MickLesk) ([core#266](https://github.com/community-scripts/core/pull/266))
+  - Keep the certificate CN within 64 characters [@MickLesk](https://github.com/MickLesk) ([core#267](https://github.com/community-scripts/core/pull/267))
+- setup_rust: retry the rustup install [@MickLesk](https://github.com/MickLesk) ([core#266](https://github.com/community-scripts/core/pull/266))
 - setup_nodejs: probe a module's binaries by its bin field [@MickLesk](https://github.com/MickLesk) ([core#265](https://github.com/community-scripts/core/pull/265))
 
 ## 2026-11-14
