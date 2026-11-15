@@ -63,7 +63,8 @@ function update_script() {
 
   OPENRESTY_VERSION="1.29.2.5"
   if [[ "$(cat ~/.openresty 2>/dev/null)" != "$OPENRESTY_VERSION" ]]; then
-    CLEAN_INSTALL=1 fetch_and_deploy_from_url "https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz" "/opt/openresty"
+    CLEAN_INSTALL=1 fetch_and_deploy_from_url "https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz" "/opt/openresty" ||
+      CLEAN_INSTALL=1 fetch_and_deploy_from_url "https://distfiles.alpinelinux.org/distfiles/edge/openresty-${OPENRESTY_VERSION}.tar.gz" "/opt/openresty"
 
     msg_info "Building OpenResty"
     cd /opt/openresty
