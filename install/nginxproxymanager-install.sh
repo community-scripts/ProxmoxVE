@@ -37,7 +37,8 @@ ln -sf /opt/certbot/bin/certbot /usr/local/bin/certbot
 msg_ok "Set up Certbot"
 
 OPENRESTY_VERSION="1.29.2.5"
-fetch_and_deploy_from_url "https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz" "/opt/openresty"
+fetch_and_deploy_from_url "https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz" "/opt/openresty" ||
+  fetch_and_deploy_from_url "https://distfiles.alpinelinux.org/distfiles/edge/openresty-${OPENRESTY_VERSION}.tar.gz" "/opt/openresty"
 
 msg_info "Building OpenResty"
 cd /opt/openresty
