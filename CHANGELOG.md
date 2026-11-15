@@ -586,6 +586,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-15
 
+### 💾 Core
+
+  - setup_nodejs: probe a module's binaries by its bin field [@MickLesk](https://github.com/MickLesk) ([core#265](https://github.com/community-scripts/core/pull/265))
+
 ## 2026-11-14
 
 ### 🆕 New Scripts
