@@ -586,6 +586,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-15
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - Nginx Proxy Manager: fall back to Alpine's distfiles for the OpenResty source [@MickLesk](https://github.com/MickLesk) ([#18736](https://github.com/community-scripts/ProxmoxVE/pull/18736))
+
 ### 💾 Core
 
   - Keep the certificate CN within 64 characters [@MickLesk](https://github.com/MickLesk) ([core#267](https://github.com/community-scripts/core/pull/267))
