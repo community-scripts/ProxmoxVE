@@ -127,6 +127,7 @@ EOF
     if [[ "$FROM_V2" == "true" ]]; then
       msg_warn "DroppedNeedle 3 needs a one-time upgrade of the v2 data: open http://${LOCAL_IP}:8688 and sign in with a v2 admin."
       msg_warn "Before pressing Upgrade: single sign-on and Spotify callback URLs move from /api/v1 to /api/v3. See docs/upgrading-from-v2.md upstream."
+      msg_warn "No v2 admin with a password? The one-time sign-in code is in: journalctl -u droppedneedle | grep 'upgrade sign-in code'"
     fi
     msg_ok "Updated successfully!"
   fi
