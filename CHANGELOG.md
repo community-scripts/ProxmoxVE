@@ -586,6 +586,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-15
 
+### 🆕 New Scripts
+
+  - BlissOS VM ([#18745](https://github.com/community-scripts/ProxmoxVE/pull/18745))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
