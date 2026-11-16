@@ -31,6 +31,46 @@ function update_script() {
     exit
   fi
 
+  TOOLS_CHANGED=false
+  if ! command -v rclone >/dev/null || check_for_gh_release "rclone" "rclone/rclone"; then
+    TOOLS_CHANGED=true
+    fetch_and_deploy_gh_release "rclone" "rclone/rclone" "binary" "latest" "" "rclone-v*-linux-$(arch_resolve).deb"
+  fi
+  if [[ ! -x /usr/local/bin/restic ]] || check_for_gh_release "restic" "restic/restic"; then
+    TOOLS_CHANGED=true
+    fetch_and_deploy_gh_release "restic" "restic/restic" "singlefile" "latest" "/usr/local/bin" "restic_*_linux_$(arch_resolve).bz2"
+  fi
+  if ! grep -q "/storage/restic/" /etc/nginx/sites-available/portabase; then
+    msg_info "Adding file backup routes to Nginx"
+    cat <<'EOF' >/tmp/portabase-storage.conf
+    location /storage/restic/ {
+        proxy_pass http://127.0.0.1:1081;
+        proxy_request_buffering off;
+        proxy_buffering off;
+        proxy_http_version 1.1;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    location /storage/sync/ {
+        proxy_pass http://127.0.0.1:1082;
+        proxy_request_buffering off;
+        proxy_buffering off;
+        proxy_http_version 1.1;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+EOF
+    sed -i '/ignore_invalid_headers off;/r /tmp/portabase-storage.conf' /etc/nginx/sites-available/portabase
+    rm -f /tmp/portabase-storage.conf
+    $STD nginx -t
+    systemctl reload nginx
+    msg_ok "Added file backup routes to Nginx"
+  fi
+  if [[ "$TOOLS_CHANGED" == "true" ]]; then
+    systemctl restart portabase
+  fi
+
   if check_for_gh_release "portabase" "Portabase/portabase"; then
     msg_info "Stopping Services"
     systemctl stop portabase portabase-tusd
