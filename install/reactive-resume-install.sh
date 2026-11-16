@@ -15,7 +15,7 @@ update_os
 
 PG_VERSION="16" setup_postgresql
 PG_DB_NAME="reactive_resume" PG_DB_USER="reactive_resume" setup_postgresql_db
-NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
+NODE_VERSION="26" NODE_MODULE="corepack" setup_nodejs
 
 msg_info "Installing Dependencies"
 $STD apt install -y \

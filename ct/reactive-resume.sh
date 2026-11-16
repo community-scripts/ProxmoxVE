@@ -38,7 +38,7 @@ function update_script() {
     ensure_dependencies git
 
     create_backup /opt/reactive-resume/.env
-    NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
+    NODE_VERSION="26" NODE_MODULE="corepack" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "reactive-resume" "amruthpillai/reactive-resume" "tarball" "latest" "/opt/reactive-resume"
 
     restore_backup
