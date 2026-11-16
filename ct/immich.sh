@@ -38,12 +38,20 @@ function update_script() {
     exit
   fi
 
-  if ! grep -qE '(^|[[:space:]])testing([[:space:]]|$)' /etc/apt/sources.list.d/debian.sources 2>/dev/null; then
+  if ! grep -qsE '^[[:space:]]*Suites:.*(^|[[:space:]])testing([[:space:]]|$)' /etc/apt/sources.list.d/*.sources; then
     msg_info "Adding Debian Testing repo"
     if grep -q "trixie-updates" /etc/apt/sources.list.d/debian.sources 2>/dev/null; then
       sed -i 's/ trixie-updates/ trixie-updates testing/g' /etc/apt/sources.list.d/debian.sources
-    else
+    elif grep -qsE '^[[:space:]]*Suites:.*trixie' /etc/apt/sources.list.d/debian.sources; then
       sed -i '/^[[:space:]]*Suites:.*trixie/ s/$/ testing/' /etc/apt/sources.list.d/debian.sources
+    else
+      cat <<EOF >/etc/apt/sources.list.d/testing.sources
+Types: deb
+URIs: http://deb.debian.org/debian
+Suites: testing
+Components: main
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+EOF
     fi
     cat <<EOF >/etc/apt/preferences.d/preferences
 Package: *
@@ -71,9 +79,6 @@ EOF
     fetch_and_deploy_gh_release "mise" "jdx/mise" "singlefile" "latest" "/usr/local/bin" "mise-v*-linux-${MISE_ARCH}"
   fi
 
-  STAGING_DIR=/opt/staging
-  BASE_DIR=${STAGING_DIR}/base-images
-  SOURCE_DIR=${STAGING_DIR}/image-source
   cd /tmp
   RELEASE="v3.4.1"
   if [[ -f ~/.intel_version ]]; then
@@ -100,21 +105,8 @@ EOF
       msg_ok "Updated Intel OpenVINO dependencies"
     fi
   fi
-  # Without the revision file the refresh was skipped and sharp failed on an old libvips (#17914).
-  [[ -f ~/.immich_library_revisions ]] || msg_warn "No record of the compiled image-processing libraries, rebuilding all of them"
-  for lib in imagemagick jpegli libheif libjxl libraw libvips; do
-    grep -q "^${lib}:" ~/.immich_library_revisions 2>/dev/null || echo "${lib}: unknown" >>~/.immich_library_revisions
-  done
-  [[ -d "$BASE_DIR/.git" ]] || $STD git clone -b main https://github.com/immich-app/base-images "$BASE_DIR"
-  libraries=("libjxl" "jpegli" "libheif" "libraw" "imagemagick" "libvips")
-  cd "$BASE_DIR"
-  msg_warn "Checking for updates to custom image-processing libraries (recompile time: 2-15min per library)"
-  ensure_dependencies liblcms2-dev libjpeg62-turbo-dev libspng-dev libexif-dev libopenjp2-7-dev pigz
-  $STD git pull
-  for library in "${libraries[@]}"; do
-    compile_"$library"
-  done
-  msg_ok "Image-processing libraries up to date"
+  # Libraries the prebuilt image-processing libraries link against; pigz compresses database backups.
+  ensure_dependencies liblcms2-dev libjpeg62-turbo-dev libspng-dev libexif-dev libopenjp2-7-dev libaom-dev pigz
 
   # 3.3.0 reads geodata/countryInfo.txt; the update before #17823 saved it into app/ instead.
   if [[ -d /opt/immich/geodata && ! -s /opt/immich/geodata/countryInfo.txt ]]; then
@@ -131,6 +123,7 @@ EOF
 
   if check_for_gh_release "Immich" "immich-app/immich" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
     msg_warn "The update takes 5-15 minutes, do not interrupt it"
+    fetch_prebuilt_libs
     PREV_IMMICH="${CS_PREVIOUS_VERSION:-$(cat ~/.immich)}"
     INSTALL_DIR="/opt/${APP}"
     UPLOAD_DIR="$(sed -n '/^IMMICH_MEDIA_LOCATION/s/[^=]*=//p' /opt/immich/.env)"
@@ -157,6 +150,7 @@ EOF
     systemctl stop immich-web
     systemctl stop immich-ml
     msg_ok "Stopped Services"
+    install_prebuilt_libs
     VCHORD_RELEASE="1.1.1"
     PG_VERSION=$(ls /etc/postgresql/ 2>/dev/null | sort -V | tail -1)
     PG_VERSION=${PG_VERSION:-16}
@@ -174,7 +168,6 @@ EOF
       $STD sudo -u postgres psql -d immich -c "REINDEX INDEX face_index;"
       $STD sudo -u postgres psql -d immich -c "REINDEX INDEX clip_index;"
     fi
-    ensure_dependencies ccache gcc-13 g++-13
 
     [[ -f "$ML_DIR"/ml_start.sh ]] && cp "$ML_DIR"/ml_start.sh "$INSTALL_DIR"
     if grep -qs "set -a" "$APP_DIR"/bin/start.sh && grep -qs "warnings" "$APP_DIR"/bin/start.sh; then
@@ -434,193 +427,65 @@ EOF
   exit
 }
 
-function compile_libjxl() {
-  SOURCE=${SOURCE_DIR}/libjxl
-  LIBJXL_REVISION="$(jq -cr '.revision' "$BASE_DIR"/server/sources/libjxl.json)"
-  if [[ "$LIBJXL_REVISION" != "$(grep 'libjxl' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
-    msg_info "Recompiling libjxl"
-    [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"
-    $STD git clone https://github.com/libjxl/libjxl.git "$SOURCE"
-    cd "$SOURCE"
-    $STD git reset --hard "$LIBJXL_REVISION"
-    $STD git submodule update --init --recursive --depth 1 --recommend-shallow -- third_party
-    mkdir build
-    cd build
-    $STD cmake \
-      -DCMAKE_BUILD_TYPE=Release \
-      -DBUILD_TESTING=OFF \
-      -DJPEGXL_ENABLE_DOXYGEN=OFF \
-      -DJPEGXL_ENABLE_MANPAGES=OFF \
-      -DJPEGXL_ENABLE_BENCHMARK=OFF \
-      -DJPEGXL_ENABLE_EXAMPLES=OFF \
-      -DJPEGXL_FORCE_SYSTEM_BROTLI=ON \
-      -DJPEGXL_FORCE_SYSTEM_HWY=ON \
-      -DJPEGXL_ENABLE_HWY_AVX3=ON \
-      -DJPEGXL_ENABLE_HWY_AVX3_ZEN4=ON \
-      -DJPEGXL_ENABLE_HWY_SVE=OFF \
-      -DJPEGXL_ENABLE_HWY_SVE2=OFF \
-      -DJPEGXL_ENABLE_HWY_SVE2_128=ON \
-      -DJPEGXL_ENABLE_PLUGINS=ON \
-      ..
-    $STD cmake --build . -- -j"$(nproc)"
-    $STD cmake --install .
-    ldconfig /usr/local/lib
-    $STD make clean
-    cd "$STAGING_DIR"
-    rm -rf "$SOURCE"/{build,third_party}
-    sed -i "s/libjxl: .*$/libjxl: $LIBJXL_REVISION/" ~/.immich_library_revisions
-    msg_ok "Recompiled libjxl"
+# Immich ships the custom photo-processing libraries (libjxl, jpegli, libheif,
+# libraw, ImageMagick, libvips) prebuilt in its own OCI base image; the release's
+# Dockerfile pins it. fetch_prebuilt_libs downloads and unpacks it while Immich
+# still runs, so a failure leaves the install as it was. install_prebuilt_libs
+# copies it into /usr/local once the services are stopped.
+function fetch_prebuilt_libs() {
+  PREBUILT_BUNDLE=""
+  BASE_REF="$(curl -fsSL "https://raw.githubusercontent.com/immich-app/immich/${RELEASE}/server/Dockerfile" | awk '/^FROM ghcr.io\/immich-app\/base-server-dev/ {print $2; exit}')" || true
+  if [[ -z "$BASE_REF" ]]; then
+    msg_error "Could not read the base image from Immich ${RELEASE}'s Dockerfile. Immich was not updated."
+    exit 115
   fi
+  [[ "$(cat ~/.immich_base_image 2>/dev/null)" == "$BASE_REF" ]] && return 0
+  msg_info "Fetching prebuilt image-processing libraries"
+  # skopeo refuses a reference with both a tag and a digest; the digest is the pin.
+  local image="$BASE_REF"
+  [[ "$BASE_REF" == *@sha256:* ]] && image="ghcr.io/immich-app/base-server-dev@${BASE_REF#*@}"
+  if ! { command -v skopeo && command -v umoci; } >/dev/null 2>&1 &&
+    ! $STD apt install -y --no-install-recommends skopeo umoci; then
+    msg_error "Could not install skopeo and umoci, which Immich needs for its image-processing libraries. Immich was not updated."
+    exit 105
+  fi
+  local oci_dir
+  oci_dir="$(mktemp -d)"
+  PREBUILT_BUNDLE="$(mktemp -d)"
+  if ! $STD skopeo copy --override-os linux --override-arch "$(arch_resolve amd64 arm64)" "docker://${image}" "oci:${oci_dir}:img"; then
+    rm -rf "$oci_dir" "$PREBUILT_BUNDLE"
+    msg_error "Could not download Immich's base image (${image}). Immich was not updated."
+    exit 115
+  fi
+  if ! $STD umoci unpack --image "${oci_dir}:img" "$PREBUILT_BUNDLE"; then
+    rm -rf "$oci_dir" "$PREBUILT_BUNDLE"
+    msg_error "Could not unpack Immich's base image. Immich needs Proxmox VE 9.1 or newer; it was not updated."
+    exit 105
+  fi
+  rm -rf "$oci_dir"
+  msg_ok "Fetched prebuilt image-processing libraries"
 }
 
-function compile_jpegli() {
-  SOURCE=${SOURCE_DIR}/jpegli
-  JPEGLI_LIBJPEG_LIBRARY_SOVERSION="62"
-  JPEGLI_LIBJPEG_LIBRARY_VERSION="62.3.0"
-  JPEGLI_REVISION="$(jq -cr '.revision' "$BASE_DIR"/server/sources/jpegli.json)"
-  if [[ "$JPEGLI_REVISION" != "$(grep 'jpegli' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
-    msg_info "Recompiling jpegli"
-    [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"
-    $STD git clone https://github.com/google/jpegli.git "$SOURCE"
-    cd "$SOURCE"
-    $STD git reset --hard "$JPEGLI_REVISION"
-    $STD git submodule update --init --depth 1 --recommend-shallow third_party/libjpeg-turbo
-    $STD git apply -3 "$BASE_DIR"/server/sources/jpegli-patches/jpegli-empty-dht-marker.patch
-    $STD git apply -3 "$BASE_DIR"/server/sources/jpegli-patches/jpegli-icc-warning.patch
-    mkdir build
-    cd build
-    $STD cmake \
-      -DCMAKE_BUILD_TYPE=Release \
-      -DBUILD_TESTING=OFF \
-      -DJPEGLI_ENABLE_DOXYGEN=OFF \
-      -DJPEGLI_ENABLE_MANPAGES=OFF \
-      -DJPEGLI_ENABLE_BENCHMARK=OFF \
-      -DJPEGLI_ENABLE_TOOLS=OFF \
-      -DJPEGLI_ENABLE_DEVTOOLS=OFF \
-      -DJPEGLI_ENABLE_FUZZERS=OFF \
-      -DJPEGLI_ENABLE_JNI=OFF \
-      -DJPEGLI_ENABLE_OPENEXR=OFF \
-      -DJPEGLI_ENABLE_SJPEG=OFF \
-      -DJPEGLI_ENABLE_SKCMS=OFF \
-      -DJPEGLI_FORCE_SYSTEM_HWY=ON \
-      -DJPEGLI_FORCE_SYSTEM_LCMS2=ON \
-      -DJPEGLI_ENABLE_JPEGLI_LIBJPEG=ON \
-      -DJPEGLI_INSTALL_JPEGLI_LIBJPEG=ON \
-      -DJPEGLI_ENABLE_HWY_AVX3=ON \
-      -DJPEGLI_ENABLE_HWY_AVX3_ZEN4=ON \
-      -DJPEGLI_ENABLE_HWY_SVE=OFF \
-      -DJPEGLI_ENABLE_HWY_SVE2=OFF \
-      -DJPEGLI_ENABLE_HWY_SVE2_128=ON \
-      -DJPEGLI_LIBJPEG_LIBRARY_SOVERSION="$JPEGLI_LIBJPEG_LIBRARY_SOVERSION" \
-      -DJPEGLI_LIBJPEG_LIBRARY_VERSION="$JPEGLI_LIBJPEG_LIBRARY_VERSION" \
-      -DLIBJPEG_TURBO_VERSION_NUMBER=2001005 \
-      ..
-    $STD cmake --build . -- -j"$(nproc)"
-    $STD cmake --install .
-    ldconfig /usr/local/lib
-    $STD make clean
-    cd "$STAGING_DIR"
-    rm -rf "$SOURCE"/{build,third_party}
-    sed -i "s/jpegli: .*$/jpegli: $JPEGLI_REVISION/" ~/.immich_library_revisions
-    msg_ok "Recompiled jpegli"
+function install_prebuilt_libs() {
+  [[ -n "${PREBUILT_BUNDLE:-}" ]] || return 0
+  msg_info "Installing prebuilt image-processing libraries"
+  # The libraries, headers and ImageMagick data, without the node runtime, global
+  # node modules and ffmpeg of the node base image: this script provides those.
+  tar -C "${PREBUILT_BUNDLE}/rootfs/usr/local" \
+    --exclude=./bin/node --exclude=./bin/npm --exclude=./bin/npx --exclude=./bin/corepack \
+    --exclude=./bin/ffmpeg --exclude=./bin/ffprobe \
+    --exclude=./lib/node_modules --exclude=./include/node \
+    -cf - . | tar -C /usr/local -xf -
+  rm -rf "$PREBUILT_BUNDLE"
+  ldconfig /usr/local/lib
+  if ! vips --version >/dev/null 2>&1 || ! pkg-config --exists vips; then
+    msg_error "The prebuilt libvips from ${BASE_REF} does not work in this container."
+    exit 1
   fi
-}
-
-function compile_libheif() {
-  SOURCE=${SOURCE_DIR}/libheif
-  ensure_dependencies libaom-dev
-  LIBHEIF_REVISION="$(jq -cr '.revision' "$BASE_DIR"/server/sources/libheif.json)"
-  if [[ "${update:-}" ]] || [[ "$LIBHEIF_REVISION" != "$(grep 'libheif' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
-    msg_info "Recompiling libheif"
-    [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"
-    $STD git clone https://github.com/strukturag/libheif.git "$SOURCE"
-    cd "$SOURCE"
-    $STD git reset --hard "$LIBHEIF_REVISION"
-    mkdir build
-    cd build
-    $STD cmake --preset=release-noplugins \
-      -DWITH_DAV1D=ON \
-      -DENABLE_PARALLEL_TILE_DECODING=ON \
-      -DWITH_LIBSHARPYUV=ON \
-      -DWITH_LIBDE265=ON \
-      -DWITH_AOM_DECODER=OFF \
-      -DWITH_AOM_ENCODER=ON \
-      -DWITH_X265=OFF \
-      -DWITH_EXAMPLES=OFF \
-      ..
-    $STD make install -j"$(nproc)"
-    ldconfig /usr/local/lib
-    $STD make clean
-    cd "$STAGING_DIR"
-    rm -rf "$SOURCE"/build
-    sed -i "s/libheif: .*$/libheif: $LIBHEIF_REVISION/" ~/.immich_library_revisions
-    msg_ok "Recompiled libheif"
-  fi
-}
-
-function compile_libraw() {
-  SOURCE=${SOURCE_DIR}/libraw
-  LIBRAW_REVISION="e419de08001de28ae6988ecb22df47e52b9c5eaa"
-  # : "${LIBRAW_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/libraw.json)}"
-  if [[ "$LIBRAW_REVISION" != "$(grep 'libraw' ~/.immich_library_revisions | awk '{print $2}')" ]]; then
-    msg_info "Recompiling libraw"
-    [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"
-    $STD git clone https://github.com/LibRaw/LibRaw.git "$SOURCE"
-    cd "$SOURCE"
-    $STD git reset --hard "$LIBRAW_REVISION"
-    $STD autoreconf --install
-    $STD ./configure --disable-examples
-    $STD make -j"$(nproc)"
-    $STD make install
-    ldconfig /usr/local/lib
-    $STD make clean
-    cd "$STAGING_DIR"
-    sed -i "s/libraw: .*$/libraw: $LIBRAW_REVISION/" ~/.immich_library_revisions
-    msg_ok "Recompiled libraw"
-  fi
-}
-
-function compile_imagemagick() {
-  SOURCE=$SOURCE_DIR/imagemagick
-  : "${IMAGEMAGICK_REVISION:=$(jq -cr '.revision' "$BASE_DIR"/server/sources/imagemagick.json)}"
-  if [[ "$IMAGEMAGICK_REVISION" != "$(grep 'imagemagick' ~/.immich_library_revisions | awk '{print $2}')" ]] ||
-    ! grep -q 'DMAGICK_LIBRAW' /usr/local/lib/ImageMagick-7*/config-Q16HDRI/configure.xml; then
-    msg_info "Recompiling ImageMagick"
-    [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"
-    $STD git clone https://github.com/ImageMagick/ImageMagick.git "$SOURCE"
-    cd "$SOURCE"
-    $STD git reset --hard "$IMAGEMAGICK_REVISION"
-    $STD ./configure --with-modules CPPFLAGS="-DMAGICK_LIBRAW_VERSION_TAIL=202502"
-    $STD make -j"$(nproc)"
-    $STD make install
-    ldconfig /usr/local/lib
-    $STD make clean
-    cd "$STAGING_DIR"
-    sed -i "s/imagemagick: .*$/imagemagick: $IMAGEMAGICK_REVISION/" ~/.immich_library_revisions
-    msg_ok "Recompiled ImageMagick"
-  fi
-}
-
-function compile_libvips() {
-  SOURCE=$SOURCE_DIR/libvips
-  LIBVIPS_REVISION="$(jq -cr '.revision' "$BASE_DIR"/server/sources/libvips.json)"
-  if [[ "$LIBVIPS_REVISION" != "$(grep 'libvips' ~/.immich_library_revisions | awk '{print $2}')" ]] ||
-    [[ "$(vips -l foreign 2>/dev/null)" != *jp2kload* ]]; then
-    msg_info "Recompiling libvips"
-    [[ -d "$SOURCE" ]] && rm -rf "$SOURCE"
-    $STD git clone https://github.com/libvips/libvips.git "$SOURCE"
-    cd "$SOURCE"
-    $STD git reset --hard "$LIBVIPS_REVISION"
-    $STD git apply "$BASE_DIR"/server/sources/libvips-patches/0001-put-other-loaders-ahead-of-dcrawload.patch
-    $STD meson setup build --buildtype=release --libdir=lib -Dintrospection=disabled -Dtiff=disabled
-    cd build
-    $STD ninja install
-    ldconfig /usr/local/lib
-    cd "$STAGING_DIR"
-    rm -rf "$SOURCE"/build
-    sed -i "s/libvips: .*$/libvips: $LIBVIPS_REVISION/" ~/.immich_library_revisions
-    msg_ok "Recompiled libvips"
-  fi
+  echo "$BASE_REF" >~/.immich_base_image
+  # Leftovers of the libraries this script used to compile.
+  rm -rf /opt/staging/base-images /opt/staging/image-source ~/.immich_library_revisions
+  msg_ok "Installed prebuilt image-processing libraries"
 }
 
 start
