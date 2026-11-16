@@ -588,7 +588,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - NetAlertX ([#18781](https://github.com/community-scripts/ProxmoxVE/pull/18781))
+  - Gitea Runner ([#18782](https://github.com/community-scripts/ProxmoxVE/pull/18782))
+- NetAlertX ([#18781](https://github.com/community-scripts/ProxmoxVE/pull/18781))
 
 ### 🚀 Updated Scripts
 
