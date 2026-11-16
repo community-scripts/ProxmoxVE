@@ -17,7 +17,8 @@ msg_info "Installing Dependencies"
 $STD apt install -y \
   build-essential \
   python3 \
-  git
+  git \
+  redis-server
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
@@ -56,8 +57,8 @@ SECRET_KEY=${SECRET_KEY}
 PORT=3000
 NODE_ENV=production
 NEXT_TELEMETRY_DISABLED=1
-BACKEND_CACHE_PROVIDER=sqlite
-BACKEND_CACHE_SQLITE_URI=sqlite:///opt/teable/.assets/.cache.db
+BACKEND_CACHE_PROVIDER=redis
+BACKEND_CACHE_REDIS_URI=redis://127.0.0.1:6379/0
 NEXTJS_DIR=apps/nextjs-app
 EOF
 ln -sf /opt/teable /app
@@ -70,10 +71,11 @@ fi
 msg_ok "Configured Teable"
 
 msg_info "Creating Service"
+systemctl enable -q --now redis-server
 cat <<EOF >/etc/systemd/system/teable.service
 [Unit]
 Description=Teable
-After=network.target postgresql.service
+After=network.target postgresql.service redis-server.service
 
 [Service]
 Type=simple

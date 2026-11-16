@@ -35,6 +35,7 @@ fetch_and_deploy_from_url \
 chown -R steam:steam /opt/steamcmd
 
 msg_info "Installing Satisfactory Dedicated Server"
+$STD runuser -u steam -- /opt/steamcmd/steamcmd.sh +login anonymous +quit || true
 $STD runuser -u steam -- /opt/steamcmd/steamcmd.sh \
   +force_install_dir /opt/satisfactory/server \
   +login anonymous \

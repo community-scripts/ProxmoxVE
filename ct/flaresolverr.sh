@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 tteck
@@ -35,6 +34,12 @@ function update_script() {
     msg_error "Wrong Debian version detected!"
     msg_error "You must upgrade your LXC to Debian Trixie before updating."
     exit
+  fi
+  # FlareSolverr hands LANG to Chrome as Accept-Language, which needs a tag like en-US, not a locale (#17987)
+  if ! grep -q '^Environment="LANG=' /etc/systemd/system/flaresolverr.service; then
+    sed -i '/^Environment="CAPTCHA_SOLVER=/a Environment="LANG=en-US"' /etc/systemd/system/flaresolverr.service
+    systemctl daemon-reload
+    systemctl restart flaresolverr
   fi
   if check_for_gh_release "flaresolverr" "FlareSolverr/FlareSolverr"; then
     msg_info "Stopping service"

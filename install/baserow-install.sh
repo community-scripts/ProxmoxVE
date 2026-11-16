@@ -50,7 +50,7 @@ NODE_OPTIONS="--max-old-space-size=4096" $STD npm run build
 msg_ok "Built Frontend"
 
 msg_info "Configuring Baserow"
-SECRET_KEY=$(openssl rand -base64 64 | tr -dc 'a-zA-Z0-9' | head -c50)
+SECRET_KEY=$(random_password 50)
 cat <<EOF >/opt/baserow/.env
 DATABASE_HOST=localhost
 DATABASE_PORT=5432

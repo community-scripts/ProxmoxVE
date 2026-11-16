@@ -56,7 +56,7 @@ msg_ok "Configured pg_cron"
 msg_info "Configuring RabbitMQ"
 systemctl enable -q --now rabbitmq-server
 until rabbitmqctl status &>/dev/null; do sleep 1; done
-RABBITMQ_PASSWORD="$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c24)"
+RABBITMQ_PASSWORD="$(random_password 24)"
 $STD rabbitmqctl add_user firecrawl "$RABBITMQ_PASSWORD"
 $STD rabbitmqctl set_permissions -p / firecrawl ".*" ".*" ".*"
 msg_ok "Configured RabbitMQ"

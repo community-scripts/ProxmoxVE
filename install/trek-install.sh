@@ -17,6 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y \
   build-essential \
   libkitinerary-bin
+ln -sf "$(find /usr/lib -name kitinerary-extractor -type f | head -1)" /usr/local/bin/kitinerary-extractor
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="24" setup_nodejs
@@ -24,7 +25,7 @@ fetch_and_deploy_gh_release "trek" "liketrek/TREK" "tarball"
 
 msg_info "Setup TREK"
 cd /opt/trek
-$STD npm ci
+$STD npm ci --ignore-scripts
 $STD npm run build --workspace=shared
 $STD npm run build --workspace=client
 $STD npm run build --workspace=server
@@ -43,19 +44,22 @@ mkdir -p \
   /opt/trek/uploads/files \
   /opt/trek/uploads/covers \
   /opt/trek/uploads/avatars \
-  /opt/trek/uploads/photos
+  /opt/trek/uploads/photos \
+  /opt/trek/uploads/journey \
+  /opt/trek/uploads/places
 rm -rf /opt/trek/server/data
 rm -rf /opt/trek/server/uploads
 ln -s /opt/trek/data /opt/trek/server/data
 ln -s /opt/trek/uploads /opt/trek/server/uploads
+rm -rf /opt/trek/node_modules
 cd /opt/trek
-$STD npm prune --omit=dev
+$STD npm ci --workspace=server --omit=dev --ignore-scripts
 msg_ok "Set up TREK Workspace"
 
 msg_info "Configuring TREK"
 ENCRYPTION_KEY=$(openssl rand -hex 32)
 ADMIN_EMAIL="admin@trek.local"
-ADMIN_PASSWORD=$(openssl rand -base64 18 | tr -dc 'A-Za-z0-9' | head -c 16)
+ADMIN_PASSWORD=$(random_password 16)
 cat <<EOF >/opt/trek/server/.env
 NODE_ENV=production
 HOST=0.0.0.0

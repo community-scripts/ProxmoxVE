@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 tteck
@@ -60,6 +59,15 @@ function update_script() {
     msg_info "Stopping Services"
     systemctl stop stirlingpdf unoserver
     msg_ok "Stopped Services"
+
+    if grep -q '^ExecStart=/usr/bin/java -jar Stirling-PDF.jar$' /etc/systemd/system/stirlingpdf.service; then
+      msg_info "Limiting Java Heap to Container Memory"
+      sed -i '/^ExecStop=\/bin\/kill -15 %n$/d' /etc/systemd/system/stirlingpdf.service
+      sed -i "s|^ExecStart=/usr/bin/java -jar Stirling-PDF.jar$|ExecStart=/bin/bash -c 'exec /usr/bin/java -XX:MaxRAM=\$\$(grep -m1 -o \"[0-9][0-9]*\" /proc/meminfo)k \$\$JAVA_BASE_OPTS \$\$JAVA_CUSTOM_OPTS -jar Stirling-PDF.jar'|" /etc/systemd/system/stirlingpdf.service
+      sed -i 's/-XX:MaxRAMPercentage=75/-XX:MaxRAMPercentage=50/' /opt/Stirling-PDF/.env
+      systemctl daemon-reload
+      msg_ok "Limited Java Heap to Container Memory"
+    fi
 
     if [[ -f ~/.Stirling-PDF-login ]]; then
       USE_ORIGINAL_FILENAME=true fetch_and_deploy_gh_release "stirling-pdf" "Stirling-Tools/Stirling-PDF" "singlefile" "latest" "/opt/Stirling-PDF" "Stirling-PDF-with-login.jar"

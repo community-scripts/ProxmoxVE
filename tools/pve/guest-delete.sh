@@ -5,7 +5,7 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 function header_info {
-  clear
+  clear 2>/dev/null || printf '\033[H\033[2J\033[3J'
   cat <<"EOF"
     ____                                          ______                __     ____       __     __
    / __ \_________  _  ______ ___  ____  _  __   / ____/_  _____  _____/ /_   / __ \___  / /__  / /____
@@ -39,7 +39,7 @@ TAB="  "
 CM="${TAB}✔️${TAB}${CL}"
 
 # Telemetry
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/api/api.func") 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "guest-delete" "pve"
 
 GUEST_LOG=$(mktemp)

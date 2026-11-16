@@ -92,7 +92,7 @@ $STD ldconfig
 msg_ok "Compiled ffmpeg"
 
 msg_info "Configuring Fireshare (Patience)"
-ADMIN_PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+ADMIN_PASSWORD=$(random_password 13)
 SECRET=$(openssl rand -base64 48)
 mkdir -p /opt/fireshare-{data,videos,images,processed}
 cd /opt/fireshare

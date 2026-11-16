@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 tteck
@@ -39,6 +38,10 @@ function update_script() {
     echo "Seerr is the new unified Jellyseerr and Overseerr."
     echo "More info: https://docs.seerr.dev/blog/seerr-release"
     echo
+    if [[ "${PHS_SILENT:-0}" == "1" ]]; then
+      msg_warn "Seerr migration detected - skipping update, requires an interactive run"
+      exit 75
+    fi
     read -rp "Do you want to migrate to Seerr now? (y/N): " MIGRATE
     echo
     if [[ ! "$MIGRATE" =~ ^[Yy]$ ]]; then
@@ -82,6 +85,12 @@ EOF
   fi
   exit
 }
+
+if [[ ! -d /opt/overseerr ]]; then
+  msg_error "Overseerr is now Seerr and can no longer be installed with this script."
+  msg_warn "Install Seerr instead: https://community-scripts.org/scripts/seerr"
+  exit 1
+fi
 
 start
 build_container

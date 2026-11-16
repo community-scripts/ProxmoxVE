@@ -16,7 +16,7 @@ cat <<"EOF"
 EOF
 
 # Telemetry
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/api/api.func") 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "monitor-all" "pve"
 
 add() {
@@ -110,8 +110,9 @@ while true; do
         pct start "$instance" >/dev/null 2>&1
         continue
       fi
-      # Not every container names its interface eth0.
-      IP=$(pct exec "$instance" -- ip -4 -o addr show scope global 2>/dev/null | awk '{print $4}' | cut -d/ -f1 | head -n1)
+      # Read the IP from the host side; pct exec depends on tools inside the
+      # guest, which minimal/OCI images may lack.
+      IP=$(lxc-info -n "$instance" -iH 2>/dev/null | awk '/^[0-9.]+$/ && !/^(127|169\.254)\./ {print; exit}')
       if [ -z "$IP" ] || ! ping -c 1 -W 2 "$IP" >/dev/null 2>&1; then
         echo "$(date): CT $instance is not responding, restarting..."
         pct stop "$instance" >/dev/null 2>&1

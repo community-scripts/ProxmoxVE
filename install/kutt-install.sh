@@ -15,7 +15,8 @@ update_os
 
 echo "${TAB3}How would you like to handle SSL termination?"
 echo "${TAB3}[i]-Internal (self-signed SSL Certificate)   [e]-External (use your own reverse proxy)"
-read -rp "${TAB3}Enter your choice <i/e> (default: i): " ssl_choice
+ssl_choice="${var_kutt_ssl:-}"
+[[ -n "$ssl_choice" ]] || read -rp "${TAB3}Enter your choice <i/e> (default: i): " ssl_choice || true
 ssl_choice=${ssl_choice:-i}
 case "${ssl_choice,,}" in
 i)
@@ -32,7 +33,9 @@ EOF
   msg_ok "Configured Caddy"
   ;;
 e)
-  read -r -p "${TAB3}Enter the hostname you want to use for Kutt (eg. kutt.example.com): " custom_host
+  custom_host="${var_kutt_hostname:-}"
+  [[ -n "$custom_host" ]] || read -r -p "${TAB3}Enter the hostname you want to use for Kutt (eg. kutt.example.com): " custom_host || true
+  [[ -n "$custom_host" ]] || { msg_error "No hostname given; set var_kutt_hostname or answer the prompt"; exit 64; }
   if [[ "$custom_host" ]]; then
     DEFAULT_HOST="$custom_host"
   fi

@@ -42,6 +42,7 @@ if [[ "$var_backend" == "auto" ]]; then
 fi
 
 REQ_COMMON="common.txt"
+PY_VERSION="3.12"
 case "$var_backend" in
 gpu)
   REQ_ACCEL="gpu.txt"
@@ -53,6 +54,7 @@ cpu)
 cpu-noavx2)
   REQ_COMMON="common-noavx2.txt"
   REQ_ACCEL="cpu-noavx2.txt"
+  PY_VERSION="3.11"
   ;;
 *)
   msg_error "Unknown var_backend '${var_backend}' (expected auto, gpu, cpu or cpu-noavx2)"
@@ -62,7 +64,7 @@ esac
 
 msg_info "Setting up Python Environment (${var_backend}, Patience)"
 cd /opt/audiomuse-ai
-$STD uv venv --seed --python 3.12 /opt/audiomuse-ai/.venv
+$STD uv venv --seed --python "$PY_VERSION" /opt/audiomuse-ai/.venv
 $STD uv pip install --python /opt/audiomuse-ai/.venv \
   -r "/opt/audiomuse-ai/requirements/${REQ_COMMON}" \
   -r "/opt/audiomuse-ai/requirements/${REQ_ACCEL}"

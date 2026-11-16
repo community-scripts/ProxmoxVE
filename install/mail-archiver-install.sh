@@ -68,7 +68,7 @@ Restart=always
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now mail-archiver
-msg_info "Created Service"
+msg_ok "Created Service"
 
 motd_ssh
 customize

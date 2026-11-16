@@ -83,7 +83,7 @@ if [[ -n "${var_jitsi_admin_user:-}" ]]; then
   msg_info "Configuring Secure Domain"
   # Only authenticated users may create rooms; guests join via the anonymous domain.
   # https://jitsi.github.io/handbook/docs/devops-guide/secure-domain/
-  var_jitsi_admin_pass="${var_jitsi_admin_pass:-$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-16)}"
+  var_jitsi_admin_pass="${var_jitsi_admin_pass:-$(random_password 16)}"
   sed -i "0,/authentication = \"jitsi-anonymous\"/s//authentication = \"internal_hashed\"/" \
     "/etc/prosody/conf.avail/${var_jitsi_domain}.cfg.lua"
   cat <<EOF >>"/etc/prosody/conf.avail/${var_jitsi_domain}.cfg.lua"

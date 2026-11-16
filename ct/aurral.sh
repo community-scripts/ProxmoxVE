@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -38,16 +37,16 @@ function update_script() {
     msg_ok "Stopped Service"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "aurral" "lklynet/aurral" "tarball"
-    NODE_VERSION="22" setup_nodejs
+    NODE_VERSION="26" NODE_MODULE="pnpm" setup_nodejs
+    ensure_dependencies git
 
     msg_info "Updating Aurral"
     cd /opt/aurral
     export VITE_APP_VERSION="$(cat ~/.aurral)"
     export VITE_GITHUB_REPO="lklynet/aurral"
     export VITE_RELEASE_CHANNEL="stable"
-    $STD npm ci --workspace frontend --include-workspace-root=false
-    $STD npm run build --workspace frontend
-    $STD npm ci --workspace backend --omit=dev --include=optional --include-workspace-root=false
+    $STD pnpm install --frozen-lockfile --config.engine-strict=false --filter aurral-frontend --filter aurral-backend
+    $STD pnpm --filter aurral-frontend run build
     mkdir -p /opt/aurral_data
     cat <<EOF >/opt/aurral/aurral.env
 NODE_ENV=production
@@ -55,6 +54,8 @@ PORT=3001
 AURRAL_DATA_DIR=/opt/aurral_data
 APP_VERSION=$(cat ~/.aurral)
 EOF
+    sed -i 's#backend/server.js#backend/server.ts#' /etc/systemd/system/aurral.service
+    systemctl daemon-reload
     msg_ok "Updated Aurral"
 
     msg_info "Starting Service"

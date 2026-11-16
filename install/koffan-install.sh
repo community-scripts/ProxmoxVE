@@ -2,7 +2,7 @@
 
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: (AminGholizad)
-# License: MIT | https://github.com/AminGholizad/ProxmoxVED/raw/main/LICENSE
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 # Source: https://github.com/PanSalut/Koffan
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"

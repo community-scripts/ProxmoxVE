@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -47,23 +46,35 @@ function update_script() {
     msg_warn "No Zabbix Agent service found, skipping agent actions"
   fi
 
+  ZABBIX_SERIES="$(dpkg-query -W -f='${Version}' zabbix-release 2>/dev/null || true)"
+  ZABBIX_SERIES="${ZABBIX_SERIES#*:}"
+  ZABBIX_SERIES="${ZABBIX_SERIES%%[!0-9.]*}"
+  if [[ "${PHS_SILENT:-0}" == "1" ]]; then
+    if [[ ! "$ZABBIX_SERIES" =~ ^[0-9]+\.[0-9]+$ ]]; then
+      msg_warn "Could not detect the installed Zabbix series - skipping update, requires an interactive run"
+      exit 75
+    fi
+    ZABBIX_VERSION="$ZABBIX_SERIES"
+    msg_warn "Unattended update: staying on Zabbix ${ZABBIX_VERSION}"
+  else
+    read -rp "Choose Zabbix version [1] 7.0 LTS  [2] 7.4 (Latest Stable)  [3] Latest available (default: 2): " ZABBIX_CHOICE
+    ZABBIX_CHOICE=${ZABBIX_CHOICE:-2}
+    case "$ZABBIX_CHOICE" in
+    1) ZABBIX_VERSION="7.0" ;;
+    2) ZABBIX_VERSION="7.4" ;;
+    3) ZABBIX_VERSION=$(curl -fsSL https://repo.zabbix.com/zabbix/ |
+      grep -oP '(?<=href=")[0-9]+\.[0-9]+(?=/")' | sort -V | tail -n1) ;;
+    *)
+      ZABBIX_VERSION="7.4"
+      echo "Invalid choice. Defaulting to 7.4."
+      ;;
+    esac
+  fi
+
   msg_info "Stopping Services"
   systemctl stop zabbix-server
   [[ -n "$AGENT_SERVICE" ]] && systemctl stop "$AGENT_SERVICE"
   msg_ok "Stopped Services"
-
-  read -rp "Choose Zabbix version [1] 7.0 LTS  [2] 7.4 (Latest Stable)  [3] Latest available (default: 2): " ZABBIX_CHOICE
-  ZABBIX_CHOICE=${ZABBIX_CHOICE:-2}
-  case "$ZABBIX_CHOICE" in
-  1) ZABBIX_VERSION="7.0" ;;
-  2) ZABBIX_VERSION="7.4" ;;
-  3) ZABBIX_VERSION=$(curl -fsSL https://repo.zabbix.com/zabbix/ |
-    grep -oP '(?<=href=")[0-9]+\.[0-9]+(?=/")' | sort -V | tail -n1) ;;
-  *)
-    ZABBIX_VERSION="7.4"
-    echo "Invalid choice. Defaulting to 7.4."
-    ;;
-  esac
 
   msg_info "Updating Zabbix to $ZABBIX_VERSION"
   mkdir -p /opt/zabbix-backup/
@@ -74,8 +85,10 @@ function update_script() {
   rm -Rf /etc/apt/sources.list.d/zabbix.list
   cd /tmp
 
+  ZABBIX_REPO_DIR="debian"
+  [[ "$ZABBIX_VERSION" == "7.0" && "$(arch_resolve)" == "arm64" ]] && ZABBIX_REPO_DIR="debian-arm64"
   if [[ "$ZABBIX_VERSION" == "7.0" ]]; then
-    ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/debian/pool/main/z/zabbix-release/zabbix-release_latest_${ZABBIX_VERSION}+debian13_all.deb"
+    ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/${ZABBIX_REPO_DIR}/pool/main/z/zabbix-release/zabbix-release_latest_${ZABBIX_VERSION}+debian13_all.deb"
     ZABBIX_DEB_FILE="zabbix-release_latest_${ZABBIX_VERSION}+debian13_all.deb"
   else
     ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/release/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian13_all.deb"
@@ -87,16 +100,16 @@ function update_script() {
   rm -rf /tmp/zabbix-release_*.deb
   apt_update_safe
 
-  $STD apt install --only-upgrade zabbix-server-pgsql zabbix-frontend-php php8.4-pgsql
+  $STD apt install --only-upgrade -y zabbix-server-pgsql zabbix-frontend-php php8.4-pgsql
 
   if [[ "$AGENT_SERVICE" == "zabbix-agent2" ]]; then
-    $STD apt install --only-upgrade zabbix-agent2 zabbix-agent2-plugin-postgresql
+    $STD apt install --only-upgrade -y zabbix-agent2 zabbix-agent2-plugin-postgresql
     if [ -f /etc/zabbix/zabbix_agent2.d/plugins.d/nvidia.conf ]; then
       sed -i 's|^Plugins.NVIDIA.System.Path=.*|# Plugins.NVIDIA.System.Path=/usr/libexec/zabbix/zabbix-agent2-plugin-nvidia-gpu|' \
         /etc/zabbix/zabbix_agent2.d/plugins.d/nvidia.conf
     fi
   elif [[ "$AGENT_SERVICE" == "zabbix-agent" ]]; then
-    $STD apt install --only-upgrade zabbix-agent
+    $STD apt install --only-upgrade -y zabbix-agent
   fi
 
   if command -v fping >/dev/null 2>&1; then

@@ -107,7 +107,7 @@ ExecStart=/opt/patchmon/patchmon-server
 Restart=always
 RestartSec=10
 Environment=PATH=/usr/bin:/usr/local/bin
-EnvironmentFile=/opt/patchmon/.env
+Environment=ENV_FILE=/opt/patchmon/.env
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict

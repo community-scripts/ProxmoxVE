@@ -25,8 +25,8 @@ JAVA_VERSION="21" setup_java
 USE_ORIGINAL_FILENAME="true" fetch_and_deploy_gh_release "plant-it" "MDeLuise/plant-it" "singlefile" "0.10.0" "/opt/plant-it/backend" "server.jar"
 fetch_and_deploy_gh_release "plant-it-front" "MDeLuise/plant-it" "prebuild" "0.10.0" "/opt/plant-it/frontend" "client.tar.gz"
 
-msg_info "Configured Plant-it"
-JWT_SECRET=$(openssl rand -base64 24 | tr -d '/+=')
+msg_info "Configuring Plant-it"
+JWT_SECRET=$(random_password 32)
 mkdir -p /opt/plant-it-data
 cat <<EOF >/opt/plant-it/backend/server.env
 MYSQL_HOST=localhost

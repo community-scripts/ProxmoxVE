@@ -97,7 +97,7 @@ setup_alpine() {
   msg_ok "Installed PostgreSQL"
 
   msg_info "Setting up Database"
-  PG_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
+  PG_PASS=$(random_password 13)
   $STD su -s /bin/sh postgres -c "psql -c \"CREATE ROLE ironclaw WITH LOGIN PASSWORD '${PG_PASS}';\""
   $STD su -s /bin/sh postgres -c "psql -c \"CREATE DATABASE ironclaw WITH OWNER ironclaw;\""
   $STD su -s /bin/sh postgres -c "psql -d ironclaw -c \"CREATE EXTENSION IF NOT EXISTS vector;\""

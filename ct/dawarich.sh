@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -33,6 +32,13 @@ function update_script() {
   fi
 
   ensure_dependencies libgeos++-dev libxml2-dev libxslt-dev libjemalloc-dev
+
+  if [[ -f /etc/nginx/sites-available/dawarich.conf ]] && ! grep -q '\.mjs\$' /etc/nginx/sites-available/dawarich.conf; then
+    msg_info "Fixing MapLibre delivery in Nginx"
+    sed -i '/location ~ \^\/(assets|packs)\/ {/i\    location ~ \\.mjs$ {\n        types { }\n        default_type text/javascript;\n        try_files $uri @rails;\n    }\n' /etc/nginx/sites-available/dawarich.conf
+    nginx_enable_site dawarich.conf
+    msg_ok "Fixed MapLibre delivery in Nginx"
+  fi
 
   if check_for_gh_release "dawarich" "Freika/dawarich"; then
     msg_info "Stopping Services"

@@ -52,9 +52,9 @@ msg_info "Setup Paperless-ngx"
 cd /opt/paperless
 rm -rf /opt/paperless/docker
 $STD uv sync --all-extras
-mkdir -p /opt/paperless_data/{consume,data,media,trash}
+mkdir -p /opt/paperless_data/{consume,data,index,media,trash}
 mkdir -p /opt/paperless/static
-SECRET_KEY="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)"
+SECRET_KEY="$(random_password 32)"
 cat <<EOF >~/paperless-ngx.creds
 
 Paperless-ngx Secret Key: $SECRET_KEY
@@ -109,6 +109,8 @@ Requires=redis.service
 [Service]
 WorkingDirectory=/opt/paperless/src
 ExecStart=uv run --no-sync -- celery --app paperless beat --loglevel INFO
+Restart=on-failure
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
@@ -123,6 +125,8 @@ After=postgresql.service
 [Service]
 WorkingDirectory=/opt/paperless/src
 ExecStart=uv run --no-sync -- celery --app paperless worker --loglevel INFO
+Restart=on-failure
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
@@ -137,6 +141,8 @@ Requires=redis.service
 WorkingDirectory=/opt/paperless/src
 ExecStartPre=/bin/sleep 2
 ExecStart=uv run --no-sync -- python manage.py document_consumer
+Restart=on-failure
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
@@ -153,6 +159,8 @@ Requires=redis.service
 WorkingDirectory=/opt/paperless/src
 #ExecStartPre=uv run --no-sync -- python manage.py document_index reindex --if-needed --no-progress-bar
 ExecStart=uv run --no-sync -- granian --interface asginl --ws --loop uvloop "paperless.asgi:application"
+Restart=on-failure
+RestartSec=5
 Environment=GRANIAN_HOST=::
 Environment=GRANIAN_PORT=8000
 Environment=GRANIAN_WORKERS=1
@@ -163,7 +171,8 @@ EOF
 systemctl enable -q --now paperless-webserver paperless-scheduler paperless-task-queue paperless-consumer
 msg_ok "Created Services"
 
-read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt
+prompt="${var_paperless_ngx_adminer:-}"
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt || true
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   setup_adminer
 fi

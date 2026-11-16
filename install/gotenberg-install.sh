@@ -14,18 +14,15 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
+CODENAME=$(get_os_info codename)
+setup_deb822_repo \
+  "debian-backports" \
+  "file:///usr/share/keyrings/debian-archive-keyring.gpg" \
+  "http://deb.debian.org/debian" \
+  "${CODENAME}-backports" \
+  "main"
 $STD apt install -y \
   chromium \
-  libreoffice-writer \
-  libreoffice-calc \
-  libreoffice-impress \
-  libreoffice-draw \
-  libreoffice-math \
-  python3-uno \
-  python-is-python3 \
-  pdftk-java \
-  qpdf \
-  libimage-exiftool-perl \
   fonts-crosextra-carlito \
   fonts-crosextra-caladea \
   fonts-liberation \
@@ -33,28 +30,30 @@ $STD apt install -y \
   fonts-dejavu \
   fonts-noto-cjk \
   fonts-noto-color-emoji \
-  fonts-noto-core
+  fonts-noto-core \
+  fonts-urw-base35
+# lok is built against the LibreOffice from backports
+$STD apt install -y -t "${CODENAME}-backports" \
+  libreoffice-writer \
+  libreoffice-calc \
+  libreoffice-impress \
+  libreoffice-draw \
+  libreoffice-math
 msg_ok "Installed Dependencies"
-
-fetch_and_deploy_gh_release "pdfcpu" "pdfcpu/pdfcpu" "prebuild" "latest" "/opt/pdfcpu" "pdfcpu_*_Linux_$(arch_resolve "x86_64" "arm64").tar.xz"
-ln -sf "$(find /opt/pdfcpu -type f -name pdfcpu | head -n1)" /usr/local/bin/pdfcpu
-
-msg_info "Installing unoconverter"
-UNOCONVERTER_VERSION=$(get_latest_github_release "gotenberg/unoconverter" "false")
-download_file "https://raw.githubusercontent.com/gotenberg/unoconverter/${UNOCONVERTER_VERSION}/unoconv" /usr/local/bin/unoconverter
-chmod +x /usr/local/bin/unoconverter
-msg_ok "Installed unoconverter"
 
 fetch_and_deploy_gh_release "gotenberg" "gotenberg/gotenberg" "tarball" "latest" "/opt/gotenberg"
 
 GO_VERSION="$(awk '$1=="go"{print $2}' /opt/gotenberg/go.mod | cut -d. -f1,2)" setup_go
+
+LOK_VERSION="$(awk -F= '/^ARG LOK_VERSION=/{print $2}' /opt/gotenberg/build/Dockerfile)"
+fetch_and_deploy_gh_release "lok" "gotenberg/lok" "prebuild" "$LOK_VERSION" "/usr/local/bin" "lok_${LOK_VERSION#v}_linux_$(arch_resolve "amd64" "arm64").tar.gz"
 
 msg_info "Building Gotenberg (Patience)"
 cd /opt/gotenberg
 export CGO_ENABLED=0
 $STD go mod download
 $STD go build -o /usr/local/bin/gotenberg \
-  -ldflags "-s -w -X 'github.com/gotenberg/gotenberg/v8/cmd.Version=$(cat ~/.gotenberg)'" \
+  -ldflags "-s -w -X 'github.com/gotenberg/gotenberg/v9/cmd.Version=$(cat ~/.gotenberg)'" \
   cmd/gotenberg/main.go
 msg_ok "Built Gotenberg"
 
@@ -70,14 +69,10 @@ Type=simple
 User=root
 Environment=LANG=C.UTF-8
 Environment=LC_ALL=C.UTF-8
-Environment=PDFTK_BIN_PATH=/usr/bin/pdftk
-Environment=QPDF_BIN_PATH=/usr/bin/qpdf
-Environment=EXIFTOOL_BIN_PATH=/usr/bin/exiftool
-Environment=PDFCPU_BIN_PATH=/usr/local/bin/pdfcpu
 Environment=CHROMIUM_BIN_PATH=/usr/bin/chromium
 Environment=CHROMIUM_HYPHEN_DATA_DIR_PATH=/opt/gotenberg/build/chromium-hyphen-data
 Environment=LIBREOFFICE_BIN_PATH=/usr/lib/libreoffice/program/soffice.bin
-Environment=UNOCONVERTER_BIN_PATH=/usr/local/bin/unoconverter
+Environment=LOK_BIN_PATH=/usr/local/bin/lok
 Environment=OTEL_TRACES_EXPORTER=none
 Environment=OTEL_METRICS_EXPORTER=none
 Environment=OTEL_LOGS_EXPORTER=none

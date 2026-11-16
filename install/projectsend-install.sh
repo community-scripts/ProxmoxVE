@@ -28,7 +28,7 @@ msg_info "Configuring ProjectSend"
 cd /opt/projectsend
 cp .env.example .env
 ADMIN_EMAIL="admin@example.com"
-ADMIN_PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+ADMIN_PASSWORD=$(random_password 13)
 sed -i \
   -e "s|^APP_ENV=.*|APP_ENV=production|" \
   -e "s|^APP_DEBUG=.*|APP_DEBUG=false|" \

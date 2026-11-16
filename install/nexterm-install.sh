@@ -33,6 +33,7 @@ LOCAL_ENGINE_TOKEN=${LOCAL_ENGINE_TOKEN}
 ENCRYPTION_KEY=${ENCRYPTION_KEY}
 EOF
 chmod 0640 /etc/nexterm-engine/config.yaml /etc/nexterm-server/server.env
+echo "x /tmp/nexterm-sea-*" >/etc/tmpfiles.d/nexterm.conf
 msg_ok "Configured Nexterm"
 
 msg_info "Creating Services"

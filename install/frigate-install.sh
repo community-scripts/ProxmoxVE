@@ -110,7 +110,7 @@ export AUTOGRAPH_VERBOSITY=0
 export GLOG_minloglevel=3
 export GLOG_logtostderr=0
 
-fetch_and_deploy_gh_release "frigate" "blakeblackshear/frigate" "tarball" "v0.18.0" "/opt/frigate"
+fetch_and_deploy_gh_release "frigate" "blakeblackshear/frigate" "tarball" "v0.18.2" "/opt/frigate"
 
 msg_info "Building Nginx"
 $STD bash /opt/frigate/docker/main/build_nginx.sh
@@ -124,6 +124,8 @@ msg_ok "Built SQLite Extensions"
 
 if [[ "$(arch_resolve)" == "amd64" ]]; then
   msg_info "Building Intel Media Driver (Patience)"
+  download_gpg_key "https://repositories.intel.com/gpu/intel-graphics.key" "/usr/share/keyrings/intel-graphics.gpg" "dearmor"
+  sed -i '/intel-graphics.key/d' /opt/frigate/docker/main/build_intel_media_driver.sh
   $STD bash /opt/frigate/docker/main/build_intel_media_driver.sh
   cp -a /rootfs/. /
   rm -rf /rootfs
@@ -236,7 +238,7 @@ $STD bash /opt/frigate/.devcontainer/initialize.sh
 $STD make version
 cd /opt/frigate/web
 $STD npm install
-$STD npm run build
+NODE_OPTIONS="--max-old-space-size=4096" $STD npm run build
 mv /opt/frigate/web/dist/BASE_PATH/monacoeditorwork/* /opt/frigate/web/dist/assets/
 rm -rf /opt/frigate/web/dist/BASE_PATH
 cp -r /opt/frigate/web/dist/* /opt/frigate/web/

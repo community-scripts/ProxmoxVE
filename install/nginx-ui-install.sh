@@ -65,7 +65,6 @@ KillMode=mixed
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl daemon-reload
 msg_ok "Created Service"
 
 msg_info "Starting Service"

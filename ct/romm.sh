@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -40,9 +39,32 @@ function update_script() {
 
   NODE_VERSION="24" setup_nodejs
 
+  # RomM 5.3.0 replaced rq-scheduler with `rq cron` and moved scans to their own queue
+  if grep -q rqscheduler /etc/systemd/system/romm-scheduler.service 2>/dev/null; then
+    msg_info "Migrating RQ services"
+    sed -i -e '/RQ_REDIS_/d' \
+      -e 's|^ExecStart=.*|ExecStart=/opt/romm/.venv/bin/rq cron --path /opt/romm/backend --url redis://127.0.0.1:6379/0 tasks.cron_config|' \
+      /etc/systemd/system/romm-scheduler.service
+    sed -i 's|bin/rq worker --path|bin/rq worker --with-scheduler --path|' /etc/systemd/system/romm-worker.service
+    sed -e 's|^Description=.*|Description=RomM RQ Scan Worker|' \
+      -e 's|^ExecStart=.*|ExecStart=/opt/romm/.venv/bin/rq worker --with-scheduler --path /opt/romm/backend --url redis://127.0.0.1:6379/0 scans|' \
+      /etc/systemd/system/romm-worker.service >/etc/systemd/system/romm-scan-worker.service
+    systemctl daemon-reload
+    systemctl enable -q --now romm-scan-worker
+    systemctl restart romm-worker romm-scheduler
+    msg_ok "Migrated RQ services"
+  fi
+
+  if ! grep -q '^save ' /etc/redis/redis.conf; then
+    msg_info "Reducing Redis snapshot frequency"
+    echo 'save 3600 1' >>/etc/redis/redis.conf
+    $STD redis-cli CONFIG SET save "3600 1"
+    msg_ok "Reduced Redis snapshot frequency"
+  fi
+
   if check_for_gh_release "romm" "rommapp/romm"; then
     msg_info "Stopping Services"
-    systemctl stop romm-backend romm-worker romm-scheduler romm-watcher
+    systemctl stop romm-backend romm-worker romm-scan-worker romm-scheduler romm-watcher
     msg_ok "Stopped Services"
 
     create_backup /opt/romm/.env
@@ -85,9 +107,10 @@ function update_script() {
     ln -sfn "$ROMM_BASE"/resources /opt/romm/frontend/dist/assets/romm/resources
     ln -sfn "$ROMM_BASE"/assets /opt/romm/frontend/dist/assets/romm/assets
     if [[ -f /etc/angie/http.d/romm.conf ]]; then
-      if ! grep -q "js_content decode.decodeBase64" /etc/angie/http.d/romm.conf; then
-        msg_info "Adding missing /decode and /cache locations to Angie config"
-        dpkg -l angie-module-njs &>/dev/null || $STD apt-get install -y angie-module-njs
+      if ! grep -q "js_content decode.decodeBase64" /etc/angie/http.d/romm.conf ||
+        ! grep -q "coep_header" /etc/angie/http.d/romm.conf; then
+        msg_info "Updating Angie config (decode/cache locations, player isolation headers)"
+        dpkg -l angie-module-njs &>/dev/null || $STD apt install -y angie-module-njs
         grep -q "ngx_http_js_module.so" /etc/angie/angie.conf || sed -i '1i load_module modules/ngx_http_js_module.so;' /etc/angie/angie.conf
         mkdir -p /etc/angie/js "${ROMM_BASE}/cache"
         cat <<'JSEOF' >/etc/angie/js/decode.js
@@ -125,6 +148,20 @@ map \$http_upgrade \$connection_upgrade {
     '' close;
 }
 
+# COEP/COOP for the EmulatorJS and js-dos players (SharedArrayBuffer needs a
+# crossOriginIsolated document). Matched on \$request_uri because try_files
+# rewrites \$uri to /index.html before add_header runs, so a per-location
+# add_header on the player route never fires. Mirrors upstream RomM's
+# docker/nginx/templates/default.conf.template.
+map \$request_uri \$coep_header {
+    default        "";
+    ~^/rom/.*/(ejs|jsdos)(\?|\$) "require-corp";
+}
+map \$request_uri \$coop_header {
+    default        "";
+    ~^/rom/.*/(ejs|jsdos)(\?|\$) "same-origin";
+}
+
 server {
     listen 80;
     server_name _;
@@ -133,6 +170,9 @@ server {
 
     location / {
         try_files \$uri \$uri/ /index.html;
+        add_header Cache-Control "no-cache";
+        add_header Cross-Origin-Embedder-Policy \$coep_header;
+        add_header Cross-Origin-Opener-Policy \$coop_header;
     }
 
     location /assets {
@@ -140,12 +180,6 @@ server {
         try_files \$uri \$uri/ =404;
         expires 1y;
         add_header Cache-Control "public, immutable";
-    }
-
-    location ~ ^/rom/.*/ejs\$ {
-        add_header Cross-Origin-Embedder-Policy "require-corp";
-        add_header Cross-Origin-Opener-Policy "same-origin";
-        try_files \$uri /index.html;
     }
 
     location /api {
@@ -187,7 +221,7 @@ server {
     }
 }
 EOF
-        msg_ok "Added /decode and /cache locations"
+        msg_ok "Updated Angie config"
       else
         sed -i -e "s|alias .*/library/;|alias ${ROMM_BASE}/library/;|" \
           -e "s|alias .*/cache/;|alias ${ROMM_BASE}/cache/;|" /etc/angie/http.d/romm.conf
@@ -196,6 +230,8 @@ EOF
 #!/usr/bin/env bash
 base="$(grep -m1 '^ROMM_BASE_PATH=' /opt/romm/.env 2>/dev/null | cut -d= -f2)"
 base="${base:-/var/lib/romm}"
+ln -sfn "${base}/resources" /opt/romm/frontend/dist/assets/romm/resources
+ln -sfn "${base}/assets" /opt/romm/frontend/dist/assets/romm/assets
 [[ -f /etc/angie/http.d/romm.conf ]] || exit 0
 sed -i -e "s|alias .*/library/;|alias ${base}/library/;|" \
   -e "s|alias .*/cache/;|alias ${base}/cache/;|" /etc/angie/http.d/romm.conf
@@ -231,14 +267,14 @@ DROPEOF
     fi
 
     msg_info "Starting Services"
-    systemctl start romm-backend romm-worker romm-scheduler romm-watcher
+    systemctl start romm-backend romm-worker romm-scan-worker romm-scheduler romm-watcher
     msg_ok "Started Services"
     msg_ok "Updated successfully"
   fi
 
   if check_for_gh_release "EmulatorJS" "EmulatorJS/EmulatorJS" "v4.2.3"; then
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "EmulatorJS" "EmulatorJS/EmulatorJS" "prebuild" "v4.2.3" "/opt/romm/frontend/dist/assets/emulatorjs" "4.2.3.7z"
-    systemctl restart romm-backend romm-worker romm-scheduler romm-watcher
+    systemctl restart romm-backend romm-worker romm-scan-worker romm-scheduler romm-watcher
     msg_ok "Updated EmulatorJS successfully"
   fi
   exit

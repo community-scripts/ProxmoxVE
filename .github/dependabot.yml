@@ -1,17 +1,14 @@
-# Keeps the GitHub Actions referenced in .github/workflows up to date.
-# https://docs.github.com/code-security/dependabot/working-with-dependabot/dependabot-options-reference
 version: 2
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
+    labels: []
     schedule:
       interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
-    # One PR per week for all action bumps instead of one PR per action.
+    target-branch: "main"
+    cooldown:
+      default-days: 7
     groups:
-      github-actions:
+      actions:
         patterns:
           - "*"

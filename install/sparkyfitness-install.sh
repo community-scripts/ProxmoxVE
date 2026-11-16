@@ -26,19 +26,19 @@ PNPM_VERSION="$(jq -r '.packageManager | split("@")[1]' /opt/sparkyfitness/packa
 NODE_VERSION="25" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 
 msg_info "Configuring Sparky Fitness"
-mkdir -p "/etc/sparkyfitness" "/var/lib/sparkyfitness/uploads" "/var/lib/sparkyfitness/backup" "/var/www/sparkyfitness"
+mkdir -p "/etc/sparkyfitness" "/var/www/sparkyfitness"
 cp "/opt/sparkyfitness/docker/.env.example" "/etc/sparkyfitness/.env"
 sed \
   -i \
-  -e "s|^#\?SPARKY_FITNESS_DB_HOST=.*|SPARKY_FITNESS_DB_HOST=localhost|" \
-  -e "s|^#\?SPARKY_FITNESS_DB_PORT=.*|SPARKY_FITNESS_DB_PORT=5432|" \
-  -e "s|^SPARKY_FITNESS_DB_NAME=.*|SPARKY_FITNESS_DB_NAME=sparkyfitness|" \
+  -e "s|^# SPARKY_FITNESS_DB_HOST=.*|SPARKY_FITNESS_DB_HOST=localhost|" \
+  -e "s|^# SPARKY_FITNESS_DB_PORT=.*|SPARKY_FITNESS_DB_PORT=5432|" \
+  -e "s|^# SPARKY_FITNESS_DB_NAME=.*|SPARKY_FITNESS_DB_NAME=sparkyfitness|" \
   -e "s|^SPARKY_FITNESS_DB_USER=.*|SPARKY_FITNESS_DB_USER=sparky|" \
   -e "s|^SPARKY_FITNESS_DB_PASSWORD=.*|SPARKY_FITNESS_DB_PASSWORD=${PG_DB_PASS}|" \
-  -e "s|^SPARKY_FITNESS_APP_DB_USER=.*|SPARKY_FITNESS_APP_DB_USER=sparky_app|" \
-  -e "s|^SPARKY_FITNESS_APP_DB_PASSWORD=.*|SPARKY_FITNESS_APP_DB_PASSWORD=$(openssl rand -base64 24 | tr -dc 'a-zA-Z0-9' | head -c20)|" \
-  -e "s|^SPARKY_FITNESS_SERVER_HOST=.*|SPARKY_FITNESS_SERVER_HOST=localhost|" \
-  -e "s|^SPARKY_FITNESS_SERVER_PORT=.*|SPARKY_FITNESS_SERVER_PORT=3010|" \
+  -e "s|^# SPARKY_FITNESS_APP_DB_USER=.*|SPARKY_FITNESS_APP_DB_USER=sparky_app|" \
+  -e "s|^# SPARKY_FITNESS_APP_DB_PASSWORD=.*|SPARKY_FITNESS_APP_DB_PASSWORD=$(random_password 20)|" \
+  -e "s|^# SPARKY_FITNESS_SERVER_HOST=.*|SPARKY_FITNESS_SERVER_HOST=localhost|" \
+  -e "s|^# SPARKY_FITNESS_SERVER_PORT=.*|SPARKY_FITNESS_SERVER_PORT=3010|" \
   -e "s|^SPARKY_FITNESS_FRONTEND_URL=.*|SPARKY_FITNESS_FRONTEND_URL=http://${LOCAL_IP}:80|" \
   -e "s|^GARMIN_MICROSERVICE_URL=.*|GARMIN_MICROSERVICE_URL=http://${LOCAL_IP}:8000|" \
   -e "s|^SPARKY_FITNESS_API_ENCRYPTION_KEY=.*|SPARKY_FITNESS_API_ENCRYPTION_KEY=$(openssl rand -hex 32)|" \
@@ -81,12 +81,14 @@ systemctl enable -q --now sparkyfitness-server
 msg_ok "Created SparkyFitness Service"
 
 msg_info "Configuring Nginx"
+NGINX_RESOLVER=$(awk '$1=="nameserver" {ns=$2; sub(/%.*/, "", ns); printf "%s%s", sep, (ns ~ /:/ ? "[" ns "]" : ns); sep=" "}' /etc/resolv.conf)
 sed \
   -e 's|${SPARKY_FITNESS_SERVER_HOST}|127.0.0.1|g' \
   -e 's|${SPARKY_FITNESS_SERVER_PORT}|3010|g' \
   -e "s|\${SPARKY_FITNESS_FRONTEND_URL}|http://${LOCAL_IP}:80|g" \
   -e 's|${NGINX_LISTEN_PORT}|80|g' \
   -e 's|${NGINX_RATE_LIMIT}|5r/s|g' \
+  -e "s|\${NGINX_RESOLVER}|${NGINX_RESOLVER:-127.0.0.1}|g" \
   -e 's|${NGINX_ACCESS_LOG}|/var/log/nginx/sparkyfitness.access.log|g' \
   -e 's|${NGINX_ERROR_LOG}|/var/log/nginx/sparkyfitness.error.log|g' \
   -e 's|root /usr/share/nginx/html;|root /var/www/sparkyfitness;|g' \

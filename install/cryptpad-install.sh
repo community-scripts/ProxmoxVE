@@ -19,19 +19,24 @@ msg_ok "Installed Dependencies"
 
 NODE_VERSION="22" setup_nodejs
 
-read -rp "${TAB3}Install OnlyOffice components instead of CKEditor? (Y/N): " onlyoffice
+onlyoffice="${var_cryptpad_onlyoffice:-}"
+[[ -n "$onlyoffice" ]] || read -rp "${TAB3}Install OnlyOffice components instead of CKEditor? (Y/N): " onlyoffice || true
 fetch_and_deploy_gh_release "cryptpad" "cryptpad/cryptpad" "tarball"
 
 msg_info "Setup CryptPad"
 cd /opt/cryptpad
 $STD npm ci --allow-git=all
 $STD npm run install:components
-if [[ "$onlyoffice" =~ ^[Yy]$ ]]; then
-  $STD bash -c "./install-onlyoffice.sh --accept-license"
+if [[ "${onlyoffice,,}" =~ ^(y|yes)$ ]]; then
+  $STD bash -c "./install-office.sh --accept-license"
 fi
 cp config/config.example.js config/config.js
-sed -i "51s/localhost/${LOCAL_IP}/g" /opt/cryptpad/config/config.js
-sed -i "80s#//httpAddress: 'localhost'#httpAddress: '0.0.0.0'#g" /opt/cryptpad/config/config.js
+cp config/infra.example.js config/infra.js
+sed -i \
+  -e "s|origin: \"http://localhost:3000\"|origin: \"http://${LOCAL_IP}:3000\"|" \
+  -e "s|sandboxOrigin: \"http://localhost:3001\"|sandboxOrigin: \"http://${LOCAL_IP}:3001\"|" \
+  -e "s|httpHost: \"localhost\"|httpHost: \"0.0.0.0\"|" \
+  config/infra.js
 $STD npm run build
 msg_ok "Setup CryptPad"
 

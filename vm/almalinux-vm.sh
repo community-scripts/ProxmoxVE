@@ -24,18 +24,9 @@ THIN="discard=on,ssd=1,"
 set -e
 trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 trap cleanup EXIT
-trap 'post_update_to_api "failed" "INTERRUPTED"' SIGINT
-trap 'post_update_to_api "failed" "TERMINATED"' SIGTERM
-
-function error_handler() {
-  local exit_code="$?"
-  local line_number="$1"
-  local command="$2"
-  local error_message="${RD}[ERROR]${CL} in line ${RD}$line_number${CL}: exit code ${RD}$exit_code${CL}: while executing command ${YW}$command${CL}"
-  post_update_to_api "failed" "${command}"
-  echo -e "\n$error_message\n"
-  cleanup_vmid
-}
+trap 'post_update_to_api "failed" "130"' SIGINT
+trap 'post_update_to_api "failed" "143"' SIGTERM
+trap 'post_update_to_api "failed" "129"; exit 129' SIGHUP
 
 TEMP_DIR=$(mktemp -d)
 pushd "$TEMP_DIR" >/dev/null
@@ -125,16 +116,6 @@ vm_start_script "Use Default Settings?\n\nDefaults:\n• 2 CPU Cores\n• 2 GB R
 post_to_api_vm
 
 vm_select_storage "$HN"
-
-# ==============================================================================
-# PREREQUISITES
-# ==============================================================================
-if ! command -v virt-customize &>/dev/null; then
-  msg_info "Installing libguestfs-tools"
-  $STD apt-get update
-  $STD apt-get install -y libguestfs-tools
-  msg_ok "Installed libguestfs-tools"
-fi
 
 msg_info "Retrieving the URL for the ${APP} Qcow2 Disk Image"
 ALMA_ARCH="$(vm_arch_resolve x86_64 aarch64)"

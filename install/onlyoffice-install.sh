@@ -21,22 +21,7 @@ msg_ok "Installed Dependencies"
 
 PG_VERSION="16" setup_postgresql
 
-msg_info "Setup Database"
-DB_NAME=onlyoffice
-DB_USER=onlyoffice_user
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
-$STD sudo -u postgres psql -c "CREATE ROLE $DB_USER WITH LOGIN PASSWORD '$DB_PASS';"
-$STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME WITH OWNER $DB_USER ENCODING 'UTF8' TEMPLATE template0;"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET client_encoding TO 'utf8';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET default_transaction_isolation TO 'read committed';"
-$STD sudo -u postgres psql -c "ALTER ROLE $DB_USER SET timezone TO 'UTC'"
-cat <<EOF >~/onlyoffice.creds
-ONLYOFFICE-Credentials
-ONLYOFFICE Database User: $DB_USER
-ONLYOFFICE Database Password: $DB_PASS
-ONLYOFFICE Database Name: $DB_NAME
-EOF
-msg_ok "Set up Database"
+PG_DB_NAME="onlyoffice" PG_DB_USER="onlyoffice_user" setup_postgresql_db
 
 msg_info "Adding ONLYOFFICE GPG Key"
 GPG_TMP="/tmp/onlyoffice.gpg"
@@ -65,23 +50,23 @@ rm -f "$TMP_KEY_CONTENT"
 
 msg_info "Preconfiguring ONLYOFFICE Debconf Settings"
 RMQ_USER=onlyoffice_rmq
-RMQ_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
+RMQ_PASS=$(random_password 13)
 JWT_SECRET=$(openssl rand -hex 16)
 $STD rabbitmqctl add_user $RMQ_USER $RMQ_PASS
 $STD rabbitmqctl set_permissions -p / $RMQ_USER ".*" ".*" ".*"
 $STD rabbitmqctl set_user_tags $RMQ_USER administrator
 
 echo onlyoffice-documentserver onlyoffice/db-host string localhost | debconf-set-selections
-echo onlyoffice-documentserver onlyoffice/db-user string $DB_USER | debconf-set-selections
-echo onlyoffice-documentserver onlyoffice/db-pwd password $DB_PASS | debconf-set-selections
-echo onlyoffice-documentserver onlyoffice/db-name string $DB_NAME | debconf-set-selections
+echo onlyoffice-documentserver onlyoffice/db-user string onlyoffice_user | debconf-set-selections
+echo onlyoffice-documentserver onlyoffice/db-pwd password $PG_DB_PASS | debconf-set-selections
+echo onlyoffice-documentserver onlyoffice/db-name string onlyoffice | debconf-set-selections
 echo onlyoffice-documentserver onlyoffice/rabbitmq-host string localhost | debconf-set-selections
 echo onlyoffice-documentserver onlyoffice/rabbitmq-user string $RMQ_USER | debconf-set-selections
 echo onlyoffice-documentserver onlyoffice/rabbitmq-pwd password $RMQ_PASS | debconf-set-selections
 echo onlyoffice-documentserver onlyoffice/jwt-enabled boolean true | debconf-set-selections
 echo onlyoffice-documentserver onlyoffice/jwt-secret password $JWT_SECRET | debconf-set-selections
 
-cat <<EOF >~/onlyoffice.creds
+cat <<EOF >>~/onlyoffice.creds
 
 ONLYOFFICE RabbitMQ Credentials
 User: $RMQ_USER

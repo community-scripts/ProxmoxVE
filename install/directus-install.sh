@@ -35,7 +35,7 @@ msg_ok "Installed Directus"
 msg_info "Configuring Directus"
 DIRECTUS_KEY=$(openssl rand -hex 32)
 DIRECTUS_SECRET=$(openssl rand -hex 32)
-DIRECTUS_ADMIN_PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c16)
+DIRECTUS_ADMIN_PASSWORD=$(random_password 16)
 cat <<EOF >/opt/directus/.env
 HOST="0.0.0.0"
 PORT=8055

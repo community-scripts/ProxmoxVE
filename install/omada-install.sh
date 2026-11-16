@@ -59,9 +59,12 @@ if ! dpkg -l | grep -q 'libssl1.1'; then
 fi
 
 msg_info "Installing Omada Controller"
-OMADA_URL=$(curl -fsSL -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15" "https://support.omadanetworks.com/en/download/software/omada-controller/" |
+OMADA_URL=$(curl -fsSL -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15" \
+  "https://support.omadanetworks.com/en/product/omada-software-controller/?resourceType=download" \
+  "https://support.omadanetworks.com/en/download/software/omada-controller/" |
   grep -o 'https://static\.tp-link\.com/upload/software/[^"]*linux_x64[^"]*\.deb' |
-  head -n1)
+  sed -n 's/.*_v\([0-9.]*\)_linux.*/\1 &/p' |
+  sort -V | tail -n1 | cut -d' ' -f2)
 OMADA_PKG=$(basename "${OMADA_URL}")
 curl_download "${OMADA_PKG}" "${OMADA_URL}"
 $STD dpkg -i "${OMADA_PKG}"

@@ -8,11 +8,6 @@
 *.install linguist-language=Shell
 
 # ---------------------------------------
-# Exclude header art from stats
-# ---------------------------------------
-ct/headers/* linguist-documentation
-
-# ---------------------------------------
 # Exclude documentation from stats
 # ---------------------------------------
 *.md linguist-documentation

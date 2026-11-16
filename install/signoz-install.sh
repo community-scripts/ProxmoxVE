@@ -151,7 +151,7 @@ INVITE_EMAIL_TEMPLATE=/opt/signoz/templates/invitation_email_template.html
 SIGNOZ_SQLSTORE_SQLITE_PATH=/var/lib/signoz/signoz.db
 SIGNOZ_WEB_ENABLED=true
 SIGNOZ_WEB_DIRECTORY=/opt/signoz/web
-SIGNOZ_JWT_SECRET=secret
+SIGNOZ_JWT_SECRET=$(openssl rand -hex 32)
 SIGNOZ_ALERTMANAGER_PROVIDER=signoz
 SIGNOZ_TELEMETRYSTORE_PROVIDER=clickhouse
 SIGNOZ_TELEMETRYSTORE_CLICKHOUSE_DSN=tcp://localhost:9000?password=

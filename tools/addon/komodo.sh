@@ -14,10 +14,10 @@ if ! command -v curl &>/dev/null; then
     apt-get install -y curl >/dev/null 2>&1
   fi
 fi
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/core.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/lib/tools.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/error_handler.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/api/api.func") 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "komodo" "addon"
 
 # Enable error handling
@@ -189,16 +189,17 @@ function install() {
   msg_info "Configuring environment"
   curl -fsSL "https://raw.githubusercontent.com/moghtech/komodo/main/compose/compose.env" -o "$COMPOSE_ENV"
 
-  DB_PASSWORD=$(openssl rand -base64 16 | tr -d '/+=')
-  ADMIN_PASSWORD=$(openssl rand -base64 8 | tr -d '/+=')
-  WEBHOOK_SECRET=$(openssl rand -base64 24 | tr -d '/+=')
-  JWT_SECRET=$(openssl rand -base64 24 | tr -d '/+=')
+  DB_PASSWORD=$(random_password 21)
+  ADMIN_PASSWORD=$(random_password 16)
+  WEBHOOK_SECRET=$(random_password 32)
+  JWT_SECRET=$(random_password 32)
 
   sed -i "s/^KOMODO_DATABASE_USERNAME=.*/KOMODO_DATABASE_USERNAME=komodo_admin/" "$COMPOSE_ENV"
   sed -i "s/^KOMODO_DATABASE_PASSWORD=.*/KOMODO_DATABASE_PASSWORD=${DB_PASSWORD}/" "$COMPOSE_ENV"
   sed -i "s/^KOMODO_INIT_ADMIN_PASSWORD=changeme/KOMODO_INIT_ADMIN_PASSWORD=${ADMIN_PASSWORD}/" "$COMPOSE_ENV"
   sed -i "s/^KOMODO_WEBHOOK_SECRET=.*/KOMODO_WEBHOOK_SECRET=${WEBHOOK_SECRET}/" "$COMPOSE_ENV"
   sed -i "s/^KOMODO_JWT_SECRET=.*/KOMODO_JWT_SECRET=${JWT_SECRET}/" "$COMPOSE_ENV"
+  sed -i "s|^KOMODO_HOST=.*|KOMODO_HOST=http://${LOCAL_IP}:${DEFAULT_PORT}|" "$COMPOSE_ENV"
   msg_ok "Configured environment"
 
   msg_info "Starting ${APP}"
@@ -214,14 +215,23 @@ function install() {
   } >>~/komodo.creds
 
   echo ""
-  msg_ok "${APP} is reachable at: ${BL}http://${LOCAL_IP}:${DEFAULT_PORT}${CL}"
+  msg_info "Waiting for ${APP} to answer"
+  for _ in $(seq 1 60); do
+    curl -fsS --max-time 3 "http://127.0.0.1:${DEFAULT_PORT}" >/dev/null 2>&1 && break
+    sleep 3
+  done
+  if curl -fsS --max-time 3 "http://127.0.0.1:${DEFAULT_PORT}" >/dev/null 2>&1; then
+    msg_ok "${APP} is reachable at: ${BL}http://${LOCAL_IP}:${DEFAULT_PORT}${CL}"
+  else
+    msg_error "${APP} did not come up - check: docker logs komodo-core-1"
+  fi
   echo ""
   echo -e "  Komodo Credentials"
   echo -e "  =================="
   echo -e "  User    : admin"
   echo -e "  Password: ${ADMIN_PASSWORD}"
   echo ""
-  msg_info "Credentials saved to ~/komodo.creds"
+  msg_ok "Credentials saved to ~/komodo.creds"
 }
 
 # ==============================================================================

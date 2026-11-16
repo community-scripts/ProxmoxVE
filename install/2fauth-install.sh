@@ -36,7 +36,6 @@ sed -i -e "s|^APP_URL=.*|APP_URL=http://$LOCAL_IP|" \
   -e "s|^DB_USERNAME=$|DB_USERNAME=$MARIADB_DB_USER|" \
   -e "s|^DB_PASSWORD=$|DB_PASSWORD=$MARIADB_DB_PASS|" .env
 export COMPOSER_ALLOW_SUPERUSER=1
-$STD composer update --no-plugins --no-scripts
 $STD composer install --no-dev --prefer-dist --no-plugins --no-scripts
 $STD php artisan key:generate --force
 $STD php artisan migrate:refresh

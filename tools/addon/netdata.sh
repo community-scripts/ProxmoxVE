@@ -18,10 +18,10 @@ if ! command -v curl &>/dev/null; then
     apt-get install -y curl >/dev/null 2>&1
   fi
 fi
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/core.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/lib/tools.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/error_handler.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/api/api.func") 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "netdata" "addon"
 
 # Enable error handling
@@ -80,7 +80,7 @@ install() {
   msg_ok "Set up repository"
 
   msg_info "Installing ${APP}"
-  $STD apt update
+  apt_update_safe
   $STD apt install -y netdata
   msg_ok "Installed ${APP}"
   msg_ok "Completed successfully!\n"
@@ -108,7 +108,7 @@ OPTIONS=(Install "Install ${APP} on Proxmox VE"
   Uninstall "Uninstall ${APP} from Proxmox VE")
 
 CHOICE=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "${APP}" \
-  --menu "Select an option:" 10 58 2 "${OPTIONS[@]}" 3>&1 1>&2 2>&3)
+  --menu "Select an option:" 10 58 2 "${OPTIONS[@]}" 3>&1 1>&2 2>&3) || exit 0
 
 case $CHOICE in
 "Install") install ;;

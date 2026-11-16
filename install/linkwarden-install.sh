@@ -24,7 +24,8 @@ PG_VERSION="16" setup_postgresql
 RUST_CRATES="monolith" setup_rust
 PG_DB_NAME="linkwardendb" PG_DB_USER="linkwarden" setup_postgresql_db
 
-read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt
+prompt="${var_linkwarden_adminer:-}"
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt || true
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   setup_adminer
 fi
@@ -32,7 +33,7 @@ fi
 fetch_and_deploy_gh_release "linkwarden" "linkwarden/linkwarden" "tarball"
 
 msg_info "Installing Linkwarden (Patience)"
-SECRET_KEY="$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)"
+SECRET_KEY="$(random_password 32)"
 echo "Linkwarden Secret: $SECRET_KEY" >>"${HOME}/linkwarden.creds"
 cd /opt/linkwarden
 yarn_ver="4.12.0"
@@ -60,6 +61,7 @@ $STD yarn web:build
 $STD yarn prisma:deploy
 rm -rf ~/.cargo/registry ~/.cargo/git ~/.cargo/.package-cache
 rm -rf /root/.cache/yarn
+rm -rf /root/.yarn/berry/cache
 rm -rf /opt/linkwarden/.next/cache
 msg_ok "Installed Linkwarden"
 

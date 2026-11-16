@@ -93,6 +93,4 @@ msg_ok "Started Redlib Service"
 motd_ssh
 customize
 
-msg_info "Cleaning up"
-$STD apk cache clean
-msg_ok "Cleaned"
+cleanup_lxc

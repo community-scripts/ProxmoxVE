@@ -160,7 +160,7 @@ systemctl enable -q --now redis-server affine-web affine-worker
 msg_ok "Created Services"
 
 msg_info "Creating Admin User"
-ADMIN_PASS=$(openssl rand -base64 12)
+ADMIN_PASS=$(random_password 16)
 for i in {1..30}; do
   if curl -s http://localhost:3010/info >/dev/null 2>&1; then
     break

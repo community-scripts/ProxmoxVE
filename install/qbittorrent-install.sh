@@ -18,12 +18,20 @@ fetch_and_deploy_gh_release "qbittorrent" "userdocs/qbittorrent-nox-static" "sin
 msg_info "Setup qBittorrent-nox"
 mv /opt/qbittorrent/qbittorrent /opt/qbittorrent/qbittorrent-nox
 mkdir -p ~/.config/qBittorrent/
+QB_PASS=$(random_password 20)
+QB_SALT=$(random_password 16)
+QB_HASH="$(printf '%s' "$QB_SALT" | base64 -w0):$(openssl kdf -keylen 64 -kdfopt digest:SHA512 -kdfopt pass:"$QB_PASS" -kdfopt salt:"$QB_SALT" -kdfopt iter:100000 -binary PBKDF2 | base64 -w0)"
+{
+  echo "qBittorrent Credentials"
+  echo "Username: admin"
+  echo "Password: ${QB_PASS}"
+} >~/qbittorrent.creds
 cat <<EOF >~/.config/qBittorrent/qBittorrent.conf
 [LegalNotice]
 Accepted=true
 
 [Preferences]
-WebUI\Password_PBKDF2="@ByteArray(amjeuVrF3xRbgzqWQmes5A==:XK3/Ra9jUmqUc4RwzCtrhrkQIcYczBl90DJw2rT8DFVTss4nxpoRhvyxhCf87ahVE3SzD8K9lyPdpyUCfmVsUg==)"
+WebUI\Password_PBKDF2="@ByteArray(${QB_HASH})"
 WebUI\Port=8090
 WebUI\UseUPnP=false
 WebUI\Username=admin

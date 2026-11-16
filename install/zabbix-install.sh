@@ -16,7 +16,8 @@ update_os
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="zabbixdb" PG_DB_USER="zabbix" setup_postgresql_db
 
-read -rp "Choose Zabbix version [1] 7.0 LTS  [2] 7.4 (Latest Stable)  [3] Latest available (default: 2): " ZABBIX_CHOICE
+ZABBIX_CHOICE="${var_zabbix_version:-}"
+[[ -n "$ZABBIX_CHOICE" ]] || read -rp "Choose Zabbix version [1] 7.0 LTS  [2] 7.4 (Latest Stable)  [3] Latest available (default: 2): " ZABBIX_CHOICE || true
 ZABBIX_CHOICE=${ZABBIX_CHOICE:-2}
 case "$ZABBIX_CHOICE" in
 1) ZABBIX_VERSION="7.0" ;;
@@ -32,18 +33,20 @@ esac
 msg_info "Installing Zabbix $ZABBIX_VERSION"
 cd /tmp
 
+ZABBIX_REPO_DIR="debian"
+[[ "$ZABBIX_VERSION" == "7.0" && "$(arch_resolve)" == "arm64" ]] && ZABBIX_REPO_DIR="debian-arm64"
 if [[ "$ZABBIX_VERSION" == "7.0" ]]; then
-  ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/debian/pool/main/z/zabbix-release/zabbix-release_latest_${ZABBIX_VERSION}+debian13_all.deb"
-  ZABBIX_DEB_FILE="zabbix-release_latest_${ZABBIX_VERSION}+debian13_all.deb"
+  ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/${ZABBIX_REPO_DIR}/pool/main/z/zabbix-release/zabbix-release_latest_${ZABBIX_VERSION}+debian$(get_os_version_major)_all.deb"
+  ZABBIX_DEB_FILE="zabbix-release_latest_${ZABBIX_VERSION}+debian$(get_os_version_major)_all.deb"
 else
-  ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/release/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian13_all.deb"
-  ZABBIX_DEB_FILE="zabbix-release_latest+debian13_all.deb"
+  ZABBIX_DEB_URL="https://repo.zabbix.com/zabbix/${ZABBIX_VERSION}/release/debian/pool/main/z/zabbix-release/zabbix-release_latest+debian$(get_os_version_major)_all.deb"
+  ZABBIX_DEB_FILE="zabbix-release_latest+debian$(get_os_version_major)_all.deb"
 fi
 
 curl -fsSL "$ZABBIX_DEB_URL" -o /tmp/"$ZABBIX_DEB_FILE"
 $STD dpkg -i /tmp/"$ZABBIX_DEB_FILE"
 apt_update_safe
-$STD apt install -y zabbix-server-pgsql zabbix-frontend-php php8.4-pgsql zabbix-apache-conf zabbix-sql-scripts
+$STD apt install -y zabbix-server-pgsql zabbix-frontend-php php-pgsql zabbix-apache-conf zabbix-sql-scripts
 
 if [[ "$ZABBIX_VERSION" == "7.0" ]]; then
   ZABBIX_SQL="/usr/share/zabbix-sql-scripts/postgresql/server.sql.gz"
@@ -57,8 +60,9 @@ sed -i "s/^DBUser=.*/DBUser=$PG_DB_USER/" /etc/zabbix/zabbix_server.conf
 sed -i "s/^# DBPassword=.*/DBPassword=$PG_DB_PASS/" /etc/zabbix/zabbix_server.conf
 msg_ok "Installed Zabbix $ZABBIX_VERSION"
 
+AGENT_CHOICE="${var_zabbix_agent:-}"
 while true; do
-  read -rp "Which agent do you want to install? [1=agent (classic), 2=agent2 (modern), default=1]: " AGENT_CHOICE
+  [[ -n "$AGENT_CHOICE" ]] || read -rp "Which agent do you want to install? [1=agent (classic), 2=agent2 (modern), default=1]: " AGENT_CHOICE || AGENT_CHOICE="1"
   case "$AGENT_CHOICE" in
   2)
     AGENT_PKG="zabbix-agent2"
@@ -70,6 +74,7 @@ while true; do
     ;;
   *)
     echo "Invalid choice. Please enter 1 or 2."
+    AGENT_CHOICE=""
     ;;
   esac
 done
@@ -78,22 +83,20 @@ msg_ok "Selected $AGENT_PKG"
 if [ "$AGENT_PKG" = "zabbix-agent2" ]; then
   echo "Choose plugins for Zabbix Agent2:"
   echo "1) PostgreSQL only (default, recommended)"
-  echo "2) All plugins (may cause issues)"
-  read -rp "Choose option [1-2]: " PLUGIN_CHOICE
+  echo "2) All plugins except NVIDIA GPU (may cause issues)"
+  PLUGIN_CHOICE="${var_zabbix_plugins:-}"
+  [[ -n "$PLUGIN_CHOICE" ]] || read -rp "Choose option [1-2]: " PLUGIN_CHOICE || true
 
   case "$PLUGIN_CHOICE" in
   2)
-    $STD apt install -y zabbix-agent2 zabbix-agent2-plugin-*
+    # The NVIDIA plugin fails the agent's config test without NVML, which aborts the package install
+    mapfile -t AGENT2_PLUGINS < <(apt-cache search --names-only '^zabbix-agent2-plugin-' | awk '{print $1}' | grep -v nvidia)
+    $STD apt install -y zabbix-agent2 "${AGENT2_PLUGINS[@]}"
     ;;
   *)
     $STD apt install -y zabbix-agent2 zabbix-agent2-plugin-postgresql
     ;;
   esac
-
-  if [ -f /etc/zabbix/zabbix_agent2.d/plugins.d/nvidia.conf ]; then
-    sed -i 's|^Plugins.NVIDIA.System.Path=.*|# Plugins.NVIDIA.System.Path=/usr/libexec/zabbix/zabbix-agent2-plugin-nvidia-gpu|' \
-      /etc/zabbix/zabbix_agent2.d/plugins.d/nvidia.conf
-  fi
 else
   $STD apt install -y zabbix-agent
 fi

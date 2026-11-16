@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -87,7 +86,7 @@ EOF
 
     msg_info "Updating SnapOtter"
     $STD uv python install 3.11
-    $STD uv venv --seed --python 3.11 /opt/snapotter_data/ai/venv
+    $STD uv venv --clear --seed --python 3.11 /opt/snapotter_data/ai/venv
     if [[ "$(arch_resolve)" == "arm64" ]]; then
       $STD uv pip install --python /opt/snapotter_data/ai/venv/bin/python \
         numpy==1.26.4 Pillow==12.3.0 opencv-python-headless==4.10.0.84 fonttools \

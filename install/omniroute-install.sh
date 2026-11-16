@@ -26,7 +26,7 @@ JWT_SECRET=$(openssl rand -base64 48)
 API_KEY_SECRET=$(openssl rand -hex 32)
 STORAGE_ENCRYPTION_KEY=$(openssl rand -hex 32)
 STORAGE_ENCRYPTION_KEY_VERSION=v1
-INITIAL_PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-20)
+INITIAL_PASSWORD=$(random_password 20)
 PORT=20128
 OMNIROUTE_SERVER_HOST=0.0.0.0
 EOF

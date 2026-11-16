@@ -23,6 +23,7 @@ $STD apt install -y \
   libldap-common \
   libssl-dev \
   libldap2 \
+  ffmpeg \
   gosu \
   iproute2
 msg_ok "Installed Dependencies"
@@ -98,6 +99,14 @@ PRODUCTION=true
 HOST=0.0.0.0
 PORT=9000
 BASE_URL=http://${LOCAL_IP}:9000
+
+# Reverse proxy auth (Mealie v3.29.0+). Disabled by default.
+# To enable: set REVERSE_PROXY_AUTH_ENABLED=true, set a secret, then restart mealie.
+# REVERSE_PROXY_AUTH_ENABLED=false
+# REVERSE_PROXY_AUTH_HEADER=X-Forwarded-User
+# REVERSE_PROXY_AUTH_SIGNUP_ENABLED=false
+# REVERSE_PROXY_AUTH_SECRET=
+# REVERSE_PROXY_AUTH_SECRET_HEADER=X-Mealie-Reverse-Proxy-Secret
 EOF
 msg_ok "Wrote Environment File"
 

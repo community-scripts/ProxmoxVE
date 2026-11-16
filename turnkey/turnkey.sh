@@ -4,14 +4,15 @@
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
 
 # Source shared libraries
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/api/api.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/core.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/error_handler.func")
 load_functions
 catch_errors
 
 APP="TurnKey LXC"
 NSAPP="turnkey"
+var_arm64="no"
 DIAGNOSTICS="no"
 METHOD="default"
 RANDOM_UUID="$(cat /proc/sys/kernel/random/uuid)"
@@ -159,6 +160,7 @@ fi
 pve_check
 shell_check
 root_check
+arch_check
 
 # Read diagnostics preference (same logic as build.func diagnostics_check)
 DIAG_CONFIG="/usr/local/community-scripts/diagnostics"
@@ -178,6 +180,7 @@ msg_ok "Updated LXC template list"
 
 # Build TurnKey selection menu dynamically from available templates
 # Requires gawk for regex capture groups in match()
+# Newest template per appliance, current or previous Debian only: the catalog still lists dropped appliances on EOL releases
 command -v gawk &>/dev/null || apt-get install -y gawk &>/dev/null
 declare -A TURNKEY_TEMPLATES
 TURNKEY_MENU=()
@@ -187,10 +190,14 @@ while IFS=$'\t' read -r TEMPLATE_FILE TAG ITEM; do
   OFFSET=2
   ((${#ITEM} + OFFSET > MSG_MAX_LENGTH)) && MSG_MAX_LENGTH=$((${#ITEM} + OFFSET))
   TURNKEY_MENU+=("$TAG" "$ITEM " "OFF")
-done < <(pveam available -section turnkeylinux | gawk '{
-  tpl = $2
-  if (match(tpl, /debian-([0-9]+)-turnkey-([^_]+)_([^_]+)_/, m)) {
-    app = m[2]; deb = m[1]; ver = m[3]
+done < <(pveam available -section turnkeylinux | sort -k2,2V | gawk '
+match($2, /debian-([0-9]+)-turnkey-([^_]+)_([^_]+)_/, m) {
+  tpl[m[2]] = $2; deb[m[2]] = m[1] + 0; ver[m[2]] = m[3]
+  if (m[1] + 0 > newest) newest = m[1] + 0
+}
+END {
+  for (app in tpl) {
+    if (deb[app] < newest - 1) continue
     display = app
     gsub(/-/, " ", display)
     n = split(display, words, " ")
@@ -199,8 +206,7 @@ done < <(pveam available -section turnkeylinux | gawk '{
       words[i] = toupper(substr(words[i], 1, 1)) substr(words[i], 2)
       display = display (i > 1 ? " " : "") words[i]
     }
-    tag = app "-" deb
-    printf "%s\t%s\t%s | Debian %s | %s\n", tpl, tag, display, deb, ver
+    printf "%s\t%s-%s\t%s | Debian %s | %s\n", tpl[app], app, deb[app], display, deb[app], ver[app]
   }
 }' | sort -t$'\t' -k2,2)
 
@@ -224,7 +230,7 @@ TEMPLATE="${TURNKEY_TEMPLATES[$selected]}"
 turnkey="${selected%-*}"
 
 # Generate random password
-PASS="$(openssl rand -base64 8)"
+PASS="$(random_password 16)"
 
 # Prompt for Container ID
 NEXT_ID=$(pvesh get /cluster/nextid 2>/dev/null || echo 100)

@@ -21,7 +21,8 @@ setup_deb822_repo \
   "stable"
 msg_ok "Set up InfluxDB Repository"
 
-read -r -p "${TAB3}Which version of InfluxDB to install? (1, 2 or 3) " prompt
+prompt="${var_influxdb_version:-}"
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Which version of InfluxDB to install? (1, 2 or 3) " prompt || true
 if [[ $prompt == "3" ]]; then
   INFLUX="3"
 elif [[ $prompt == "2" ]]; then
@@ -50,7 +51,8 @@ else
 fi
 msg_ok "Installed InfluxDB"
 
-read -r -p "${TAB3}Would you like to add Telegraf? <y/N> " prompt
+prompt="${var_influxdb_telegraf:-}"
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Telegraf? <y/N> " prompt || true
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   msg_info "Installing Telegraf"
   $STD apt install -y telegraf

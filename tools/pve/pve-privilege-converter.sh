@@ -10,8 +10,8 @@ if ! command -v curl >/dev/null 2>&1; then
   apt-get update >/dev/null 2>&1
   apt-get install -y curl >/dev/null 2>&1
 fi
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/core.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/api/api.func") 2>/dev/null || true
 load_functions
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "pve-privilege-converter" "pve"
 
@@ -31,7 +31,7 @@ check_root() {
 
 select_target_storage_and_container_id() {
   echo -e "\nSelect target storage for restored container:\n"
-  mapfile -t target_storages < <(pvesm status --content images | awk 'NR > 1 {print $1}')
+  mapfile -t target_storages < <(pvesm status --content rootdir | awk 'NR > 1 {print $1}')
   for i in "${!target_storages[@]}"; do
     printf "%s) %s\n" "$((i + 1))" "${target_storages[$i]}"
   done

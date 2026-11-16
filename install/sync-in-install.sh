@@ -51,7 +51,7 @@ msg_ok "Ran Database Migrations"
 
 msg_info "Creating Admin User"
 cd /opt/sync-in
-ADMIN_PASS=$(openssl rand -base64 18)
+ADMIN_PASS=$(random_password 24)
 $STD npx sync-in-server create-user --role admin --login admin --password "${ADMIN_PASS}"
 cat <<EOF >~/sync-in.creds
 Sync-in Credentials

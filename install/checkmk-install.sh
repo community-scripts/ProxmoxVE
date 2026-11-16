@@ -25,7 +25,7 @@ msg_ok "Installed Checkmk"
 msg_info "Creating Service"
 SITE_NAME="monitoring"
 $STD omd create "$SITE_NAME"
-MKPASSWORD=$(openssl rand -base64 18 | tr -d '/+=' | cut -c1-16)
+MKPASSWORD=$(random_password 16)
 
 echo -e "$MKPASSWORD\n$MKPASSWORD" | su - "$SITE_NAME" -c "cmk-passwd cmkadmin --stdin"
 $STD omd start "$SITE_NAME"

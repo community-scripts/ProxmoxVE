@@ -23,9 +23,11 @@ NODE_VERSION="24" NODE_MODULE="playactor" setup_nodejs
 fetch_and_deploy_gh_release "ps5-mqtt" "FunkeyFlo/ps5-mqtt" "tarball"
 
 msg_info "Configuring PS5-MQTT"
-cd /opt/ps5-mqtt/ps5-mqtt/
-$STD npm install
-$STD npm run build
+cd /opt/ps5-mqtt
+$STD corepack yarn install --immutable
+$STD env PREPARE_ONLY=1 corepack yarn workspace @ps5-mqtt/server run package
+cd /opt/ps5-mqtt/ps5-mqtt/server/.packaged/server
+$STD npm install --omit=dev --omit=optional
 mkdir -p /opt/.config/ps5-mqtt/
 mkdir -p /opt/.config/ps5-mqtt/playactor
 cat <<EOF >/opt/.config/ps5-mqtt/config.json
@@ -66,7 +68,7 @@ Description=PS5-MQTT Daemon
 After=syslog.target network.target
 
 [Service]
-WorkingDirectory=/opt/ps5-mqtt/ps5-mqtt
+WorkingDirectory=/opt/ps5-mqtt/ps5-mqtt/server/.packaged
 Environment="CONFIG_PATH=/opt/.config/ps5-mqtt/config.json"
 Environment="DEBUG='@ha:ps5:*'"
 Restart=always

@@ -46,7 +46,7 @@ mv "/opt/leantime/config/sample.env" "/opt/leantime/config/.env"
 sed -i -e "s|^LEAN_DB_DATABASE.*|LEAN_DB_DATABASE = '$MARIADB_DB_NAME'|" \
   -e "s|^LEAN_DB_USER.*|LEAN_DB_USER = '$MARIADB_DB_USER'|" \
   -e "s|^LEAN_DB_PASSWORD.*|LEAN_DB_PASSWORD = '$MARIADB_DB_PASS'|" \
-  -e "s|^LEAN_SESSION_PASSWORD.*|LEAN_SESSION_PASSWORD = '$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)'|" \
+  -e "s|^LEAN_SESSION_PASSWORD.*|LEAN_SESSION_PASSWORD = '$(random_password 13)'|" \
   "/opt/leantime/config/.env"
 $STD a2enmod -q proxy_fcgi setenvif rewrite
 $STD a2enconf -q "php8.4-fpm"

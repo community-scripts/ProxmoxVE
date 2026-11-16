@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 
@@ -31,6 +30,16 @@ function update_script() {
   if [[ ! -d /opt/teable ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  ensure_dependencies redis-server
+  systemctl enable -q --now redis-server
+  if ! grep -q "BACKEND_CACHE_REDIS_URI" /opt/teable/.env; then
+    sed -i '/^BACKEND_CACHE_SQLITE_URI=/d' /opt/teable/.env
+    sed -i 's|^BACKEND_CACHE_PROVIDER=.*|BACKEND_CACHE_PROVIDER=redis\nBACKEND_CACHE_REDIS_URI=redis://127.0.0.1:6379/0|' /opt/teable/.env
+    sed -i 's|^After=network.target postgresql.service$|After=network.target postgresql.service redis-server.service|' /etc/systemd/system/teable.service
+    systemctl daemon-reload
+    systemctl restart teable
   fi
 
   if check_for_gh_release "teable" "teableio/teable"; then

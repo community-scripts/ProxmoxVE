@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -53,7 +52,7 @@ function update_script() {
     msg_error "Unable to detect latest Kasm release URL."
     exit 250
   fi
-  msg_info "Checked for new version"
+  msg_ok "Checked for new version"
 
   msg_info "Removing outdated docker-compose plugin"
   [ -f ~/.docker/cli-plugins/docker-compose ] && rm -rf ~/.docker/cli-plugins/docker-compose
@@ -63,16 +62,7 @@ function update_script() {
     msg_info "Updating Kasm"
     cd /tmp
 
-    msg_warn "WARNING: This script will run an external installer from a third-party source (https://www.kasmweb.com/)."
-    msg_warn "The following code is NOT maintained or audited by our repository."
-    msg_warn "If you have any doubts or concerns, please review the installer code before proceeding:"
-    msg_custom "${TAB3}${GATEWAY}${BGN}${CL}" "\e[1;34m" "→  upgrade.sh inside tar.gz $KASM_URL"
-    echo
-    read -r -p "${TAB3}Do you want to continue? [y/N]: " CONFIRM
-    if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-      msg_error "Aborted by user. No changes have been made."
-      exit 10
-    fi
+    confirm_external_installer "https://www.kasmweb.com/" "upgrade.sh inside tar.gz $KASM_URL"
     curl_download "/tmp/kasm_release_${KASM_VERSION}.tar.gz" "$KASM_URL"
     tar -xf "kasm_release_${KASM_VERSION}.tar.gz"
     chmod +x /tmp/kasm_release/install.sh

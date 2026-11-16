@@ -22,7 +22,7 @@ msg_ok "Installed Dependencies"
 
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="openproject" PG_DB_USER="openproject" setup_postgresql_db
-API_KEY=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
+API_KEY=$(random_password 13)
 echo "OpenProject API Key: $API_KEY" >>~/openproject.creds
 fetch_and_deploy_gh_release "jemalloc" "jemalloc/jemalloc" "tarball"
 
@@ -70,6 +70,9 @@ memcached/autoinstall install
 openproject/admin_email admin@example.net
 openproject/default_language en
 EOF
+# Debian's memcached also listens on ::1 and does not start when IPv6 is disabled
+$STD apt install -y memcached
+sed -i '/^-l ::1$/d' /etc/memcached.conf
 $STD sudo openproject configure
 systemctl stop openproject-web-1
 if ! grep -qF 'Environment=LD_PRELOAD=/usr/local/lib/libjemalloc.so.2' /etc/systemd/system/openproject-web-1.service; then

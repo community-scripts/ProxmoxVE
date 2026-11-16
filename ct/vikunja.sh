@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -37,6 +36,10 @@ function update_script() {
     msg_warn "This requires MANUAL config changes in /etc/vikunja/config.yml."
     msg_warn "See: https://vikunja.io/changelog/whats-new-in-vikunja-1.0.0/#config-changes"
 
+    if [[ "${PHS_SILENT:-0}" == "1" ]]; then
+      msg_warn "Vikunja 1.0 config migration detected - skipping update, requires an interactive run"
+      exit 75
+    fi
     read -rp "Continue with update? (y to proceed): " -t 30 CONFIRM1 || exit 254
     [[ "$CONFIRM1" =~ ^[yY]$ ]] || exit 0
 
@@ -48,13 +51,24 @@ function update_script() {
     [[ "$CONFIRM2" =~ ^[yY]$ ]] || exit 0
   fi
 
+  if [[ $(grep -c '^service:' /etc/vikunja/config.yml || true) -gt 1 ]]; then
+    msg_info "Merging duplicate service section in config.yml"
+    sed -i '0,/^service:/!{/^service:/d}' /etc/vikunja/config.yml
+    systemctl restart vikunja
+    msg_ok "Merged duplicate service section in config.yml"
+  fi
+
   if check_for_gh_release "vikunja" "go-vikunja/vikunja"; then
     echo
     msg_warn "The package update may include config file changes."
     echo -e "${TAB}${YW}How do you want to handle /etc/vikunja/config.yml?${CL}"
     echo -e "${TAB}  1) Keep your current config"
     echo -e "${TAB}  2) Install the new package maintainer's config"
-    read -rp "  Choose [1/2] (default: 1): " -t 60 CONFIG_CHOICE || CONFIG_CHOICE="1"
+    if [[ "${PHS_SILENT:-0}" == "1" ]]; then
+      CONFIG_CHOICE="1"
+    else
+      read -rp "  Choose [1/2] (default: 1): " -t 60 CONFIG_CHOICE || CONFIG_CHOICE="1"
+    fi
     [[ -z "$CONFIG_CHOICE" ]] && CONFIG_CHOICE="1"
 
     if [[ "$CONFIG_CHOICE" == "2" ]]; then

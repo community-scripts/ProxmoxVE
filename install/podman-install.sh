@@ -16,7 +16,7 @@ update_os
 PORTAINER_LATEST_VERSION=$(get_latest_github_release "portainer/portainer")
 PORTAINER_AGENT_LATEST_VERSION=$(get_latest_github_release "portainer/agent")
 
-if $STD mount | grep 'on / type zfs' >null && echo "ZFS"; then
+if $STD mount | grep 'on / type zfs' >/dev/null && echo "ZFS"; then
   msg_info "Enabling ZFS support."
   mkdir -p /etc/containers
   cat <<'EOF' >/usr/local/bin/overlayzfsmount
@@ -37,6 +37,7 @@ mount_program = "/usr/local/bin/overlayzfsmount"
 [storage.options.overlay]
 mountopt = "nodev"
 EOF
+  msg_ok "Enabled ZFS support"
 fi
 
 msg_info "Installing Podman"
@@ -47,7 +48,12 @@ msg_ok "Installed Podman"
 
 mkdir -p /etc/containers/systemd
 
-read -r -p "${TAB3}Would you like to add Portainer? <y/N> " prompt
+if [[ ! -x /usr/libexec/podman/quadlet ]]; then
+  msg_warn "Portainer runs as a Quadlet unit, which needs Podman 4.4 or newer (Debian 13); skipping it"
+  var_podman_portainer="n" var_podman_portainer_agent="n"
+fi
+prompt="${var_podman_portainer:-}"
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Portainer? <y/N> " prompt || true
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing Portainer $PORTAINER_LATEST_VERSION"
   podman volume create portainer_data >/dev/null
@@ -75,7 +81,8 @@ EOF
   $STD systemctl start portainer
   msg_ok "Installed Portainer $PORTAINER_LATEST_VERSION"
 else
-  read -r -p "${TAB3}Would you like to add the Portainer Agent? <y/N> " prompt
+  prompt="${var_podman_portainer_agent:-}"
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add the Portainer Agent? <y/N> " prompt || true
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     msg_info "Installing Portainer agent $PORTAINER_AGENT_LATEST_VERSION"
     $STD podman pull docker.io/portainer/agent:latest

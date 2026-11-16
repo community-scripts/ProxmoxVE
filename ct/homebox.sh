@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 tteck
@@ -51,7 +50,7 @@ function update_script() {
     [ -d /opt/.data ] && mv /opt/.data /opt/homebox/.data
 
     if ! grep -q "HBOX_AUTH_API_KEY_PEPPER" /opt/homebox/.env; then
-      AUTH_KEY=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)
+      AUTH_KEY=$(random_password 32)
       echo "HBOX_AUTH_API_KEY_PEPPER=${AUTH_KEY}" >>/opt/homebox/.env
     fi
 

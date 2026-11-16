@@ -19,7 +19,7 @@ $STD apt install -y \
   nginx
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="20" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 PG_VERSION="18" setup_postgresql
 PG_DB_NAME="excalidash" PG_DB_USER="excalidash" setup_postgresql_db
 

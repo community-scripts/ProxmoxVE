@@ -20,16 +20,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 RELEASE=$(get_latest_github_release "bunkerity/bunkerweb")
-msg_warn "WARNING: This script will run an external installer from a third-party source (install-bunkerweb.sh)."
-msg_warn "The following code is NOT maintained or audited by our repository."
-msg_warn "If you have any doubts or concerns, please review the installer code before proceeding:"
-msg_custom "${TAB3}${GATEWAY}${BGN}${CL}" "\e[1;34m" "→  https://github.com/bunkerity/bunkerweb/raw/v${RELEASE}/misc/install-bunkerweb.sh"
-echo
-read -r -p "${TAB3}Do you want to continue? [y/N]: " CONFIRM
-if [[ ! "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-  msg_error "Aborted by user. No changes have been made."
-  exit 10
-fi
+confirm_external_installer "install-bunkerweb.sh" "https://github.com/bunkerity/bunkerweb/raw/v${RELEASE}/misc/install-bunkerweb.sh"
 msg_info "Installing BunkerWeb (Patience)"
 curl -fsSL -o install-bunkerweb.sh "https://github.com/bunkerity/bunkerweb/raw/v${RELEASE}/misc/install-bunkerweb.sh"
 chmod +x install-bunkerweb.sh

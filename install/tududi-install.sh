@@ -13,13 +13,9 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt install -y \
-  sqlite3 \
-  yq
-msg_ok "Installed Dependencies"
-
 NODE_VERSION="22" setup_nodejs
+PG_VERSION="17" setup_postgresql
+PG_DB_NAME="tududi" PG_DB_USER="tududi" setup_postgresql_db
 fetch_and_deploy_gh_release "tududi" "chrisvel/tududi" "tarball" "latest" "/opt/tududi"
 
 msg_info "Configuring Tududi"
@@ -30,30 +26,22 @@ $STD npm run frontend:build
 mv ./dist ./backend
 msg_ok "Configured Tududi"
 
-msg_info "Creating env and database"
-DB_LOCATION="/opt/tududi-db"
-UPLOAD_DIR="/opt/tududi-uploads"
-mkdir -p {"$DB_LOCATION","$UPLOAD_DIR"}
+msg_info "Creating env"
+mkdir -p /opt/tududi-uploads
 SECRET="$(openssl rand -hex 64)"
 sed -e '/^NODE_ENV=/s/=.*$/=production/' \
   -e 's/^TUDUDI_USER/# TUDUDI_USER/g' \
-  -e "/_SECRET=/s/=.*$/=${SECRET}/" \
-  -e '/^# DB_FILE=/s/^# //' \
-  -e "s|^DB_FILE=.*|DB_FILE=${DB_LOCATION}/production.sqlite3|" \
-  -e "/^# TUDUDI_ALLOWED/s/^# //; \
-    \|_ORIGINS=|s|=.*$|=<your tududi IP or FDQN>|" \
-  -e "/^# TUDUDI_UPLOAD/s/^# //; \
-    \|UPLOAD_PATH=|s|=.*$|=${UPLOAD_DIR}|" \
+  -e "s/^TUDUDI_SESSION_SECRET=.*/TUDUDI_SESSION_SECRET=${SECRET}/" \
+  -e "s|^DATABASE_URL=.*|DATABASE_URL=postgres://tududi:${PG_DB_PASS}@localhost:5432/tududi|" \
   /opt/tududi/backend/.env.example >/opt/tududi/backend/.env
-export DB_FILE="${DB_LOCATION}/production.sqlite3"
-$STD npm run db:init
-msg_ok "Created env and database"
+echo "TUDUDI_UPLOAD_PATH=/opt/tududi-uploads" >>/opt/tududi/backend/.env
+msg_ok "Created env"
 
 msg_info "Creating service"
 cat <<EOF >/etc/systemd/system/tududi.service
 [Unit]
 Description=Tududi Service
-After=network.target
+After=network.target postgresql.service
 
 [Service]
 Type=simple

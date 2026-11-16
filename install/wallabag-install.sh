@@ -29,7 +29,7 @@ fetch_and_deploy_gh_release "wallabag" "wallabag/wallabag" "prebuild" "latest" "
 
 msg_info "Configuring Wallabag"
 cd /opt/wallabag
-SECRET_KEY="$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)"
+SECRET_KEY="$(random_password 32)"
 cat <<EOF >/opt/wallabag/app/config/parameters.yml
 parameters:
     database_driver: pdo_mysql
@@ -114,6 +114,7 @@ server {
         fastcgi_pass unix:__PHP_SOCK__;
         fastcgi_split_path_info ^(.+\.php)(/.*)$;
         include fastcgi_params;
+        fastcgi_param HTTP_HOST $http_host;
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
         fastcgi_param DOCUMENT_ROOT $realpath_root;
         internal;

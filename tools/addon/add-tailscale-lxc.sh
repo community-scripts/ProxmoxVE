@@ -18,10 +18,10 @@ if ! command -v curl &>/dev/null; then
     apt-get install -y curl >/dev/null 2>&1
   fi
 fi
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/core.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/lib/tools.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/error_handler.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/api/api.func") 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "add-tailscale-lxc" "addon"
 
 # Enable error handling
@@ -56,8 +56,7 @@ while read -r line; do
   ((${#ITEM} + OFFSET > MSG_MAX_LENGTH)) && MSG_MAX_LENGTH=$((${#ITEM} + OFFSET))
   CTID_MENU+=("$TAG" "$ITEM" "OFF")
 done < <(pct list | awk 'NR>1')
-
-stop_spinner
+msg_ok "Loaded container list"
 CTID=""
 while [[ -z "${CTID}" ]]; do
   CTID=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Containers on $NODE" --radiolist \
@@ -65,6 +64,28 @@ while [[ -z "${CTID}" ]]; do
     16 $((MSG_MAX_LENGTH + 23)) 6 \
     "${CTID_MENU[@]}" 3>&1 1>&2 2>&3) || exit 0
 done
+
+if [[ "$(pct status "$CTID" | awk '{print $2}')" != "running" ]]; then
+  msg_info "Starting CT $CTID"
+  pct start "$CTID"
+  for _ in {1..30}; do
+    pct exec "$CTID" -- sh -c 'ip route 2>/dev/null | grep -q "^default"' && break
+    sleep 1
+  done
+  msg_ok "Started CT $CTID"
+fi
+
+CT_OS=$(pct exec "$CTID" -- sh -c '. /etc/os-release 2>/dev/null; echo "${ID:-}"')
+case "$CT_OS" in
+debian | ubuntu) ;;
+alpine)
+  pct exec "$CTID" -- sh -c 'command -v bash >/dev/null 2>&1 || apk add --no-cache bash >/dev/null'
+  ;;
+*)
+  msg_error "CT $CTID runs ${CT_OS:-an unknown OS}. This add-on supports Debian, Ubuntu and Alpine containers."
+  exit 238
+  ;;
+esac
 
 CTID_CONFIG_PATH="/etc/pve/lxc/${CTID}.conf"
 
@@ -143,8 +164,8 @@ else
   fi
 
   # Reuse the shared repository helper instead of hand-rolling the sources entry
-  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-  source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
+  source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/core.func")
+  source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/lib/tools.func")
   load_functions
 
   # Drop the legacy keyring from the pre-deb822 layout

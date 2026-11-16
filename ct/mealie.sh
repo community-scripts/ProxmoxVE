@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -31,6 +30,9 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+
+  ensure_dependencies ffmpeg
+
   if check_for_gh_release "mealie" "mealie-recipes/mealie"; then
 
     msg_info "Stopping Service"
@@ -59,6 +61,18 @@ exec uv run mealie
 STARTEOF
     fi
     chmod +x /opt/mealie/start.sh
+    if ! grep -q "REVERSE_PROXY_AUTH_ENABLED" /opt/mealie/mealie.env; then
+      cat <<EOF >>/opt/mealie/mealie.env
+
+# Reverse proxy auth (Mealie v3.29.0+). Disabled by default.
+# To enable: set REVERSE_PROXY_AUTH_ENABLED=true, set a secret, then restart mealie.
+# REVERSE_PROXY_AUTH_ENABLED=false
+# REVERSE_PROXY_AUTH_HEADER=X-Forwarded-User
+# REVERSE_PROXY_AUTH_SIGNUP_ENABLED=false
+# REVERSE_PROXY_AUTH_SECRET=
+# REVERSE_PROXY_AUTH_SECRET_HEADER=X-Mealie-Reverse-Proxy-Secret
+EOF
+    fi
     msg_ok "Configuration restored"
 
     msg_info "Installing Python Dependencies with uv"

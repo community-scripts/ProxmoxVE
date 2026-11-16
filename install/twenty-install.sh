@@ -21,7 +21,7 @@ msg_ok "Installed Dependencies"
 
 PG_VERSION="17" PG_MODULES="pgvector" setup_postgresql
 PG_DB_NAME="twenty_db" PG_DB_USER="twenty" PG_DB_SCHEMA_PERMS="true" PG_DB_EXTENSIONS="vector" setup_postgresql_db
-NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
+NODE_VERSION="26" NODE_MODULE="corepack" setup_nodejs
 
 fetch_and_deploy_gh_release "twenty" "twentyhq/twenty" "tarball"
 

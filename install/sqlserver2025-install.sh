@@ -39,14 +39,15 @@ setup_deb822_repo \
   "https://packages.microsoft.com/ubuntu/24.04/prod" \
   "noble" \
   "main"
-$STD apt-get install -y \
+$STD apt install -y \
   mssql-tools18 \
   unixodbc-dev
 echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >>~/.bash_profile
 source ~/.bash_profile
 msg_ok "Installed SQL Server Tools"
 
-read -r -p "${TAB3}Do you want to run the SQL Server setup now? (Later is also possible) <y/N>" prompt
+prompt="${var_sqlserver2025_setup_now:-}"
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Do you want to run the SQL Server setup now? (Later is also possible) <y/N>" prompt || true
 if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
   /opt/mssql/bin/mssql-conf setup
 else

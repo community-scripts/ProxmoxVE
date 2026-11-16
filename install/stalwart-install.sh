@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "stalwart" "stalwartlabs/stalwart" "prebuild" "latest" "/opt/stalwart" "stalwart-$(arch_resolve x86_64 aarch64)-unknown-linux-gnu.tar.gz"
+fetch_and_deploy_gh_release "stalwart" "stalwartlabs/stalwart" "prebuild" "v0.16.27" "/opt/stalwart" "stalwart-$(arch_resolve x86_64 aarch64)-unknown-linux-gnu.tar.gz"
 chmod +x /opt/stalwart/stalwart
 
 msg_info "Configuring Stalwart"

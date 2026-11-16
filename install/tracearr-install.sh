@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y redis-server
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
+NODE_VERSION="26" NODE_MODULE="corepack" setup_nodejs
 PG_VERSION="18" setup_postgresql
 
 msg_info "Installing pnpm"
@@ -67,7 +67,8 @@ cd /opt/tracearr.build
 $STD pnpm install --frozen-lockfile --force
 $STD pnpm turbo telemetry disable
 $STD pnpm turbo run build --no-daemon --filter=@tracearr/shared --filter=@tracearr/server --filter=@tracearr/web
-mkdir -p /opt/tracearr/{packages/shared,packages/emails,apps/server,apps/web,apps/server/src/db}
+$STD ./scripts/fetch-basemap.sh || msg_warn "Basemap download failed, the map will show without base tiles"
+mkdir -p /opt/tracearr/{packages/shared,packages/emails,apps/server,apps/web,apps/server/src/db,assets}
 cp -rf package.json /opt/tracearr/
 cp -rf pnpm-workspace.yaml /opt/tracearr/
 cp -rf pnpm-lock.yaml /opt/tracearr/
@@ -80,11 +81,12 @@ cp -rf packages/shared/dist /opt/tracearr/packages/shared/dist
 cp -rf packages/emails/package.json /opt/tracearr/packages/emails/
 cp -rf packages/emails/dist /opt/tracearr/packages/emails/dist
 cp -rf apps/server/src/db/migrations /opt/tracearr/apps/server/src/db/migrations
+cp -f assets/logo.png /opt/tracearr/assets/
 cp -rf data /opt/tracearr/data
 mkdir -p /opt/tracearr/data/image-cache
 rm -rf /opt/tracearr.build
 cd /opt/tracearr
-$STD pnpm install --prod --frozen-lockfile --ignore-scripts
+$STD pnpm install --prod --frozen-lockfile --ignore-scripts --filter @tracearr/server...
 msg_ok "Built Tracearr"
 
 msg_info "Configuring Tracearr"

@@ -62,7 +62,7 @@ install -d -m 755 \
   /data/uploads/{m3us,epgs} \
   /data/{m3us,epgs}
 chown -R root:root /data
-DJANGO_SECRET=$(openssl rand -base64 48 | tr -dc 'a-zA-Z0-9' | cut -c1-50)
+DJANGO_SECRET=$(random_password 50)
 export DATABASE_URL="postgresql://${PG_DB_USER}:${PG_DB_PASS}@localhost:5432/${PG_DB_NAME}"
 export POSTGRES_DB=$PG_DB_NAME
 export POSTGRES_USER=$PG_DB_USER

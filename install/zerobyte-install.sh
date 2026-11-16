@@ -15,7 +15,7 @@ update_os
 
 msg_info "Installing Dependencies"
 echo "davfs2 davfs2/suid_file boolean false" | debconf-set-selections
-$STD apt-get install -y \
+$STD apt install -y \
   bzip2 \
   fuse3 \
   git \
@@ -25,9 +25,6 @@ $STD apt-get install -y \
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "restic" "restic/restic" "singlefile" "latest" "/usr/local/bin" "restic_*_linux_$(arch_resolve).bz2"
-mv /usr/local/bin/restic /usr/local/bin/restic.bz2
-bzip2 -d /usr/local/bin/restic.bz2
-chmod +x /usr/local/bin/restic
 
 fetch_and_deploy_gh_release "rclone" "rclone/rclone" "prebuild" "latest" "/opt/rclone" "rclone-*-linux-$(arch_resolve).zip"
 ln -sf /opt/rclone/rclone /usr/local/bin/rclone
@@ -53,6 +50,7 @@ export VITE_SHOUTRRR_VERSION=$(cat ~/.shoutrrr)
 export NODE_OPTIONS="--max-old-space-size=3072"
 $STD bun install
 $STD node ./node_modules/vite/bin/vite.js build
+$STD bun build apps/agent/src/index.ts --outfile .output/agent/index.mjs --target bun
 msg_ok "Built Zerobyte"
 
 msg_info "Configuring Zerobyte"

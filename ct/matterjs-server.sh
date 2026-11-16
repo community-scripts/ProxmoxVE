@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -33,6 +32,15 @@ function update_script() {
   fi
 
   NODE_VERSION="24" setup_nodejs
+
+  SERVICE_FILE="/etc/systemd/system/matterjs-server.service"
+  if [[ -f "$SERVICE_FILE" ]] && ! grep -Fxq 'Environment=ENABLE_TIME_SYNC=true' "$SERVICE_FILE"; then
+    msg_info "Enabling MatterJS Time Sync"
+    sed -i '/^ExecStart=/i Environment=ENABLE_TIME_SYNC=true' "$SERVICE_FILE"
+    $STD systemctl daemon-reload
+    $STD systemctl restart matterjs-server
+    msg_ok "Enabled MatterJS Time Sync"
+  fi
 
   CURRENT=$(cat /opt/matter-server/node_modules/matter-server/package.json | grep '"version"' | head -1 | sed 's/.*"\([^"]*\)".*/\1/')
   LATEST=$(npm view matter-server version 2>/dev/null)

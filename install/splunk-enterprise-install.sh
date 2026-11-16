@@ -51,30 +51,48 @@ $STD curl -fsSL -o "splunk-enterprise.tgz" "$DOWNLOAD_URL" || {
 }
 $STD tar -xzf "splunk-enterprise.tgz" -C /opt
 rm -f "splunk-enterprise.tgz"
-addgroup --system splunk
-adduser --system --home /opt/splunk --shell /bin/bash --ingroup splunk --no-create-home splunk
+$STD addgroup --system splunk
+$STD adduser --system --home /opt/splunk --shell /bin/bash --ingroup splunk --no-create-home splunk
 chown -R splunk:splunk /opt/splunk
 msg_ok "Setup Splunk Enterprise v${RELEASE}"
 
 msg_info "Creating Splunk admin user"
 ADMIN_USER="admin"
-ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+ADMIN_PASS=$(random_password 13)
 cat <<EOF >~/splunk.creds
 Splunk-Credentials
 Username: $ADMIN_USER
 Password: $ADMIN_PASS
 EOF
+chmod 600 ~/splunk.creds
 
-cat <<EOF >"/opt/splunk/etc/system/local/user-seed.conf"
+install -d -o splunk -g splunk -m 755 /opt/splunk/etc/system/local
+cat <<EOF >/opt/splunk/etc/system/local/user-seed.conf
 [user_info]
 USERNAME = $ADMIN_USER
 PASSWORD = $ADMIN_PASS
 EOF
+chown splunk:splunk /opt/splunk/etc/system/local/user-seed.conf
+chmod 600 /opt/splunk/etc/system/local/user-seed.conf
+if ! grep -q '^SPLUNK_OS_USER=' /opt/splunk/etc/splunk-launch.conf; then
+    echo 'SPLUNK_OS_USER=splunk' >>/opt/splunk/etc/splunk-launch.conf
+fi
+chown splunk:splunk /opt/splunk/etc/splunk-launch.conf
 msg_ok "Created Splunk admin user"
 
 msg_info "Starting Service"
-$STD sudo -u splunk /opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt
-$STD /opt/splunk/bin/splunk enable boot-start -user splunk
+$STD sudo -H -u splunk /opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt
+$STD sudo -H -u splunk /opt/splunk/bin/splunk stop --answer-yes --no-prompt
+$STD /opt/splunk/bin/splunk enable boot-start \
+    -systemd-managed 1 \
+    -user splunk \
+    -group splunk \
+    --accept-license \
+    --answer-yes \
+    --no-prompt
+chown -R splunk:splunk /opt/splunk
+$STD systemctl daemon-reload
+$STD systemctl enable --now splunkd
 msg_ok "Started Service"
 
 motd_ssh

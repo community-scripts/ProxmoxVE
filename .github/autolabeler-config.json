@@ -10,9 +10,7 @@
       ],
       "excludeGlobs": [
         "**/headers/**",
-        "ct/headers/**",
-        "tools/headers/**",
-        "vm/headers/**"
+        "tools/headers/**"
       ]
     }
   ],
@@ -48,9 +46,7 @@
       ],
       "excludeGlobs": [
         "**/headers/**",
-        "ct/headers/**",
-        "tools/headers/**",
-        "vm/headers/**"
+        "tools/headers/**"
       ]
     }
   ],
@@ -81,17 +77,6 @@
       "excludeGlobs": []
     }
   ],
-  "core": [
-    {
-      "fileStatus": null,
-      "includeGlobs": [
-        "misc/*.func"
-      ],
-      "excludeGlobs": [
-        "misc/api.func"
-      ]
-    }
-  ],
   "documentation": [
     {
       "fileStatus": null,
@@ -118,8 +103,7 @@
     {
       "fileStatus": null,
       "includeGlobs": [
-        "api/**",
-        "misc/api.func"
+        "api/**"
       ],
       "excludeGlobs": []
     }

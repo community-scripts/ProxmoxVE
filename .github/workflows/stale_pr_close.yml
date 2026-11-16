@@ -22,90 +22,112 @@ jobs:
             const now = new Date();
             const owner = context.repo.owner;
             const repo = context.repo.repo;
-            
-            // --- When stale label is added, comment immediately ---
+            const TEMPLATE_LABEL = "missing pr template";
+            const MAINTAINERS = ["OWNER", "MEMBER", "COLLABORATOR"];
+            const days = d => (now - d) / (1000 * 60 * 60 * 24);
+            const staleNotice = author =>
+              `@${author} This PR has been marked as stale. It will be closed if no new commits are added in 7 days.`;
+
+            // Only fires for a maintainer's label: labels set with GITHUB_TOKEN raise no event.
             if (context.eventName === "pull_request_target" && context.payload.action === "labeled") {
-              const label = context.payload.label?.name;
-              if (label === "stale") {
-                const author = context.payload.pull_request.user.login;
+              const pr = context.payload.pull_request;
+              const labels = (pr.labels || []).map(l => l.name);
+              if (context.payload.label?.name === "stale" && !labels.includes(TEMPLATE_LABEL)) {
                 await github.rest.issues.createComment({
-                  owner,
-                  repo,
-                  issue_number: context.payload.pull_request.number,
-                  body: `@${author} This PR has been marked as stale. It will be closed if no new commits are added in 7 days.`
+                  owner, repo, issue_number: pr.number, body: staleNotice(pr.user.login)
                 });
               }
               return;
             }
-            
-            // --- Scheduled run: check all stale PRs ---
-            const { data: prs } = await github.rest.pulls.list({
-              owner,
-              repo,
-              state: "open",
-              per_page: 100
-            });
-            
+
+            const prs = await github.paginate(github.rest.pulls.list, { owner, repo, state: "open", per_page: 100 });
+
             for (const pr of prs) {
-              const hasStale = pr.labels.some(l => l.name === "stale");
-              if (!hasStale) continue;
-              
-              // Get timeline events to find when stale label was added
-              const { data: events } = await github.rest.issues.listEvents({
-                owner,
-                repo,
-                issue_number: pr.number,
-                per_page: 100
-              });
-              
-              // Find the most recent time the stale label was added
-              const staleLabelEvents = events
-                .filter(e => e.event === "labeled" && e.label?.name === "stale")
-                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-              
-              if (staleLabelEvents.length === 0) continue;
-              
-              const staleLabelDate = new Date(staleLabelEvents[0].created_at);
-              const daysSinceStale = (now - staleLabelDate) / (1000 * 60 * 60 * 24);
-              
-              // Check for new commits since stale label was added
-              const { data: commits } = await github.rest.pulls.listCommits({
-                owner,
-                repo,
-                pull_number: pr.number
-              });
-              
-              const lastCommitDate = new Date(commits[commits.length - 1].commit.author.date);
+              const labels = pr.labels.map(l => l.name);
               const author = pr.user.login;
-              
-              // If there are new commits after the stale label, remove it
-              if (lastCommitDate > staleLabelDate) {
-                await github.rest.issues.removeLabel({
-                  owner,
-                  repo,
-                  issue_number: pr.number,
-                  name: "stale"
+              const hasStale = labels.includes("stale");
+
+              if (labels.includes("keep-open")) {
+                if (hasStale) {
+                  await github.rest.issues.removeLabel({ owner, repo, issue_number: pr.number, name: "stale" });
+                }
+                continue;
+              }
+
+              const comments = await github.paginate(github.rest.issues.listComments, {
+                owner, repo, issue_number: pr.number, per_page: 100
+              });
+              const commits = await github.paginate(github.rest.pulls.listCommits, {
+                owner, repo, pull_number: pr.number, per_page: 100
+              });
+              const lastCommitDate = commits.length > 0
+                ? new Date(commits[commits.length - 1].commit.author.date)
+                : new Date(pr.created_at);
+              const humanComments = comments.filter(c => c.user?.type !== "Bot");
+
+              // -------------------------------------------------------
+              // Auto-label PRs with no activity in the last 14 days,
+              // but ONLY if someone other than the author has engaged.
+              // -------------------------------------------------------
+              if (!hasStale) {
+                const reviews = await github.paginate(github.rest.pulls.listReviews, {
+                  owner, repo, pull_number: pr.number, per_page: 100
                 });
+                const engaged =
+                  reviews.some(r => r.user?.type !== "Bot" && r.user?.login !== author) ||
+                  humanComments.some(c => c.user?.login !== author);
+                if (!engaged) continue;
+
+                const lastCommentDate = humanComments.length > 0
+                  ? new Date(humanComments[humanComments.length - 1].created_at)
+                  : null;
+                const lastActivityDate = lastCommentDate && lastCommentDate > lastCommitDate
+                  ? lastCommentDate
+                  : lastCommitDate;
+
+                if (days(lastActivityDate) > 14) {
+                  await github.rest.issues.addLabels({ owner, repo, issue_number: pr.number, labels: ["stale"] });
+                  await github.rest.issues.createComment({ owner, repo, issue_number: pr.number, body: staleNotice(author) });
+                }
+                continue;
+              }
+
+              // -------------------------------------------------------
+              // Manage already-stale PRs
+              // -------------------------------------------------------
+              const events = await github.paginate(github.rest.issues.listEvents, {
+                owner, repo, issue_number: pr.number, per_page: 100
+              });
+              const staleDates = events
+                .filter(e => e.event === "labeled" && e.label?.name === "stale")
+                .map(e => new Date(e.created_at));
+              if (staleDates.length === 0) continue;
+              const staleLabelDate = new Date(Math.max(...staleDates));
+              const isTemplateIssue = labels.includes(TEMPLATE_LABEL);
+
+              // A push ends an inactivity mark; a template mark only ends via close-invalid-pr-template.yml's re-check.
+              if (!isTemplateIssue && lastCommitDate > staleLabelDate) {
+                await github.rest.issues.removeLabel({ owner, repo, issue_number: pr.number, name: "stale" });
                 await github.rest.issues.createComment({
-                  owner,
-                  repo,
-                  issue_number: pr.number,
+                  owner, repo, issue_number: pr.number,
                   body: `@${author} Recent activity detected. Removing stale label.`
                 });
+                continue;
               }
-              // If 7 days have passed since stale label, close the PR
-              else if (daysSinceStale > 7) {
-                await github.rest.pulls.update({
-                  owner,
-                  repo,
-                  pull_number: pr.number,
-                  state: "closed"
-                });
-                await github.rest.issues.createComment({
-                  owner,
-                  repo,
-                  issue_number: pr.number,
-                  body: `@${author} Closing stale PR due to inactivity (no commits for 7 days after stale label).`
-                });
-              }
+
+              // A maintainer comment after the mark restarts the 7 days.
+              const maintainerDates = humanComments
+                .filter(c => MAINTAINERS.includes(c.author_association) && c.user?.login !== author)
+                .map(c => new Date(c.created_at))
+                .filter(d => d > staleLabelDate);
+              const clockStart = maintainerDates.length > 0 ? new Date(Math.max(...maintainerDates)) : staleLabelDate;
+              if (days(clockStart) <= 7) continue;
+
+              await github.rest.issues.createComment({
+                owner, repo, issue_number: pr.number,
+                body: isTemplateIssue
+                  ? `@${author} Closing: the PR template requirements listed above were still missing 7 days later. Once they are in place, please open a new pull request.`
+                  : `@${author} Closing stale PR due to inactivity (no commits for 7 days after stale label).`
+              });
+              await github.rest.pulls.update({ owner, repo, pull_number: pr.number, state: "closed" });
             }

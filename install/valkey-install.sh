@@ -19,7 +19,7 @@ setup_deb_based() {
   $STD apt install -y valkey openssl
   sed -i 's/^bind .*/bind 0.0.0.0/' /etc/valkey/valkey.conf
 
-  PASS="$(openssl rand -base64 48 | tr -dc 'a-zA-Z0-9' | head -c32)"
+  PASS="$(random_password 32)"
   echo "requirepass $PASS" >>/etc/valkey/valkey.conf
   echo "$PASS" >~/valkey.creds
   chmod 600 ~/valkey.creds
@@ -36,9 +36,11 @@ setup_deb_based() {
   msg_ok "Installed Valkey"
 
   echo
-  read -r -p "${TAB3}Enable TLS for Valkey (Sentinel mode does not supported)? [y/N]: " prompt
+  prompt="${var_valkey_tls:-}"
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Enable TLS for Valkey (Sentinel mode does not supported)? [y/N]: " prompt || true
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
-      read -r -p "${TAB3}Use TLS-only mode (disable TCP port 6379)? [y/N]: " tls_only
+      tls_only="${var_valkey_tls_only:-}"
+      [[ -n "$tls_only" ]] || read -r -p "${TAB3}Use TLS-only mode (disable TCP port 6379)? [y/N]: " tls_only || true
       msg_info "Configuring TLS for Valkey..."
 
       create_self_signed_cert "Valkey"
@@ -80,7 +82,7 @@ setup_alpine() {
   $STD apk add valkey valkey-openrc valkey-cli
   sed -i 's/^bind .*/bind 0.0.0.0/' /etc/valkey/valkey.conf
 
-  PASS="$(head -c 100 /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c32)"
+  PASS="$(random_password 32)"
   echo "requirepass $PASS" >>/etc/valkey/valkey.conf
   echo "$PASS" >~/valkey.creds
   chmod 600 ~/valkey.creds

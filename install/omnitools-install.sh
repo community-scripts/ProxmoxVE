@@ -14,7 +14,9 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y nginx
+$STD apt install -y \
+  git \
+  nginx
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="24" setup_nodejs
@@ -24,6 +26,8 @@ msg_info "Building OmniTools"
 cd /opt/omnitools
 export HUSKY=0
 $STD npm ci --allow-remote=all
+$STD git init -q
+$STD git -c user.name=build -c user.email=build@localhost commit -q --allow-empty -m build
 $STD npm run build
 msg_ok "Built OmniTools"
 

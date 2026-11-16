@@ -37,7 +37,7 @@ couchdb couchdb/adminpass seen true
 couchdb couchdb/adminpass_again password ${COUCHDB_PASSWORD}
 couchdb couchdb/adminpass_again seen true
 EOF
-DEBIAN_FRONTEND=noninteractive $STD apt-get install -y couchdb
+DEBIAN_FRONTEND=noninteractive $STD apt install -y couchdb
 
 cat <<EOF >/root/.couchdb.credentials
 COUCHDB_ADMIN_USER="${COUCHDB_ADMIN_USER}"

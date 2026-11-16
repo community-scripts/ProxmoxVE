@@ -34,7 +34,8 @@ msg_ok "Installed Dependencies"
 PYTHON_VERSION="3.12" setup_uv
 JAVA_VERSION="25" setup_java
 
-if ! read -r -p "${TAB3}Do you want to use Stirling-PDF with Login? (no/n = without Login) [Y/n] " response; then
+response="${var_stirling_pdf_login:-}"
+if [[ -z "$response" ]] && ! read -r -p "${TAB3}Do you want to use Stirling-PDF with Login? (no/n = without Login) [Y/n] " response; then
   # No interactive stdin (EOF): fall back to the no-login install instead of
   # silently selecting login, which the -z test below would otherwise do.
   response="n"
@@ -91,7 +92,7 @@ msg_ok "Installed Language Packs"
 msg_info "Creating Environment Variables"
 cat <<EOF >/opt/Stirling-PDF/.env
 # Java tuning
-JAVA_BASE_OPTS="-XX:+UnlockExperimentalVMOptions -XX:MaxRAMPercentage=75 -XX:InitiatingHeapOccupancyPercent=20 -XX:+G1PeriodicGCInvokesConcurrent -XX:G1PeriodicGCInterval=10000 -XX:+UseStringDeduplication -XX:G1PeriodicGCSystemLoadThreshold=70"
+JAVA_BASE_OPTS="-XX:+UnlockExperimentalVMOptions -XX:MaxRAMPercentage=50 -XX:InitiatingHeapOccupancyPercent=20 -XX:+G1PeriodicGCInvokesConcurrent -XX:G1PeriodicGCInterval=10000 -XX:+UseStringDeduplication -XX:G1PeriodicGCSystemLoadThreshold=70"
 JAVA_CUSTOM_OPTS=""
 
 # LibreOffice
@@ -115,10 +116,6 @@ if [[ "$login_mode" == "true" ]]; then
 # activate Login
 DISABLE_ADDITIONAL_FEATURES=false
 SECURITY_ENABLELOGIN=true
-
-# login credentials
-SECURITY_INITIALLOGIN_USERNAME=admin
-SECURITY_INITIALLOGIN_PASSWORD=stirling
 EOF
 fi
 msg_ok "Created Environment Variables"
@@ -134,7 +131,8 @@ msg_ok "Font Cache Updated"
 msg_info "Creating Service"
 # unoserver starts and supervises its own LibreOffice on UNO port 2002, so a separate
 # listener on that port only collides with it. Do not reintroduce one.
-cat <<EOF >/etc/systemd/system/stirlingpdf.service
+# MaxRAM: inside LXC the JVM sizes its heap from host RAM; /proc/meminfo (lxcfs) reports the CT limit
+cat <<'EOF' >/etc/systemd/system/stirlingpdf.service
 [Unit]
 Description=Stirling-PDF service
 After=syslog.target network.target unoserver.service
@@ -146,7 +144,7 @@ User=root
 Group=root
 EnvironmentFile=/opt/Stirling-PDF/.env
 WorkingDirectory=/opt/Stirling-PDF
-ExecStart=/usr/bin/java -jar Stirling-PDF.jar
+ExecStart=/bin/bash -c 'exec /usr/bin/java -XX:MaxRAM=$$(grep -m1 -o "[0-9][0-9]*" /proc/meminfo)k $$JAVA_BASE_OPTS $$JAVA_CUSTOM_OPTS -jar Stirling-PDF.jar'
 Restart=always
 RestartSec=10
 

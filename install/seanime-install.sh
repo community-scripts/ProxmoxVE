@@ -30,7 +30,7 @@ fetch_and_deploy_gh_release "seanime" "5rahim/seanime" "prebuild" "latest" "/opt
 chmod +x /opt/seanime/seanime
 
 msg_info "Configuring Seanime"
-SEANIME_PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
+SEANIME_PASSWORD=$(random_password 13)
 mkdir -p /opt/seanime-data
 cat <<EOF >/opt/seanime-data/config.toml
 [server]

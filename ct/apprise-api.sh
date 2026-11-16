@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -47,7 +46,7 @@ function update_script() {
     $STD uv venv /opt/apprise/.venv
     $STD uv pip install -r requirements.txt gunicorn supervisor -p /opt/apprise/.venv/bin/python
     ln -sf /opt/apprise/.venv/bin/supervisord /opt/apprise/.venv/bin/gunicorn /usr/local/bin/
-    cp -fr apprise_api/static /usr/share/nginx/html/s/
+    cp -fr apprise_api/static/. /usr/share/nginx/html/s/
     mv apprise_api/ webapp
     touch /etc/nginx/server-override.conf
     touch /etc/nginx/location-override.conf

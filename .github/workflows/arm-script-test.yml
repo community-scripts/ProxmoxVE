@@ -1,0 +1,114 @@
+name: ARM script test (manual)
+
+# Builds one ct/ script on GitHub's free arm64 runner (ubuntu-24.04-arm),
+# inside Incus, with the same harness as pr-script-test.yml. Started by hand
+# from the Actions tab; it posts nothing anywhere: the result is in the job
+# summary and the artifact (with the screenshots).
+#
+# pr-script-test.yml runs the same ARM build for every /test, as information
+# only. This one is for trying a script or branch on ARM without a PR.
+#
+# Public repositories get the standard hosted runners, arm64 included, at no
+# cost. Each job is a fresh VM that is thrown away afterwards, so the script
+# under test never touches the lab.
+#
+# The engine refuses to guess on arm64: a script that leaves var_arm64 unset
+# stops with "refusing to guess". Here var_arm64=no means "not built", yes is
+# built as is, and unset is built with var_arm64=yes to see whether it would
+# work.
+
+on:
+  workflow_dispatch:
+    inputs:
+      script:
+        description: "ct/ script, e.g. ct/bark-server.sh"
+        required: true
+        type: string
+      ref:
+        description: "Branch or full SHA of this repository"
+        required: false
+        default: main
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  arm:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 120
+    steps:
+      # The harness from the default branch, as in pr-script-test.yml.
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: .github/workflows/scripts
+          persist-credentials: false
+
+      - name: Decide var_arm64
+        id: plan
+        env:
+          SCRIPT: ${{ inputs.script }}
+          REF: ${{ inputs.ref }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [[ "$SCRIPT" =~ ^ct/[A-Za-z0-9._-]+\.sh$ ]] || { echo "::error::script must be ct/<name>.sh"; exit 1; }
+          [[ "$REF" =~ ^[A-Za-z0-9._/-]+$ ]] || { echo "::error::bad ref"; exit 1; }
+          sha=$(gh api "repos/${GITHUB_REPOSITORY}/commits/${REF}" --jq .sha)
+          text=$(gh api "repos/${GITHUB_REPOSITORY}/contents/${SCRIPT}?ref=${sha}" --jq .content | base64 -d)
+          # A commented-out line ("#var_arm64=...") counts as unset.
+          arm=$(grep -m1 -oE '^[[:space:]]*var_arm64="[$][{]var_arm64:-(yes|no)[}]"' <<<"$text" | grep -oE ':-(yes|no)' | cut -c3- || true)
+          echo "sha=$sha" >>"$GITHUB_OUTPUT"
+          echo "arm64=${arm:-unset}" >>"$GITHUB_OUTPUT"
+          case "$arm" in
+          no) echo "::notice::${SCRIPT} sets var_arm64=no: not built on ARM" ;;
+          yes) echo "${SCRIPT} sets var_arm64=yes" ;;
+          *) echo "::notice::${SCRIPT} leaves var_arm64 unset: building with var_arm64=yes to see whether it works" ;;
+          esac
+          echo "Building ${SCRIPT} at ${sha:0:7} on $(uname -m), $(nproc) cores, $(free -g | awk '/^Mem/ {print $2}') GB RAM, $(df -h / | awk 'NR==2 {print $4}') free"
+
+      - name: Set up Incus
+        if: steps.plan.outputs.arm64 != 'no'
+        timeout-minutes: 20 # about 2 when healthy; a hang must not hold the report
+        run: sudo bash .github/workflows/scripts/arm-runner-setup.sh
+
+      - name: Build and check ${{ inputs.script }}
+        if: steps.plan.outputs.arm64 != 'no'
+        env:
+          PLATFORM: incus
+          VAR_ARM64: "yes"
+          PR_REPO: ${{ github.repository }}
+          PR_SHA: ${{ steps.plan.outputs.sha }}
+          SCRIPT: ${{ inputs.script }}
+          UPSTREAM: ${{ github.repository }}
+          CTID_BASE: "9000"
+          GH_API_TOKEN: ${{ github.token }}
+          OUT_DIR: ${{ runner.temp }}/result
+          BUILD_TIMEOUT: 90m
+        run: sudo --preserve-env=PLATFORM,VAR_ARM64,PR_REPO,PR_SHA,SCRIPT,UPSTREAM,CTID_BASE,GH_API_TOKEN,OUT_DIR,BUILD_TIMEOUT,GITHUB_RUN_ID,GITHUB_RUN_ATTEMPT bash .github/workflows/scripts/pve-run-script.sh
+
+      - name: Summary
+        if: always() && steps.plan.outputs.arm64 != 'no'
+        env:
+          OUT_DIR: ${{ runner.temp }}/result
+          ARM64: ${{ steps.plan.outputs.arm64 }}
+        run: |
+          sudo chmod -R a+rX "$OUT_DIR" 2>/dev/null || true
+          r="$OUT_DIR/result.json"
+          [[ -f "$r" ]] || { echo "No result.json" >>"$GITHUB_STEP_SUMMARY"; exit 0; }
+          {
+            echo "### ARM (arm64, Incus): $(jq -r .script "$r")"
+            echo
+            echo "| Status | Install | Update | Duration | var_arm64 | Detail |"
+            echo "|---|---|---|---|---|---|"
+            jq -r --arg arm "$ARM64" '"| \(.status) | \(if .update_status != "" then "pass" else .status end) | \(if .update_status == "" then "-" else .update_status end) | \(.duration)s | \($arm) | \(if .status == "pass" then (.url // "" | if . == "" then "no URL" else . + " → " + $ARGS.named.c end) else .step end) |"' --arg c "$(jq -r .http_code "$r")" "$r"
+            echo
+            ls "$OUT_DIR"/screenshot*.png &>/dev/null && echo "Screenshots: in the \`result-arm\` artifact." || echo "No screenshot."
+          } >>"$GITHUB_STEP_SUMMARY"
+
+      - if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: result-arm
+          path: ${{ runner.temp }}/result
+          if-no-files-found: ignore
+          retention-days: 14

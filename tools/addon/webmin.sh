@@ -18,18 +18,19 @@ if ! command -v curl &>/dev/null; then
     apt-get install -y curl >/dev/null 2>&1
   fi
 fi
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/core.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/lib/tools.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/error_handler.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/api/api.func") 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "webmin" "addon"
 
 # Enable error handling
 set -Eeuo pipefail
-trap 'error_handler' ERR
+catch_errors
 
 # Initialize all core functions (colors, formatting, icons, STD mode)
 load_functions
+confirm_not_pve_host
 require_debian_like
 
 header_info
@@ -49,9 +50,13 @@ msg_ok "Installed Prerequisites"
 
 msg_info "Installing ${APP}"
 fetch_and_deploy_gh_release "webmin" "webmin/webmin" "binary" "latest" "/opt/webmin" "webmin_*_all.deb"
-/usr/share/webmin/changepass.pl /etc/webmin root root &>/dev/null
+WEBMIN_PASS=$(random_password 20)
+/usr/share/webmin/changepass.pl /etc/webmin root "$WEBMIN_PASS" &>/dev/null
+echo -e "Webmin\nUsername: root\nPassword: ${WEBMIN_PASS}" >~/webmin.creds
+chmod 600 ~/webmin.creds
 msg_ok "Installed ${APP}"
 
 get_lxc_ip
 echo -e "Successfully Installed!! ${APP} should be reachable by going to ${BL}https://${LOCAL_IP}:10000${CL}"
+echo -e "Login: root, password in ~/webmin.creds"
 

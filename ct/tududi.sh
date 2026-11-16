@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -33,7 +32,14 @@ function update_script() {
 
   NODE_VERSION="22" setup_nodejs
 
-  if check_for_gh_release "tududi" "chrisvel/tududi"; then
+  RELEASE=""
+  if ! grep -qs '^DATABASE_URL=' /opt/tududi/backend/.env; then
+    RELEASE="v1.15.0"
+    msg_warn "Tududi 2.0 runs on PostgreSQL only, so this SQLite install stays on 1.15.0"
+    msg_warn "To move to 2.0, export in Settings > Backups and import into a new Tududi LXC"
+  fi
+
+  if check_for_gh_release "tududi" "chrisvel/tududi" "${RELEASE}" "2.0 needs PostgreSQL"; then
     msg_info "Stopping Service"
     systemctl stop tududi
     msg_ok "Stopped Service"
@@ -44,9 +50,14 @@ function update_script() {
     else
       cp /opt/tududi/.env /opt/tududi.env
     fi
+    if ! grep -q '^TUDUDI_UPLOAD_PATH=' /opt/tududi.env; then
+      mkdir -p /opt/tududi-uploads
+      [[ -d /opt/tududi/backend/uploads ]] && cp -a /opt/tududi/backend/uploads/. /opt/tududi-uploads/
+      echo "TUDUDI_UPLOAD_PATH=/opt/tududi-uploads" >>/opt/tududi.env
+    fi
     msg_ok "Backed up env file"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tududi" "chrisvel/tududi" "tarball" "latest" "/opt/tududi"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "tududi" "chrisvel/tududi" "tarball" "${CHECK_UPDATE_RELEASE}" "/opt/tududi"
 
     msg_info "Updating Tududi"
     cd /opt/tududi

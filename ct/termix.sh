@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -109,6 +108,12 @@ EOF
   fi
 
   if check_for_gh_release "termix" "Termix-SSH/Termix"; then
+    TERMIX_RELEASE="latest"
+    if [[ "$CS_PREVIOUS_VERSION" =~ ^(release-)?([0-9]+)\.([0-9]+)\. ]] && ((BASH_REMATCH[2] * 100 + BASH_REMATCH[3] < 209)); then
+      TERMIX_RELEASE="release-2.9.2-tag"
+      msg_warn "Termix ${CS_PREVIOUS_VERSION} has to run 2.9.2 once before newer releases accept its database"
+    fi
+
     msg_info "Stopping Termix"
     systemctl stop termix
     msg_ok "Stopped Termix"
@@ -164,13 +169,9 @@ EOF
     fi
     msg_ok "Migrated Configuration"
 
-    create_backup \
-      /opt/termix/db/data \
-      /opt/termix/data \
-      /opt/termix/uploads \
-      /opt/termix/.env
+    create_backup /opt/termix/.env
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "termix" "Termix-SSH/Termix" "tarball"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="db/data data uploads" fetch_and_deploy_gh_release "termix" "Termix-SSH/Termix" "tarball" "$TERMIX_RELEASE"
 
     restore_backup
 
@@ -263,12 +264,24 @@ EOF
 
     msg_info "Starting Termix"
     systemctl daemon-reload
+    TERMIX_START=$(date +%s)
     if ! systemctl start termix; then
       msg_error "Termix failed to start"
       journalctl -u termix -n 30 --no-pager || true
       exit 1
     fi
     msg_ok "Started Termix"
+    if [[ "$TERMIX_RELEASE" != "latest" ]]; then
+      msg_info "Waiting for Termix 2.9.2 to migrate the database"
+      if ! timeout 300 bash -c "until journalctl -u termix --since @${TERMIX_START} --no-pager | grep -q 'Termix backend started successfully'; do sleep 2; done"; then
+        msg_error "Termix 2.9.2 did not finish starting, so the database was not migrated"
+        journalctl -u termix -n 30 --no-pager || true
+        exit 1
+      fi
+      msg_ok "Migrated the database with Termix 2.9.2"
+      msg_warn "Run update again to continue to the current Termix release"
+      exit
+    fi
     msg_ok "Updated successfully!"
   fi
   exit

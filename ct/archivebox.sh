@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 tteck
@@ -10,7 +9,7 @@ source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_
 APP="ArchiveBox"
 var_tags="${var_tags:-archive;bookmark}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-1024}"
+var_ram="${var_ram:-2048}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
@@ -31,79 +30,46 @@ function update_script() {
     exit
   fi
 
-  setup_uv
+  if check_for_gh_release "archivebox" "ArchiveBox/ArchiveBox"; then
+    msg_info "Stopping ArchiveBox"
+    systemctl stop archivebox
+    msg_ok "Stopped ArchiveBox"
 
-  msg_info "Stopping Service"
-  systemctl stop archivebox
-  msg_ok "Stopped Service"
+    export UV_PYTHON_INSTALL_DIR="/opt/archivebox/python"
+    PYTHON_VERSION="3.13" setup_uv
+    ensure_dependencies chromium
 
-  local migrate=0 py port base runtime
-  if [[ ! -x /opt/archivebox/venv/bin/archivebox ]]; then
-    migrate=1
-    msg_info "Moving ArchiveBox to its own Python 3.13 environment"
-    py="/usr/bin/python3.13"
-    [[ -x "$py" ]] || ensure_dependencies python3.13 || true
-    if [[ ! -x "$py" ]]; then
-      $STD uv python install --install-dir /opt/archivebox/python 3.13
-      py="$(UV_PYTHON_INSTALL_DIR=/opt/archivebox/python uv python find 3.13)"
+    if [[ ! -x /opt/archivebox/.venv/bin/archivebox ]]; then
+      msg_info "Migrating ArchiveBox to 0.9"
+      $STD uv pip uninstall --system --break-system-packages archivebox playwright
+      rm -rf /home/archivebox/.cache/ms-playwright
+      remove_old_tool_version "nodejs" "nodesource"
+      sed -i -e '/^User=archivebox$/d' -e 's|^ExecStart=/usr/local/bin/archivebox |ExecStart=/opt/archivebox/.venv/bin/archivebox |' /etc/systemd/system/archivebox.service
+      systemctl daemon-reload
+      $STD uv venv --python 3.13 /opt/archivebox/.venv
+      msg_ok "Migrated ArchiveBox to 0.9"
     fi
-    $STD uv venv --python "$py" /opt/archivebox/venv
-    msg_ok "Moved ArchiveBox to its own Python 3.13 environment"
-  fi
 
-  port="$(awk -F: '/^ExecStart=/ {print $NF}' /etc/systemd/system/archivebox.service 2>/dev/null)"
-  [[ "$port" =~ ^[0-9]+$ ]] || port=5797
-  cat <<EOF >/etc/systemd/system/archivebox.service
-[Unit]
-Description=ArchiveBox Server
-After=network.target
-
-[Service]
-User=archivebox
-WorkingDirectory=/opt/archivebox/data
-ExecStartPre=/opt/archivebox/venv/bin/archivebox init
-ExecStart=/opt/archivebox/venv/bin/archivebox server 0.0.0.0:${port}
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
+    msg_info "Updating ArchiveBox"
+    $STD uv pip install --python /opt/archivebox/.venv/bin/python "archivebox==${CHECK_UPDATE_RELEASE#v}"
+    ln -sf /opt/archivebox/.venv/bin/archivebox /usr/local/bin/archivebox
+    cd /opt/archivebox/data
+    $STD archivebox init
+    if ! grep -q "^BASE_URL" ArchiveBox.conf; then
+      $STD archivebox config --set "BASE_URL=http://${LOCAL_IP}:$(grep -oP 'server 0\.0\.0\.0:\K[0-9]+' /etc/systemd/system/archivebox.service)"
+    fi
+    $STD archivebox install
+    $STD archivebox update --migrate-only
+    cat <<EOF >~/.archivebox
+${CHECK_UPDATE_RELEASE#v}
 EOF
-  systemctl daemon-reload
+    msg_ok "Updated ArchiveBox"
 
-  msg_info "Updating ArchiveBox"
-  $STD uv pip install --python /opt/archivebox/venv/bin/python --upgrade archivebox
-  ln -sf /opt/archivebox/venv/bin/archivebox /usr/local/bin/archivebox
-  mkdir -p /home/archivebox/.config
-  chown -R archivebox:archivebox /opt/archivebox /home/archivebox
-  cd /opt/archivebox/data
-  $STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox init
-  base="$(grep -oP '^BASE_URL\s*=\s*\K\S+' ArchiveBox.conf 2>/dev/null || true)"
-  if [[ -z "$base" || "$base" =~ ^https?://[0-9.]+(:[0-9]+)?/?$ ]]; then
-    base="http://$(hostname -I | awk '{print $1}'):${port}"
+    msg_info "Starting ArchiveBox"
+    systemctl start archivebox
+    msg_ok "Started ArchiveBox"
+    msg_ok "Updated successfully!"
   fi
-  $STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox config --set "BASE_URL=${base}" MERCURY_ENABLED=False
-  msg_ok "Updated ArchiveBox"
-
-  msg_info "Installing Extractors (Patience)"
-  runtime="/tmp/archivebox-runtime-$(id -u archivebox)"
-  install -d -m 700 -o archivebox -g archivebox "$runtime"
-  if $STD env HOME=/home/archivebox USER=archivebox LOGNAME=archivebox XDG_CONFIG_HOME=/home/archivebox/.config XDG_RUNTIME_DIR="$runtime" \
-    /opt/archivebox/venv/bin/archivebox install; then
-    msg_ok "Installed Extractors"
-  else
-    msg_warn "Some extractors failed to install - crawls stop until the next update succeeds"
-  fi
-
-  if [[ "$migrate" == 1 ]]; then
-    msg_info "Migrating Existing Snapshots (Patience)"
-    $STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox update --rescan --migrate-only --index-only
-    msg_ok "Migrated Existing Snapshots"
-  fi
-
-  msg_info "Starting Service"
-  systemctl start archivebox
-  msg_ok "Started Service"
-  msg_ok "Updated successfully!"
   exit
 }
 

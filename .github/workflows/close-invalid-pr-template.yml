@@ -1,4 +1,4 @@
-name: Close PRs Missing Template
+name: Flag PRs Missing Template
 
 on:
   pull_request_target:
@@ -14,10 +14,12 @@ jobs:
       issues: write
       contents: read
     steps:
-      - name: Close PR if it does not follow the PR template
+      - name: Check PR against the template, comment and label instead of closing
         uses: actions/github-script@v9
         with:
           script: |
+            const MARKER = "<!-- pr-template-check -->";
+            const LABELS = ["missing pr template", "stale"];
             const pr = context.payload.pull_request;
             const prNumber = pr.number;
             const author = pr.user.login;
@@ -44,11 +46,11 @@ jobs:
               return;
             }
 
-            const labels = pr.labels.map((label) => label.name);
+            const prLabels = pr.labels.map((label) => label.name);
             const skipLabels = ["automated pr", "keep-open"];
 
-            if (skipLabels.some((label) => labels.includes(label))) {
-              core.info(`PR #${prNumber} has a skip label (${labels.join(", ")}) — skipping template validation.`);
+            if (skipLabels.some((label) => prLabels.includes(label))) {
+              core.info(`PR #${prNumber} has a skip label (${prLabels.join(", ")}) — skipping template validation.`);
               return;
             }
 
@@ -114,50 +116,52 @@ jobs:
               failures.push("At least one **Type of Change** checkbox must be checked.");
             }
 
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner, repo, issue_number: prNumber, per_page: 100
+            });
+            const mine = comments.find(c => c.body && c.body.includes(MARKER));
+
             if (failures.length === 0) {
               core.info(`PR #${prNumber} follows the PR template.`);
+              if (mine && !mine.body.startsWith(MARKER + "\n✅")) {
+                await github.rest.issues.updateComment({
+                  owner, repo, comment_id: mine.id,
+                  body: MARKER + "\n✅ **Template check passed.** Thanks for fixing the description — the `stale` mark has been removed.",
+                });
+              }
+              for (const name of LABELS) {
+                if (prLabels.includes(name)) {
+                  await github.rest.issues.removeLabel({ owner, repo, issue_number: prNumber, name });
+                }
+              }
               return;
             }
 
-            core.info(`Closing PR #${prNumber} — template validation failed.`);
+            core.info(`PR #${prNumber} — template validation failed, flagging instead of closing.`);
 
             const templateUrl =
               "https://github.com/community-scripts/ProxmoxVE/blob/main/.github/pull_request_template.md";
             const failureList = failures.map((item) => `- ${item}`).join("\n");
 
-            const comment = [
-              `👋 Hi @${author},`,
-              ``,
-              `This pull request was closed because it does not follow the [PR template](${templateUrl}).`,
-              ``,
-              `Please fix the following and open a new PR (or reopen this one after updating the description):`,
-              ``,
-              failureList,
-              ``,
-              `> Use the template sections, fill in the description, check all prerequisite boxes, and select at least one type of change.`,
-              ``,
-              `Maintainers can add the \`keep-open\` label to exempt a PR from this check.`,
-              ``,
-              `Thank you for contributing! 🙏`,
-            ].join("\n");
+            const text =
+              MARKER + "\n" +
+              `👋 Hi @${author},\n\n` +
+              `This pull request does not follow the [PR template](${templateUrl}) yet:\n\n` +
+              failureList + "\n\n" +
+              `**Edit the PR description** to fix it — no new PR needed. This check runs again on every edit and clears itself once everything is in place.\n\n` +
+              `Until then the PR is marked \`stale\` and will be closed in **7 days**.\n\n` +
+              `Maintainers can add the \`keep-open\` label to exempt a PR from this check.\n\n` +
+              `Thank you for contributing! 🙏`;
 
-            await github.rest.issues.createComment({
-              owner,
-              repo,
-              issue_number: prNumber,
-              body: comment,
-            });
+            if (mine) {
+              if (mine.body !== text) {
+                await github.rest.issues.updateComment({ owner, repo, comment_id: mine.id, body: text });
+              }
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number: prNumber, body: text });
+            }
 
-            await github.rest.pulls.update({
-              owner,
-              repo,
-              pull_number: prNumber,
-              state: "closed",
-            });
-
-            await github.rest.issues.addLabels({
-              owner,
-              repo,
-              issue_number: prNumber,
-              labels: ["missing pr template"],
-            });
+            const toAdd = LABELS.filter(name => !prLabels.includes(name));
+            if (toAdd.length > 0) {
+              await github.rest.issues.addLabels({ owner, repo, issue_number: prNumber, labels: toAdd });
+            }

@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 tteck
@@ -50,11 +49,13 @@ function update_script() {
 
     msg_info "Installing uv-based Open-WebUI"
     PYTHON_VERSION="3.12" setup_uv
-    export UV_HTTP_TIMEOUT=300
-    for attempt in $(seq 1 3); do
-      $STD uv tool install --python 3.12 --constraint <(echo "numba>=0.60") open-webui[all] && break
-      [[ $attempt -lt 3 ]] && msg_warn "Open WebUI install attempt $attempt failed, retrying..." && sleep 10
+    installed=0
+    for attempt in 1 2; do
+      $STD uv tool install --python 3.12 open-webui[all] && { installed=1; break; }
+      msg_warn "Open WebUI install attempt $attempt failed, retrying..."
+      sleep 10
     done
+    ((installed)) || $STD uv tool install --python 3.12 open-webui[all]
     msg_ok "Installed uv-based Open-WebUI"
 
     msg_info "Restoring data"
@@ -100,21 +101,29 @@ EOF
   if [ -x "/usr/bin/ollama" ]; then
     msg_info "Checking for Ollama Update"
     if check_for_gh_release "ollama-com" "ollama/ollama"; then
-      msg_info "Stopping Ollama Service"
-      systemctl stop ollama
-      msg_ok "Stopped Service"
-
-      rm -rf /usr/lib/ollama /usr/bin/ollama
-      if ! fetch_and_deploy_gh_release "ollama-com" "ollama/ollama" "prebuild" "latest" "/usr/lib/ollama" "ollama-linux-$(arch_resolve).tar.zst"; then
-        msg_error "Ollama download or deployment failed – check network connectivity and GitHub API availability"
+      rm -rf /usr/lib/ollama.new
+      mkdir -p /usr/lib/ollama.new
+      if ! fetch_and_deploy_gh_release "ollama-com" "ollama/ollama" "prebuild" "latest" "/usr/lib/ollama.new" "ollama-linux-$(arch_resolve).tar.zst"; then
+        rm -rf /usr/lib/ollama.new
+        msg_error "Ollama download or deployment failed – check network connectivity and GitHub API availability (installed Ollama left unchanged)"
       else
-        ln -sf /usr/lib/ollama/bin/ollama /usr/bin/ollama
-        msg_ok "Updated Ollama to ${CHECK_UPDATE_RELEASE}"
-      fi
+        msg_info "Stopping Ollama Service"
+        systemctl stop ollama
+        msg_ok "Stopped Service"
 
-      msg_info "Starting Ollama Service"
-      systemctl start ollama
-      msg_ok "Started Service"
+        rm -rf /usr/lib/ollama.old
+        if [[ -d /usr/lib/ollama ]]; then
+          mv /usr/lib/ollama /usr/lib/ollama.old
+        fi
+        mv /usr/lib/ollama.new /usr/lib/ollama
+        ln -sf /usr/lib/ollama/bin/ollama /usr/bin/ollama
+        rm -rf /usr/lib/ollama.old
+        msg_ok "Updated Ollama to ${CHECK_UPDATE_RELEASE}"
+
+        msg_info "Starting Ollama Service"
+        systemctl start ollama
+        msg_ok "Started Service"
+      fi
     fi
   fi
 
@@ -127,11 +136,13 @@ EOF
       OTEL_ARGS+=(--with "$pkg")
     done < <(uv pip list --python "$OWUI_PYTHON" --format freeze 2>/dev/null | grep -i '^opentelemetry-' | cut -d= -f1)
   fi
-  export UV_HTTP_TIMEOUT=300
-  for attempt in $(seq 1 3); do
-    $STD uv tool install --force --python 3.12 --constraint <(echo "numba>=0.60") "${OTEL_ARGS[@]}" open-webui[all] && break
-    [[ $attempt -lt 3 ]] && msg_warn "Open WebUI update attempt $attempt failed, retrying..." && sleep 10
+  updated=0
+  for attempt in 1 2; do
+    $STD uv tool install --force --python 3.12 "${OTEL_ARGS[@]}" open-webui[all] && { updated=1; break; }
+    msg_warn "Open WebUI update attempt $attempt failed, retrying..."
+    sleep 10
   done
+  ((updated)) || $STD uv tool install --force --python 3.12 "${OTEL_ARGS[@]}" open-webui[all]
   systemctl restart open-webui
   msg_ok "Updated Open WebUI"
   msg_ok "Updated successfully!"

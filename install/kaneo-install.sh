@@ -41,7 +41,7 @@ msg_info "Building Kaneo"
 cd /opt/kaneo
 export NODE_OPTIONS="--max-old-space-size=4096"
 HUSKY=0 $STD pnpm install --frozen-lockfile
-$STD pnpm exec turbo build --filter=@kaneo/api --filter=@kaneo/web
+$STD pnpm exec vp run --filter '@kaneo/api...' --filter '@kaneo/web...' build
 unset NODE_OPTIONS
 msg_ok "Built Kaneo"
 

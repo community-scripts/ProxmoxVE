@@ -23,7 +23,9 @@ NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 
 echo "${TAB3}It is important to choose the name for your server before you install Synapse, because it cannot be changed later."
 echo "${TAB3}The server name determines the “domain” part of user-ids for users on your server: these will all be of the format @user:my.domain.name. It also determines how other matrix servers will reach yours for federation."
-read -p "${TAB3}Please enter the name for your server: " servername
+servername="${var_elementsynapse_server_name:-}"
+[[ -n "$servername" ]] || read -r -p "${TAB3}Please enter the name for your server: " servername || true
+[[ -n "$servername" ]] || { msg_error "No server name given; set var_elementsynapse_server_name or answer the prompt"; exit 64; }
 
 msg_info "Installing Element Synapse"
 setup_deb822_repo "matrix-org" \
@@ -38,9 +40,9 @@ chmod +x /usr/sbin/policy-rc.d
 $STD apt install matrix-synapse-py3 -y
 rm -f /usr/sbin/policy-rc.d
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/matrix-synapse/homeserver.yaml
-sed -i 's/'\''::1'\'', //g' /etc/matrix-synapse/homeserver.yaml
+sed -i '/^ *- ::1$/d' /etc/matrix-synapse/homeserver.yaml
 SECRET=$(openssl rand -hex 32)
-ADMIN_PASS="$(openssl rand -base64 18 | cut -c1-13)"
+ADMIN_PASS="$(random_password 13)"
 echo "enable_registration_without_verification: true" >>/etc/matrix-synapse/homeserver.yaml
 echo "registration_shared_secret: ${SECRET}" >>/etc/matrix-synapse/homeserver.yaml
 
@@ -69,7 +71,7 @@ Admin username: admin
 Admin password: $ADMIN_PASS
 EOF
 systemctl stop matrix-synapse
-sed -i '34d' /etc/matrix-synapse/homeserver.yaml
+sed -i '/^enable_registration_without_verification: true$/d' /etc/matrix-synapse/homeserver.yaml
 systemctl start matrix-synapse
 msg_ok "Installed Element Synapse"
 

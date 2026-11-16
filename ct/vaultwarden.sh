@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 tteck
@@ -54,10 +53,6 @@ update_deb_based() {
       printf '%s\n' "$INSTALLED_VERSION" >"$HOME/.vaultwarden"
     fi
     if check_for_gh_release "vaultwarden" "dani-garcia/vaultwarden"; then
-      msg_info "Stopping Service"
-      systemctl stop vaultwarden
-      msg_ok "Stopped Service"
-
       fetch_and_deploy_gh_release "vaultwarden" "dani-garcia/vaultwarden" "tarball" "latest" "/tmp/vaultwarden-src"
 
       msg_info "Updating VaultWarden to $VAULT (Patience)"
@@ -65,6 +60,12 @@ update_deb_based() {
       VW_VERSION="$VAULT"
       export VW_VERSION
       CARGO_BUILD_JOBS="$(get_parallel_jobs)" CARGO_PROFILE_RELEASE_LTO=false CARGO_PROFILE_RELEASE_CODEGEN_UNITS=16 $STD cargo build --features "sqlite,mysql,postgresql" --release
+      msg_ok "Built VaultWarden ${VAULT}"
+
+      msg_info "Stopping Service"
+      systemctl stop vaultwarden
+      msg_ok "Stopped Service"
+
       if [[ -f /usr/bin/vaultwarden ]]; then
         cp target/release/vaultwarden /usr/bin/
       else

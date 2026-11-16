@@ -22,15 +22,15 @@ if ! command -v curl &>/dev/null; then
     apt-get install -y curl >/dev/null 2>&1
   fi
 fi
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/core.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/lib/tools.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/error_handler.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/api/api.func") 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "filebrowser-quantum" "addon"
 
 # Enable error handling
 set -Eeuo pipefail
-trap 'error_handler' ERR
+catch_errors
 
 # Initialize all core functions (colors, formatting, icons, STD mode)
 load_functions
@@ -96,6 +96,27 @@ if [[ -f "$LEGACY_DB" || -f "$LEGACY_BIN" && ! -f "$CONFIG_PATH" ]]; then
   fi
 fi
 
+# v2 rejects v1 config keys and imports the BoltDB on its first start
+migrate_v1_config() {
+  local dir="/usr/local/community-scripts" db=0
+  [[ -s "$dir/database.db" && ! -s "$dir/filebrowser.sqlite" ]] && db=1
+  ((db)) || grep -qE 'conditionals:|indexingIntervalMinutes:' "$CONFIG_PATH" || return 0
+  cp "$CONFIG_PATH" "${CONFIG_PATH}.v1.bak"
+  ((db)) && mv "$dir/database.db" "$dir/database.db.old"
+  awk -v db="$db" '
+    { match($0, /^ */); ind = RLENGTH }
+    /^[^ #]/ { top = $1 }
+    cond && ind > ci { print substr($0, 3); next }
+    { cond = 0 }
+    /^[[:space:]]*conditionals:[[:space:]]*$/ { cond = 1; ci = ind; next }
+    /^[[:space:]]*indexingIntervalMinutes:/ { next }
+    top == "server:" && /^  port:/ { port = $2; next }
+    { print }
+    /^server:/ && db { print "  database:"; print "    migrateFrom: \"database.db.old\"" }
+    END { if (port != "") { print "http:"; print "  port: " port } }
+  ' "${CONFIG_PATH}.v1.bak" >"$CONFIG_PATH"
+}
+
 # Existing installation
 if [[ -f "$INSTALL_PATH" ]]; then
   msg_warn "${APP} is already installed."
@@ -126,6 +147,7 @@ if [[ -f "$INSTALL_PATH" ]]; then
       mv -f /usr/local/bin/filebrowser-quantum "$INSTALL_PATH"
       if [[ -f "$CONFIG_PATH" ]]; then
         sed -i '/^\s*disableIndexing:/d' "$CONFIG_PATH"
+        migrate_v1_config
       fi
       if [[ "$OS" == "Debian" ]]; then
         systemctl restart filebrowser.service
@@ -167,28 +189,29 @@ chown root:root /usr/local/community-scripts
 chmod 755 /usr/local/community-scripts
 msg_ok "Directory prepared"
 
+ADMIN_PASS=$(random_password 20)
+msg_warn "FileBrowser runs as root and shows the whole filesystem. Without authentication, anyone who reaches port ${PORT} can read and change every file."
 echo -n "${TAB}Use No Authentication? (y/N): "
 read -r noauth_prompt
 
 # === YAML CONFIG GENERATION ===
 if [[ "${noauth_prompt,,}" =~ ^(y|yes)$ ]]; then
   cat <<EOF >"$CONFIG_PATH"
-server:
+http:
   port: $PORT
+server:
   sources:
     - path: "$SRC_DIR"
       name: "RootFS"
       config:
         denyByDefault: false
-        indexingIntervalMinutes: 240
-        conditionals:
-          rules:
-            - neverWatchPath: "/proc"
-            - neverWatchPath: "/sys"
-            - neverWatchPath: "/dev"
-            - neverWatchPath: "/run"
-            - neverWatchPath: "/tmp"
-            - neverWatchPath: "/lost+found"
+        rules:
+          - neverWatchPath: "/proc"
+          - neverWatchPath: "/sys"
+          - neverWatchPath: "/dev"
+          - neverWatchPath: "/run"
+          - neverWatchPath: "/tmp"
+          - neverWatchPath: "/lost+found"
 auth:
   methods:
     noauth: true
@@ -196,27 +219,29 @@ EOF
   msg_ok "Configured with no authentication"
 else
   cat <<EOF >"$CONFIG_PATH"
-server:
+http:
   port: $PORT
+server:
   sources:
     - path: "$SRC_DIR"
       name: "RootFS"
       config:
         denyByDefault: false
-        indexingIntervalMinutes: 240
-        conditionals:
-          rules:
-            - neverWatchPath: "/proc"
-            - neverWatchPath: "/sys"
-            - neverWatchPath: "/dev"
-            - neverWatchPath: "/run"
-            - neverWatchPath: "/tmp"
-            - neverWatchPath: "/lost+found"
+        rules:
+          - neverWatchPath: "/proc"
+          - neverWatchPath: "/sys"
+          - neverWatchPath: "/dev"
+          - neverWatchPath: "/run"
+          - neverWatchPath: "/tmp"
+          - neverWatchPath: "/lost+found"
 auth:
   adminUsername: admin
-  adminPassword: community-scripts.org
+  adminPassword: ${ADMIN_PASS}
 EOF
-  msg_ok "Configured with default admin (admin / community-scripts.org)"
+  chmod 600 "$CONFIG_PATH"
+  echo -e "FileBrowser Quantum\nUsername: admin\nPassword: ${ADMIN_PASS}" >~/filebrowser-quantum.creds
+  chmod 600 ~/filebrowser-quantum.creds
+  msg_ok "Configured admin (credentials saved in ~/filebrowser-quantum.creds)"
 fi
 
 msg_info "Creating service"
@@ -256,4 +281,13 @@ EOF
 fi
 
 msg_ok "Service created successfully"
+
+# auth.adminPassword resets the password on every start, so it stays only until the admin exists
+if grep -q '^\s*adminPassword:' "$CONFIG_PATH"; then
+  for _ in {1..30}; do
+    [[ "$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:${PORT}/health")" == "200" ]] && break
+    sleep 1
+  done
+  sed -i '/^\s*adminPassword:/d' "$CONFIG_PATH"
+fi
 msg_ok "${APP} is reachable at: ${BL}http://${IP}:${PORT}${CL}"

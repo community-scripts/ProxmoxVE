@@ -25,10 +25,7 @@ $STD apk add docker
 $STD rc-service docker start
 $STD rc-update add docker default
 
-get_latest_release() {
-  curl -fsSL https://api.github.com/repos/$1/releases/latest | grep '"tag_name":' | cut -d'"' -f4
-}
-DOCKER_COMPOSE_LATEST_VERSION=$(get_latest_release "docker/compose")
+DOCKER_COMPOSE_LATEST_VERSION=$(get_latest_github_release "docker/compose" false)
 DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
 mkdir -p $DOCKER_CONFIG/cli-plugins
 curl -fsSL https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_LATEST_VERSION/docker-compose-linux-$(arch_resolve "x86_64" "aarch64") -o ~/.docker/cli-plugins/docker-compose
@@ -41,12 +38,19 @@ curl -fsSL "https://raw.githubusercontent.com/ZoeyVid/NPMplus/refs/heads/develop
 msg_ok "Fetched NPMplus"
 
 attempts=0
+TZ_INPUT="${var_npmplus_tz:-}"
+TZ_DEFAULT="$(cat /etc/timezone 2>/dev/null || true)"
 while true; do
-  read -r -p "${TAB3}Enter your TZ Identifier (e.g., Europe/Berlin): " TZ_INPUT
+  if [[ -z "$TZ_INPUT" && -n "$TZ_DEFAULT" ]]; then
+    read -r -p "${TAB3}Enter your TZ Identifier [${TZ_DEFAULT}]: " TZ_INPUT || true
+    TZ_INPUT="${TZ_INPUT:-$TZ_DEFAULT}"
+  fi
+  [[ -n "$TZ_INPUT" ]] || read -r -p "${TAB3}Enter your TZ Identifier (e.g., Europe/Berlin): " TZ_INPUT || { msg_error "No TZ identifier given; set var_npmplus_tz or answer the prompt"; exit 64; }
   if validate_tz "$TZ_INPUT"; then
     break
   fi
   msg_error "Invalid timezone! Please enter a valid TZ identifier."
+  TZ_INPUT=""
 
   attempts=$((attempts + 1))
   if [[ "$attempts" -ge 3 ]]; then
@@ -55,13 +59,20 @@ while true; do
   fi
 done
 
-read -r -p "${TAB3}Enter your ACME Email: " ACME_EMAIL_INPUT
+ACME_EMAIL_INPUT="${var_npmplus_acme_email:-}"
+[[ -n "$ACME_EMAIL_INPUT" ]] || read -r -p "${TAB3}Enter your ACME Email (optional, press ENTER to skip): " ACME_EMAIL_INPUT || true
 
+ADMIN_PASS=$(random_password 20)
 yq -i "
   .services.npmplus.environment |=
     (map(select(. != \"TZ=*\" and . != \"ACME_EMAIL=*\" and . != \"INITIAL_ADMIN_EMAIL=*\" and . != \"INITIAL_ADMIN_PASSWORD=*\")) +
-    [\"TZ=$TZ_INPUT\", \"ACME_EMAIL=$ACME_EMAIL_INPUT\", \"INITIAL_ADMIN_EMAIL=admin@local.com\", \"INITIAL_ADMIN_PASSWORD=community-scripts.org\"])
+    [\"TZ=$TZ_INPUT\", \"ACME_EMAIL=$ACME_EMAIL_INPUT\", \"INITIAL_ADMIN_EMAIL=admin@local.com\", \"INITIAL_ADMIN_PASSWORD=${ADMIN_PASS}\"])
 " /opt/compose.yaml
+{
+  echo "NPMplus Credentials"
+  echo "Email: admin@local.com"
+  echo "Password: ${ADMIN_PASS}"
+} >~/npmplus.creds
 
 msg_info "Building and Starting NPMplus (Patience)"
 $STD docker compose up -d
@@ -86,3 +97,4 @@ msg_ok "Builded and started NPMplus"
 
 motd_ssh
 customize
+cleanup_lxc

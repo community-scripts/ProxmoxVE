@@ -16,16 +16,15 @@ update_os
 fetch_and_deploy_gh_release "newt" "fosrl/newt" "singlefile" "latest" "/opt/newt" "newt_linux_$(arch_resolve)"
 ln -sf /opt/newt/newt /usr/local/bin/newt
 
-if [[ -z "${NEWT_ID:-}" ]]; then
-  read -rp "Newt ID (from your Pangolin dashboard): " NEWT_ID
-fi
-if [[ -z "${NEWT_SECRET:-}" ]]; then
-  read -rsp "Newt Secret: " NEWT_SECRET
+NEWT_ID="${NEWT_ID:-${var_newt_id:-}}"
+[[ -n "$NEWT_ID" ]] || read -rp "Newt ID (from your Pangolin dashboard): " NEWT_ID || true
+NEWT_SECRET="${NEWT_SECRET:-${var_newt_secret:-}}"
+if [[ -z "$NEWT_SECRET" ]]; then
+  read -rsp "Newt Secret: " NEWT_SECRET || true
   echo
 fi
-if [[ -z "${PANGOLIN_ENDPOINT:-}" ]]; then
-  read -rp "Pangolin endpoint (e.g. https://pangolin.example.com): " PANGOLIN_ENDPOINT
-fi
+PANGOLIN_ENDPOINT="${PANGOLIN_ENDPOINT:-${var_newt_endpoint:-}}"
+[[ -n "$PANGOLIN_ENDPOINT" ]] || read -rp "Pangolin endpoint (e.g. https://pangolin.example.com): " PANGOLIN_ENDPOINT || true
 
 if [[ -z "$NEWT_ID" || -z "$NEWT_SECRET" || -z "$PANGOLIN_ENDPOINT" ]]; then
   msg_error "Newt ID, Secret and Endpoint are all required. Aborting."

@@ -19,7 +19,7 @@ CONF_FILE="/etc/update-lxcs.conf"
 LOG_FILE="/var/log/update-lxcs-cron.log"
 CRON_ENTRY="0 0 * * 0 ${LOCAL_SCRIPT} >>${LOG_FILE} 2>&1"
 
-clear
+clear 2>/dev/null || printf '\033[H\033[2J\033[3J'
 cat <<"EOF"
    ______                    __  __          __      __          __   _  ________
   / ____/________  ____     / / / /___  ____/ /___ _/ /____     / /  | |/ / ____/____

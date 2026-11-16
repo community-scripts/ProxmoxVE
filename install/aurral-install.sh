@@ -16,13 +16,14 @@ update_os
 msg_info "Installing Dependencies"
 $STD apt install -y \
   build-essential \
+  git \
   python3 \
   ffmpeg \
   fontconfig \
   fonts-dejavu-core
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="26" NODE_MODULE="pnpm" setup_nodejs
 
 fetch_and_deploy_gh_release "yt-dlp" "yt-dlp/yt-dlp" "singlefile" "latest" "/usr/local/bin" "yt-dlp"
 fetch_and_deploy_gh_release "aurral" "lklynet/aurral" "tarball"
@@ -32,9 +33,8 @@ cd /opt/aurral
 export VITE_APP_VERSION="$(cat ~/.aurral)"
 export VITE_GITHUB_REPO="lklynet/aurral"
 export VITE_RELEASE_CHANNEL="stable"
-$STD npm ci --workspace frontend --include-workspace-root=false
-$STD npm run build --workspace frontend
-$STD npm ci --workspace backend --omit=dev --include=optional --include-workspace-root=false
+$STD pnpm install --frozen-lockfile --config.engine-strict=false --filter aurral-frontend --filter aurral-backend
+$STD pnpm --filter aurral-frontend run build
 msg_ok "Built Aurral"
 
 msg_info "Creating Service"
@@ -55,7 +55,7 @@ Type=simple
 User=root
 WorkingDirectory=/opt/aurral
 EnvironmentFile=/opt/aurral/aurral.env
-ExecStart=/usr/bin/node backend/server.js
+ExecStart=/usr/bin/node backend/server.ts
 Restart=on-failure
 RestartSec=5
 

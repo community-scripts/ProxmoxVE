@@ -38,16 +38,22 @@ CGO_ENABLED=1 go build -tags musl -o paperless-gpt .
 msg_ok "Setup Paperless-GPT"
 
 mkdir -p /opt/paperless-gpt-data
-read -rp "${TAB3}Do you want to enter the Paperless local URL now? (y/n) " input_url
-if [[ $input_url =~ ^[Yy]$ ]]; then
-  read -rp "${TAB3}Enter your Paperless-NGX instance URL (e.g., http://192.168.1.100:8000): " PAPERLESS_BASE_URL
+input_url="${var_paperless_gpt_enter_url:-}"
+[[ -n "$input_url" ]] || read -rp "${TAB3}Do you want to enter the Paperless local URL now? (y/n) " input_url || true
+if [[ $input_url =~ ^[Yy]([Ee][Ss])?$ ]]; then
+  PAPERLESS_BASE_URL="${var_paperless_gpt_url:-}"
+  [[ -n "$PAPERLESS_BASE_URL" ]] || read -rp "${TAB3}Enter your Paperless-NGX instance URL (e.g., http://192.168.1.100:8000): " PAPERLESS_BASE_URL || true
+  [[ -n "$PAPERLESS_BASE_URL" ]] || { msg_error "No Paperless-NGX URL given; set var_paperless_gpt_url or answer the prompt"; exit 64; }
 else
   PAPERLESS_BASE_URL="http://your_paperless_ngx_url"
 fi
 
-read -rp "${TAB3}Do you want to enter the Paperless API token now? (y/n) " input_token
-if [[ $input_token =~ ^[Yy]$ ]]; then
-  read -rp "${TAB3}Enter your Paperless API token: " PAPERLESS_API_TOKEN
+input_token="${var_paperless_gpt_enter_token:-}"
+[[ -n "$input_token" ]] || read -rp "${TAB3}Do you want to enter the Paperless API token now? (y/n) " input_token || true
+if [[ $input_token =~ ^[Yy]([Ee][Ss])?$ ]]; then
+  PAPERLESS_API_TOKEN="${var_paperless_gpt_api_token:-}"
+  [[ -n "$PAPERLESS_API_TOKEN" ]] || read -rp "${TAB3}Enter your Paperless API token: " PAPERLESS_API_TOKEN || true
+  [[ -n "$PAPERLESS_API_TOKEN" ]] || { msg_error "No Paperless API token given; set var_paperless_gpt_api_token or answer the prompt"; exit 64; }
 else
   PAPERLESS_API_TOKEN="your_paperless_api_token"
 fi

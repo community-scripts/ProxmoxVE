@@ -55,3 +55,4 @@ msg_ok "Started Wakapi"
 
 motd_ssh
 customize
+cleanup_lxc

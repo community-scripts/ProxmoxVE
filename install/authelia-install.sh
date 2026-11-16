@@ -17,9 +17,10 @@ fetch_and_deploy_gh_release "authelia" "authelia/authelia" "binary"
 
 MAX_ATTEMPTS=3
 attempt=0
+DOMAIN="${var_authelia_domain:-}"
 while true; do
   attempt=$((attempt + 1))
-  read -rp "${TAB3}Enter your domain or IP (ex. example.com or 192.168.1.100): " DOMAIN
+  [[ -n "$DOMAIN" ]] || read -rp "${TAB3}Enter your domain or IP (ex. example.com or 192.168.1.100): " DOMAIN || true
   if [[ -z "$DOMAIN" ]]; then
     if ((attempt >= MAX_ATTEMPTS)); then
       DOMAIN="${LOCAL_IP:-localhost}"
@@ -40,11 +41,13 @@ while true; do
       break
     else
       msg_warn "Invalid IP address!"
+      DOMAIN=""
     fi
   elif [[ "$DOMAIN" =~ ^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$ ]]; then
     break
   else
     msg_warn "Invalid domain format!"
+    DOMAIN=""
   fi
 done
 msg_info "Setting Authelia up"
@@ -60,12 +63,19 @@ else
 fi
 echo "$AUTHELIA_URL" >/etc/authelia/.authelia_url
 
+AUTHELIA_PASS=$(random_password 20)
+AUTHELIA_HASH=$(authelia crypto hash generate argon2 --password "$AUTHELIA_PASS" | awk '/Digest:/{print $2}')
+{
+  echo "Authelia Credentials"
+  echo "Username: authelia"
+  echo "Password: ${AUTHELIA_PASS}"
+} >~/authelia.creds
 cat <<EOF >/etc/authelia/users.yml
 users:
   authelia:
     disabled: false
     displayname: "Authelia Admin"
-    password: "\$argon2id\$v=19\$m=65536,t=3,p=4\$ZBopMzXrzhHXPEZxRDVT2w\$SxWm96DwhOsZyn34DLocwQEIb4kCDsk632PuiMdZnig"
+    password: "${AUTHELIA_HASH}"
     groups: []
 EOF
 cat <<EOF >/etc/authelia/configuration.yml

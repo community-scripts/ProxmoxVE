@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -49,7 +48,12 @@ function update_script() {
 
     $STD corepack prepare "pnpm@${PNPM_VERSION}" --activate
     $STD pnpm install --frozen-lockfile
-    $STD pnpm --filter client run build-only
+    # vite's bundler (rolldown) crashes at random on some builds, rolldown#10860.
+    for attempt in 1 2 3; do
+      $STD pnpm --filter client run build-only && break
+      [[ $attempt -eq 3 ]] && { msg_error "Client build failed three times"; exit 1; }
+      msg_warn "Client build failed (attempt $attempt), retrying"
+    done
     $STD pnpm --filter server run build
     cp -r /opt/bookorbit/client/dist /opt/bookorbit/server/public
     mkdir -p /opt/bookorbit/server/migrations

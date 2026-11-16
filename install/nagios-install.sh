@@ -63,7 +63,13 @@ setcap cap_net_raw+p /bin/ping
 msg_ok "Built Nagios Plugins"
 
 msg_info "Configuring Web Authentication"
-$STD htpasswd -bc /usr/local/nagios/etc/htpasswd.users nagiosadmin nagiosadmin
+NAGIOS_PASS=$(random_password 20)
+$STD htpasswd -bc /usr/local/nagios/etc/htpasswd.users nagiosadmin "$NAGIOS_PASS"
+{
+  echo "Nagios Credentials"
+  echo "Username: nagiosadmin"
+  echo "Password: ${NAGIOS_PASS}"
+} >~/nagios.creds
 chown root:www-data /usr/local/nagios/etc/htpasswd.users
 chmod 640 /usr/local/nagios/etc/htpasswd.users
 msg_ok "Configured Web Authentication"

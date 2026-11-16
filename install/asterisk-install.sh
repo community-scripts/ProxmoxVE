@@ -47,7 +47,8 @@ Choose Asterisk version to install:
 2) Latest LTS ($LTS_VERSION)
 3) Latest Certified ($CERT_VERSION)
 EOF
-read -rp "Enter choice [1-3]: " ASTERISK_CHOICE
+ASTERISK_CHOICE="${var_asterisk_version:-}"
+[[ -n "$ASTERISK_CHOICE" ]] || read -rp "Enter choice [1-3]: " ASTERISK_CHOICE || true
 
 CERTIFIED=0
 case "$ASTERISK_CHOICE" in

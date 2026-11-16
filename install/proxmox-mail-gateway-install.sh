@@ -16,9 +16,9 @@ update_os
 msg_info "Installing Proxmox Mail Gateway"
 setup_deb822_repo \
   "pmg" \
-  "https://enterprise.proxmox.com/debian/proxmox-release-trixie.gpg" \
+  "https://enterprise.proxmox.com/debian/proxmox-release-$(get_os_info codename).gpg" \
   "http://download.proxmox.com/debian/pmg" \
-  "trixie" \
+  "$(get_os_info codename)" \
   "pmg-no-subscription"
 $STD apt install -y proxmox-mailgateway-container
 msg_ok "Installed Proxmox Mail Gateway"

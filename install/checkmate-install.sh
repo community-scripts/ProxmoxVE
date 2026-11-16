@@ -21,7 +21,7 @@ $STD apt install -y \
 msg_ok "Installed Dependencies"
 
 MONGO_VERSION="8.0" setup_mongodb
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="24" setup_nodejs
 fetch_and_deploy_gh_release "checkmate" "bluewave-labs/Checkmate" "tarball"
 
 msg_info "Configuring Checkmate"

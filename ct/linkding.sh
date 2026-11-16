@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -30,6 +29,16 @@ function update_script() {
   if [[ ! -d /opt/linkding ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  if grep -q 'alias /opt/linkding/static/;' /etc/nginx/sites-available/linkding 2>/dev/null; then
+    msg_info "Serving Favicons and Preview Images"
+    sed -i \
+      -e 's|location /static/ {|location ~ ^/static/(.*)$ {|' \
+      -e 's|alias /opt/linkding/static/;|root /opt/linkding;\n        try_files /static/$1 /data/favicons/$1 /data/previews/$1 =404;\n        add_header Content-Security-Policy "sandbox";|' \
+      /etc/nginx/sites-available/linkding
+    $STD systemctl reload nginx
+    msg_ok "Serving Favicons and Preview Images"
   fi
 
   if check_for_gh_release "linkding" "sissbruecker/linkding"; then

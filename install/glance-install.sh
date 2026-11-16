@@ -13,11 +13,12 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "glance" "glanceapp/glance" "prebuild" "latest" "/opt/glance" "glance-linux-$(arch_resolve).tar.gz"
+setup_deb_based() {
+  fetch_and_deploy_gh_release "glance" "glanceapp/glance" "prebuild" "latest" "/opt/glance" "glance-linux-$(arch_resolve).tar.gz"
 
-msg_info "Configuring Glance"
-mkdir -p /opt/glance_data
-cat <<EOF >/opt/glance_data/glance.yml
+  msg_info "Configuring Glance"
+  mkdir -p /opt/glance_data
+  cat <<EOF >/opt/glance_data/glance.yml
 pages:
   - name: Startpage
     width: slim
@@ -37,10 +38,10 @@ pages:
                   - title: Helper Scripts
                     url: https://github.com/community-scripts/ProxmoxVE
 EOF
-msg_ok "Configured Glance"
+  msg_ok "Configured Glance"
 
-msg_info "Creating Service"
-cat <<EOF >/etc/systemd/system/glance.service
+  msg_info "Creating Service"
+  cat <<EOF >/etc/systemd/system/glance.service
 [Unit]
 Description=Glance Daemon
 After=network.target
@@ -56,8 +57,58 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now glance
-msg_ok "Created Service"
+  systemctl enable -q --now glance
+  msg_ok "Created Service"
+}
+
+setup_alpine() {
+  fetch_and_deploy_gh_release "glance" "glanceapp/glance" "prebuild" "latest" "/opt/glance" "glance-linux-$(arch_resolve).tar.gz"
+
+  msg_info "Configuring Glance"
+  mkdir -p /opt/glance_data
+  cat <<EOF >/opt/glance_data/glance.yml
+pages:
+  - name: Startpage
+    width: slim
+    hide-desktop-navigation: true
+    center-vertically: true
+    columns:
+      - size: full
+        widgets:
+          - type: search
+            autofocus: true
+          - type: bookmarks
+            groups:
+              - title: General
+                links:
+                  - title: Google
+                    url: https://www.google.com/
+                  - title: Helper Scripts
+                    url: https://github.com/community-scripts/ProxmoxVE
+EOF
+  msg_ok "Configured Glance"
+
+  msg_info "Creating Service"
+  cat <<EOF >/etc/init.d/glance
+#!/sbin/openrc-run
+name="glance"
+description="Glance Daemon"
+command="/opt/glance/glance"
+command_args="--config /opt/glance_data/glance.yml"
+command_background="yes"
+pidfile="/run/glance.pid"
+
+depend() {
+    need net
+}
+EOF
+  chmod +x /etc/init.d/glance
+  rc-update add glance default
+  rc-service glance start
+  msg_ok "Created Service"
+}
+
+run_os_setup
 
 motd_ssh
 customize

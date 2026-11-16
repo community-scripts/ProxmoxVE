@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -92,6 +91,7 @@ User=root
 WorkingDirectory=/opt/droppedneedle/backend
 Environment=ROOT_APP_DIR=/opt/droppedneedle/backend
 Environment=PORT=8688
+Environment=COMMIT_TAG=v$(<~/.droppedneedle)
 # Environment=SLSKD_DOWNLOADS_PATH=<path-to-slskd-downloads>
 ExecStart=/opt/droppedneedle/venv/bin/python -m maintenance.automatic_upgrade --start-target
 Restart=on-failure
@@ -107,6 +107,11 @@ EOF
         sed -i '\|=8688$|a# Environment=SLSKD_DOWNLOADS_PATH=<path-to-slskd-downloads>' /etc/systemd/system/droppedneedle.service
       fi
       sed -i 's|^ExecStart=.*|ExecStart=/opt/droppedneedle/venv/bin/python -m maintenance.automatic_upgrade --start-target|' /etc/systemd/system/droppedneedle.service
+      if grep -q '^Environment=COMMIT_TAG=' /etc/systemd/system/droppedneedle.service; then
+        sed -i "s|^Environment=COMMIT_TAG=.*|Environment=COMMIT_TAG=v$(<~/.droppedneedle)|" /etc/systemd/system/droppedneedle.service
+      else
+        sed -i "\|=8688$|a Environment=COMMIT_TAG=v$(<~/.droppedneedle)" /etc/systemd/system/droppedneedle.service
+      fi
     fi
 
     systemctl daemon-reload

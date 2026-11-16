@@ -15,12 +15,13 @@ update_os
 
 setup_deb_based() {
   setup_docker
-  read -r -p "${TAB3}Expose Docker TCP socket (insecure) ? [n = No, l = Local only (127.0.0.1), a = All interfaces (0.0.0.0)] <n/l/a>: " socket_choice
+  socket_choice="${var_docker_socket:-}"
+  [[ -n "$socket_choice" ]] || read -r -p "${TAB3}Expose Docker TCP socket (insecure) ? [n = No, l = Local only (127.0.0.1), a = All interfaces (0.0.0.0)] <n/l/a>: " socket_choice || true
   case "${socket_choice,,}" in
-  l)
+  l | local)
     socket="tcp://127.0.0.1:2375"
     ;;
-  a)
+  a | all)
     socket="tcp://0.0.0.0:2375"
     ;;
   *)
@@ -30,7 +31,7 @@ setup_deb_based() {
 
   if [[ -n "$socket" ]]; then
     msg_info "Enabling Docker TCP socket on $socket"
-    $STD apt-get install -y jq
+    $STD apt install -y jq
 
     tmpfile=$(mktemp)
     jq --arg sock "$socket" '. + { "hosts": ["unix:///var/run/docker.sock", $sock] }' /etc/docker/daemon.json >"$tmpfile" && mv "$tmpfile" /etc/docker/daemon.json
@@ -65,12 +66,10 @@ setup_alpine() {
   $STD rc-update add docker default
   msg_ok "Installed Docker"
 
-  get_latest_release() {
-    curl -fsSL https://api.github.com/repos/"$1"/releases/latest | grep '"tag_name":' | cut -d'"' -f4
-  }
-  DOCKER_COMPOSE_LATEST_VERSION=$(get_latest_release "docker/compose")
-  read -r -p "${TAB3}Would you like to add Docker Compose? <y/N> " prompt
-  if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
+  DOCKER_COMPOSE_LATEST_VERSION=$(get_latest_github_release "docker/compose" false)
+  prompt="${var_docker_compose:-}"
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Docker Compose? <y/N> " prompt || true
+  if [[ "${prompt,,}" =~ ^(y|yes|true)$ ]]; then
     msg_info "Installing Docker Compose $DOCKER_COMPOSE_LATEST_VERSION"
     DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
     mkdir -p "$DOCKER_CONFIG"/cli-plugins
@@ -78,13 +77,20 @@ setup_alpine() {
     chmod +x "$DOCKER_CONFIG"/cli-plugins/docker-compose
     msg_ok "Installed Docker Compose $DOCKER_COMPOSE_LATEST_VERSION"
   fi
-  read -r -p "${TAB3}Would you like to expose the Docker TCP socket? <y/N> " prompt
-  if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
-    msg_info "Exposing Docker TCP socket"
-    $STD mkdir -p /etc/docker
-    $STD echo '{ "hosts": ["unix:///var/run/docker.sock", "tcp://0.0.0.0:2375"] }' >/etc/docker/daemon.json
+  prompt="${var_docker_socket:-}"
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to expose the Docker TCP socket? <y/N> " prompt || true
+  case "${prompt,,}" in
+  y | yes | a | all) socket="tcp://0.0.0.0:2375" ;;
+  l | local) socket="tcp://127.0.0.1:2375" ;;
+  *) socket="" ;;
+  esac
+  if [[ -n "$socket" ]]; then
+    msg_info "Exposing Docker TCP socket on $socket"
+    mkdir -p /etc/docker
+    # No $STD here: silent() captures stdout, which left daemon.json empty.
+    printf '{ "hosts": ["unix:///var/run/docker.sock", "%s"] }\n' "$socket" >/etc/docker/daemon.json
     $STD rc-service docker restart
-    msg_ok "Exposed Docker TCP socket at tcp://+:2375"
+    msg_ok "Exposed Docker TCP socket on $socket"
   fi
 }
 

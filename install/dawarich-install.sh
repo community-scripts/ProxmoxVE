@@ -150,6 +150,12 @@ server {
     root /opt/dawarich/app/public;
     client_max_body_size 100M;
 
+    location ~ \.mjs\$ {
+        types { }
+        default_type text/javascript;
+        try_files \$uri @rails;
+    }
+
     location ~ ^/(assets|packs)/ {
         expires max;
         add_header Cache-Control "public, immutable";

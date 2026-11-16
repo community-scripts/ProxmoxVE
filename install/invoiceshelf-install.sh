@@ -52,6 +52,9 @@ chown -R www-data:www-data /opt/invoiceshelf
 chmod -R 775 storage bootstrap/cache
 $STD php artisan migrate --force
 $STD php artisan storage:link
+cat <<'EOF' >/etc/cron.d/invoiceshelf
+* * * * * www-data cd /opt/invoiceshelf && php artisan schedule:run >> /dev/null 2>&1
+EOF
 msg_ok "Set up InvoiceShelf"
 
 msg_info "Configuring Caddy"

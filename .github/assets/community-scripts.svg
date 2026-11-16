@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Community Scripts - CS Amber</title>
+  <desc id="desc">A continuous ivory C interlocks with a warm orange S on charcoal. Both letterforms use rounded, folded geometry.</desc>
+  <rect width="512" height="512" rx="112" fill="#29262b"/>
+  <defs>
+    <mask id="weave-clearance" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
+      <rect width="512" height="512" fill="white"/>
+      <path d="M390 142H322L270 172V220L322 250H348L392 276V338L338 370H284" fill="none" stroke="black" stroke-width="72" stroke-linecap="round" stroke-linejoin="round"/>
+    </mask>
+  </defs>
+  <g fill="none" stroke-width="56" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M254 142H186L118 182V330L186 370H254" stroke="#f5f4eb" mask="url(#weave-clearance)"/>
+    <path d="M390 142H322L270 172V220L322 250H348L392 276V338L338 370H284" stroke="#f29a67"/>
+  </g>
+</svg>

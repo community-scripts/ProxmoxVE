@@ -14,9 +14,11 @@ network_check
 update_os
 
 setup_deb_based() {
-  read -r -p "${TAB3}Enter PostgreSQL version (15/16/17/18): " ver
+  ver="${var_postgresql_version:-}"
+  [[ -n "$ver" ]] || read -r -p "${TAB3}Enter PostgreSQL version (15/16/17/18) [17]: " ver || true
+  ver="${ver:-17}"
   [[ $ver =~ ^(15|16|17|18)$ ]] || {
-    echo "Invalid version"
+    msg_error "Invalid PostgreSQL version: ${ver} (expected 15, 16, 17 or 18)"
     exit 64
   }
   PG_VERSION=$ver setup_postgresql
@@ -124,7 +126,8 @@ EOF
   systemctl restart postgresql
   msg_ok "Installed PostgreSQL"
 
-  read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt
+  prompt="${var_postgresql_adminer:-}"
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt
   if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Installing Adminer"
     $STD apt install -y adminer
@@ -135,8 +138,13 @@ EOF
 }
 
 setup_alpine() {
-  read -r -p "${TAB3}Enter PostgreSQL version (15/16/17): " ver
-  [[ $ver =~ ^(15|16|17)$ ]] || { echo "Invalid version"; exit 64; }
+  ver="${var_postgresql_version:-}"
+  [[ -n "$ver" ]] || read -r -p "${TAB3}Enter PostgreSQL version (16/17/18) [17]: " ver || true
+  ver="${ver:-17}"
+  [[ $ver =~ ^(16|17|18)$ ]] || {
+    msg_error "Invalid PostgreSQL version: ${ver} (expected 16, 17 or 18)"
+    exit 64
+  }
 
   msg_info "Installing PostgreSQL ${ver}"
   $STD apk add --no-cache postgresql${ver} postgresql${ver}-contrib postgresql${ver}-openrc sudo
@@ -158,7 +166,8 @@ setup_alpine() {
   $STD rc-service postgresql restart
   msg_ok "Configured and Restarted PostgreSQL"
 
-  read -r -p "${TAB3}Would you like to install Adminer with lighttpd? <y/N>: " prompt
+  prompt="${var_postgresql_adminer:-}"
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to install Adminer with lighttpd? <y/N>: " prompt
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     msg_info "Installing Adminer and dependencies"
     $STD apk add --no-cache \
@@ -180,7 +189,7 @@ setup_alpine() {
     sed -i 's|# *include "mod_fastcgi.conf"|include "mod_fastcgi.conf"|' /etc/lighttpd/lighttpd.conf
     sed -i 's|/usr/bin/php-cgi|/usr/bin/php-cgi83|g' /etc/lighttpd/mod_fastcgi.conf
     mkdir -p /var/www/localhost/htdocs
-    ADMINER_VERSION=$(curl -fsSL https://api.github.com/repos/vrana/adminer/releases/latest | jq -r '.tag_name' | sed 's/^v//')
+    ADMINER_VERSION=$(get_latest_github_release "vrana/adminer")
     curl -fsSL "https://github.com/vrana/adminer/releases/download/v${ADMINER_VERSION}/adminer-${ADMINER_VERSION}.php" -o /var/www/localhost/htdocs/adminer.php
     chown lighttpd:lighttpd /var/www/localhost/htdocs/adminer.php
     chmod 755 /var/www/localhost/htdocs/adminer.php

@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -26,7 +25,10 @@ function update_script() {
   check_container_storage
   check_container_resources
 
-  if [[ ! -f /etc/systemd/system/onedev.service ]]; then
+  # Installs from before 16.9.0 keep their onedev.service; newer ones get onedev.server.service
+  SERVICE="onedev.server"
+  [[ -f /etc/systemd/system/onedev.service ]] && SERVICE="onedev"
+  if [[ ! -f "/etc/systemd/system/${SERVICE}.service" ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
   fi
@@ -35,12 +37,12 @@ function update_script() {
     JAVA_VERSION="21" setup_java
 
     msg_info "Stopping Service"
-    systemctl stop onedev
+    systemctl stop "$SERVICE"
     msg_ok "Stopped Service"
 
     msg_info "Updating OneDev"
     cd /opt
-    curl -fsSL "https://code.onedev.io/onedev/server/~site/onedev-latest.tar.gz" -o onedev-latest.tar.gz
+    curl -fsSL "https://code.onedev.io/onedev/server/~sites/public/onedev-latest.tar.gz" -o onedev-latest.tar.gz
     tar -xzf onedev-latest.tar.gz
     $STD /opt/onedev-latest/bin/upgrade.sh /opt/onedev
     rm -rf /opt/onedev-latest
@@ -49,7 +51,7 @@ function update_script() {
     msg_ok "Updated OneDev"
 
     msg_info "Starting Service"
-    systemctl start onedev
+    systemctl start "$SERVICE"
     msg_ok "Started Service"
     msg_ok "Updated successfully!"
     exit

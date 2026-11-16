@@ -34,6 +34,7 @@ $STD apt install -y \
   pkg-config \
   poppler-utils \
   python3-dev \
+  redis-server \
   tesseract-ocr
 msg_ok "Installed Dependencies"
 
@@ -70,6 +71,8 @@ REQUEST_CACHE_CONFIG={"CACHE_TYPE":"FileSystemCache","CACHE_DIR":"/opt/gramps-we
 PERSISTENT_CACHE_CONFIG={"CACHE_TYPE":"FileSystemCache","CACHE_DIR":"/opt/gramps-web/data/cache/persistent","CACHE_THRESHOLD":0,"CACHE_DEFAULT_TIMEOUT":0}
 REPORT_DIR="/opt/gramps-web/data/cache/report"
 EXPORT_DIR="/opt/gramps-web/data/cache/export"
+CELERY_CONFIG={"broker_url":"redis://127.0.0.1:6379/0","result_backend":"redis://127.0.0.1:6379/0"}
+RATELIMIT_STORAGE_URI="redis://127.0.0.1:6379/1"
 EOF
 $STD uv venv -c -p python3.12 /opt/gramps-web/venv
 source /opt/gramps-web/venv/bin/activate
@@ -82,7 +85,7 @@ GRAMPS_PLUGINS_DIR="/opt/gramps-web/data/gramps/gramps${GRAMPS_VERSION}/plugins"
 mkdir -p "$GRAMPS_PLUGINS_DIR"
 
 msg_info "Installing Gramps Addons (gramps${GRAMPS_VERSION})"
-$STD wget -q https://github.com/gramps-project/addons/archive/refs/heads/master.zip -O /tmp/gramps-addons.zip
+curl -fsSL -o /tmp/gramps-addons.zip https://github.com/gramps-project/addons/archive/refs/heads/master.zip
 for addon in FilterRules JSON; do
   unzip -p /tmp/gramps-addons.zip "addons-master/gramps${GRAMPS_VERSION}/download/${addon}.addon.tgz" | \
     tar -xz -C "$GRAMPS_PLUGINS_DIR"
@@ -107,7 +110,8 @@ msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/gramps-web.service
 [Unit]
 Description=Gramps Web Service
-After=network.target
+After=network.target redis-server.service
+Wants=redis-server.service
 
 [Service]
 Type=simple
@@ -124,7 +128,28 @@ RestartSec=5
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl enable -q --now gramps-web
+cat <<EOF >/etc/systemd/system/gramps-web-celery.service
+[Unit]
+Description=Gramps Web Celery Worker
+After=network.target redis-server.service
+Wants=redis-server.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/gramps-web-api
+Environment=GRAMPS_API_CONFIG=/opt/gramps-web/config/config.cfg
+Environment=GRAMPSHOME=/opt/gramps-web/data
+Environment=GRAMPS_DATABASE_PATH=/opt/gramps-web/data/gramps/grampsdb
+Environment=PATH=/opt/gramps-web/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/opt/gramps-web/venv/bin/celery -A gramps_webapi.celery worker --loglevel=INFO --concurrency=2
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable -q --now gramps-web gramps-web-celery
 msg_ok "Created Service"
 
 motd_ssh

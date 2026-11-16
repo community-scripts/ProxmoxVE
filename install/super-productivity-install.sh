@@ -51,9 +51,7 @@ server {
     }
 }
 EOF
-ln -sf /etc/nginx/sites-available/super-productivity.conf /etc/nginx/sites-enabled/super-productivity.conf
-rm -f /etc/nginx/sites-enabled/default
-systemctl reload nginx
+nginx_enable_site super-productivity.conf
 msg_ok "Configured Nginx"
 
 motd_ssh

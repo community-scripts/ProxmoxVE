@@ -16,8 +16,8 @@ update_os
 msg_info "Installing OpenObserve"
 mkdir -p /opt/openobserve/data
 RELEASE=$(get_latest_github_release "openobserve/openobserve")
-tar zxf <(curl -fsSL https://downloads.openobserve.ai/releases/openobserve/v$RELEASE/openobserve-v$RELEASE-linux-$(arch_resolve).tar.gz) -C /opt/openobserve
-ROOT_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c9)Aa1!"
+tar zxf <(curl -fsSL https://downloads.openobserve.ai/releases/openobserve/v$RELEASE/openobserve-v$RELEASE-linux-$(arch_resolve).tar.gz) -C /opt/openobserve --no-same-owner
+ROOT_PASS="$(random_password 9)Aa1!"
 
 cat <<EOF >/opt/openobserve/data/.env
 ZO_ROOT_USER_EMAIL = "admin@example.com"
@@ -25,7 +25,7 @@ ZO_ROOT_USER_PASSWORD = "${ROOT_PASS}"
 ZO_DATA_DIR = "/opt/openobserve/data"
 ZO_HTTP_PORT = "5080"
 EOF
-echo "${RELEASE}" >>~/.openobserve
+echo "${RELEASE}" >~/.openobserve
 msg_ok "Installed OpenObserve"
 
 msg_info "Creating Service"
@@ -38,7 +38,6 @@ After=network.target
 Type=simple
 EnvironmentFile=/opt/openobserve/data/.env
 ExecStart=/opt/openobserve/openobserve
-ExecStop=killall -QUIT openobserve
 Restart=on-failure
 
 [Install]

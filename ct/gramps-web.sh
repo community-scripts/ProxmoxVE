@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -35,9 +34,43 @@ function update_script() {
   PYTHON_VERSION="3.12" setup_uv
   NODE_VERSION="22" NODE_MODULE="corepack" setup_nodejs
 
+  if ! grep -q '^CELERY_CONFIG=' /opt/gramps-web/config/config.cfg; then
+    msg_info "Setting up Celery Task Queue"
+    ensure_dependencies redis-server
+    cat <<EOF >>/opt/gramps-web/config/config.cfg
+CELERY_CONFIG={"broker_url":"redis://127.0.0.1:6379/0","result_backend":"redis://127.0.0.1:6379/0"}
+RATELIMIT_STORAGE_URI="redis://127.0.0.1:6379/1"
+EOF
+    cat <<EOF >/etc/systemd/system/gramps-web-celery.service
+[Unit]
+Description=Gramps Web Celery Worker
+After=network.target redis-server.service
+Wants=redis-server.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/gramps-web-api
+Environment=GRAMPS_API_CONFIG=/opt/gramps-web/config/config.cfg
+Environment=GRAMPSHOME=/opt/gramps-web/data
+Environment=GRAMPS_DATABASE_PATH=/opt/gramps-web/data/gramps/grampsdb
+Environment=PATH=/opt/gramps-web/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/opt/gramps-web/venv/bin/celery -A gramps_webapi.celery worker --loglevel=INFO --concurrency=2
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    systemctl daemon-reload
+    systemctl enable -q --now redis-server gramps-web-celery
+    systemctl restart gramps-web
+    msg_ok "Set up Celery Task Queue"
+  fi
+
   if check_for_gh_release "gramps-web-api" "gramps-project/gramps-web-api"; then
     msg_info "Stopping Service"
-    systemctl stop gramps-web
+    systemctl stop gramps-web gramps-web-celery
     msg_ok "Stopped Service"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "gramps-web-api" "gramps-project/gramps-web-api" "tarball" "latest" "/opt/gramps-web-api"
@@ -63,7 +96,7 @@ function update_script() {
     GRAMPS_VERSION=$(/opt/gramps-web/venv/bin/python3 -c "import gramps.version; print('%s%s' % (gramps.version.VERSION_TUPLE[0], gramps.version.VERSION_TUPLE[1]))" 2>/dev/null || echo "60")
     GRAMPS_PLUGINS_DIR="/opt/gramps-web/data/gramps/gramps${GRAMPS_VERSION}/plugins"
     mkdir -p "$GRAMPS_PLUGINS_DIR"
-    $STD wget -q https://github.com/gramps-project/addons/archive/refs/heads/master.zip -O /tmp/gramps-addons.zip
+    curl -fsSL -o /tmp/gramps-addons.zip https://github.com/gramps-project/addons/archive/refs/heads/master.zip
     for addon in FilterRules JSON; do
       unzip -p /tmp/gramps-addons.zip "addons-master/gramps${GRAMPS_VERSION}/download/${addon}.addon.tgz" |
         tar -xz -C "$GRAMPS_PLUGINS_DIR"
@@ -72,7 +105,7 @@ function update_script() {
     msg_ok "Updated Gramps Addons"
 
     msg_info "Starting Service"
-    systemctl start gramps-web
+    systemctl start gramps-web gramps-web-celery
     msg_ok "Started Service"
   fi
 

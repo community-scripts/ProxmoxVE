@@ -29,25 +29,25 @@ rm -f /tmp/LanguageTool-stable.zip
 msg_ok "Setup LanguageTool"
 
 ngram_dir=""
-lang_code=""
+lang_code="${var_languagetool_ngram_lang:-}"
 max_attempts=3
 attempt=0
 
 while [[ $attempt -lt $max_attempts ]]; do
-  read -r -p "${TAB3}Enter language code (en, de, es, fr, nl) to download ngrams or press ENTER to skip: " lang_code
+  [[ -n "$lang_code" ]] || read -r -p "${TAB3}Enter language code (en, de, es, fr, nl) to download ngrams or press ENTER to skip: " lang_code || lang_code=""
 
   if [[ -z "$lang_code" ]]; then
     break
   fi
 
   if [[ "$lang_code" =~ [[:space:]] ]]; then
-    ((attempt++))
+    attempt=$((attempt + 1))
     remaining=$((max_attempts - attempt))
+    lang_code=""
     if [[ $remaining -gt 0 ]]; then
       msg_error "Please enter only ONE language code. You have $remaining attempt(s) remaining."
     else
       msg_error "Maximum attempts reached. Continuing without ngrams."
-      lang_code=""
     fi
     continue
   fi
@@ -60,18 +60,16 @@ if [[ -n "$lang_code" ]]; then
     filename=$(curl -fsSL https://languagetool.org/download/ngram-data/ | grep -oP "ngrams-${lang_code}-[0-9]+\.zip" | sort -uV | tail -n1)
 
     if [[ -n "$filename" ]]; then
-      msg_info "Downloading $filename"
       download_file "https://languagetool.org/download/ngram-data/${filename}" "/tmp/${filename}"
 
       mkdir -p /opt/ngrams
-      msg_info "Extracting $lang_code ngrams to /opt/ngrams"
       unzip -q "/tmp/${filename}" -d /opt/ngrams
       rm "/tmp/${filename}"
 
       ngram_dir="/opt/ngrams"
       msg_ok "Installed $lang_code ngrams"
     else
-      msg_info "No ngram file found for ${lang_code}"
+      msg_warn "No ngram file found for ${lang_code}"
     fi
   else
     msg_error "Invalid language code: $lang_code"

@@ -19,17 +19,15 @@ $STD apt install -y \
   nginx
 msg_ok "Installed Dependencies"
 
-PG_VERSION="17" PG_MODULES="postgis" setup_postgresql
+PG_VERSION="18" PG_MODULES="postgis" setup_postgresql
 PG_DB_NAME="geopulse" PG_DB_USER="geopulse" PG_DB_EXTENSIONS="postgis,postgis_topology" setup_postgresql_db
 
 msg_info "Generating Security Keys"
 mkdir -p /opt/geopulse/{backend,keys}
 mkdir -p /etc/geopulse /var/www/geopulse /var/lib/geopulse/dumps
 mkdir -p /var/log/geopulse/{backend,nginx}
-openssl genpkey -algorithm RSA -out /opt/geopulse/keys/jwt-private-key.pem 2>/dev/null
-openssl rsa -pubout -in /opt/geopulse/keys/jwt-private-key.pem -out /opt/geopulse/keys/jwt-public-key.pem 2>/dev/null
 openssl rand -base64 32 >/opt/geopulse/keys/ai-encryption-key.txt
-chmod 640 /opt/geopulse/keys/jwt-private-key.pem /opt/geopulse/keys/jwt-public-key.pem /opt/geopulse/keys/ai-encryption-key.txt
+chmod 640 /opt/geopulse/keys/ai-encryption-key.txt
 msg_ok "Generated Security Keys"
 
 if [[ "$(uname -m)" == "aarch64" ]]; then
@@ -62,8 +60,6 @@ GEOPULSE_POSTGRES_PORT=5432
 GEOPULSE_POSTGRES_DB=${PG_DB_NAME}
 GEOPULSE_POSTGRES_USERNAME=${PG_DB_USER}
 GEOPULSE_POSTGRES_PASSWORD=${PG_DB_PASS}
-GEOPULSE_JWT_PRIVATE_KEY_LOCATION=file:/opt/geopulse/keys/jwt-private-key.pem
-GEOPULSE_JWT_PUBLIC_KEY_LOCATION=file:/opt/geopulse/keys/jwt-public-key.pem
 GEOPULSE_AI_ENCRYPTION_KEY_LOCATION=file:/opt/geopulse/keys/ai-encryption-key.txt
 QUARKUS_LOG_FILE_ENABLE=true
 QUARKUS_LOG_FILE_PATH=/var/log/geopulse/backend/geopulse.log
@@ -124,6 +120,14 @@ server {
     gzip_min_length 1000;
 
     location ~* ^/(?!osm/).*\.(jpg|jpeg|png|gif|ico|css|js)$ {
+        expires 1y;
+        add_header Cache-Control "public, max-age=31536000";
+    }
+
+    location ~* ^/(?!osm/).*\.mjs$ {
+        types {
+            application/javascript mjs;
+        }
         expires 1y;
         add_header Cache-Control "public, max-age=31536000";
     }

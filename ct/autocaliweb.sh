@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -59,7 +58,7 @@ function update_script() {
     mkdir -p "$INSTALL_DIR"/metadata_temp
     $STD tar -xf ~/autocaliweb_bkp.tar --directory /
     KEPUB_VERSION="$(/usr/bin/kepubify --version)"
-    CALIBRE_RELEASE="$(curl -s https://api.github.com/repos/kovidgoyal/calibre/releases/latest | grep -o '"tag_name": "[^"]*' | cut -d'"' -f4)"
+    CALIBRE_RELEASE="$(get_latest_github_release "kovidgoyal/calibre")"
     echo "${KEPUB_VERSION#v}" >"$INSTALL_DIR"/KEPUBIFY_RELEASE
     echo "${CALIBRE_RELEASE#v}" >/"$INSTALL_DIR"/CALIBRE_RELEASE
     sed 's/^/v/' ~/.autocaliweb >"$INSTALL_DIR"/ACW_RELEASE

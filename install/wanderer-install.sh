@@ -33,7 +33,7 @@ msg_ok "Installed wanderer"
 
 msg_info "Installing wanderer plugins"
 for plugin in hammerhead komoot strava; do
-  fetch_and_deploy_gh_release "wanderer-plugin-${plugin}" "open-wanderer/wanderer" "prebuild" "latest" "/opt/wanderer_data/plugins" "wanderer-plugin-${plugin}.tar.gz" || msg_warn "Failed to install wanderer plugin: ${plugin}"
+  fetch_and_deploy_gh_release "wanderer-plugin-${plugin}" "open-wanderer/wanderer" "prebuild" "latest" "/opt/wanderer_data/plugins/${plugin}" "wanderer-plugin-${plugin}.tar.gz" || msg_warn "Failed to install wanderer plugin: ${plugin}"
 done
 msg_ok "Installed wanderer plugins"
 
@@ -49,9 +49,20 @@ PB_URL=${LOCAL_IP}:8090
 PUBLIC_POCKETBASE_URL=http://${LOCAL_IP}:8090
 PUBLIC_VALHALLA_URL=https://valhalla1.openstreetmap.de
 POCKETBASE_ENCRYPTION_KEY=${POCKETBASE_KEY}
+POCKETBASE_PROXY_SECRET=$(openssl rand -hex 32)
 PB_DB_LOCATION=/opt/wanderer_data/pb_data
 MEILI_DB_PATH=/opt/wanderer_data/meili_data
 EOF
+
+cat <<'EOF' >/usr/local/bin/wanderer-pb
+#!/usr/bin/env bash
+set -a
+source /opt/wanderer/.env
+set +a
+cd /opt/wanderer/db
+exec ./pocketbase "$@" --dir="$PB_DB_LOCATION"
+EOF
+chmod +x /usr/local/bin/wanderer-pb
 
 cat <<EOF >/etc/systemd/system/wanderer-pocketbase.service
 [Unit]

@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 tteck
@@ -45,7 +44,7 @@ function update_script() {
       docker pull "${CONTAINER_IMAGE}"
       LATEST_IMAGE="$(docker inspect --format "{{.Id}}" --type image "${CONTAINER_IMAGE}")"
       if [[ "${RUNNING_IMAGE}" != "${LATEST_IMAGE}" ]]; then
-        pip install -U runlike
+        pip install -U runlike --break-system-packages
         echo "Updating ${container} image ${CONTAINER_IMAGE}"
         DOCKER_COMMAND="$(runlike --use-volume-id "${container}")"
         docker rm --force "${container}"
@@ -71,32 +70,7 @@ function update_script() {
     exit
   fi
   if [ "$UPD" == "4" ]; then
-    msg_info "Installing FileBrowser"
-    RELEASE=$(curl -fsSL https://api.github.com/repos/filebrowser/filebrowser/releases/latest | grep -o '"tag_name": ".*"' | sed 's/"//g' | sed 's/tag_name: //g')
-    $STD curl -fsSL https://github.com/filebrowser/filebrowser/releases/download/v2.23.0/linux-$(arch_resolve)-filebrowser.tar.gz | tar -xzv -C /usr/local/bin
-    $STD filebrowser config init -a '0.0.0.0'
-    $STD filebrowser config set -a '0.0.0.0'
-    $STD filebrowser users add admin community-scripts.org --perm.admin
-    msg_ok "Installed FileBrowser"
-
-    msg_info "Creating Service"
-    service_path="/etc/systemd/system/filebrowser.service"
-    echo "[Unit]
-Description=Filebrowser
-After=network-online.target
-[Service]
-User=root
-WorkingDirectory=/root/
-ExecStart=/usr/local/bin/filebrowser -r /
-[Install]
-WantedBy=default.target" >$service_path
-
-    $STD systemctl enable --now filebrowser
-    msg_ok "Created Service"
-
-    msg_ok "Completed successfully!\n"
-    echo -e "FileBrowser should be reachable by going to the following URL.
-         ${BL}http://$LOCAL_IP:8080${CL}   admin|community-scripts.org\n"
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/addon/filebrowser.sh)"
     exit
   fi
 }

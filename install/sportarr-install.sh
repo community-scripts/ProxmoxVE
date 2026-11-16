@@ -48,7 +48,7 @@ Restart=always
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now sportarr
-msg_info "Created Service"
+msg_ok "Created Service"
 
 motd_ssh
 customize

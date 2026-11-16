@@ -3,7 +3,7 @@
 set -eEuo pipefail
 
 function header_info() {
-  clear
+  clear 2>/dev/null || printf '\033[H\033[2J\033[3J'
   cat <<"EOF"
     _______ __                     __                    ______     _
    / ____(_) /__  _______  _______/ /____  ____ ___     /_  __/____(_)___ ___
@@ -20,7 +20,7 @@ GN="\033[1;92m"
 CL="\033[m"
 
 # Telemetry
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/api/api.func") 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "fstrim" "pve"
 
 LOGFILE="/var/log/fstrim.log"
@@ -118,7 +118,8 @@ function trim_container() {
   fi
 
   local fstrim_output
-  fstrim_output=$(pct fstrim "$container" 2>&1)
+  # pct fstrim fails on a locked CT (e.g. a running backup); report it and go on.
+  fstrim_output=$(pct fstrim "$container" 2>&1) || true
   if echo "$fstrim_output" | grep -qi "not supported"; then
     echo -e "${RD}fstrim isnt supported on this storage!${CL}"
   elif echo "$fstrim_output" | grep -Eq '([0-9]+(\.[0-9]+)?\s*[KMGT]?B)'; then

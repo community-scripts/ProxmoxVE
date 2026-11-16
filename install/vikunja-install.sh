@@ -17,6 +17,7 @@ fetch_and_deploy_gh_release "vikunja" "go-vikunja/vikunja" "binary" "latest" "" 
 
 msg_info "Setting up Vikunja"
 sed -i 's|^# \(service:\)|\1|' /etc/vikunja/config.yml
+sed -i '0,/^service:/!{/^service:/d}' /etc/vikunja/config.yml
 sed -i "s|^  # \(publicurl: \).*|  \1\"http://$LOCAL_IP\"|" /etc/vikunja/config.yml
 sed -i "0,/^  # \(timezone: \).*/s||  \1${tz}|" /etc/vikunja/config.yml
 systemctl enable -q --now vikunja

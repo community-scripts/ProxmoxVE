@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -37,11 +36,7 @@ function update_script() {
     systemctl stop ownfoil
     msg_ok "Stopped Service"
 
-    create_backup /opt/ownfoil/app/config
-
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "ownfoil" "a1ex4/ownfoil" "tarball" "${RELEASE}"
-
-    restore_backup
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="app/config" fetch_and_deploy_gh_release "ownfoil" "a1ex4/ownfoil" "tarball" "${RELEASE}"
 
     msg_info "Installing Dependencies"
     cd /opt/ownfoil

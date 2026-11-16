@@ -45,7 +45,7 @@ PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="cli,snmp,gmp" setup_php
 setup_mariadb
 setup_composer
 PYTHON_VERSION="3.13" setup_uv
-MARIADB_DB_NAME="librenms" MARIADB_DB_USER="librenms" MARIADB_DB_PASS="$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)" setup_mariadb_db
+MARIADB_DB_NAME="librenms" MARIADB_DB_USER="librenms" MARIADB_DB_PASS="$(random_password 13)" setup_mariadb_db
 fetch_and_deploy_gh_release "librenms" "librenms/librenms" "tarball"
 
 msg_info "Configuring LibreNMS"
@@ -114,7 +114,7 @@ mkdir -p /etc/bash_completion.d/
 cp /opt/librenms/misc/lnms-completion.bash /etc/bash_completion.d/
 cp /opt/librenms/snmpd.conf.example /etc/snmp/snmpd.conf
 
-APP_PASSWORD=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+APP_PASSWORD=$(random_password 13)
 APP_USER="admin"
 cat <<EOF >~/librenms.creds
 LibreNMS Credentials
@@ -128,7 +128,7 @@ $STD su - librenms -s /bin/bash -c "cd /opt/librenms && php8.4 artisan key:gener
 $STD su - librenms -s /bin/bash -c "cd /opt/librenms && lnms db:seed --force"
 $STD su - librenms -s /bin/bash -c "cd /opt/librenms && lnms user:add -p ${APP_PASSWORD} ${APP_USER} --role=admin"
 
-RANDOM_STRING=$(openssl rand -base64 16 | tr -dc 'a-zA-Z0-9')
+RANDOM_STRING=$(random_password 20)
 sed -i "s/RANDOMSTRINGGOESHERE/$RANDOM_STRING/g" /etc/snmp/snmpd.conf
 echo "SNMP Community String: $RANDOM_STRING" >>~/librenms.creds
 curl -qso /usr/bin/distro https://raw.githubusercontent.com/librenms/librenms-agent/master/snmp/distro

@@ -13,15 +13,18 @@ setting_up_container
 network_check
 update_os
 
-var_cf_api_token="default"
-read -rp "${TAB3}Enter the Cloudflare API token: " var_cf_api_token
+var_cf_api_token="${var_cf_api_token:-}"
+[[ -n "$var_cf_api_token" ]] || read -rp "${TAB3}Enter the Cloudflare API token: " var_cf_api_token || true
+[[ -n "$var_cf_api_token" ]] || { msg_error "No Cloudflare API token given; set var_cf_api_token or answer the prompt"; exit 64; }
 
-var_cf_domains="default"
-read -rp "${TAB3}Enter the domains separated with a comma (*.example.org,www.example.org) " var_cf_domains
+var_cf_domains="${var_cf_domains:-}"
+[[ -n "$var_cf_domains" ]] || read -rp "${TAB3}Enter the domains separated with a comma (*.example.org,www.example.org) " var_cf_domains || true
+[[ -n "$var_cf_domains" ]] || { msg_error "No domains given; set var_cf_domains or answer the prompt"; exit 64; }
 
 var_cf_proxied="false"
+answer="${var_cloudflare_ddns_proxied:-}"
 while true; do
-  read -rp "${TAB3}Proxied? (y/n): " answer
+  [[ -n "$answer" ]] || read -rp "${TAB3}Proxied? (y/n): " answer || answer="n"
   case "$answer" in
   [Yy]*)
     var_cf_proxied="true"
@@ -31,12 +34,13 @@ while true; do
     var_cf_proxied="false"
     break
     ;;
-  *) echo "Please answer y or n." ;;
+  *) echo "Please answer y or n."; answer="" ;;
   esac
 done
 var_cf_ip6_provider="none"
+answer="${var_cloudflare_ddns_ipv6:-}"
 while true; do
-  read -rp "${TAB3}Enable IPv6 support? (y/n): " answer
+  [[ -n "$answer" ]] || read -rp "${TAB3}Enable IPv6 support? (y/n): " answer || answer="n"
   case "$answer" in
   [Yy]*)
     var_cf_ip6_provider="cloudflare.trace"
@@ -46,7 +50,7 @@ while true; do
     var_cf_ip6_provider="none"
     break
     ;;
-  *) echo "Please answer y or n." ;;
+  *) echo "Please answer y or n."; answer="" ;;
   esac
 done
 msg_ok "Configured Application"

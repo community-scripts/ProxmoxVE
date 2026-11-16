@@ -14,42 +14,39 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt-get install -y \
-  git \
-  procps \
-  dnsutils \
-  python3.13
+$STD apt install -y chromium
 msg_ok "Installed Dependencies"
 
-setup_uv
+export UV_PYTHON_INSTALL_DIR="/opt/archivebox/python"
+PYTHON_VERSION="3.13" setup_uv
 
 msg_info "Installing ArchiveBox"
+ARCHIVEBOX_VERSION="${var_appversion:-$(get_latest_github_release "ArchiveBox/ArchiveBox")}"
 mkdir -p /opt/archivebox/data
-$STD adduser --system --shell /bin/bash --gecos 'Archive Box User' --group --disabled-password --home /home/archivebox archivebox
-$STD uv venv --python /usr/bin/python3.13 /opt/archivebox/venv
-$STD uv pip install --python /opt/archivebox/venv/bin/python archivebox
-ln -sf /opt/archivebox/venv/bin/archivebox /usr/local/bin/archivebox
-mkdir -p /home/archivebox/.config
-chown -R archivebox:archivebox /opt/archivebox /home/archivebox
+$STD uv venv --python 3.13 /opt/archivebox/.venv
+$STD uv pip install --python /opt/archivebox/.venv/bin/python "archivebox==${ARCHIVEBOX_VERSION#v}"
+ln -sf /opt/archivebox/.venv/bin/archivebox /usr/local/bin/archivebox
+cat <<EOF >~/.archivebox
+${ARCHIVEBOX_VERSION#v}
+EOF
 msg_ok "Installed ArchiveBox"
 
 msg_info "Initializing ArchiveBox"
 cd /opt/archivebox/data
-$STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox init
-$STD sudo -u archivebox env \
-  DJANGO_SUPERUSER_USERNAME=archivebox \
-  DJANGO_SUPERUSER_EMAIL=archivebox@archivebox.local \
-  DJANGO_SUPERUSER_PASSWORD=community-scripts.org \
-  /opt/archivebox/venv/bin/archivebox manage createsuperuser --noinput
-$STD sudo -u archivebox /opt/archivebox/venv/bin/archivebox config --set "BASE_URL=http://$(get_ip):5797" MERCURY_ENABLED=False
+$STD archivebox init
+ADMIN_PASS=$(random_password 20)
+DJANGO_SUPERUSER_USERNAME=archivebox DJANGO_SUPERUSER_EMAIL=archivebox@archivebox.local DJANGO_SUPERUSER_PASSWORD="$ADMIN_PASS" $STD archivebox manage createsuperuser --noinput
+$STD archivebox config --set "BASE_URL=http://${LOCAL_IP}:5797"
+cat <<EOF >~/archivebox.creds
+ArchiveBox Credentials
+Username: archivebox
+Password: ${ADMIN_PASS}
+EOF
 msg_ok "Initialized ArchiveBox"
 
-msg_info "Installing Extractors (Patience)"
-AB_RUNTIME="/tmp/archivebox-runtime-$(id -u archivebox)"
-install -d -m 700 -o archivebox -g archivebox "$AB_RUNTIME"
-$STD env HOME=/home/archivebox USER=archivebox LOGNAME=archivebox XDG_CONFIG_HOME=/home/archivebox/.config XDG_RUNTIME_DIR="$AB_RUNTIME" \
-  /opt/archivebox/venv/bin/archivebox install
-msg_ok "Installed Extractors"
+msg_info "Installing ArchiveBox Extractors"
+$STD archivebox install
+msg_ok "Installed ArchiveBox Extractors"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/archivebox.service
@@ -58,10 +55,8 @@ Description=ArchiveBox Server
 After=network.target
 
 [Service]
-User=archivebox
 WorkingDirectory=/opt/archivebox/data
-ExecStartPre=/opt/archivebox/venv/bin/archivebox init
-ExecStart=/opt/archivebox/venv/bin/archivebox server 0.0.0.0:5797
+ExecStart=/opt/archivebox/.venv/bin/archivebox server 0.0.0.0:5797
 Restart=always
 
 [Install]

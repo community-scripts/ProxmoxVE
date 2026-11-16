@@ -13,6 +13,11 @@ setting_up_container
 network_check
 update_os
 
+if is_debian && [[ "$(get_os_version_major)" -lt 13 ]]; then
+  msg_error "UniFi OS Server needs Debian 13: its installer requires a newer Podman than Debian 12 ships."
+  exit 238
+fi
+
 if [[ "${CTTYPE:-1}" != "0" ]]; then
   msg_error "UniFi OS Server requires a privileged LXC container."
   msg_error "Recreate the container with unprivileged=0."

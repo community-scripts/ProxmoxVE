@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -32,12 +31,13 @@ function update_script() {
     exit
   fi
 
-  if check_for_gh_release "stalwart" "stalwartlabs/stalwart"; then
+  RELEASE="v0.16.27"
+  if check_for_gh_release "stalwart" "stalwartlabs/stalwart" "${RELEASE}" "Stalwart v1 changes the data store layout and requires an offline migration with stalwartlabs/stalwart-migrate; pinned until this script supports it"; then
     msg_info "Stopping Service"
     systemctl stop stalwart
     msg_ok "Stopped Service"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "stalwart" "stalwartlabs/stalwart" "prebuild" "latest" "/opt/stalwart" "stalwart-$(arch_resolve x86_64 aarch64)-unknown-linux-gnu.tar.gz"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "stalwart" "stalwartlabs/stalwart" "prebuild" "${RELEASE}" "/opt/stalwart" "stalwart-$(arch_resolve x86_64 aarch64)-unknown-linux-gnu.tar.gz"
     chmod +x /opt/stalwart/stalwart
 
     msg_info "Starting Service"

@@ -13,10 +13,15 @@ setting_up_container
 network_check
 update_os
 
+if is_debian && [[ "$(get_os_version_major)" -lt 13 ]]; then
+  msg_error "Podman Home Assistant needs Debian 13: its Quadlet units require Podman 4.4 or newer."
+  exit 238
+fi
+
 PORTAINER_LATEST_VERSION=$(get_latest_github_release "portainer/portainer")
 PORTAINER_AGENT_LATEST_VERSION=$(get_latest_github_release "portainer/agent")
 
-if $STD mount | grep 'on / type zfs' >null && echo "ZFS"; then
+if $STD mount | grep 'on / type zfs' >/dev/null && echo "ZFS"; then
   msg_info "Enabling ZFS support."
   mkdir -p /etc/containers
   cat <<'EOF' >/usr/local/bin/overlayzfsmount
@@ -37,6 +42,7 @@ mount_program = "/usr/local/bin/overlayzfsmount"
 [storage.options.overlay]
 mountopt = "nodev"
 EOF
+  msg_ok "Enabled ZFS support"
 fi
 
 msg_info "Installing Podman"
@@ -47,7 +53,8 @@ msg_ok "Installed Podman"
 
 mkdir -p /etc/containers/systemd
 
-read -r -p "${TAB3}Would you like to add Portainer? <y/N> " prompt
+prompt="${var_podman_homeassistant_portainer:-}"
+[[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Portainer? <y/N> " prompt || true
 if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
   msg_info "Installing Portainer $PORTAINER_LATEST_VERSION"
   podman volume create portainer_data >/dev/null
@@ -74,7 +81,8 @@ EOF
   $STD systemctl start portainer
   msg_ok "Installed Portainer $PORTAINER_LATEST_VERSION"
 else
-  read -r -p "${TAB3}Would you like to add the Portainer Agent? <y/N> " prompt
+  prompt="${var_podman_homeassistant_portainer_agent:-}"
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add the Portainer Agent? <y/N> " prompt || true
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     msg_info "Installing Portainer agent $PORTAINER_AGENT_LATEST_VERSION"
     cat <<EOF >/etc/containers/systemd/portainer-agent.container

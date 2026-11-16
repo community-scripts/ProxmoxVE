@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 tteck
@@ -39,19 +38,30 @@ update_deb_based() {
     exit
   fi
 
+  cleanup_old_repo_files "caddy"
   msg_info "Updating Caddy LXC"
   apt_update_safe
   $STD apt upgrade -y
   msg_ok "Updated Caddy LXC"
+
+  [[ -f ~/.caddy ]] || dpkg-query -W -f='${Version}' caddy >~/.caddy 2>/dev/null || true
+  if check_for_gh_release "caddy" "caddyserver/caddy"; then
+    DPKG_FORCE_CONFOLD=1 fetch_and_deploy_gh_release "caddy" "caddyserver/caddy" "binary" "latest" "/opt/caddy" "caddy_*_linux_$(arch_resolve).deb"
+    systemctl restart caddy
+  fi
 
   if command -v xcaddy >/dev/null 2>&1; then
     if check_for_gh_release "xcaddy" "caddyserver/xcaddy"; then
       setup_go
       fetch_and_deploy_gh_release "xcaddy" "caddyserver/xcaddy" "binary"
 
-      msg_info "Updating xCaddy"
-      $STD xcaddy build
-      msg_ok "Updated xCaddy"
+      if (($(awk '/^MemTotal:/ {print int($2 / 1024)}' /proc/meminfo) < 1900)); then
+        msg_warn "xCaddy updated; its test build was skipped because linking Caddy needs about 2 GB RAM"
+      else
+        msg_info "Updating xCaddy"
+        $STD xcaddy build
+        msg_ok "Updated xCaddy"
+      fi
     fi
   fi
   msg_ok "Updated successfully!"

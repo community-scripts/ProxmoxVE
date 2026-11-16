@@ -55,7 +55,7 @@ sqlite3 /var/lib/powerdns/powerdns.db </opt/poweradmin/sql/pdns/49/schema.sqlite
 PA_ADMIN_USERNAME="admin"
 PA_ADMIN_EMAIL="admin@example.com"
 PA_ADMIN_FULLNAME="Administrator"
-PA_ADMIN_PASSWORD=$(openssl rand -base64 16 | tr -d "=+/" | cut -c1-16)
+PA_ADMIN_PASSWORD=$(random_password 16)
 PA_SESSION_KEY=$(openssl rand -base64 75 | tr -dc 'A-Za-z0-9^@#!(){}[]%_\-+=~' | head -c 50)
 PASSWORD_HASH=$(php -r "echo password_hash(\$argv[1], PASSWORD_DEFAULT);" -- "${PA_ADMIN_PASSWORD}" 2>/dev/null)
 sqlite3 /var/lib/powerdns/powerdns.db "INSERT INTO users (username, password, fullname, email, description, perm_templ, active, use_ldap) \

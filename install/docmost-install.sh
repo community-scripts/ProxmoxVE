@@ -39,7 +39,7 @@ fi
 
 mv .env.example .env
 mkdir data
-sed -i -e "s|APP_SECRET=.*|APP_SECRET=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)|" \
+sed -i -e "s|APP_SECRET=.*|APP_SECRET=$(random_password 32)|" \
   -e "s|DATABASE_URL=.*|DATABASE_URL=\"postgres://$PG_DB_USER:$PG_DB_PASS@localhost:5432/$PG_DB_NAME?schema=public\"|" \
   -e "s|FILE_UPLOAD_SIZE_LIMIT=.*|FILE_UPLOAD_SIZE_LIMIT=50mb|" \
   -e "s|DRAWIO_URL=.*|DRAWIO_URL=https://embed.diagrams.net|" \

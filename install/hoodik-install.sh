@@ -17,7 +17,7 @@ fetch_and_deploy_gh_release "hoodik" "hudikhq/hoodik" "prebuild" "latest" "/opt/
 
 msg_info "Configuring Hoodik"
 mkdir -p /opt/hoodik_data
-JWT_SECRET=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | cut -c1-32)
+JWT_SECRET=$(random_password 32)
 cat <<EOF >/opt/hoodik/.env
 DATA_DIR=/opt/hoodik_data
 HTTP_PORT=5443

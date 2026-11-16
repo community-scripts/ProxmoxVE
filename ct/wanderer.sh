@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-_CS_DEFAULT_URL="https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main"
 _cs_boot="${COMMUNITY_SCRIPTS_CORE_DIR:-$(dirname "${BASH_SOURCE[0]}")/../../core}/core/build.func"
 source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/build.func")
 # Copyright (c) 2021-2026 community-scripts ORG
@@ -101,7 +100,6 @@ EOF
       -e "s|^MEILI_DB_PATH=.*|MEILI_DB_PATH=/opt/wanderer_data/meili_data|" \
       /opt/wanderer/.env
     sed -i "s|^db_path =.*|db_path = \"/opt/wanderer_data/meili_data\"|" /etc/meilisearch.toml
-    rm -f /usr/local/bin/wanderer-pb
 
     cat <<EOF >/etc/systemd/system/wanderer-pocketbase.service
 [Unit]
@@ -149,6 +147,33 @@ EOF
     msg_ok "Migrated wanderer services"
   fi
 
+  if ! grep -q '^POCKETBASE_PROXY_SECRET=' /opt/wanderer/.env; then
+    msg_info "Adding POCKETBASE_PROXY_SECRET"
+    echo "POCKETBASE_PROXY_SECRET=$(openssl rand -hex 32)" >>/opt/wanderer/.env
+    systemctl restart wanderer-web
+    msg_ok "Added POCKETBASE_PROXY_SECRET"
+  fi
+
+  cat <<'EOF' >/usr/local/bin/wanderer-pb
+#!/usr/bin/env bash
+set -a
+source /opt/wanderer/.env
+set +a
+cd /opt/wanderer/db
+exec ./pocketbase "$@" --dir="$PB_DB_LOCATION"
+EOF
+  chmod +x /usr/local/bin/wanderer-pb
+
+  if [[ -f /opt/wanderer_data/plugins/plugin.json ]]; then
+    msg_info "Reinstalling wanderer plugins, one directory each"
+    find /opt/wanderer_data/plugins -maxdepth 1 -type f -delete
+    for plugin in hammerhead komoot strava; do
+      rm -f ~/.wanderer-plugin-${plugin}
+      fetch_and_deploy_gh_release "wanderer-plugin-${plugin}" "open-wanderer/wanderer" "prebuild" "latest" "/opt/wanderer_data/plugins/${plugin}" "wanderer-plugin-${plugin}.tar.gz" || msg_warn "Failed to install wanderer plugin: ${plugin}"
+    done
+    msg_ok "Reinstalled wanderer plugins"
+  fi
+
   if check_for_gh_release "wanderer" "open-wanderer/wanderer"; then
     msg_info "Stopping service"
     systemctl stop wanderer-web
@@ -171,7 +196,7 @@ EOF
     [[ -e /opt/wanderer/db/data/plugins ]] || ln -sfn /opt/wanderer_data/plugins /opt/wanderer/db/data/plugins
     msg_info "Installing wanderer plugins"
     for plugin in hammerhead komoot strava; do
-      fetch_and_deploy_gh_release "wanderer-plugin-${plugin}" "open-wanderer/wanderer" "prebuild" "${CHECK_UPDATE_RELEASE:-latest}" "/opt/wanderer_data/plugins" "wanderer-plugin-${plugin}.tar.gz" || msg_warn "Failed to install wanderer plugin: ${plugin}"
+      fetch_and_deploy_gh_release "wanderer-plugin-${plugin}" "open-wanderer/wanderer" "prebuild" "${CHECK_UPDATE_RELEASE:-latest}" "/opt/wanderer_data/plugins/${plugin}" "wanderer-plugin-${plugin}.tar.gz" || msg_warn "Failed to install wanderer plugin: ${plugin}"
     done
     msg_ok "Installed wanderer plugins"
     msg_ok "Updated wanderer"

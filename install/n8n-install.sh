@@ -23,7 +23,10 @@ msg_ok "Installed Dependencies"
 NODE_VERSION="24" setup_nodejs
 
 msg_info "Installing n8n (Patience)"
-$STD npm install -g n8n@latest
+# n8n-nodes-base 2.46.0 pins both @napi-rs/canvas musl binaries as hard
+# dependencies, which no os/cpu/libc combination can satisfy. Drop --force
+# once upstream makes them optional again.
+$STD npm install -g n8n@latest --force
 msg_ok "Installed n8n"
 
 msg_info "Creating Service"

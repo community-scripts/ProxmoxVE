@@ -22,7 +22,7 @@ fetch_and_deploy_gh_release "Radicale" "Kozea/Radicale" "tarball" "latest" "/opt
 
 msg_info "Setting up Radicale"
 cd /opt/radicale
-RNDPASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | head -c13)
+RNDPASS=$(random_password 13)
 $STD htpasswd -c -b -5 /opt/radicale/users admin "$RNDPASS"
 cat <<EOF >~/radicale.creds
 Radicale Credentials
@@ -58,7 +58,7 @@ Requires=network.target
 
 [Service]
 WorkingDirectory=/opt/radicale
-ExecStart=/usr/local/bin/uv run -m radicale --config /etc/radicale/config
+ExecStart=/usr/local/bin/uv run --extra bcrypt --extra argon2 -m radicale --config /etc/radicale/config
 Restart=on-failure
 # User=radicale
 # Deny other users access to the calendar data

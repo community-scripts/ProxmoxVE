@@ -41,6 +41,9 @@ export DATABASE_DRIVER="node"
 export KEY_VAULTS_SECRET="$(openssl rand -base64 32)"
 export AUTH_SECRET="$(openssl rand -base64 32)"
 export APP_URL="http://localhost:3210"
+if grep -qE '"@lobehub/ui": "\^5\.4[0-9]\.' package.json; then
+  sed -i "/^overrides:/a\  '@lobehub/ui': ~5.49.1" pnpm-workspace.yaml
+fi
 $STD pnpm install
 $STD pnpm run build:docker
 msg_ok "Built Application"

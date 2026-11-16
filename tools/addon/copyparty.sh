@@ -15,15 +15,15 @@ if ! command -v curl &>/dev/null; then
     apt-get install -y curl >/dev/null 2>&1
   fi
 fi
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/core.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/tools.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/error_handler.func)
-source <(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/misc/api.func) 2>/dev/null || true
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/core.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/lib/tools.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/error_handler.func")
+source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/api/api.func") 2>/dev/null || true
 declare -f init_tool_telemetry &>/dev/null && init_tool_telemetry "copyparty" "addon"
 
 # Enable error handling
 set -Eeuo pipefail
-trap 'error_handler' ERR
+catch_errors
 load_functions
 
 # ==============================================================================
@@ -151,9 +151,9 @@ function install() {
   else
     read -rp "${TAB}Set admin username [admin]: " admin_user
     admin_user=${admin_user:-admin}
-    read -rsp "${TAB}Set admin password [community-scripts.org]: " admin_pass
+    read -rsp "${TAB}Set admin password [random]: " admin_pass
     echo ""
-    admin_pass=${admin_pass:-community-scripts.org}
+    admin_pass=${admin_pass:-$(random_password 20)}
     msg_ok "Configured with admin user: ${admin_user}"
   fi
 
@@ -291,8 +291,10 @@ UPDATEEOF
   msg_ok "Storage: ${BL}${DATA_PATH}${CL}"
   msg_ok "Config: ${BL}${CONF_PATH}${CL}"
   if [[ -n "$admin_user" ]]; then
+    echo -e "Copyparty\nUsername: ${admin_user}\nPassword: ${admin_pass}" >~/copyparty.creds
+    chmod 600 ~/copyparty.creds
     echo ""
-    msg_ok "Login: ${GN}${admin_user}${CL} / ${GN}${admin_pass}${CL}"
+    msg_ok "Login: ${GN}${admin_user}${CL} (password in ~/copyparty.creds)"
   fi
 }
 

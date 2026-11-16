@@ -26,9 +26,9 @@ PG_VERSION="17" setup_postgresql
 msg_info "Setup PostgreSQL"
 DB_NAME="warranty_db"
 DB_USER="warranty_user"
-DB_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
+DB_PASS=$(random_password 13)
 DB_ADMIN_USER="warracker_admin"
-DB_ADMIN_PASS=$(openssl rand -base64 18 | tr -dc 'a-zA-Z0-9' | cut -c1-13)
+DB_ADMIN_PASS=$(random_password 13)
 $STD sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '$DB_PASS';"
 $STD sudo -u postgres psql -c "CREATE USER $DB_ADMIN_USER WITH PASSWORD '$DB_ADMIN_PASS' SUPERUSER;"
 $STD sudo -u postgres psql -c "CREATE DATABASE $DB_NAME OWNER $DB_ADMIN_USER;"
