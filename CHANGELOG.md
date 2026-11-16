@@ -584,6 +584,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-11-16
+
+### 🚀 Updated Scripts
+
+  - #### 💥 Breaking Changes
+
+    - immich: reuse prebuilt image-processing libraries from the base image [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#18605](https://github.com/community-scripts/ProxmoxVE/pull/18605))
+
 ## 2026-11-15
 
 ### 🆕 New Scripts
