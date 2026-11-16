@@ -600,6 +600,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - immich: reuse prebuilt image-processing libraries from the base image [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#18605](https://github.com/community-scripts/ProxmoxVE/pull/18605))
 
+### 💾 Core
+
+  - forge: a .deb without service units is not an error [@MickLesk](https://github.com/MickLesk) ([core#269](https://github.com/community-scripts/core/pull/269))
+
 ## 2026-11-15
 
 ### 🆕 New Scripts
