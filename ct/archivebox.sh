@@ -9,7 +9,7 @@ source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_
 APP="ArchiveBox"
 var_tags="${var_tags:-archive;bookmark}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-2048}"
+var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
