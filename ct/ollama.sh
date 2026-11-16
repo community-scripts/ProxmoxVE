@@ -34,9 +34,6 @@ function update_script() {
 
   if check_for_gh_release "ollama-com" "ollama/ollama"; then
     ensure_dependencies zstd
-    # Download into a staging dir while Ollama keeps serving, stop it only for the swap.
-    # The release tarball is >1.5 GB: stopping first meant long downtime on slow links,
-    # and a failed download left the container without any Ollama binary.
     OLLAMA_INSTALL_DIR="/usr/local/lib/ollama"
     OLLAMA_STAGING_DIR="${OLLAMA_INSTALL_DIR}.new"
     rm -rf "$OLLAMA_STAGING_DIR"

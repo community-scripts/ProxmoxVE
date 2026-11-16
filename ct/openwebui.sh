@@ -101,8 +101,6 @@ EOF
   if [ -x "/usr/bin/ollama" ]; then
     msg_info "Checking for Ollama Update"
     if check_for_gh_release "ollama-com" "ollama/ollama"; then
-      # Download into a staging dir while Ollama keeps serving, stop it only for the swap
-      # (same pattern as ct/ollama.sh; a failed download leaves the running Ollama untouched).
       rm -rf /usr/lib/ollama.new
       mkdir -p /usr/lib/ollama.new
       if ! fetch_and_deploy_gh_release "ollama-com" "ollama/ollama" "prebuild" "latest" "/usr/lib/ollama.new" "ollama-linux-$(arch_resolve).tar.zst"; then
