@@ -588,6 +588,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - reactive-resume: bump Node.js from 24 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18758](https://github.com/community-scripts/ProxmoxVE/pull/18758))
+
   - #### 💥 Breaking Changes
 
     - immich: reuse prebuilt image-processing libraries from the base image [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#18605](https://github.com/community-scripts/ProxmoxVE/pull/18605))
