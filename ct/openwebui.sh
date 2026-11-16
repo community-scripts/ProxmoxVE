@@ -101,21 +101,29 @@ EOF
   if [ -x "/usr/bin/ollama" ]; then
     msg_info "Checking for Ollama Update"
     if check_for_gh_release "ollama-com" "ollama/ollama"; then
-      msg_info "Stopping Ollama Service"
-      systemctl stop ollama
-      msg_ok "Stopped Service"
-
-      rm -rf /usr/lib/ollama /usr/bin/ollama
-      if ! fetch_and_deploy_gh_release "ollama-com" "ollama/ollama" "prebuild" "latest" "/usr/lib/ollama" "ollama-linux-$(arch_resolve).tar.zst"; then
-        msg_error "Ollama download or deployment failed – check network connectivity and GitHub API availability"
+      rm -rf /usr/lib/ollama.new
+      mkdir -p /usr/lib/ollama.new
+      if ! fetch_and_deploy_gh_release "ollama-com" "ollama/ollama" "prebuild" "latest" "/usr/lib/ollama.new" "ollama-linux-$(arch_resolve).tar.zst"; then
+        rm -rf /usr/lib/ollama.new
+        msg_error "Ollama download or deployment failed – check network connectivity and GitHub API availability (installed Ollama left unchanged)"
       else
-        ln -sf /usr/lib/ollama/bin/ollama /usr/bin/ollama
-        msg_ok "Updated Ollama to ${CHECK_UPDATE_RELEASE}"
-      fi
+        msg_info "Stopping Ollama Service"
+        systemctl stop ollama
+        msg_ok "Stopped Service"
 
-      msg_info "Starting Ollama Service"
-      systemctl start ollama
-      msg_ok "Started Service"
+        rm -rf /usr/lib/ollama.old
+        if [[ -d /usr/lib/ollama ]]; then
+          mv /usr/lib/ollama /usr/lib/ollama.old
+        fi
+        mv /usr/lib/ollama.new /usr/lib/ollama
+        ln -sf /usr/lib/ollama/bin/ollama /usr/bin/ollama
+        rm -rf /usr/lib/ollama.old
+        msg_ok "Updated Ollama to ${CHECK_UPDATE_RELEASE}"
+
+        msg_info "Starting Ollama Service"
+        systemctl start ollama
+        msg_ok "Started Service"
+      fi
     fi
   fi
 

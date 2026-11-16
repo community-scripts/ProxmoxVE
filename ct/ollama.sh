@@ -34,18 +34,25 @@ function update_script() {
 
   if check_for_gh_release "ollama-com" "ollama/ollama"; then
     ensure_dependencies zstd
+    OLLAMA_INSTALL_DIR="/usr/local/lib/ollama"
+    OLLAMA_STAGING_DIR="${OLLAMA_INSTALL_DIR}.new"
+    rm -rf "$OLLAMA_STAGING_DIR"
+    mkdir -p "$OLLAMA_STAGING_DIR"
+    if ! fetch_and_deploy_gh_release "ollama-com" "ollama/ollama" "prebuild" "latest" "$OLLAMA_STAGING_DIR" "ollama-linux-$(arch_resolve).tar.zst"; then
+      rm -rf "$OLLAMA_STAGING_DIR"
+      msg_error "Download or deployment failed – check network connectivity and GitHub API availability (installed Ollama left unchanged)"
+      exit 250
+    fi
+
     msg_info "Stopping Services"
     systemctl stop ollama
     msg_ok "Services Stopped"
 
-    OLLAMA_INSTALL_DIR="/usr/local/lib/ollama"
-    rm -rf "$OLLAMA_INSTALL_DIR" /usr/local/bin/ollama
-    mkdir -p "$OLLAMA_INSTALL_DIR"
-    if ! fetch_and_deploy_gh_release "ollama-com" "ollama/ollama" "prebuild" "latest" "$OLLAMA_INSTALL_DIR" "ollama-linux-$(arch_resolve).tar.zst"; then
-      msg_error "Download or deployment failed – check network connectivity and GitHub API availability"
-      exit 250
-    fi
+    rm -rf "${OLLAMA_INSTALL_DIR}.old"
+    mv "$OLLAMA_INSTALL_DIR" "${OLLAMA_INSTALL_DIR}.old"
+    mv "$OLLAMA_STAGING_DIR" "$OLLAMA_INSTALL_DIR"
     ln -sf "$OLLAMA_INSTALL_DIR/bin/ollama" /usr/local/bin/ollama
+    rm -rf "${OLLAMA_INSTALL_DIR}.old"
     msg_ok "Updated Ollama"
 
     msg_info "Starting Services"
