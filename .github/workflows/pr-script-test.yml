@@ -68,7 +68,7 @@ jobs:
       pull-requests: write
     uses: community-scripts/ci/.github/workflows/pr-script-test.yml@main
     with:
-      screenshots_app_id: ${{ vars.GHAPP_SCREENSHOTS_ID }}
+      screenshots_client_id: ${{ vars.GHAPP_SCREENSHOTS_CLIENT_ID }}
     # Only the screenshot App, and only the report job uses it: never
     # `secrets: inherit`, the test jobs run PR code.
     secrets:
