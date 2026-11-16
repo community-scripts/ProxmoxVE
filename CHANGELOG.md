@@ -590,6 +590,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - opengym: bump Node.js from 22 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18756](https://github.com/community-scripts/ProxmoxVE/pull/18756))
     - razzia: bump Node.js from 24 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18757](https://github.com/community-scripts/ProxmoxVE/pull/18757))
     - reactive-resume: bump Node.js from 24 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18758](https://github.com/community-scripts/ProxmoxVE/pull/18758))
 
