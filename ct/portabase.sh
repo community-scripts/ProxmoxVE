@@ -32,11 +32,11 @@ function update_script() {
   fi
 
   TOOLS_CHANGED=false
-  if ! command -v rclone >/dev/null || check_for_gh_release "rclone" "rclone/rclone"; then
+  if check_for_gh_release "rclone" "rclone/rclone"; then
     TOOLS_CHANGED=true
     fetch_and_deploy_gh_release "rclone" "rclone/rclone" "binary" "latest" "" "rclone-v*-linux-$(arch_resolve).deb"
   fi
-  if [[ ! -x /usr/local/bin/restic ]] || check_for_gh_release "restic" "restic/restic"; then
+  if check_for_gh_release "restic" "restic/restic"; then
     TOOLS_CHANGED=true
     fetch_and_deploy_gh_release "restic" "restic/restic" "singlefile" "latest" "/usr/local/bin" "restic_*_linux_$(arch_resolve).bz2"
   fi
