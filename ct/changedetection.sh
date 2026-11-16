@@ -31,7 +31,7 @@ function update_script() {
     exit
   fi
 
-  ensure_dependencies libjpeg-dev poppler-utils file locales
+  ensure_dependencies libjpeg-dev poppler-utils file locales xvfb xauth python3
 
   msg_info "Generating Locales"
   for l in cs_CZ de_DE en_GB en_US es_ES fr_FR id_ID it_IT ja_JP ko_KR \
@@ -44,56 +44,83 @@ function update_script() {
   fi
   msg_ok "Generated Locales"
 
-  NODE_VERSION="24" setup_nodejs
-
   VENV_PATH="/opt/changedetection/.venv"
   CHANGEDETECTION_BIN="${VENV_PATH}/bin/changedetection.io"
+  SERVICE_FILE="/etc/systemd/system/changedetection.service"
 
   PYTHON_VERSION="3.13" setup_uv
 
-  if [[ ! -d "$VENV_PATH" || ! -x "$CHANGEDETECTION_BIN" ]]; then
-    msg_info "Migrating to uv/venv"
-    rm -rf "$VENV_PATH"
-    $STD uv venv --clear "$VENV_PATH"
-    $STD "$VENV_PATH/bin/python" -m ensurepip --upgrade
-    $STD "$VENV_PATH/bin/python" -m pip install --upgrade pip
-    $STD "$VENV_PATH/bin/python" -m pip install changedetection.io playwright
-    msg_ok "Migrated to uv/venv"
+  msg_info "Updating ${APP}"
+  [[ -x "$CHANGEDETECTION_BIN" ]] || $STD uv venv --clear "$VENV_PATH"
+  $STD uv pip install --python "$VENV_PATH/bin/python" --upgrade changedetection.io playwright
+  if ! grep -q "$CHANGEDETECTION_BIN" "$SERVICE_FILE"; then
+    sed -i "s|^ExecStart=.*|ExecStart=$CHANGEDETECTION_BIN -d /opt/changedetection -p 5000|" "$SERVICE_FILE"
+  fi
+  msg_ok "Updated ${APP}"
+
+  if [[ ! -f /etc/apt/sources.list.d/google-chrome.sources ]]; then
+    msg_info "Installing Chrome"
+    setup_deb822_repo \
+      "google-chrome" \
+      "https://dl.google.com/linux/linux_signing_key.pub" \
+      "https://dl.google.com/linux/chrome/deb/" \
+      "stable"
+    $STD apt install -y google-chrome-stable
+    rm -f /etc/apt/sources.list.d/google-chrome.list
+    msg_ok "Installed Chrome"
   else
-    msg_info "Updating ${APP}"
-    $STD "$VENV_PATH/bin/python" -m pip install --upgrade changedetection.io playwright
-    msg_ok "Updated ${APP}"
+    msg_info "Updating Chrome"
+    apt_update_safe
+    $STD apt install -y --only-upgrade google-chrome-stable
+    msg_ok "Updated Chrome"
   fi
 
-  SERVICE_FILE="/etc/systemd/system/changedetection.service"
-  if ! grep -q "${VENV_PATH}/bin/changedetection.io" "$SERVICE_FILE"; then
-    msg_info "Updating systemd service"
-    sed -i "s|^ExecStart=.*|ExecStart=${VENV_PATH}/bin/changedetection.io -d /opt/changedetection -p 5000|" "$SERVICE_FILE"
-    $STD systemctl daemon-reload
-    msg_ok "Updated systemd service"
+  if check_for_gh_release "sockpuppetbrowser" "dgtlmoon/sockpuppetbrowser"; then
+    [[ -f /etc/systemd/system/sockpuppetbrowser.service ]] && systemctl stop sockpuppetbrowser
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "sockpuppetbrowser" "dgtlmoon/sockpuppetbrowser" "tarball"
+
+    msg_info "Setting up SockPuppetBrowser"
+    id -u chrome &>/dev/null || useradd -r -m -s /usr/sbin/nologin chrome
+    $STD uv venv --clear --python /usr/bin/python3 /opt/sockpuppetbrowser/.venv
+    $STD uv pip install --python /opt/sockpuppetbrowser/.venv/bin/python -r /opt/sockpuppetbrowser/requirements.txt
+    msg_ok "Set up SockPuppetBrowser"
   fi
 
   if [[ -f /etc/systemd/system/browserless.service ]]; then
-    msg_info "Updating Browserless (Patience)"
-    $STD git -C /opt/browserless/ fetch --all
-    $STD git -C /opt/browserless/ reset --hard origin/main
-    $STD npm ci --include=optional --include=dev --prefix /opt/browserless
-    $STD npm install --save-exact playwright-core@1.62.1 --prefix /opt/browserless
-    $STD /opt/browserless/node_modules/playwright-core/cli.js install --with-deps
-    # Update Chrome separately, as it has to be done with the force option. Otherwise the installation of other browsers will not be done if Chrome is already installed.
-    $STD /opt/browserless/node_modules/playwright-core/cli.js install --force chrome
-    $STD /opt/browserless/node_modules/playwright-core/cli.js install --force msedge
-    $STD /opt/browserless/node_modules/playwright-core/cli.js install chromium firefox webkit
-    $STD npm install --prefix /opt/browserless esbuild typescript ts-node @types/node --save-dev
-    $STD npm run build --prefix /opt/browserless
-    $STD npm run build:function --prefix /opt/browserless
-    $STD npm prune production --prefix /opt/browserless
-    systemctl restart browserless
-    msg_ok "Updated Browserless"
-  else
-    msg_error "No Browserless Installation Found!"
+    msg_info "Replacing Browserless with SockPuppetBrowser"
+    systemctl disable -q --now browserless
+    rm -f /etc/systemd/system/browserless.service
+    rm -rf /opt/browserless /root/.cache/ms-playwright
+    $STD apt purge -y microsoft-edge-stable
+    rm -f /etc/apt/sources.list.d/microsoft-edge-stable.list
+    cat <<EOF >/etc/systemd/system/sockpuppetbrowser.service
+[Unit]
+Description=SockPuppetBrowser
+After=network.target
+
+[Service]
+User=chrome
+Group=chrome
+WorkingDirectory=/opt/sockpuppetbrowser/backend
+Environment=CHROME_BIN=/usr/bin/google-chrome-stable
+Environment=LOG_LEVEL=INFO
+ExecStart=/opt/sockpuppetbrowser/.venv/bin/python server.py --host 127.0.0.1 --port 3000 --sport 8080
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    sed -i 's/browserless\.service/sockpuppetbrowser.service/g' "$SERVICE_FILE"
+    sed -i -e '/^WEBDRIVER_URL=/d' \
+      -e 's|^PLAYWRIGHT_DRIVER_URL=ws://localhost:3000/chrome.*|PLAYWRIGHT_DRIVER_URL=ws://127.0.0.1:3000/?headful=true\&--window-size=1920,1080|' \
+      /opt/changedetection/.env
+    systemctl daemon-reload
+    systemctl enable -q sockpuppetbrowser
+    msg_ok "Replaced Browserless with SockPuppetBrowser"
   fi
 
+  systemctl daemon-reload
+  systemctl restart sockpuppetbrowser
   systemctl restart changedetection
   msg_ok "Updated successfully!"
   exit
