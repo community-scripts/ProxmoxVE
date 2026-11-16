@@ -590,6 +590,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Dawarich: let Rails serve undigested asset paths [@ryanvo](https://github.com/ryanvo) ([#18779](https://github.com/community-scripts/ProxmoxVE/pull/18779))
     - ArchiveBox: install libatomic1 for the Playwright driver [@MickLesk](https://github.com/MickLesk) ([#18722](https://github.com/community-scripts/ProxmoxVE/pull/18722))
     - Ollama/OpenWebUI: download update before stopping the service [@jobben-2025](https://github.com/jobben-2025) ([#18755](https://github.com/community-scripts/ProxmoxVE/pull/18755))
     - opengym: bump Node.js from 22 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18756](https://github.com/community-scripts/ProxmoxVE/pull/18756))
