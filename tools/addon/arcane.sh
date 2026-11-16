@@ -130,6 +130,12 @@ function install() {
   msg_info "Starting ${APP}"
   cd "$INSTALL_PATH"
   $STD docker compose up -d
+  local ADMIN_PASS=""
+  for _ in {1..30}; do
+    ADMIN_PASS=$(docker cp arcane:/app/data/initial-admin-password - 2>/dev/null | tar -xO 2>/dev/null || true)
+    [[ -n "$ADMIN_PASS" ]] && break
+    sleep 1
+  done
   msg_ok "Started ${APP}"
 
   # Create update script
@@ -148,7 +154,7 @@ UPDATEEOF
   echo -e "Arcane Credentials"
   echo -e "=================="
   echo -e "User: arcane"
-  echo -e "Password: arcane-admin"
+  echo -e "Password: ${ADMIN_PASS:-run 'docker cp arcane:/app/data/initial-admin-password - | tar -xO'}"
   echo ""
   msg_warn "On first access, you'll be prompted to change your password."
 }
