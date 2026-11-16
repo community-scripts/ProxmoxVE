@@ -159,7 +159,7 @@ server {
     location ~ ^/(assets|packs)/ {
         expires max;
         add_header Cache-Control "public, immutable";
-        try_files \$uri =404;
+        try_files \$uri @rails;
     }
 
     location / {

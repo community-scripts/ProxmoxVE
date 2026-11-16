@@ -40,6 +40,13 @@ function update_script() {
     msg_ok "Fixed MapLibre delivery in Nginx"
   fi
 
+  if [[ -f /etc/nginx/sites-available/dawarich.conf ]] && grep -q 'try_files \$uri =404;' /etc/nginx/sites-available/dawarich.conf; then
+    msg_info "Fixing Dawarich asset fallback in Nginx"
+    sed -i 's|try_files \$uri =404;|try_files $uri @rails;|' /etc/nginx/sites-available/dawarich.conf
+    nginx_enable_site dawarich.conf
+    msg_ok "Fixed Dawarich asset fallback in Nginx"
+  fi
+
   if check_for_gh_release "dawarich" "Freika/dawarich"; then
     msg_info "Stopping Services"
     systemctl stop dawarich-web dawarich-worker
