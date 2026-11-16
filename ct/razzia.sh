@@ -42,7 +42,7 @@ function update_script() {
 
     restore_backup
 
-    NODE_VERSION="24" NODE_MODULE="pnpm@11" setup_nodejs
+    NODE_VERSION="26" NODE_MODULE="pnpm@11" setup_nodejs
 
     msg_info "Building Razzia"
     cd /opt/razzia
