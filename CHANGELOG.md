@@ -629,9 +629,15 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🛰️ Services
 
-  - Serve failure text only to requests that carry the admin token [@MickLesk](https://github.com/MickLesk) ([services#17](https://github.com/community-scripts/services/pull/17))
+  - Let contributors read traces and open issues with a password of their own [@MickLesk](https://github.com/MickLesk) ([services#19](https://github.com/community-scripts/services/pull/19))
+- Rework the dashboard around triaging failures [@MickLesk](https://github.com/MickLesk) ([services#18](https://github.com/community-scripts/services/pull/18))
+- Serve failure text only to requests that carry the admin token [@MickLesk](https://github.com/MickLesk) ([services#17](https://github.com/community-scripts/services/pull/17))
 - Number the notes in the testing message and show their type [@MickLesk](https://github.com/MickLesk) ([services#16](https://github.com/community-scripts/services/pull/16))
 - Decide exit 255 by the command, not as dpkg [@MickLesk](https://github.com/MickLesk) ([services#14](https://github.com/community-scripts/services/pull/14))
+
+### ❔ Uncategorized
+
+  - chore(ct): sync paperclip defaults with PocketBase [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18820](https://github.com/community-scripts/ProxmoxVE/pull/18820))
 
 ## 2026-11-16
 
