@@ -131,6 +131,8 @@ Wants=network-online.target
 [Service]
 Type=simple
 Environment=NODE_ENV=production
+# Without HOME, n8n 3.x keeps its data in /.n8n instead of /root/.n8n.
+Environment=HOME=/root
 EnvironmentFile=/opt/n8n.env
 ExecStart=/usr/bin/env n8n start
 Restart=on-failure
@@ -246,8 +248,15 @@ function install_n8n_image() {
     cp -a "${N8N_BUNDLE}/usr/share/fonts/truetype/msttcorefonts" /usr/share/fonts/truetype/
   fi
   rm -rf "$N8N_BUNDLE"
+  # Not a symlink: n8n finds its modules from the path it was started as
+  # (process.argv[1]/../../dist), which must be /opt/n8n/bin/n8n.
   mkdir -p /usr/local/bin
-  ln -sf /opt/n8n/bin/n8n /usr/local/bin/n8n
+  rm -f /usr/local/bin/n8n
+  cat <<'EOF' >/usr/local/bin/n8n
+#!/bin/sh
+exec node /opt/n8n/bin/n8n "$@"
+EOF
+  chmod 755 /usr/local/bin/n8n
   if ! /usr/local/bin/n8n --version 2>/dev/null | grep -qxF "$version"; then
     msg_error "n8n ${version} does not start in this container."
     exit 1
