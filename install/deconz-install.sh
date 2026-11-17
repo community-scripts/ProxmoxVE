@@ -22,9 +22,9 @@ setup_deb822_repo \
 msg_ok "Setup Phoscon Repository"
 
 msg_info "Installing deConz"
-pool="$(arch_resolve "https://security.ubuntu.com/ubuntu/pool/main/o/openssl/" "http://ports.ubuntu.com/ubuntu-ports/pool/main/o/openssl/")"
-libssl=$(curl -fsSL --proto '=http,https' "$pool" | grep -o "libssl1\.1_1\.1\.1f-1ubuntu2\.2[^\"]*$(arch_resolve)\.deb" | head -n1)
-curl -fsSL --proto '=http,https' "$pool$libssl" -o "$libssl"
+pool="$(arch_resolve "https://security.ubuntu.com/ubuntu/pool/main/o/openssl/" "https://ports.ubuntu.com/ubuntu-ports/pool/main/o/openssl/")"
+libssl=$(curl -fsSL --proto '=https' "$pool" | grep -o "libssl1\.1_1\.1\.1f-1ubuntu2\.2[^\"]*$(arch_resolve)\.deb" | head -n1)
+curl -fsSL --proto '=https' "$pool$libssl" -o "$libssl"
 $STD dpkg -i "$libssl"
 $STD apt install -y deconz
 rm -rf "$libssl"
