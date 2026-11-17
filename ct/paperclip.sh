@@ -54,6 +54,7 @@ function update_script() {
       msg_warn "The lockfile of this release is out of date, resolving dependencies without it"
       $STD pnpm install --no-frozen-lockfile
     }
+    sed -i 's/"compilerOptions": {/&\n    "checkers": 1,/' server/tsconfig.json
     $STD pnpm build
     unset NODE_OPTIONS
     msg_ok "Rebuilt Paperclip"
