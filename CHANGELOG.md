@@ -594,6 +594,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - immichframe: move to .NET 10 (1.0.40.0 requires it) [@supersoju](https://github.com/supersoju) ([#18806](https://github.com/community-scripts/ProxmoxVE/pull/18806))
     - LibreNMS: write a valid APP_KEY before migrating [@MickLesk](https://github.com/MickLesk) ([#18776](https://github.com/community-scripts/ProxmoxVE/pull/18776))
 
   - #### ✨ New Features
