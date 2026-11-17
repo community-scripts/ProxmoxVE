@@ -604,6 +604,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - ITSM-NG: fetch the repo and key over HTTPS [@MickLesk](https://github.com/MickLesk) ([#18799](https://github.com/community-scripts/ProxmoxVE/pull/18799))
     - Frigate: Fetch the OpenVINO model over HTTPS [@MickLesk](https://github.com/MickLesk) ([#18797](https://github.com/community-scripts/ProxmoxVE/pull/18797))
     - Change Detection: replace Browserless with SockPuppetBrowser [@MickLesk](https://github.com/MickLesk) ([#18767](https://github.com/community-scripts/ProxmoxVE/pull/18767))
 
