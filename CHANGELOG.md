@@ -596,6 +596,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Portabase: support file and folder backups (restic / rclone) [@MickLesk](https://github.com/MickLesk) ([#18766](https://github.com/community-scripts/ProxmoxVE/pull/18766))
 
+  - #### 🔧 Refactor
+
+    - Change Detection: replace Browserless with SockPuppetBrowser [@MickLesk](https://github.com/MickLesk) ([#18767](https://github.com/community-scripts/ProxmoxVE/pull/18767))
+
 ### 🧰 Tools
 
   - #### 🐞 Bug Fixes
