@@ -22,6 +22,11 @@ setup_deb822_repo \
 msg_ok "Setup Phoscon Repository"
 
 msg_info "Installing deConz"
+# deCONZ runs as root; the file caps its postinst sets (sys_time, sys_boot) are
+# outside a privileged Incus container's bounding set and make exec fail.
+cat <<'EOF' >/etc/apt/apt.conf.d/99-deconz-no-filecaps
+DPkg::Post-Invoke { "setcap -r /usr/bin/deCONZ 2>/dev/null || true"; };
+EOF
 pool="$(arch_resolve "https://security.ubuntu.com/ubuntu/pool/main/o/openssl/" "https://ports.ubuntu.com/ubuntu-ports/pool/main/o/openssl/")"
 libssl=$(curl -fsSL --proto '=https' "$pool" | grep -o "libssl1\.1_1\.1\.1f-1ubuntu2\.2[^\"]*$(arch_resolve)\.deb" | head -n1)
 curl -fsSL --proto '=https' "$pool$libssl" -o "$libssl"
