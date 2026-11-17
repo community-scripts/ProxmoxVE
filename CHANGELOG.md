@@ -608,7 +608,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Bound the template catalog lookup so a dead storage cannot hang the run [@MickLesk](https://github.com/MickLesk) ([core#275](https://github.com/community-scripts/core/pull/275))
+  - Stop setting kernel.keys.maxkeys on Incus containers [@MickLesk](https://github.com/MickLesk) ([core#277](https://github.com/community-scripts/core/pull/277))
+- Bound the template catalog lookup so a dead storage cannot hang the run [@MickLesk](https://github.com/MickLesk) ([core#275](https://github.com/community-scripts/core/pull/275))
 - Record a failed command as written in the script [@MickLesk](https://github.com/MickLesk) ([core#274](https://github.com/community-scripts/core/pull/274))
 - Let the Incus network wait ask again when its probe fails [@MickLesk](https://github.com/MickLesk) ([core#273](https://github.com/community-scripts/core/pull/273))
 - Run the VM cleanup and Incus file pull tests in CI | Take files out of an Incus guest as a bounded stream into a private file [@MickLesk](https://github.com/MickLesk) ([core#272](https://github.com/community-scripts/core/pull/272))
