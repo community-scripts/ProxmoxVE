@@ -601,6 +601,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Change Detection: replace Browserless with SockPuppetBrowser [@MickLesk](https://github.com/MickLesk) ([#18767](https://github.com/community-scripts/ProxmoxVE/pull/18767))
 
+### 💾 Core
+
+  - Run the VM cleanup and Incus file pull tests in CI | Take files out of an Incus guest as a bounded stream into a private file [@MickLesk](https://github.com/MickLesk) ([core#272](https://github.com/community-scripts/core/pull/272))
+
 ### 🧰 Tools
 
   - #### 🐞 Bug Fixes
