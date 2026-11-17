@@ -13,32 +13,13 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies (Patience)"
+msg_info "Installing Dependencies"
 $STD apt install -y \
-  git \
   build-essential \
-  dumb-init \
-  libjpeg-dev \
-  libatk-bridge2.0-0 \
-  libasound2 \
-  libatk1.0-0 \
-  libcairo2 \
-  libcups2 \
-  libdbus-1-3 \
-  libexpat1 \
-  libgbm-dev \
-  libgbm1 \
-  libgdk-pixbuf-2.0-0 \
-  libglib2.0-0 \
-  libgtk-3-0 \
-  libnspr4 \
-  libnss3 \
-  libpango-1.0-0 \
-  libpangocairo-1.0-0 \
   qpdf \
-  xdg-utils \
   xvfb \
-  ca-certificates \
+  xauth \
+  python3 \
   locales \
   poppler-utils \
   file
@@ -54,35 +35,25 @@ msg_ok "Generated Locales"
 
 PYTHON_VERSION="3.13" setup_uv
 
-NODE_VERSION="24" setup_nodejs
-
 msg_info "Installing Change Detection"
 mkdir -p /opt/changedetection
 $STD uv venv --clear /opt/changedetection/.venv
-$STD /opt/changedetection/.venv/bin/python -m ensurepip --upgrade
-$STD /opt/changedetection/.venv/bin/python -m pip install --upgrade pip
-$STD /opt/changedetection/.venv/bin/python -m pip install changedetection.io
+$STD uv pip install --python /opt/changedetection/.venv/bin/python changedetection.io playwright
 cat <<EOF >/opt/changedetection/.env
-WEBDRIVER_URL=http://127.0.0.1:4444/wd/hub
-PLAYWRIGHT_DRIVER_URL=ws://localhost:3000/chrome?launch=eyJkZWZhdWx0Vmlld3BvcnQiOnsiaGVpZ2h0Ijo3MjAsIndpZHRoIjoxMjgwfSwiaGVhZGxlc3MiOmZhbHNlLCJzdGVhbHRoIjp0cnVlfQ==&blockAds=true
+PLAYWRIGHT_DRIVER_URL=ws://127.0.0.1:3000/?headful=true&--window-size=1920,1080
 LC_ALL=en_US.UTF-8
 EOF
 msg_ok "Installed Change Detection"
 
-msg_info "Installing Browserless & Playwright"
-mkdir /opt/browserless
-$STD /opt/changedetection/.venv/bin/python -m pip install playwright
-$STD git clone https://github.com/browserless/chrome /opt/browserless
-$STD npm ci --include=optional --include=dev --prefix /opt/browserless
-$STD npm install --save-exact playwright-core@1.62.1 --prefix /opt/browserless
-$STD /opt/browserless/node_modules/playwright-core/cli.js install --with-deps &>/dev/null
-$STD /opt/browserless/node_modules/playwright-core/cli.js install --force chrome &>/dev/null
-$STD /opt/browserless/node_modules/playwright-core/cli.js install chromium firefox webkit &>/dev/null
-$STD /opt/browserless/node_modules/playwright-core/cli.js install --force msedge
-$STD npm run build --prefix /opt/browserless
-$STD npm run build:function --prefix /opt/browserless
-$STD npm prune production --prefix /opt/browserless
-msg_ok "Installed Browserless & Playwright"
+msg_info "Installing Chrome"
+setup_deb822_repo \
+  "google-chrome" \
+  "https://dl.google.com/linux/linux_signing_key.pub" \
+  "https://dl.google.com/linux/chrome/deb/" \
+  "stable"
+$STD apt install -y google-chrome-stable
+rm -f /etc/apt/sources.list.d/google-chrome.list
+msg_ok "Installed Chrome"
 
 msg_info "Installing Font Packages"
 $STD apt install -y \
@@ -99,30 +70,38 @@ $STD apt install -y \
   fonts-wqy-zenhei
 msg_ok "Installed Font Packages"
 
-msg_info "Installing X11 Packages"
-$STD apt install -y \
-  libx11-6 \
-  libx11-xcb1 \
-  libxcb1 \
-  libxcomposite1 \
-  libxcursor1 \
-  libxdamage1 \
-  libxext6 \
-  libxfixes3 \
-  libxi6 \
-  libxrandr2 \
-  libxrender1 \
-  libxss1 \
-  libxtst6
-msg_ok "Installed X11 Packages"
+fetch_and_deploy_gh_release "sockpuppetbrowser" "dgtlmoon/sockpuppetbrowser" "tarball"
+
+msg_info "Setting up SockPuppetBrowser"
+useradd -r -m -s /usr/sbin/nologin chrome
+$STD uv venv --clear --python /usr/bin/python3 /opt/sockpuppetbrowser/.venv
+$STD uv pip install --python /opt/sockpuppetbrowser/.venv/bin/python -r /opt/sockpuppetbrowser/requirements.txt
+msg_ok "Set up SockPuppetBrowser"
 
 msg_info "Creating Services"
+cat <<EOF >/etc/systemd/system/sockpuppetbrowser.service
+[Unit]
+Description=SockPuppetBrowser
+After=network.target
+
+[Service]
+User=chrome
+Group=chrome
+WorkingDirectory=/opt/sockpuppetbrowser/backend
+Environment=CHROME_BIN=/usr/bin/google-chrome-stable
+Environment=LOG_LEVEL=INFO
+ExecStart=/opt/sockpuppetbrowser/.venv/bin/python server.py --host 127.0.0.1 --port 3000 --sport 8080
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
 cat <<EOF >/etc/systemd/system/changedetection.service
 [Unit]
 Description=Change Detection
-After=network-online.target
-After=network.target browserless.service
-Wants=browserless.service
+After=network-online.target sockpuppetbrowser.service
+Wants=sockpuppetbrowser.service
 
 [Service]
 Type=simple
@@ -133,23 +112,7 @@ ExecStart=/opt/changedetection/.venv/bin/changedetection.io -d /opt/changedetect
 [Install]
 WantedBy=multi-user.target
 EOF
-
-cat <<EOF >/etc/systemd/system/browserless.service
-[Unit]
-Description=browserless service
-After=network.target
-
-[Service]
-Environment=CONNECTION_TIMEOUT=60000
-WorkingDirectory=/opt/browserless
-ExecStart=/opt/browserless/scripts/start.sh
-SyslogIdentifier=browserless
-
-[Install]
-WantedBy=default.target
-EOF
-systemctl enable -q --now browserless
-systemctl enable -q --now changedetection
+systemctl enable -q --now sockpuppetbrowser changedetection
 msg_ok "Created Services"
 
 motd_ssh
