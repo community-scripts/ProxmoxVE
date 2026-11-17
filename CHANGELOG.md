@@ -586,6 +586,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-17
 
+### 🆕 New Scripts
+
+  - AIOStreams ([#18673](https://github.com/community-scripts/ProxmoxVE/pull/18673))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
