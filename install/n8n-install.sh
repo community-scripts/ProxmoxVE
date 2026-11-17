@@ -157,8 +157,6 @@ Wants=network-online.target
 [Service]
 Type=simple
 Environment=NODE_ENV=production
-# Without HOME, n8n 3.x keeps its data in /.n8n instead of /root/.n8n.
-Environment=HOME=/root
 EnvironmentFile=/opt/n8n.env
 ExecStart=/usr/bin/env n8n start
 Restart=on-failure

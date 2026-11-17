@@ -94,7 +94,7 @@ EOF
     echo -e "${TAB}This update moves n8n ${current:-2.x} to ${target}, unpacked from the official Docker image."
     echo -e "${TAB}There is no way back to 2.x afterwards. 3.0 removes legacy nodes (Function, Cron,"
     echo -e "${TAB}Interval, Read/Write Binary File, ...). Check Settings > Migration Report in n8n first."
-    echo -e "${TAB}The SQLite data in ~/.n8n is backed up first; an external database is not."
+    echo -e "${TAB}The SQLite data in /.n8n is backed up first; an external database is not."
     echo -e "${TAB}Declining keeps n8n on 2.x, which gets security fixes for 12 months after 3.x."
     echo
     if [[ ! "${N8N_FORCE_MAJOR,,}" =~ ^(1|yes|true|on)$ ]] && ! prompt_confirm "Upgrade n8n to ${target}?" "n" 300; then
@@ -111,9 +111,11 @@ EOF
   msg_ok "Stopped n8n"
 
   if [[ ! -f /opt/n8n/package.json ]]; then
+    # The unit sets no HOME, so n8n (2.x and 3.x alike) keeps its data in
+    # <working directory>/.n8n, i.e. /.n8n, unless N8N_USER_FOLDER says otherwise.
     local data_parent backup
     data_parent="$(sed -n 's/^N8N_USER_FOLDER=//p' /opt/n8n.env | tail -n1)"
-    data_parent="${data_parent:-/root}"
+    data_parent="${data_parent:-/}"
     if [[ -d "${data_parent}/.n8n" ]]; then
       msg_info "Backing up n8n data"
       backup="/root/n8n-backup-${current:-2.x}-$(date +%Y%m%d-%H%M%S).tar.gz"
@@ -131,8 +133,6 @@ Wants=network-online.target
 [Service]
 Type=simple
 Environment=NODE_ENV=production
-# Without HOME, n8n 3.x keeps its data in /.n8n instead of /root/.n8n.
-Environment=HOME=/root
 EnvironmentFile=/opt/n8n.env
 ExecStart=/usr/bin/env n8n start
 Restart=on-failure
