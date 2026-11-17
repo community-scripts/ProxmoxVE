@@ -620,6 +620,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Arcane: show the generated admin password [@MickLesk](https://github.com/MickLesk) ([#18785](https://github.com/community-scripts/ProxmoxVE/pull/18785))
 
+### 📚 Documentation
+
+  - Merge only the changelog pull request the job opened [@MickLesk](https://github.com/MickLesk) ([#18804](https://github.com/community-scripts/ProxmoxVE/pull/18804))
+
 ## 2026-11-16
 
 ### 🆕 New Scripts
