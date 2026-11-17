@@ -603,6 +603,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Frigate: Fetch the OpenVINO model over HTTPS [@MickLesk](https://github.com/MickLesk) ([#18797](https://github.com/community-scripts/ProxmoxVE/pull/18797))
     - Change Detection: replace Browserless with SockPuppetBrowser [@MickLesk](https://github.com/MickLesk) ([#18767](https://github.com/community-scripts/ProxmoxVE/pull/18767))
 
 ### 💾 Core
