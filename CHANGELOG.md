@@ -588,7 +588,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - AIOStreams ([#18673](https://github.com/community-scripts/ProxmoxVE/pull/18673))
+  - AIOStreams [@MrNRod](https://github.com/MrNRod) ([#18673](https://github.com/community-scripts/ProxmoxVE/pull/18673))
 
 ### 🚀 Updated Scripts
 
@@ -622,7 +622,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 📚 Documentation
 
-  - Merge only the changelog pull request the job opened [@MickLesk](https://github.com/MickLesk) ([#18804](https://github.com/community-scripts/ProxmoxVE/pull/18804))
+  - Changelog: Credit script authors and list services and website changes [@MickLesk](https://github.com/MickLesk) ([#18809](https://github.com/community-scripts/ProxmoxVE/pull/18809))
+- Merge only the changelog pull request the job opened [@MickLesk](https://github.com/MickLesk) ([#18804](https://github.com/community-scripts/ProxmoxVE/pull/18804))
+
+### 🛰️ Services
+
+  - Serve failure text only to requests that carry the admin token [@MickLesk](https://github.com/MickLesk) ([services#17](https://github.com/community-scripts/services/pull/17))
+- Number the notes in the testing message and show their type [@MickLesk](https://github.com/MickLesk) ([services#16](https://github.com/community-scripts/services/pull/16))
+- Decide exit 255 by the command, not as dpkg [@MickLesk](https://github.com/MickLesk) ([services#14](https://github.com/community-scripts/services/pull/14))
 
 ## 2026-11-16
 
