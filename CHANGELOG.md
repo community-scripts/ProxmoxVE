@@ -592,6 +592,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - LibreNMS: write a valid APP_KEY before migrating [@MickLesk](https://github.com/MickLesk) ([#18776](https://github.com/community-scripts/ProxmoxVE/pull/18776))
 
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - Arcane: show the generated admin password [@MickLesk](https://github.com/MickLesk) ([#18785](https://github.com/community-scripts/ProxmoxVE/pull/18785))
+
 ## 2026-11-16
 
 ### 🆕 New Scripts
