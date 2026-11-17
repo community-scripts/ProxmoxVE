@@ -55,7 +55,7 @@ function update_script() {
     mkdir -p /opt/aiostreams/resources
     AIOSTREAMS_VERSION=$(jq -r '.version' /opt/aiostreams/package.json)
     AIOSTREAMS_DESC=$(jq -r '.description' /opt/aiostreams/package.json)
-    AIOSTREAMS_COMMIT_INFO=$(curl -fsSL "https://api.github.com/repos/Viren070/AIOStreams/commits/${AIOSTREAMS_TAG}" 2>/dev/null)
+    AIOSTREAMS_COMMIT_INFO=$(curl -fsSL "https://api.github.com/repos/Viren070/AIOStreams/commits/${AIOSTREAMS_TAG}" 2>/dev/null || true)
     AIOSTREAMS_COMMIT=$(jq -r '.sha[0:8] // empty' <<<"${AIOSTREAMS_COMMIT_INFO}")
     AIOSTREAMS_COMMIT_TIME=$(jq -r '.commit.committer.date // empty' <<<"${AIOSTREAMS_COMMIT_INFO}")
     cat <<EOF >/opt/aiostreams/resources/metadata.json

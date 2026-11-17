@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y \
   build-essential \
   python3 \
-  libmimalloc3
+  ffmpeg
 msg_ok "Installed Dependencies"
 
 fetch_and_deploy_gh_release "aiostreams" "Viren070/AIOStreams" "tarball" "latest" "" "" "v"
@@ -51,9 +51,9 @@ msg_info "Generating Version Metadata"
 mkdir -p /opt/aiostreams/resources
 AIOSTREAMS_VERSION=$(jq -r '.version' /opt/aiostreams/package.json)
 AIOSTREAMS_DESC=$(jq -r '.description' /opt/aiostreams/package.json)
-AIOSTREAMS_COMMIT_INFO=$(curl -fsSL "https://api.github.com/repos/Viren070/AIOStreams/commits/${AIOSTREAMS_TAG}" 2>/dev/null)
-AIOSTREAMS_COMMIT=$(jq -r '.sha // empty' <<<"${AIOSTREAMS_COMMIT_INFO}")
+AIOSTREAMS_COMMIT_INFO=$(curl -fsSL "https://api.github.com/repos/Viren070/AIOStreams/commits/${AIOSTREAMS_TAG}" 2>/dev/null || true)
 AIOSTREAMS_COMMIT=$(jq -r '.sha[0:8] // empty' <<<"${AIOSTREAMS_COMMIT_INFO}")
+AIOSTREAMS_COMMIT_TIME=$(jq -r '.commit.committer.date // empty' <<<"${AIOSTREAMS_COMMIT_INFO}")
 cat <<EOF >/opt/aiostreams/resources/metadata.json
 {
   "version": "${AIOSTREAMS_VERSION}",
@@ -68,7 +68,7 @@ EOF
 msg_ok "Generated Version Metadata"
 
 msg_info "Creating Service"
-MIMALLOC_LIB=$(dpkg -L libmimalloc3 | grep -E '/libmimalloc\.so\.[0-9]+$' | head -1)
+NODE_HEAP_MB=$(($(free -m | awk '/^Mem:/ {print $2}') / 2))
 cat <<EOF >/etc/systemd/system/aiostreams.service
 [Unit]
 Description=AIOStreams
@@ -79,8 +79,9 @@ Type=simple
 User=root
 WorkingDirectory=/opt/aiostreams
 EnvironmentFile=/opt/aiostreams_data/.env
-Environment="NODE_OPTIONS=--max-semi-space-size=8 --expose-gc"
-Environment="LD_PRELOAD=${MIMALLOC_LIB}"
+Environment="NODE_ENV=production"
+Environment="NODE_OPTIONS=--max-old-space-size=${NODE_HEAP_MB} --max-semi-space-size=8 --expose-gc"
+Environment="MALLOC_ARENA_MAX=2"
 ExecStart=/usr/bin/node /opt/aiostreams/packages/server/dist/server.js
 Restart=on-failure
 RestartSec=5
