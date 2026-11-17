@@ -26,6 +26,8 @@ PG_DB_NAME="portabase" PG_DB_USER="portabase" setup_postgresql_db
 
 fetch_and_deploy_gh_release "portabase" "Portabase/portabase" "tarball"
 fetch_and_deploy_gh_release "tusd" "tus/tusd" "prebuild" "latest" "/opt/tusd" "tusd_linux_$(arch_resolve).tar.gz"
+fetch_and_deploy_gh_release "rclone" "rclone/rclone" "binary" "latest" "" "rclone-v*-linux-$(arch_resolve).deb"
+fetch_and_deploy_gh_release "restic" "restic/restic" "singlefile" "latest" "/usr/local/bin" "restic_*_linux_$(arch_resolve).bz2"
 
 msg_info "Configuring Portabase"
 mkdir -p /opt/portabase-data/uploads/tmp
@@ -139,6 +141,24 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
+    }
+
+    location /storage/restic/ {
+        proxy_pass http://127.0.0.1:1081;
+        proxy_request_buffering off;
+        proxy_buffering off;
+        proxy_http_version 1.1;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    location /storage/sync/ {
+        proxy_pass http://127.0.0.1:1082;
+        proxy_request_buffering off;
+        proxy_buffering off;
+        proxy_http_version 1.1;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
 
     location = /api/tus/hooks {
