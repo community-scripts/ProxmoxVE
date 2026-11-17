@@ -40,7 +40,7 @@ function update_script() {
     msg_ok "Allowed OpenCloud to embed Collabora"
   fi
 
-  RELEASE="v9.0.0"
+  RELEASE="v9.1.1"
   if check_for_gh_release "OpenCloud" "opencloud-eu/opencloud" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
     OLD_VERSION="$(cat ~/.opencloud 2>/dev/null)"
     msg_info "Stopping services"
