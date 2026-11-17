@@ -17,8 +17,8 @@ msg_info "Installing Dependencies"
 if [[ "$(arch_resolve)" == "arm64" ]]; then
   $STD apt install -y libicu-dev libssl-dev gettext-base
   curl -fsSL https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh
-  $STD bash /tmp/dotnet-install.sh --channel 8.0 --install-dir /usr/lib/dotnet8
-  ln -sf /usr/lib/dotnet8/dotnet /usr/bin/dotnet
+  $STD bash /tmp/dotnet-install.sh --channel 10.0 --install-dir /usr/lib/dotnet10
+  ln -sf /usr/lib/dotnet10/dotnet /usr/bin/dotnet
   rm -f /tmp/dotnet-install.sh
 else
   setup_deb822_repo \
@@ -31,8 +31,8 @@ else
     libicu-dev \
     libssl-dev \
     gettext-base \
-    dotnet-sdk-8.0 \
-    aspnetcore-runtime-8.0
+    dotnet-sdk-10.0 \
+    aspnetcore-runtime-10.0
 fi
 msg_ok "Installed Dependencies"
 
