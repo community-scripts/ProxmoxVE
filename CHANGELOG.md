@@ -594,6 +594,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - OpenCloud: bump to v9.1.1 [@SimKaiLong](https://github.com/SimKaiLong) ([#18795](https://github.com/community-scripts/ProxmoxVE/pull/18795))
     - Portabase: support file and folder backups (restic / rclone) [@MickLesk](https://github.com/MickLesk) ([#18766](https://github.com/community-scripts/ProxmoxVE/pull/18766))
 
   - #### 🔧 Refactor
