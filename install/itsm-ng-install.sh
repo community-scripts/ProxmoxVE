@@ -22,8 +22,8 @@ MARIADB_DB_NAME="itsmng_db" MARIADB_DB_USER="itsmng" MARIADB_DB_EXTRA_GRANTS="GR
 msg_info "Installing ITSM-NG"
 setup_deb822_repo \
   "itsm-ng" \
-  "http://deb.itsm-ng.org/pubkey.gpg" \
-  "http://deb.itsm-ng.org/$(get_os_info id)/" \
+  "https://deb.itsm-ng.org/pubkey.gpg" \
+  "https://deb.itsm-ng.org/$(get_os_info id)/" \
   "$(get_os_info codename)"
 $STD apt install -y itsm-ng
 cd /usr/share/itsm-ng
