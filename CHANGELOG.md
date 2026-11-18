@@ -586,11 +586,19 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-18
 
+### 🆕 New Scripts
+
+  - Scrutiny [@MickLesk](https://github.com/MickLesk) ([#18827](https://github.com/community-scripts/ProxmoxVE/pull/18827))
+
 ### 🚀 Updated Scripts
 
   - #### ✨ New Features
 
     - OpenCloud: bump to v9.2.0 [@SimKaiLong](https://github.com/SimKaiLong) ([#18822](https://github.com/community-scripts/ProxmoxVE/pull/18822))
+
+### 🧰 Tools
+
+  - Scrutiny Collector ([#18826](https://github.com/community-scripts/ProxmoxVE/pull/18826))
 
 ## 2026-11-17
 
