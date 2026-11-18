@@ -588,7 +588,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Scrutiny [@MickLesk](https://github.com/MickLesk) ([#18827](https://github.com/community-scripts/ProxmoxVE/pull/18827))
+  - Factorio [@LindholmLabs](https://github.com/LindholmLabs) ([#18830](https://github.com/community-scripts/ProxmoxVE/pull/18830))
+- Scrutiny [@MickLesk](https://github.com/MickLesk) ([#18827](https://github.com/community-scripts/ProxmoxVE/pull/18827))
 
 ### 🚀 Updated Scripts
 
