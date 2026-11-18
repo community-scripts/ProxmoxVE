@@ -584,6 +584,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-11-18
+
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - OpenCloud: bump to v9.2.0 [@SimKaiLong](https://github.com/SimKaiLong) ([#18822](https://github.com/community-scripts/ProxmoxVE/pull/18822))
+
 ## 2026-11-17
 
 ### 🆕 New Scripts
