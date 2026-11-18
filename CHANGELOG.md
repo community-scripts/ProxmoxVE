@@ -592,6 +592,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - WireGuard: increase Alpine disk size to 2 GB [@degeens](https://github.com/degeens) ([#18831](https://github.com/community-scripts/ProxmoxVE/pull/18831))
+
   - #### ✨ New Features
 
     - OpenCloud: bump to v9.2.0 [@SimKaiLong](https://github.com/SimKaiLong) ([#18822](https://github.com/community-scripts/ProxmoxVE/pull/18822))
