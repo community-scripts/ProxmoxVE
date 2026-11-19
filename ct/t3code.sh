@@ -62,8 +62,3 @@ description
 
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW}Pair a device using the QR code or URL below:${CL}"
-pct exec "$CTID" -- env NODE_NO_WARNINGS=1 t3 pair --base-dir /opt/t3code --ttl 1h | grep -v "127.0.0.1"
-echo -e ""
-echo -e "${INFO}${YW}The pairing URL above expires after 1 hour. Generate a fresh one from the Proxmox host:${CL}"
-echo -e "${TAB}${BGN}pct exec ${CTID} -- t3 pair --base-dir /opt/t3code${CL}"
