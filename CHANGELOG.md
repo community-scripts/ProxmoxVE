@@ -584,6 +584,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-11-19
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Nginx Proxy Manager: patch nginx HTTP/2 CVE-2026-123007 / CVE-2026-123633 [@valentingoulier](https://github.com/valentingoulier) ([#18835](https://github.com/community-scripts/ProxmoxVE/pull/18835))
+
 ## 2026-11-18
 
 ### 🆕 New Scripts
