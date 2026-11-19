@@ -588,7 +588,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Faraday [@MickLesk](https://github.com/MickLesk) ([#18844](https://github.com/community-scripts/ProxmoxVE/pull/18844))
+  - T3 Code [@lukdz](https://github.com/lukdz) ([#18845](https://github.com/community-scripts/ProxmoxVE/pull/18845))
+- Faraday [@MickLesk](https://github.com/MickLesk) ([#18844](https://github.com/community-scripts/ProxmoxVE/pull/18844))
 
 ### 🚀 Updated Scripts
 
