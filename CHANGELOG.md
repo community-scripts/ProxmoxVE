@@ -590,6 +590,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Frigate: bump to v0.18.3 [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#18841](https://github.com/community-scripts/ProxmoxVE/pull/18841))
     - Nginx Proxy Manager: patch nginx HTTP/2 CVE-2026-123007 / CVE-2026-123633 [@valentingoulier](https://github.com/valentingoulier) ([#18835](https://github.com/community-scripts/ProxmoxVE/pull/18835))
 
 ## 2026-11-18
