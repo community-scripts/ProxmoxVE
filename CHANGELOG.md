@@ -586,12 +586,21 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-19
 
+### 🆕 New Scripts
+
+  - Faraday [@MickLesk](https://github.com/MickLesk) ([#18844](https://github.com/community-scripts/ProxmoxVE/pull/18844))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
 
     - Frigate: bump to v0.18.3 [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#18841](https://github.com/community-scripts/ProxmoxVE/pull/18841))
     - Nginx Proxy Manager: patch nginx HTTP/2 CVE-2026-123007 / CVE-2026-123633 [@valentingoulier](https://github.com/valentingoulier) ([#18835](https://github.com/community-scripts/ProxmoxVE/pull/18835))
+
+### 🛰️ Services
+
+  - Take the API reference out of the menu and cut it down [@MickLesk](https://github.com/MickLesk) ([services#21](https://github.com/community-scripts/services/pull/21))
+- Add an API reference page and offer 3 days instead of a year [@MickLesk](https://github.com/MickLesk) ([services#20](https://github.com/community-scripts/services/pull/20))
 
 ## 2026-11-18
 
