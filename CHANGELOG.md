@@ -595,6 +595,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - fix(t3code): wait for server readiness before pairing [@ps915](https://github.com/ps915) ([#18849](https://github.com/community-scripts/ProxmoxVE/pull/18849))
     - Frigate: bump to v0.18.3 [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#18841](https://github.com/community-scripts/ProxmoxVE/pull/18841))
     - Nginx Proxy Manager: patch nginx HTTP/2 CVE-2026-123007 / CVE-2026-123633 [@valentingoulier](https://github.com/valentingoulier) ([#18835](https://github.com/community-scripts/ProxmoxVE/pull/18835))
 
