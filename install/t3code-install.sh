@@ -57,7 +57,10 @@ RestartSec=5
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now t3code
-sleep 5
+for _ in {1..60}; do
+  [[ -f /opt/t3code/userdata/server-runtime.json ]] && curl -s -o /dev/null http://127.0.0.1:3773 && break
+  sleep 2
+done
 msg_ok "Created Service"
 
 motd_ssh
