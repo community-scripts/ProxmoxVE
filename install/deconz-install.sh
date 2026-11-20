@@ -31,7 +31,7 @@ rm -rf "$libssl"
 msg_ok "Installed deConz"
 
 msg_info "Creating Service"
-cat <<EOF >/lib/systemd/system/deconz.service
+cat <<EOF >/etc/systemd/system/deconz.service
 [Unit]
 Description=deCONZ: ZigBee gateway -- REST API
 Wants=deconz-init.service deconz-update.service

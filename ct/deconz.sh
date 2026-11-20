@@ -29,6 +29,29 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  if [[ ! -f /etc/systemd/system/deconz.service ]]; then
+    msg_info "Moving Service to /etc/systemd/system"
+    # A deconz upgrade overwrites /lib/systemd/system/deconz.service with its own User=1000 unit
+    cat <<EOF >/etc/systemd/system/deconz.service
+[Unit]
+Description=deCONZ: ZigBee gateway -- REST API
+Wants=deconz-init.service deconz-update.service
+StartLimitIntervalSec=0
+
+[Service]
+User=root
+ExecStart=/usr/bin/deCONZ -platform minimal --http-port=80
+Restart=on-failure
+RestartSec=30
+AmbientCapabilities=CAP_NET_BIND_SERVICE CAP_KILL CAP_SYS_BOOT CAP_SYS_TIME
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    systemctl daemon-reload
+    systemctl reenable -q deconz
+    msg_ok "Moved Service to /etc/systemd/system"
+  fi
   msg_info "Updating deCONZ"
   apt_update_safe
   $STD apt upgrade -y
