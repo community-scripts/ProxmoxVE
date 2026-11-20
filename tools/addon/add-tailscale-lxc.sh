@@ -104,7 +104,7 @@ fi
 
 msg_info "Installing Tailscale in CT $CTID"
 
-pct exec "$CTID" -- bash -c '
+$STD pct exec "$CTID" -- bash -c '
 set -e
 
 # Detect OS inside container
@@ -128,6 +128,8 @@ if [ -f /etc/alpine-release ]; then
 else
   # ── Debian / Ubuntu ──
   export DEBIAN_FRONTEND=noninteractive
+  # The helpers then print apt output instead of logging it inside the container.
+  export VERBOSE=yes
 
   # Source os-release properly (handles quoted values)
   . /etc/os-release
@@ -175,6 +177,11 @@ else
   # Reuse the shared repository helper instead of hand-rolling the sources entry
   source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/core.func")
   source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/lib/tools.func")
+  # A failed download is sourced as an empty file
+  if ! declare -f load_functions setup_deb822_repo >/dev/null; then
+    echo "[ERROR] Could not download the community-scripts helpers inside the container. Check its network and DNS." >&2
+    exit 7
+  fi
   load_functions
 
   # Drop the legacy keyring from the pre-deb822 layout
@@ -187,7 +194,7 @@ else
     "${VERSION_CODENAME}" \
     "main"
 
-  apt-get install -y tailscale >/dev/null
+  apt-get install -y tailscale
 
   if [ -f /tmp/resolv.conf.backup ]; then
     echo "[INFO] Restoring original /etc/resolv.conf"
