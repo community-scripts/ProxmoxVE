@@ -592,6 +592,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Stalwart: migrate to v1 with stalwart-migrate [@MickLesk](https://github.com/MickLesk) ([#18794](https://github.com/community-scripts/ProxmoxVE/pull/18794))
 
+### 💾 Core
+
+  - fix: vm - name why an image step failed and open one message for the disk import [@MickLesk](https://github.com/MickLesk) ([core#279](https://github.com/community-scripts/core/pull/279))
+
 ## 2026-11-19
 
 ### 🆕 New Scripts
