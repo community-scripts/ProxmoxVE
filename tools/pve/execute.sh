@@ -51,18 +51,20 @@ header_info
 echo "One moment please...\n"
 
 function execute_in() {
-  container=$1
-  name=$(pct exec "$container" hostname)
-  echo -e "${BL}[Info]${GN} Execute inside${BL} ${name}${GN} with output: ${CL}"
-  if ! pct exec "$container" -- bash -c "command ${custom_command} >/dev/null 2>&1"; then
-    echo -e "${BL}[Info]${GN} Skipping ${name} ${RD}$container has no command: ${custom_command}"
-  else
-    pct exec "$container" -- bash -c "${custom_command}" | tee
+  local container=$1 name rc=0
+  name=$(pct config "$container" | awk '/^hostname:/ {print $2}')
+  echo -e "${BL}[Info]${GN} Execute inside${BL} ${container} (${name})${GN} with output: ${CL}"
+  # Run once; a failure in one container must not end the run for the others.
+  pct exec "$container" -- bash -c "${custom_command}" | tee || rc=$?
+  if [ "$rc" -eq 127 ]; then
+    echo -e "${BL}[Info]${RD} ${container} (${name}) has no command: ${custom_command}${CL}"
+  elif [ "$rc" -ne 0 ]; then
+    echo -e "${BL}[Info]${RD} Command exited with code ${rc} in ${container} (${name})${CL}"
   fi
 }
 
 for container in $(pct list | awk '{if(NR>1) print $1}'); do
-  if [[ " ${excluded_containers[@]} " =~ " $container " ]]; then
+  if [[ " ${excluded_containers} " == *" ${container} "* ]]; then
     echo -e "${BL}[Info]${GN} Skipping ${BL}$container${CL}"
   else
     os=$(pct config "$container" | awk '/^ostype/ {print $2}')
@@ -75,7 +77,10 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
     template=$(pct config "$container" | grep -q "template:" && echo "true" || echo "false")
     if [ "$template" == "false" ] && [ "$status" == "status: stopped" ]; then
       echo -e "${BL}[Info]${GN} Starting${BL} $container ${CL}"
-      pct start "$container"
+      if ! pct start "$container"; then
+        echo -e "${BL}[Info]${RD} Skipping ${container}, it did not start${CL}"
+        continue
+      fi
       echo -e "${BL}[Info]${GN} Waiting For${BL} $container${CL}${GN} To Start ${CL}"
       sleep 5
       execute_in "$container"
