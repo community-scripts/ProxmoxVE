@@ -614,6 +614,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Report an interrupted update-apps backup as cancelled, not failed [@MickLesk](https://github.com/MickLesk) ([#18867](https://github.com/community-scripts/ProxmoxVE/pull/18867))
     - FSTrim: skip a container that will not start instead of ending fstrim [@MickLesk](https://github.com/MickLesk) ([#18864](https://github.com/community-scripts/ProxmoxVE/pull/18864))
     - Say which containers update-lxcs failed on and why [@MickLesk](https://github.com/MickLesk) ([#18863](https://github.com/community-scripts/ProxmoxVE/pull/18863))
     - clean-lxc: say which containers clean-lxcs failed on and why [@MickLesk](https://github.com/MickLesk) ([#18862](https://github.com/community-scripts/ProxmoxVE/pull/18862))
