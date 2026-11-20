@@ -227,7 +227,7 @@ EOF
     # plugins
     cd "$SRC_DIR"
     export MISE_TRUSTED_CONFIG_PATHS="$SRC_DIR"/mise.toml
-    export MISE_DISABLE_TOOLS=github:jellyfin/jellyfin-ffmpeg,java,terragrunt,opentofu,restic,npm:@openapitools/openapi-generator-cli
+    export MISE_DISABLE_TOOLS=github:jellyfin/jellyfin-ffmpeg,java,terragrunt,opentofu,restic,npm:@openapitools/openapi-generator-cli,npm:oazapfts
     export MISE_LOCKFILE_MODE=merge MISE_LOCKFILE_PLATFORMS="linux-$(arch_resolve x64 arm64)"
     mise_ok=0
     for i in 1 2 3; do
