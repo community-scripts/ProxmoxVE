@@ -118,9 +118,63 @@ jobs:
                 )
               );
 
+              async function getScriptAuthors(pr) {
+                try {
+                  const { data: files } = await github.rest.pulls.listFiles({
+                    owner: context.repo.owner,
+                    repo: "ProxmoxVE",
+                    pull_number: pr.number,
+                    per_page: 100,
+                  });
+                  const ctFile = files.find(file => file.status === "added" && /^ct\/[^/]+\.sh$/.test(file.filename));
+                  if (!ctFile) return "";
+
+                  const { data: script } = await github.rest.repos.getContent({
+                    owner: context.repo.owner,
+                    repo: "ProxmoxVE",
+                    path: ctFile.filename,
+                    ref: pr.merge_commit_sha,
+                  });
+                  const header = Buffer.from(script.content, "base64").toString("utf-8")
+                    .split("\n").slice(0, 20)
+                    .find(line => /^#\s*Authors?:/i.test(line));
+                  if (!header) return "";
+
+                  // "MickLesk (CanbiZ)" puts the handle first, "Slaviša Arežina (tremor021)" in the parentheses
+                  const candidates = header.replace(/^#\s*Authors?:/i, "").split("|").map(part => {
+                    part = part.trim().replace(/^[A-Za-z-]+:\s*/, "");
+                    const match = part.match(/^([^(]*)\(([^)]*)\)/);
+                    if (!match) return part;
+                    const words = match[1].trim().split(/\s+/).filter(Boolean);
+                    return words.length === 1 ? words[0] : match[2].trim();
+                  });
+
+                  // A display name used alone in a header; the GitHub account of that name is someone else
+                  const authorAliases = { canbiz: "MickLesk" };
+                  const logins = [];
+                  for (let candidate of candidates) {
+                    if (!/^[A-Za-z0-9-]+$/.test(candidate)) continue;
+                    candidate = authorAliases[candidate.toLowerCase()] ?? candidate;
+                    try {
+                      const { data: user } = await github.rest.users.getByUsername({ username: candidate });
+                      if (user.type === "User" && !logins.includes(user.login)) logins.push(user.login);
+                    } catch (error) {
+                      console.log(`No GitHub user ${candidate} (${ctFile.filename}): ${error}`);
+                    }
+                  }
+                  return logins.map(login => `[@${login}](https://github.com/${login})`).join(", ");
+                } catch (error) {
+                  console.error(`Could not read the author of #${pr.number}: ${error}`);
+                  return "";
+                }
+              }
+
               for (const pr of filteredPRs) {
                 const prLabels = pr.labels.map(label => label.name.toLowerCase());
-                if (pr.user.login.includes("push-app-to-main[bot]")) {
+                const scriptAuthors = prLabels.includes("new script") ? await getScriptAuthors(pr) : "";
+                if (scriptAuthors) {
+                  prNote = `- ${pr.title} ${scriptAuthors} ([#${pr.number}](${pr.html_url}))`;
+                } else if (pr.user.login.includes("push-app-to-main[bot]")) {
 
                   const scriptName = pr.title;
                     try {
@@ -128,11 +182,12 @@ jobs:
                         owner: context.repo.owner,
                         repo: "DevScripts",
                         state: "all",
-                        labels: ["Started Migration To ProxmoxVE"]
+                        labels: ["Started Migration To ProxmoxVE"],
+                        per_page: 100,
                       });
 
                       const matchingIssue = relatedIssues.find(issue =>
-                        issue.title.toLowerCase().includes(scriptName.toLowerCase())
+                        issue.title.trim().toLowerCase() === scriptName.trim().toLowerCase()
                       );
 
                       if (matchingIssue) {
@@ -212,75 +267,70 @@ jobs:
 
               }
 
-              // ── Engine pull requests ────────────────────────────────────────
-              // The engine lives in community-scripts/core, so its changes never
-              // show up in this repository's PR list -- and a fix there reaches
-              // every script here. The "💾 Core" category already existed for
-              // ProxmoxVE PRs labelled `core`; engine PRs land in the same place.
-              try {
-                const { data: corePulls } = await github.rest.pulls.list({
-                  owner: context.repo.owner,
-                  repo: "core",
-                  base: "main",
-                  state: "closed",
-                  sort: "updated",
-                  direction: "desc",
-                  per_page: 100,
-                });
+              // ── Pull requests from other repositories ───────────────────────
+              const externalRepos = [
+                { repo: "core", category: "💾 Core", prefix: "core" },
+                { repo: "services", category: "🛰️ Services", prefix: "services" },
+                { repo: "ProxmoxVE-Frontend", category: "🌐 Website", prefix: "website" },
+              ];
+              const externalLabelAliases = {
+                bug: "bugfix",
+                bugfix: "bugfix",
+                enhancement: "feature",
+                feature: "feature",
+                refactor: "refactor",
+                "breaking change": "breaking change",
+              };
+              const externalPriority = ["breaking change", "bugfix", "feature", "refactor"];
 
-                const coreCategory = categorizedPRs.find(category =>
-                  category.title.includes("Core") || category.labels.includes("core"));
+              for (const { repo, category: categoryTitle, prefix } of externalRepos) {
+                try {
+                  const { data: externalPulls } = await github.rest.pulls.list({
+                    owner: context.repo.owner,
+                    repo,
+                    base: "main",
+                    state: "closed",
+                    sort: "updated",
+                    direction: "desc",
+                    per_page: 100,
+                  });
 
-                // core carries GitHub's default label set, and most of its pull
-                // requests carry none at all, so map what maps and let the rest
-                // sit directly under the category.
-                const coreLabelAliases = {
-                  bug: "bugfix",
-                  bugfix: "bugfix",
-                  enhancement: "feature",
-                  feature: "feature",
-                  refactor: "refactor",
-                  "breaking change": "breaking change",
-                };
-                const corePriority = ["breaking change", "bugfix", "feature", "refactor"];
+                  const category = categorizedPRs.find(c => c.title === categoryTitle);
 
-                for (const pr of corePulls) {
-                  if (!pr.merged_at) continue;
-                  if (new Date(pr.merged_at) <= latestDateInChangelog) continue;
+                  for (const pr of externalPulls) {
+                    if (!pr.merged_at) continue;
+                    if (new Date(pr.merged_at) <= latestDateInChangelog) continue;
 
-                  const rawLabels = pr.labels.map(label => label.name.toLowerCase());
-                  if (rawLabels.some(l => ["invalid", "wontdo", "wontfix", "duplicate", process.env.AUTOMATED_PR_LABEL].includes(l))) continue;
+                    const rawLabels = pr.labels.map(label => label.name.toLowerCase());
+                    if (rawLabels.some(l => ["invalid", "wontdo", "wontfix", "duplicate", process.env.AUTOMATED_PR_LABEL].includes(l))) continue;
 
-                  if (!coreCategory) {
-                    console.log(`No Core category configured; skipping core#${pr.number}`);
-                    continue;
-                  }
+                    if (!category) {
+                      console.log(`No ${categoryTitle} category configured; skipping ${prefix}#${pr.number}`);
+                      continue;
+                    }
 
-                  // core#N rather than #N: a bare number reads as a pull request
-                  // in this repository, so the link would lead somewhere other
-                  // than the text promises.
-                  const coreNote = `- ${pr.title} [@${pr.user.login}](https://github.com/${pr.user.login}) ([core#${pr.number}](${pr.html_url}))`;
+                    // core#N rather than #N: a bare #N links to a pull request in this repository.
+                    const note = `- ${pr.title} [@${pr.user.login}](https://github.com/${pr.user.login}) ([${prefix}#${pr.number}](${pr.html_url}))`;
 
-                  const mapped = rawLabels.map(l => coreLabelAliases[l]).filter(Boolean);
-                  let placed = false;
-                  if (coreCategory.subCategories && coreCategory.subCategories.length > 0) {
-                    for (const priorityLabel of corePriority) {
-                      if (!mapped.includes(priorityLabel)) continue;
-                      const subCategory = coreCategory.subCategories.find(sub =>
-                        sub.labels.includes(priorityLabel));
-                      if (subCategory) {
-                        subCategory.notes.push(coreNote);
-                        placed = true;
-                        break;
+                    const mapped = rawLabels.map(l => externalLabelAliases[l]).filter(Boolean);
+                    let placed = false;
+                    if (category.subCategories && category.subCategories.length > 0) {
+                      for (const priorityLabel of externalPriority) {
+                        if (!mapped.includes(priorityLabel)) continue;
+                        const subCategory = category.subCategories.find(sub =>
+                          sub.labels.includes(priorityLabel));
+                        if (subCategory) {
+                          subCategory.notes.push(note);
+                          placed = true;
+                          break;
+                        }
                       }
                     }
+                    if (!placed) category.notes.push(note);
                   }
-                  if (!placed) coreCategory.notes.push(coreNote);
+                } catch (error) {
+                  console.error(`Could not read ${repo} pull requests: ${error}`);
                 }
-              } catch (error) {
-                // The engine repository being unreachable must not cost this
-                // repository its changelog.
-                console.error(`Could not read core pull requests: ${error}`);
               }
 
               return categorizedPRs;
@@ -349,13 +399,14 @@ jobs:
           git commit -m "Update CHANGELOG.md"
           git checkout -b $BRANCH_NAME || git checkout $BRANCH_NAME
           git push origin $BRANCH_NAME --force
+          echo "HEAD_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
 
       - name: Create pull request if not exists
         if: env.changed == 'true'
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
         run: |
-          PR_EXISTS=$(gh pr list --head "${BRANCH_NAME}" --json number --jq '.[].number')
+          PR_EXISTS=$(gh pr list --head "${BRANCH_NAME}" --state open --json number,isCrossRepository --jq '[.[] | select(.isCrossRepository == false)][0].number // empty')
           if [ -z "$PR_EXISTS" ]; then
             gh pr create --title "[Github Action] Update CHANGELOG.md" \
                          --body "This PR is auto-generated by a Github Action to update the CHANGELOG.md file." \
@@ -369,9 +420,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          PR_NUMBER=$(gh pr list --head "${BRANCH_NAME}" --json number --jq '.[].number')
+          PR_NUMBER=$(gh pr list --head "${BRANCH_NAME}" --state open --json number,isCrossRepository --jq '[.[] | select(.isCrossRepository == false)][0].number // empty')
           if [ -n "$PR_NUMBER" ]; then
-            gh pr review $PR_NUMBER --approve
+            gh pr review "$PR_NUMBER" --approve
           fi
 
       - name: Approve pull request and merge
@@ -381,8 +432,8 @@ jobs:
         run: |
           git config --global user.name "github-actions-automege[bot]"
           git config --global user.email "github-actions-automege[bot]@users.noreply.github.com"
-          PR_NUMBER=$(gh pr list --head "${BRANCH_NAME}" --json number --jq '.[].number')
+          PR_NUMBER=$(gh pr list --head "${BRANCH_NAME}" --state open --json number,isCrossRepository --jq '[.[] | select(.isCrossRepository == false)][0].number // empty')
           if [ -n "$PR_NUMBER" ]; then
-            gh pr review $PR_NUMBER --approve
-            gh pr merge $PR_NUMBER --squash --admin
+            gh pr review "$PR_NUMBER" --approve
+            gh pr merge "$PR_NUMBER" --squash --admin --match-head-commit "$HEAD_SHA"
           fi

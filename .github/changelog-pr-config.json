@@ -204,6 +204,42 @@
     ]
   },
   {
+    "title": "🛰️ Services",
+    "labels": [
+      "services"
+    ],
+    "subCategories": [
+      {
+        "title": "🐞 Bug Fixes",
+        "labels": [
+          "bugfix"
+        ],
+        "notes": []
+      },
+      {
+        "title": "✨ New Features",
+        "labels": [
+          "feature"
+        ],
+        "notes": []
+      },
+      {
+        "title": "💥 Breaking Changes",
+        "labels": [
+          "breaking change"
+        ],
+        "notes": []
+      },
+      {
+        "title": "🔧 Refactor",
+        "labels": [
+          "refactor"
+        ],
+        "notes": []
+      }
+    ]
+  },
+  {
     "title": "❔ Uncategorized",
     "labels": [
       "needs triage"

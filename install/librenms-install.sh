@@ -52,7 +52,7 @@ msg_info "Configuring LibreNMS"
 $STD useradd librenms -d /opt/librenms -M -r -s "$(which bash)"
 mkdir -p /opt/librenms/{rrd,logs,bootstrap/cache,storage,html}
 cd /opt/librenms
-APP_KEY=$(openssl rand -base64 40 | tr -dc 'a-zA-Z0-9')
+APP_KEY="base64:$(openssl rand -base64 32)"
 $STD uv venv --clear .venv
 $STD source .venv/bin/activate
 $STD uv pip install -r requirements.txt
@@ -124,7 +124,6 @@ EOF
 
 $STD su - librenms -s /bin/bash -c "cd /opt/librenms && COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev"
 $STD su - librenms -s /bin/bash -c "cd /opt/librenms && php8.4 artisan migrate --force"
-$STD su - librenms -s /bin/bash -c "cd /opt/librenms && php8.4 artisan key:generate --force"
 $STD su - librenms -s /bin/bash -c "cd /opt/librenms && lnms db:seed --force"
 $STD su - librenms -s /bin/bash -c "cd /opt/librenms && lnms user:add -p ${APP_PASSWORD} ${APP_USER} --role=admin"
 

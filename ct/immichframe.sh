@@ -31,12 +31,12 @@ function update_script() {
     exit
   fi
 
-  if ! dotnet --list-sdks 2>/dev/null | grep -q '^8\.'; then
-    msg_info "Installing .NET SDK 8.0"
+  if ! dotnet --list-sdks 2>/dev/null | grep -q '^10\.'; then
+    msg_info "Installing .NET SDK 10.0"
     if [[ "$(arch_resolve)" == "arm64" ]]; then
       curl -fsSL https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh
-      $STD bash /tmp/dotnet-install.sh --channel 8.0 --install-dir /usr/lib/dotnet8
-      ln -sf /usr/lib/dotnet8/dotnet /usr/bin/dotnet
+      $STD bash /tmp/dotnet-install.sh --channel 10.0 --install-dir /usr/lib/dotnet10
+      ln -sf /usr/lib/dotnet10/dotnet /usr/bin/dotnet
       rm -f /tmp/dotnet-install.sh
     else
       setup_deb822_repo \
@@ -45,9 +45,9 @@ function update_script() {
         "https://packages.microsoft.com/debian/13/prod/" \
         "trixie" \
         "main"
-      $STD apt install -y dotnet-sdk-8.0
+      $STD apt install -y dotnet-sdk-10.0
     fi
-    msg_ok "Installed .NET SDK 8.0"
+    msg_ok "Installed .NET SDK 10.0"
   fi
 
   if check_for_gh_release "immichframe" "immichFrame/ImmichFrame"; then

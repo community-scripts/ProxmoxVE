@@ -14,7 +14,9 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y chromium
+$STD apt install -y \
+  libatomic1 \
+  chromium
 msg_ok "Installed Dependencies"
 
 export UV_PYTHON_INSTALL_DIR="/opt/archivebox/python"

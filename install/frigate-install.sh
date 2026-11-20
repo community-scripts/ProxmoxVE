@@ -110,7 +110,7 @@ export AUTOGRAPH_VERBOSITY=0
 export GLOG_minloglevel=3
 export GLOG_logtostderr=0
 
-fetch_and_deploy_gh_release "frigate" "blakeblackshear/frigate" "tarball" "v0.18.2" "/opt/frigate"
+fetch_and_deploy_gh_release "frigate" "blakeblackshear/frigate" "tarball" "v0.18.3" "/opt/frigate"
 
 msg_info "Building Nginx"
 $STD bash /opt/frigate/docker/main/build_nginx.sh
@@ -201,7 +201,7 @@ msg_ok "Installed OpenVino"
 
 msg_info "Building OpenVino Model"
 cd /models
-curl_download "ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz" "http://download.tensorflow.org/models/object_detection/ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz"
+curl_download "ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz" "https://storage.googleapis.com/download.tensorflow.org/models/object_detection/ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz"
 $STD tar -zxf ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz --no-same-owner
 if python3 /opt/frigate/docker/main/build_ov_model.py &>/dev/null; then
   mkdir -p /openvino-model

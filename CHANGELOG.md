@@ -584,12 +584,123 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
-## 2026-11-16
+## 2026-11-20
+
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Stalwart: migrate to v1 with stalwart-migrate [@MickLesk](https://github.com/MickLesk) ([#18794](https://github.com/community-scripts/ProxmoxVE/pull/18794))
+
+## 2026-11-19
+
+### 🆕 New Scripts
+
+  - T3 Code [@lukdz](https://github.com/lukdz) ([#18845](https://github.com/community-scripts/ProxmoxVE/pull/18845))
+- Faraday [@MickLesk](https://github.com/MickLesk) ([#18844](https://github.com/community-scripts/ProxmoxVE/pull/18844))
 
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
 
+    - fix(t3code): wait for server readiness before pairing [@ps915](https://github.com/ps915) ([#18849](https://github.com/community-scripts/ProxmoxVE/pull/18849))
+    - Frigate: bump to v0.18.3 [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#18841](https://github.com/community-scripts/ProxmoxVE/pull/18841))
+    - Nginx Proxy Manager: patch nginx HTTP/2 CVE-2026-123007 / CVE-2026-123633 [@valentingoulier](https://github.com/valentingoulier) ([#18835](https://github.com/community-scripts/ProxmoxVE/pull/18835))
+
+### 🛰️ Services
+
+  - Take the API reference out of the menu and cut it down [@MickLesk](https://github.com/MickLesk) ([services#21](https://github.com/community-scripts/services/pull/21))
+- Add an API reference page and offer 3 days instead of a year [@MickLesk](https://github.com/MickLesk) ([services#20](https://github.com/community-scripts/services/pull/20))
+
+## 2026-11-18
+
+### 🆕 New Scripts
+
+  - Factorio [@LindholmLabs](https://github.com/LindholmLabs) ([#18830](https://github.com/community-scripts/ProxmoxVE/pull/18830))
+- Scrutiny [@MickLesk](https://github.com/MickLesk) ([#18827](https://github.com/community-scripts/ProxmoxVE/pull/18827))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - WireGuard: increase Alpine disk size to 2 GB [@degeens](https://github.com/degeens) ([#18831](https://github.com/community-scripts/ProxmoxVE/pull/18831))
+
+  - #### ✨ New Features
+
+    - OpenCloud: bump to v9.2.0 [@SimKaiLong](https://github.com/SimKaiLong) ([#18822](https://github.com/community-scripts/ProxmoxVE/pull/18822))
+
+### 🧰 Tools
+
+  - Scrutiny Collector ([#18826](https://github.com/community-scripts/ProxmoxVE/pull/18826))
+
+## 2026-11-17
+
+### 🆕 New Scripts
+
+  - AIOStreams [@MrNRod](https://github.com/MrNRod) ([#18673](https://github.com/community-scripts/ProxmoxVE/pull/18673))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - immichframe: move to .NET 10 (1.0.40.0 requires it) [@supersoju](https://github.com/supersoju) ([#18806](https://github.com/community-scripts/ProxmoxVE/pull/18806))
+    - LibreNMS: write a valid APP_KEY before migrating [@MickLesk](https://github.com/MickLesk) ([#18776](https://github.com/community-scripts/ProxmoxVE/pull/18776))
+
+  - #### ✨ New Features
+
+    - OpenCloud: bump to v9.1.1 [@SimKaiLong](https://github.com/SimKaiLong) ([#18795](https://github.com/community-scripts/ProxmoxVE/pull/18795))
+    - Portabase: support file and folder backups (restic / rclone) [@MickLesk](https://github.com/MickLesk) ([#18766](https://github.com/community-scripts/ProxmoxVE/pull/18766))
+
+  - #### 🔧 Refactor
+
+    - ITSM-NG: fetch the repo and key over HTTPS [@MickLesk](https://github.com/MickLesk) ([#18799](https://github.com/community-scripts/ProxmoxVE/pull/18799))
+    - Frigate: Fetch the OpenVINO model over HTTPS [@MickLesk](https://github.com/MickLesk) ([#18797](https://github.com/community-scripts/ProxmoxVE/pull/18797))
+    - Change Detection: replace Browserless with SockPuppetBrowser [@MickLesk](https://github.com/MickLesk) ([#18767](https://github.com/community-scripts/ProxmoxVE/pull/18767))
+
+### 💾 Core
+
+  - Stop setting kernel.keys.maxkeys on Incus containers [@MickLesk](https://github.com/MickLesk) ([core#277](https://github.com/community-scripts/core/pull/277))
+- Bound the template catalog lookup so a dead storage cannot hang the run [@MickLesk](https://github.com/MickLesk) ([core#275](https://github.com/community-scripts/core/pull/275))
+- Record a failed command as written in the script [@MickLesk](https://github.com/MickLesk) ([core#274](https://github.com/community-scripts/core/pull/274))
+- Let the Incus network wait ask again when its probe fails [@MickLesk](https://github.com/MickLesk) ([core#273](https://github.com/community-scripts/core/pull/273))
+- Run the VM cleanup and Incus file pull tests in CI | Take files out of an Incus guest as a bounded stream into a private file [@MickLesk](https://github.com/MickLesk) ([core#272](https://github.com/community-scripts/core/pull/272))
+
+### 🧰 Tools
+
+  - #### 🐞 Bug Fixes
+
+    - Arcane: show the generated admin password [@MickLesk](https://github.com/MickLesk) ([#18785](https://github.com/community-scripts/ProxmoxVE/pull/18785))
+
+### 📚 Documentation
+
+  - Changelog: Credit script authors and list services and website changes [@MickLesk](https://github.com/MickLesk) ([#18809](https://github.com/community-scripts/ProxmoxVE/pull/18809))
+- Merge only the changelog pull request the job opened [@MickLesk](https://github.com/MickLesk) ([#18804](https://github.com/community-scripts/ProxmoxVE/pull/18804))
+
+### 🛰️ Services
+
+  - Let contributors read traces and open issues with a password of their own [@MickLesk](https://github.com/MickLesk) ([services#19](https://github.com/community-scripts/services/pull/19))
+- Rework the dashboard around triaging failures [@MickLesk](https://github.com/MickLesk) ([services#18](https://github.com/community-scripts/services/pull/18))
+- Serve failure text only to requests that carry the admin token [@MickLesk](https://github.com/MickLesk) ([services#17](https://github.com/community-scripts/services/pull/17))
+- Number the notes in the testing message and show their type [@MickLesk](https://github.com/MickLesk) ([services#16](https://github.com/community-scripts/services/pull/16))
+- Decide exit 255 by the command, not as dpkg [@MickLesk](https://github.com/MickLesk) ([services#14](https://github.com/community-scripts/services/pull/14))
+
+### ❔ Uncategorized
+
+  - chore(ct): sync paperclip defaults with PocketBase [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18820](https://github.com/community-scripts/ProxmoxVE/pull/18820))
+
+## 2026-11-16
+
+### 🆕 New Scripts
+
+  - Gitea Runner ([#18782](https://github.com/community-scripts/ProxmoxVE/pull/18782))
+- NetAlertX ([#18781](https://github.com/community-scripts/ProxmoxVE/pull/18781))
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Dawarich: let Rails serve undigested asset paths [@ryanvo](https://github.com/ryanvo) ([#18779](https://github.com/community-scripts/ProxmoxVE/pull/18779))
+    - ArchiveBox: install libatomic1 for the Playwright driver [@MickLesk](https://github.com/MickLesk) ([#18722](https://github.com/community-scripts/ProxmoxVE/pull/18722))
     - Ollama/OpenWebUI: download update before stopping the service [@jobben-2025](https://github.com/jobben-2025) ([#18755](https://github.com/community-scripts/ProxmoxVE/pull/18755))
     - opengym: bump Node.js from 22 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18756](https://github.com/community-scripts/ProxmoxVE/pull/18756))
     - razzia: bump Node.js from 24 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18757](https://github.com/community-scripts/ProxmoxVE/pull/18757))
@@ -598,6 +709,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - #### 💥 Breaking Changes
 
     - immich: reuse prebuilt image-processing libraries from the base image [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#18605](https://github.com/community-scripts/ProxmoxVE/pull/18605))
+
+### 💾 Core
+
+  - Treat a closed update menu as cancel [@MickLesk](https://github.com/MickLesk) ([core#270](https://github.com/community-scripts/core/pull/270))
+- forge: a .deb without service units is not an error [@MickLesk](https://github.com/MickLesk) ([core#269](https://github.com/community-scripts/core/pull/269))
 
 ## 2026-11-15
 
