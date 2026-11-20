@@ -32,6 +32,8 @@ function update_script() {
   msg_info "Updating deCONZ"
   apt_update_safe
   $STD apt upgrade -y
+  setcap -r /usr/bin/deCONZ 2>/dev/null || true
+  systemctl restart deconz
   msg_ok "Updated deCONZ"
   msg_ok "Updated successfully!"
   exit
