@@ -596,6 +596,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Stalwart: migrate to v1 with stalwart-migrate [@MickLesk](https://github.com/MickLesk) ([#18794](https://github.com/community-scripts/ProxmoxVE/pull/18794))
 
+  - #### 🔧 Refactor
+
+    - Pi.Alert: install the crontab after the first scans [@MickLesk](https://github.com/MickLesk) ([#18858](https://github.com/community-scripts/ProxmoxVE/pull/18858))
+
 ### 💾 Core
 
   - core: Keep the root filesystem lookup a soft failure [@MickLesk](https://github.com/MickLesk) ([core#280](https://github.com/community-scripts/core/pull/280))
