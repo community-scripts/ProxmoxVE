@@ -57,10 +57,11 @@ function update_script() {
     $STD pnpm turbo run build --filter=web --filter=admin --filter=space --filter=live
     msg_ok "Rebuilt Frontend"
 
+    PYTHON_VERSION="3.12" UV_PROJECT_DIR="/opt/plane/apps/api" setup_uv
+
     msg_info "Updating Python Dependencies"
     cd /opt/plane/apps/api
-    export VIRTUAL_ENV=/opt/plane-venv
-    $STD uv pip install --upgrade -r requirements/production.txt
+    UV_PROJECT_ENVIRONMENT=/opt/plane-venv $STD uv sync --locked --no-default-groups --group production
     msg_ok "Updated Python Dependencies"
 
     msg_info "Running Migrations"
