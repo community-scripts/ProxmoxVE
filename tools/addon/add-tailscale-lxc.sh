@@ -203,9 +203,11 @@ else
 fi
 '
 
-TAGS=$(awk -F': ' '/^tags:/ {print $2}' "$CTID_CONFIG_PATH")
-TAGS="${TAGS:+$TAGS; }tailscale"
-pct set "$CTID" -tags "$TAGS"
+# The tag is cosmetic; Tailscale is installed by now.
+TAGS=$(pct config "$CTID" | awk -F': ' '/^tags:/ {print $2}')
+if [[ ";${TAGS};" != *";tailscale;"* ]] && ! TAG_OUTPUT=$(pct set "$CTID" -tags "${TAGS:+$TAGS;}tailscale" 2>&1); then
+  msg_warn "Could not add the tailscale tag to CT $CTID: ${TAG_OUTPUT}"
+fi
 
 msg_ok "Tailscale installed on CT $CTID"
 echo -e "${YW}Reboot the container${CL}, then run 'tailscale up' inside the container to activate."
