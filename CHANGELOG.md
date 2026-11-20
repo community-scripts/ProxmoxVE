@@ -599,6 +599,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Immich: skip oazapfts in mise install, the build never runs it [@MickLesk](https://github.com/MickLesk) ([#18859](https://github.com/community-scripts/ProxmoxVE/pull/18859))
     - QoL - Postgres: keep installing when the Adminer prompt reads a closed console  [@MickLesk](https://github.com/MickLesk) ([#18857](https://github.com/community-scripts/ProxmoxVE/pull/18857))
     - Plane: install the API from uv.lock, v1.5.0 dropped the requirements files [@MickLesk](https://github.com/MickLesk) ([#18856](https://github.com/community-scripts/ProxmoxVE/pull/18856))
     - Pi.Alert: install the crontab after the first scans [@MickLesk](https://github.com/MickLesk) ([#18858](https://github.com/community-scripts/ProxmoxVE/pull/18858))
