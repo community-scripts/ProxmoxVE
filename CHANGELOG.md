@@ -614,6 +614,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Say which containers update-lxcs failed on and why [@MickLesk](https://github.com/MickLesk) ([#18863](https://github.com/community-scripts/ProxmoxVE/pull/18863))
+    - clean-lxc: say which containers clean-lxcs failed on and why [@MickLesk](https://github.com/MickLesk) ([#18862](https://github.com/community-scripts/ProxmoxVE/pull/18862))
     - LXC-Executer: run the execute command once per container and keep going on failure [@MickLesk](https://github.com/MickLesk) ([#18861](https://github.com/community-scripts/ProxmoxVE/pull/18861))
 
 ## 2026-11-19
