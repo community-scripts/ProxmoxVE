@@ -68,6 +68,11 @@ yq -i "
     (map(select(. != \"TZ=*\" and . != \"ACME_EMAIL=*\" and . != \"INITIAL_ADMIN_EMAIL=*\" and . != \"INITIAL_ADMIN_PASSWORD=*\")) +
     [\"TZ=$TZ_INPUT\", \"ACME_EMAIL=$ACME_EMAIL_INPUT\", \"INITIAL_ADMIN_EMAIL=admin@local.com\", \"INITIAL_ADMIN_PASSWORD=${ADMIN_PASS}\"])
 " /opt/compose.yaml
+# nginx in the NPMplus image cannot parse a link-local resolver with a zone ID (fe80::1%eth0)
+DNS_SERVERS="$(awk '/^nameserver/ && $2 !~ /%/ {print $2}' /etc/resolv.conf)"
+if grep -qE '^nameserver[[:space:]]+[^[:space:]]*%' /etc/resolv.conf && [[ -n "$DNS_SERVERS" ]]; then
+  DNS_SERVERS="$DNS_SERVERS" yq -i '.services.npmplus.dns = (strenv(DNS_SERVERS) | split("\n"))' /opt/compose.yaml
+fi
 {
   echo "NPMplus Credentials"
   echo "Email: admin@local.com"
