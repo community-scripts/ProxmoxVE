@@ -89,9 +89,18 @@ esac
 
 CTID_CONFIG_PATH="/etc/pve/lxc/${CTID}.conf"
 
-# Skip if already configured
-grep -q "lxc.cgroup2.devices.allow: c 10:200 rwm" "$CTID_CONFIG_PATH" || echo "lxc.cgroup2.devices.allow: c 10:200 rwm" >>"$CTID_CONFIG_PATH"
-grep -q "lxc.mount.entry: /dev/net/tun" "$CTID_CONFIG_PATH" || echo "lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file" >>"$CTID_CONFIG_PATH"
+# Snapshots follow the container's own settings as [name] sections, so a line
+# appended to the file ends up in the last snapshot instead of the container.
+CONF_MAIN=$(awk '/^\[/ {exit} {print}' "$CTID_CONFIG_PATH")
+CONF_SNAPSHOTS=$(awk '/^\[/ {s=1} s' "$CTID_CONFIG_PATH")
+CONF_ADD=""
+grep -q "^lxc.cgroup2.devices.allow: c 10:200 rwm" <<<"$CONF_MAIN" || CONF_ADD+=$'\n'"lxc.cgroup2.devices.allow: c 10:200 rwm"
+grep -q "^lxc.mount.entry: /dev/net/tun" <<<"$CONF_MAIN" || CONF_ADD+=$'\n'"lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file"
+if [[ -n "$CONF_ADD" && -n "$CONF_SNAPSHOTS" ]]; then
+  printf '%s%s\n\n%s\n' "$CONF_MAIN" "$CONF_ADD" "$CONF_SNAPSHOTS" >"$CTID_CONFIG_PATH"
+elif [[ -n "$CONF_ADD" ]]; then
+  printf '%s\n' "${CONF_ADD#$'\n'}" >>"$CTID_CONFIG_PATH"
+fi
 
 msg_info "Installing Tailscale in CT $CTID"
 
