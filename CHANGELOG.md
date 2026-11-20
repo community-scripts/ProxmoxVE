@@ -618,6 +618,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🧰 Tools
 
+  - #### 🐞 Bug Fixes
+
+    - Install the Scrutiny collector on TrueNAS SCALE without apt [@MickLesk](https://github.com/MickLesk) ([#18870](https://github.com/community-scripts/ProxmoxVE/pull/18870))
+
   - #### 🔧 Refactor
 
     - Refactor: Tailscale Script [@MickLesk](https://github.com/MickLesk) ([#18868](https://github.com/community-scripts/ProxmoxVE/pull/18868))
