@@ -63,7 +63,12 @@ curl_download "/opt/kasm_release_${KASM_VERSION}.tar.gz" "$KASM_URL"
 cd /opt
 tar -xf "kasm_release_${KASM_VERSION}.tar.gz"
 chmod +x /opt/kasm_release/install.sh
-bash /opt/kasm_release/install.sh --accept-eula --no-swap-check --no-check-disk --ignore-dep-failures >~/kasm-install.output 2>&1
+bash /opt/kasm_release/install.sh --accept-eula --no-swap-check --no-check-disk --ignore-dep-failures >~/kasm-install.output 2>&1 || {
+  KASM_RC=$?
+  $STD tail -n 25 ~/kasm-install.output
+  msg_error "The Kasm installer failed (exit ${KASM_RC}), see ~/kasm-install.output"
+  exit "$KASM_RC"
+}
 awk '
   /^Kasm UI Login Credentials$/ {capture=1}
   capture {print}
