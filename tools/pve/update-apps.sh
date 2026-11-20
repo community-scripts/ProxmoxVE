@@ -275,7 +275,8 @@ function dry_run_container() {
 function failure_reason() {
   local reason
   reason=$(grep -m1 '^ERROR:' <<<"$1" | sed 's/^ERROR: //')
-  [[ -n "$reason" ]] || reason=$(grep -v '^[[:space:]]*$' <<<"$1" | tail -n1)
+  # A rejected option ends in the usage line, the option's error is above it.
+  [[ -n "$reason" ]] || reason=$(grep -v -e '^[[:space:]]*$' -e '\[OPTIONS\]$' <<<"$1" | tail -n1)
   printf '%s' "$reason"
 }
 
@@ -286,6 +287,11 @@ function backup_container() {
     msg_ok "Backup created"
   else
     log_write "Container $1: vzdump failed:"$'\n'"$output"
+    # Ctrl+C, or the task was stopped: the backup did not fail, it was cancelled.
+    if grep -q "interrupted by signal" <<<"$output"; then
+      msg_error "Backup of container $1 was interrupted (Ctrl+C or the task was stopped)"
+      exit 130
+    fi
     msg_error "Backup failed for container $1: $(failure_reason "$output")"
     exit 235
   fi
