@@ -45,7 +45,7 @@ function update_script() {
       rm -rf /home/archivebox/.cache/ms-playwright
       remove_old_tool_version "nodejs" "nodesource"
       sed -i -e '/^User=archivebox$/d' -e 's|^ExecStart=/usr/local/bin/archivebox |ExecStart=/opt/archivebox/.venv/bin/archivebox |' /etc/systemd/system/archivebox.service
-      sed -i '/^ExecStart=/i ExecStartPre=-/bin/sh -c "echo 1G >/sys/fs/cgroup/memory.reclaim"' /etc/systemd/system/archivebox.service
+      sed -i '/^ExecStart=/i ExecStartPre=-/bin/sh -c "echo 1G 2>/dev/null >/sys/fs/cgroup/memory.reclaim"' /etc/systemd/system/archivebox.service
       systemctl daemon-reload
       $STD uv venv --python 3.13 /opt/archivebox/.venv
       msg_ok "Migrated ArchiveBox to 0.9"
@@ -59,7 +59,7 @@ function update_script() {
     if ! grep -q "^BASE_URL" ArchiveBox.conf; then
       $STD archivebox config --set "BASE_URL=http://${LOCAL_IP}:$(grep -oP 'server 0\.0\.0\.0:\K[0-9]+' /etc/systemd/system/archivebox.service)"
     fi
-    { echo 1G >/sys/fs/cgroup/memory.reclaim; } 2>/dev/null || true
+    echo 1G 2>/dev/null >/sys/fs/cgroup/memory.reclaim || true
     $STD archivebox install
     $STD archivebox update --migrate-only
     cat <<EOF >~/.archivebox
