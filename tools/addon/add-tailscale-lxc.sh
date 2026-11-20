@@ -89,13 +89,22 @@ esac
 
 CTID_CONFIG_PATH="/etc/pve/lxc/${CTID}.conf"
 
-# Skip if already configured
-grep -q "lxc.cgroup2.devices.allow: c 10:200 rwm" "$CTID_CONFIG_PATH" || echo "lxc.cgroup2.devices.allow: c 10:200 rwm" >>"$CTID_CONFIG_PATH"
-grep -q "lxc.mount.entry: /dev/net/tun" "$CTID_CONFIG_PATH" || echo "lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file" >>"$CTID_CONFIG_PATH"
+# Snapshots follow the container's own settings as [name] sections, so a line
+# appended to the file ends up in the last snapshot instead of the container.
+CONF_MAIN=$(awk '/^\[/ {exit} {print}' "$CTID_CONFIG_PATH")
+CONF_SNAPSHOTS=$(awk '/^\[/ {s=1} s' "$CTID_CONFIG_PATH")
+CONF_ADD=""
+grep -q "^lxc.cgroup2.devices.allow: c 10:200 rwm" <<<"$CONF_MAIN" || CONF_ADD+=$'\n'"lxc.cgroup2.devices.allow: c 10:200 rwm"
+grep -q "^lxc.mount.entry: /dev/net/tun" <<<"$CONF_MAIN" || CONF_ADD+=$'\n'"lxc.mount.entry: /dev/net/tun dev/net/tun none bind,create=file"
+if [[ -n "$CONF_ADD" && -n "$CONF_SNAPSHOTS" ]]; then
+  printf '%s%s\n\n%s\n' "$CONF_MAIN" "$CONF_ADD" "$CONF_SNAPSHOTS" >"$CTID_CONFIG_PATH"
+elif [[ -n "$CONF_ADD" ]]; then
+  printf '%s\n' "${CONF_ADD#$'\n'}" >>"$CTID_CONFIG_PATH"
+fi
 
 msg_info "Installing Tailscale in CT $CTID"
 
-pct exec "$CTID" -- bash -c '
+$STD pct exec "$CTID" -- bash -c '
 set -e
 
 # Detect OS inside container
@@ -119,6 +128,8 @@ if [ -f /etc/alpine-release ]; then
 else
   # ── Debian / Ubuntu ──
   export DEBIAN_FRONTEND=noninteractive
+  # The helpers then print apt output instead of logging it inside the container.
+  export VERBOSE=yes
 
   # Source os-release properly (handles quoted values)
   . /etc/os-release
@@ -130,7 +141,8 @@ else
   # Check DNS resolution using multiple methods (dig may not be installed)
   dns_check_failed=true
   if command -v dig >/dev/null 2>&1; then
-    if dig +short pkgs.tailscale.com 2>/dev/null | grep -qvE "^127\.|^0\.0\.0\.0$|^$"; then
+    # dig prints its own errors (";; no servers could be reached") on stdout
+    if dig +short pkgs.tailscale.com 2>/dev/null | grep -E "^[0-9.]+$" | grep -qvE "^127\.|^0\.0\.0\.0$"; then
       dns_check_failed=false
     fi
   elif command -v host >/dev/null 2>&1; then
@@ -156,6 +168,8 @@ else
     cp "$ORIG_RESOLV" "$BACKUP_RESOLV"
     echo "nameserver 1.1.1.1" >"$ORIG_RESOLV"
   fi
+  RESTORE_RESOLV="[ ! -f $BACKUP_RESOLV ] || mv -f $BACKUP_RESOLV $ORIG_RESOLV"
+  trap "$RESTORE_RESOLV" EXIT
 
   if ! command -v curl >/dev/null 2>&1; then
     echo "[INFO] curl not found, installing..."
@@ -166,6 +180,13 @@ else
   # Reuse the shared repository helper instead of hand-rolling the sources entry
   source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/core.func")
   source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/lib/tools.func")
+  # core.func sets its own EXIT trap
+  trap "$RESTORE_RESOLV" EXIT
+  # A failed download is sourced as an empty file
+  if ! declare -f load_functions setup_deb822_repo >/dev/null; then
+    echo "[ERROR] Could not download the community-scripts helpers inside the container. Check its network and DNS." >&2
+    exit 7
+  fi
   load_functions
 
   # Drop the legacy keyring from the pre-deb822 layout
@@ -178,18 +199,15 @@ else
     "${VERSION_CODENAME}" \
     "main"
 
-  apt-get install -y tailscale >/dev/null
-
-  if [ -f /tmp/resolv.conf.backup ]; then
-    echo "[INFO] Restoring original /etc/resolv.conf"
-    mv /tmp/resolv.conf.backup /etc/resolv.conf
-  fi
+  apt-get install -y tailscale
 fi
 '
 
-TAGS=$(awk -F': ' '/^tags:/ {print $2}' "$CTID_CONFIG_PATH")
-TAGS="${TAGS:+$TAGS; }tailscale"
-pct set "$CTID" -tags "$TAGS"
+# The tag is cosmetic; Tailscale is installed by now.
+TAGS=$(pct config "$CTID" | awk -F': ' '/^tags:/ {print $2}')
+if [[ ";${TAGS};" != *";tailscale;"* ]] && ! TAG_OUTPUT=$(pct set "$CTID" -tags "${TAGS:+$TAGS;}tailscale" 2>&1); then
+  msg_warn "Could not add the tailscale tag to CT $CTID: ${TAG_OUTPUT}"
+fi
 
 msg_ok "Tailscale installed on CT $CTID"
 echo -e "${YW}Reboot the container${CL}, then run 'tailscale up' inside the container to activate."
