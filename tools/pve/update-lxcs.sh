@@ -48,6 +48,11 @@ while read -r TAG ITEM; do
 done < <(pct list | awk 'NR>1')
 excluded_containers=$(whiptail --backtitle "Proxmox VE Helper Scripts" --title "Containers on $NODE" --checklist "\nSelect containers to skip from updates:\n" 16 $((MSG_MAX_LENGTH + 23)) 6 "${EXCLUDE_MENU[@]}" 3>&1 1>&2 2>&3 | tr -d '"')
 
+# The failing containers' output, for the user and for the telemetry trace.
+RUN_LOG="/tmp/update-lxcs-$(date +%Y%m%d_%H%M%S).log"
+SILENT_LOGFILE="$RUN_LOG"
+UPDATE_OUTPUT=$(mktemp)
+
 function needs_reboot() {
   local container=$1
   local os=$(pct config "$container" | awk '/^ostype/ {print $2}')
@@ -78,9 +83,21 @@ function update_container() {
   alpine) pct exec "$container" -- ash -c "apk -U upgrade" ;;
   archlinux) pct exec "$container" -- bash -c "pacman -Syyu --noconfirm" ;;
   fedora | rocky | centos | alma) pct exec "$container" -- bash -c "dnf -y update && dnf -y upgrade" ;;
-  ubuntu | debian | devuan) pct exec "$container" -- bash -c "apt-get update 2>/dev/null | grep 'packages.*upgraded'; apt list --upgradable 2>/dev/null | cat && apt-get -yq dist-upgrade 2>&1; apt-get -yq autoremove 2>&1; apt-get -yq autoclean 2>&1; rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED || true" ;;
+  ubuntu | debian | devuan) pct exec "$container" -- bash -c "apt-get update 2>/dev/null | grep 'packages.*upgraded'; apt list --upgradable 2>/dev/null | cat && apt-get -yq dist-upgrade 2>&1; rc=\$?; apt-get -yq autoremove 2>&1; apt-get -yq autoclean 2>&1; rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED; exit \$rc" ;;
   opensuse) pct exec "$container" -- bash -c "zypper ref && zypper --non-interactive dup" ;;
-  esac
+  esac 2>&1 | tee "$UPDATE_OUTPUT"
+}
+
+# record_failure <ctid> <what> [output file] - adds the output's last error line
+function record_failure() {
+  local name reason=""
+  name=$(pct config "$1" 2>/dev/null | awk '/^hostname:/ {print $2}' || true)
+  if [[ -s "${3:-}" ]]; then
+    reason=$(sed 's/\x1b\[[0-9;]*[a-zA-Z]//g; s/\r//g' "$3" | grep -E '^(E:|ERROR|Error|error)' | tail -n1 || true)
+    [[ -n "$reason" ]] || reason=$(sed 's/\x1b\[[0-9;]*[a-zA-Z]//g; s/\r//g' "$3" | grep -v '^[[:space:]]*$' | tail -n1 || true)
+    { echo "CT $1${name:+ ($name)}: $2"; tail -n 20 "$3"; echo; } >>"$RUN_LOG"
+  fi
+  failed_containers+=("$1${name:+ ($name)}: $2${reason:+ - $reason}")
 }
 
 containers_needing_reboot=()
@@ -92,7 +109,10 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
     echo -e "${BL}[Info]${GN} Skipping ${BL}$container${CL}"
     sleep 1
   else
-    status=$(pct status $container)
+    if ! status=$(pct status "$container" 2>&1); then
+      record_failure "$container" "pct status failed: $status"
+      continue
+    fi
     if [ "$SKIP_STOPPED" == "yes" ] && [ "$status" == "status: stopped" ]; then
       header_info
       echo -e "${BL}[Info]${GN} Skipping ${BL}$container${CL}${GN} (not running)${CL}"
@@ -102,17 +122,22 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
     template=$(pct config $container | grep -q "template:" && echo "true" || echo "false")
     if [ "$template" == "false" ] && [ "$status" == "status: stopped" ]; then
       echo -e "${BL}[Info]${GN} Starting${BL} $container ${CL} \n"
-      if ! pct start $container; then
-        failed_containers+=("$container (start)")
+      if ! pct start "$container" >"$UPDATE_OUTPUT" 2>&1; then
+        cat "$UPDATE_OUTPUT"
+        record_failure "$container" "did not start" "$UPDATE_OUTPUT"
         continue
       fi
       echo -e "${BL}[Info]${GN} Waiting For${BL} $container${CL}${GN} To Start ${CL} \n"
       sleep 5
-      update_container $container || failed_containers+=("$container")
+      rc=0
+      update_container "$container" || rc=$?
+      [ "$rc" -eq 0 ] || record_failure "$container" "update exited with $rc" "$UPDATE_OUTPUT"
       echo -e "${BL}[Info]${GN} Shutting down${BL} $container ${CL} \n"
       pct shutdown $container &
     elif [ "$status" == "status: running" ]; then
-      update_container $container || failed_containers+=("$container")
+      rc=0
+      update_container "$container" || rc=$?
+      [ "$rc" -eq 0 ] || record_failure "$container" "update exited with $rc" "$UPDATE_OUTPUT"
     fi
     if [ "$status" == "status: running" ]; then
       if pct exec "$container" -- [ -e "/var/run/reboot-required" ]; then
@@ -129,11 +154,13 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
   fi
 done
 wait
+rm -f "$UPDATE_OUTPUT"
 header_info
 if [ "${#failed_containers[@]}" -gt 0 ]; then
   echo -e "${RD}The update failed in these containers:${CL}"
   printf '%s\n' "${failed_containers[@]}"
   echo ""
+  [ -s "$RUN_LOG" ] && echo -e "Their output: $RUN_LOG\n"
 else
   echo -e "${GN}The process is complete, and the containers have been successfully updated.${CL}\n"
 fi
@@ -144,4 +171,8 @@ if [ "${#containers_needing_reboot[@]}" -gt 0 ]; then
   done
 fi
 echo ""
-[ "${#failed_containers[@]}" -eq 0 ] || exit 1
+if [ "${#failed_containers[@]}" -gt 0 ]; then
+  printf -v CS_ERROR_MSG '%s; ' "${failed_containers[@]}"
+  CS_ERROR_MSG="Update failed in ${#failed_containers[@]} container(s): ${CS_ERROR_MSG%; }"
+  exit 1
+fi
