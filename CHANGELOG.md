@@ -586,6 +586,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-20
 
+### 🆕 New Scripts
+
+  - Grimmory [@MickLesk](https://github.com/MickLesk) ([#18880](https://github.com/community-scripts/ProxmoxVE/pull/18880))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
