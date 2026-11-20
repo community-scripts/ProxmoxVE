@@ -598,7 +598,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - fix: vm - name why an image step failed and open one message for the disk import [@MickLesk](https://github.com/MickLesk) ([core#279](https://github.com/community-scripts/core/pull/279))
+  - core: Keep the root filesystem lookup a soft failure [@MickLesk](https://github.com/MickLesk) ([core#280](https://github.com/community-scripts/core/pull/280))
+- fix: vm - name why an image step failed and open one message for the disk import [@MickLesk](https://github.com/MickLesk) ([core#279](https://github.com/community-scripts/core/pull/279))
 
 ## 2026-11-19
 
