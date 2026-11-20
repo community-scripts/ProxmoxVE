@@ -15,13 +15,32 @@ set -Eeuo pipefail
 
 APP="Scrutiny-Collector"
 APP_TYPE="tools"
-BIN="/usr/local/bin/scrutiny-collector-metrics"
+BIN_DIR="/usr/local/bin"
+# TrueNAS SCALE mounts /usr read-only.
+[[ -w "$BIN_DIR" ]] || BIN_DIR="/var/lib/scrutiny"
+BIN="${BIN_DIR}/scrutiny-collector-metrics"
 CONFIG_DIR="/etc/scrutiny"
 CONFIG="${CONFIG_DIR}/collector.yaml"
 SERVICE="scrutiny-collector"
 REPO="AnalogJ/scrutiny"
 
 header_info
+
+function require_tool() {
+  local cmd="$1" pkg="$2"
+  command -v "$cmd" &>/dev/null && return 0
+  # TrueNAS SCALE replaces apt with a stub that refuses to run.
+  if ! apt-get --version &>/dev/null; then
+    msg_error "${cmd} is missing and apt cannot install ${pkg} on this host. Install ${pkg}, then run this again."
+    exit 1
+  fi
+  msg_info "Installing ${pkg}"
+  if ! $STD apt install -y "$pkg"; then
+    msg_error "apt could not install ${pkg}. Run 'apt install ${pkg}' to see why."
+    exit 1
+  fi
+  msg_ok "Installed ${pkg}"
+}
 
 if [[ "$(id -u)" -ne 0 ]]; then
   msg_error "Run this as root (sudo) on the machine that has the disks."
@@ -30,14 +49,11 @@ fi
 if systemd-detect-virt -cq 2>/dev/null; then
   msg_warn "This looks like a container: only disks passed through to it can be read."
 fi
-if ! command -v apt &>/dev/null; then
-  msg_error "This tool needs a Debian or Ubuntu based host (apt)."
-  exit 1
-fi
-command -v whiptail &>/dev/null || $STD apt install -y whiptail
+require_tool whiptail whiptail
 
 function deploy_binary() {
-  fetch_and_deploy_gh_release "scrutiny-collector-metrics" "$REPO" "singlefile" "latest" "/usr/local/bin" "scrutiny-collector-metrics-linux-$(arch_resolve "amd64" "arm64")"
+  # uname, not dpkg: the dpkg stub on TrueNAS SCALE prints a notice that would be read as the architecture.
+  fetch_and_deploy_gh_release "scrutiny-collector-metrics" "$REPO" "singlefile" "latest" "$BIN_DIR" "scrutiny-collector-metrics-linux-$(PCT_ARCH="$(uname -m)" arch_resolve "amd64" "arm64")"
   # Only catch_errors' on_exit clears this marker, and tools run without it.
   rm -f ~/.scrutiny-collector-metrics.pending
 }
@@ -60,9 +76,8 @@ function install_collector() {
     msg_warn "Scrutiny does not answer at ${url}/api/health yet; the collector will retry every 15 minutes."
   fi
 
-  msg_info "Installing smartmontools"
-  $STD apt install -y smartmontools
-  msg_ok "Installed smartmontools"
+  require_tool smartctl smartmontools
+  msg_ok "Using $(smartctl --version 2>/dev/null | awk 'NR==1 {print $1, $2}')"
 
   deploy_binary
 
@@ -105,6 +120,9 @@ EOF
   echo ""
   msg_ok "The disks of $(hostname) show up in Scrutiny at ${BL}${url}${CL} after the first run."
   msg_ok "Follow it with: ${BL}journalctl -u ${SERVICE} -f${CL}"
+  if command -v midclt &>/dev/null; then
+    msg_warn "A TrueNAS update replaces /etc and /var, which removes the collector: run this again after each update."
+  fi
 }
 
 function update_collector() {
@@ -122,6 +140,7 @@ function uninstall_collector() {
   systemctl stop ${SERVICE}.service 2>/dev/null || true
   rm -f /etc/systemd/system/${SERVICE}.service /etc/systemd/system/${SERVICE}.timer "$BIN" ~/.scrutiny-collector-metrics
   rm -rf "$CONFIG_DIR"
+  [[ "$BIN_DIR" == /usr/local/bin ]] || rmdir "$BIN_DIR" 2>/dev/null || true
   systemctl daemon-reload
   msg_ok "Removed ${APP} (smartmontools stays installed)"
 }
