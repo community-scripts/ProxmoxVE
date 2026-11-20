@@ -47,6 +47,8 @@ EOF
 msg_ok "Initialized ArchiveBox"
 
 msg_info "Installing ArchiveBox Extractors"
+# 0.9.77 counts page cache as used memory under a cgroup limit and refuses to run (ArchiveBox#1966)
+{ echo 1G >/sys/fs/cgroup/memory.reclaim; } 2>/dev/null || true
 $STD archivebox install
 msg_ok "Installed ArchiveBox Extractors"
 
@@ -58,6 +60,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=/opt/archivebox/data
+ExecStartPre=-/bin/sh -c "echo 1G >/sys/fs/cgroup/memory.reclaim"
 ExecStart=/opt/archivebox/.venv/bin/archivebox server 0.0.0.0:8000
 Restart=always
 
