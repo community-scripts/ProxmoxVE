@@ -96,11 +96,11 @@ $STD pnpm install --frozen-lockfile
 $STD pnpm turbo run build --filter=web --filter=admin --filter=space --filter=live
 msg_ok "Built Frontend Apps"
 
+PYTHON_VERSION="3.12" UV_PROJECT_DIR="/opt/plane/apps/api" setup_uv
+
 msg_info "Setting up Python API"
-setup_uv
-$STD uv venv /opt/plane-venv
-export VIRTUAL_ENV=/opt/plane-venv
-$STD uv pip install -r /opt/plane/apps/api/requirements/production.txt
+cd /opt/plane/apps/api
+UV_PROJECT_ENVIRONMENT=/opt/plane-venv $STD uv sync --locked --no-default-groups --group production
 msg_ok "Set up Python API"
 
 msg_info "Configuring Plane"
