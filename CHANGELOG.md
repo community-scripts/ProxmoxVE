@@ -584,6 +584,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-11-20
+
+### 🚀 Updated Scripts
+
+  - #### ✨ New Features
+
+    - Stalwart: migrate to v1 with stalwart-migrate [@MickLesk](https://github.com/MickLesk) ([#18794](https://github.com/community-scripts/ProxmoxVE/pull/18794))
+
 ## 2026-11-19
 
 ### 🆕 New Scripts
