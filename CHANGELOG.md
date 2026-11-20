@@ -594,6 +594,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Remove thumbnails as opencloud user [@jheyens](https://github.com/jheyens) ([#18865](https://github.com/community-scripts/ProxmoxVE/pull/18865))
     - NPMplus: hand Docker the usable DNS servers when resolv.conf has a zone ID [@MickLesk](https://github.com/MickLesk) ([#18860](https://github.com/community-scripts/ProxmoxVE/pull/18860))
     - Nginx Proxy Manager: fetch the nginx HTTP/2 patches from the GitHub API [@MickLesk](https://github.com/MickLesk) ([#18855](https://github.com/community-scripts/ProxmoxVE/pull/18855))
     - deCONZ: fetch libssl1.1 over HTTPS on arm64 [@MickLesk](https://github.com/MickLesk) ([#18798](https://github.com/community-scripts/ProxmoxVE/pull/18798))
@@ -604,6 +605,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Kasm: show the installer's last lines when it fails [@MickLesk](https://github.com/MickLesk) ([#18869](https://github.com/community-scripts/ProxmoxVE/pull/18869))
     - Immich: skip oazapfts in mise install, the build never runs it [@MickLesk](https://github.com/MickLesk) ([#18859](https://github.com/community-scripts/ProxmoxVE/pull/18859))
     - QoL - Postgres: keep installing when the Adminer prompt reads a closed console  [@MickLesk](https://github.com/MickLesk) ([#18857](https://github.com/community-scripts/ProxmoxVE/pull/18857))
     - Plane: install the API from uv.lock, v1.5.0 dropped the requirements files [@MickLesk](https://github.com/MickLesk) ([#18856](https://github.com/community-scripts/ProxmoxVE/pull/18856))
@@ -618,6 +620,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Refactor: Tailscale Script [@MickLesk](https://github.com/MickLesk) ([#18868](https://github.com/community-scripts/ProxmoxVE/pull/18868))
     - Report an interrupted update-apps backup as cancelled, not failed [@MickLesk](https://github.com/MickLesk) ([#18867](https://github.com/community-scripts/ProxmoxVE/pull/18867))
     - FSTrim: skip a container that will not start instead of ending fstrim [@MickLesk](https://github.com/MickLesk) ([#18864](https://github.com/community-scripts/ProxmoxVE/pull/18864))
     - Say which containers update-lxcs failed on and why [@MickLesk](https://github.com/MickLesk) ([#18863](https://github.com/community-scripts/ProxmoxVE/pull/18863))
