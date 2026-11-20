@@ -127,7 +127,7 @@ EOF
   msg_ok "Installed PostgreSQL"
 
   prompt="${var_postgresql_adminer:-}"
-  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to add Adminer? <y/N> " prompt || true
   if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
     msg_info "Installing Adminer"
     $STD apt install -y adminer
@@ -167,7 +167,7 @@ setup_alpine() {
   msg_ok "Configured and Restarted PostgreSQL"
 
   prompt="${var_postgresql_adminer:-}"
-  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to install Adminer with lighttpd? <y/N>: " prompt
+  [[ -n "$prompt" ]] || read -r -p "${TAB3}Would you like to install Adminer with lighttpd? <y/N>: " prompt || true
   if [[ ${prompt,,} =~ ^(y|yes)$ ]]; then
     msg_info "Installing Adminer and dependencies"
     $STD apk add --no-cache \
