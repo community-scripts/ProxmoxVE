@@ -590,6 +590,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - NPMplus: hand Docker the usable DNS servers when resolv.conf has a zone ID [@MickLesk](https://github.com/MickLesk) ([#18860](https://github.com/community-scripts/ProxmoxVE/pull/18860))
     - Nginx Proxy Manager: fetch the nginx HTTP/2 patches from the GitHub API [@MickLesk](https://github.com/MickLesk) ([#18855](https://github.com/community-scripts/ProxmoxVE/pull/18855))
     - deCONZ: fetch libssl1.1 over HTTPS on arm64 [@MickLesk](https://github.com/MickLesk) ([#18798](https://github.com/community-scripts/ProxmoxVE/pull/18798))
 
