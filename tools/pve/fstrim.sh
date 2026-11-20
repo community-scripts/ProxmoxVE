@@ -141,6 +141,7 @@ function trim_container() {
   sleep 0.5
 }
 
+NOT_STARTED=()
 for LINE in "${CTLINES[@]}"; do
   CTID=$(awk '{print $1}' <<<"$LINE")
   STATUS=$(awk '{print $2}' <<<"$LINE")
@@ -161,7 +162,13 @@ for LINE in "${CTLINES[@]}"; do
     if [[ -n "${WAS_STOPPED[$CTID]:-}" ]]; then
       header_info
       echo -e "${BL}[Info]${GN} Starting $CTID ($NAME) for trim...${CL}"
-      pct start "$CTID"
+      if ! start_output=$(pct start "$CTID" 2>&1); then
+        echo -e "${RD}$CTID ($NAME) did not start, skipping it: ${start_output}${CL}"
+        echo "$(date '+%Y-%m-%d %H:%M:%S') | CTID=$CTID | Name=$NAME | skipped, did not start: ${start_output//$'\n'/ }" >>"$LOGFILE"
+        NOT_STARTED+=("$CTID ($NAME)")
+        sleep 1
+        continue
+      fi
       sleep 2
     else
       header_info
@@ -189,6 +196,9 @@ for LINE in "${CTLINES[@]}"; do
 done
 
 header_info
+if [ ${#NOT_STARTED[@]} -gt 0 ]; then
+  echo -e "${RD}Not trimmed, did not start: ${NOT_STARTED[*]}${CL}\n"
+fi
 echo -e "${GN}Finished, LXC Containers Trimmed.${CL} \n"
 echo -e "${BL}If you want to see the complete log: cat $LOGFILE${CL}"
 exit 0
