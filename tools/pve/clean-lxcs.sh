@@ -49,6 +49,11 @@ if ! excluded_containers=$(whiptail --backtitle "Proxmox VE Helper Scripts" --ti
   exit 0
 fi
 
+# The failing containers' output, for the user and for the telemetry trace.
+RUN_LOG="/tmp/clean-lxcs-$(date +%Y%m%d_%H%M%S).log"
+SILENT_LOGFILE="$RUN_LOG"
+CLEAN_OUTPUT=$(mktemp)
+
 function run_lxc_clean() {
   local container=$1
   header_info
@@ -79,7 +84,19 @@ function run_lxc_clean() {
       apt -y autoclean
       apt update
     fi
-  '
+  ' 2>&1 | tee "$CLEAN_OUTPUT"
+}
+
+# record_failure <ctid> <what> [output file] - adds the output's last error line
+function record_failure() {
+  local name reason=""
+  name=$(pct config "$1" 2>/dev/null | awk '/^hostname:/ {print $2}' || true)
+  if [[ -s "${3:-}" ]]; then
+    reason=$(sed 's/\x1b\[[0-9;]*[a-zA-Z]//g; s/\r//g' "$3" | grep -E '^(E:|ERROR|Error|error)' | tail -n1 || true)
+    [[ -n "$reason" ]] || reason=$(sed 's/\x1b\[[0-9;]*[a-zA-Z]//g; s/\r//g' "$3" | grep -v '^[[:space:]]*$' | tail -n1 || true)
+    { echo "CT $1${name:+ ($name)}: $2"; tail -n 20 "$3"; echo; } >>"$RUN_LOG"
+  fi
+  failed_containers+=("$1${name:+ ($name)}: $2${reason:+ - $reason}")
 }
 
 failed_containers=()
@@ -107,30 +124,43 @@ for container in $(pct list | awk '{if(NR>1) print $1}'); do
     continue
   fi
 
-  status=$(pct status "$container")
+  if ! status=$(pct status "$container" 2>&1); then
+    record_failure "$container" "pct status failed: $status"
+    continue
+  fi
   template=$(pct config "$container" | grep -q "template:" && echo "true" || echo "false")
 
   if [ "$template" == "false" ] && [ "$status" == "status: stopped" ]; then
     echo -e "${BL}[Info]${GN} Starting${BL} $container ${CL} \n"
-    if ! pct start "$container"; then
-      failed_containers+=("$container (start)")
+    if ! pct start "$container" >"$CLEAN_OUTPUT" 2>&1; then
+      cat "$CLEAN_OUTPUT"
+      record_failure "$container" "did not start" "$CLEAN_OUTPUT"
       continue
     fi
     echo -e "${BL}[Info]${GN} Waiting For${BL} $container${CL}${GN} To Start ${CL} \n"
     sleep 5
-    run_lxc_clean "$container" || failed_containers+=("$container")
+    rc=0
+    run_lxc_clean "$container" || rc=$?
+    [ "$rc" -eq 0 ] || record_failure "$container" "cleaning exited with $rc" "$CLEAN_OUTPUT"
     echo -e "${BL}[Info]${GN} Shutting down${BL} $container ${CL} \n"
     pct shutdown "$container" &
   elif [ "$status" == "status: running" ]; then
-    run_lxc_clean "$container" || failed_containers+=("$container")
+    rc=0
+    run_lxc_clean "$container" || rc=$?
+    [ "$rc" -eq 0 ] || record_failure "$container" "cleaning exited with $rc" "$CLEAN_OUTPUT"
   fi
 done
 
 wait
+rm -f "$CLEAN_OUTPUT"
 header_info
 if [ "${#failed_containers[@]}" -gt 0 ]; then
   echo -e "${RD}Cleaning failed in these containers:${CL}"
   printf '%s\n' "${failed_containers[@]}"
+  echo ""
+  [ -s "$RUN_LOG" ] && echo -e "Their output: $RUN_LOG\n"
+  printf -v CS_ERROR_MSG '%s; ' "${failed_containers[@]}"
+  CS_ERROR_MSG="Cleaning failed in ${#failed_containers[@]} container(s): ${CS_ERROR_MSG%; }"
   exit 1
 fi
 echo -e "${GN} Finished, Selected Containers Cleaned. ${CL} \n"
