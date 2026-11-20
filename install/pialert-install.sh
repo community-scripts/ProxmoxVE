@@ -83,7 +83,6 @@ for file in pialert.vendors.log pialert.IP.log pialert.1.log pialert.cleanup.log
 done
 sed -i 's#PIALERT_PATH\s*=\s*'\''/home/pi/pialert'\''#PIALERT_PATH           = '\''/opt/pialert'\''#' /opt/pialert/config/pialert.conf
 sed -i 's/$HOME/\/opt/g' /opt/pialert/install/pialert.cron
-crontab /opt/pialert/install/pialert.cron
 echo "python3 /opt/pialert/back/pialert.py 1" >/usr/bin/scan
 chmod +x /usr/bin/scan
 echo "/opt/pialert/back/pialert-cli set_permissions --lxc" >/usr/bin/permissions
@@ -96,6 +95,7 @@ msg_info "Start Pi.Alert Scan (Patience)"
 $STD python3 /opt/pialert/back/pialert.py update_vendors
 $STD python3 /opt/pialert/back/pialert.py internet_IP
 $STD python3 /opt/pialert/back/pialert.py 1
+crontab /opt/pialert/install/pialert.cron
 msg_ok "Finished Pi.Alert Scan"
 
 motd_ssh
