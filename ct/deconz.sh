@@ -29,27 +29,13 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
-  msg_info "Updating Package Index"
-  apt_update_safe
-  msg_ok "Updated Package Index"
-
-  CURRENT=$(dpkg-query -W -f='${Version}' deconz 2>/dev/null)
-  CANDIDATE=$(apt-cache policy deconz | awk '/Candidate:/{print $2}')
-  if [[ -z "$CANDIDATE" || "$CANDIDATE" == "(none)" ]]; then
-    msg_error "No candidate version found for deconz"
-    exit
-  fi
-  if [[ "$CURRENT" == "$CANDIDATE" ]]; then
-    msg_ok "Already on latest version: ${CURRENT}"
-    exit
-  fi
-
   msg_info "Updating deCONZ"
-  $STD apt install -y --only-upgrade deconz
+  apt_update_safe
+  $STD apt upgrade -y
   setcap -r /usr/bin/deCONZ 2>/dev/null || true
   systemctl restart deconz
   msg_ok "Updated deCONZ"
-  msg_ok "Updated successfully from ${CURRENT} to ${CANDIDATE}!"
+  msg_ok "Updated successfully!"
   exit
 }
 
