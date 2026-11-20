@@ -56,13 +56,13 @@ RUST_PROFILE="minimal" RUST_TOOLCHAIN="stable" setup_rust
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="authentik" PG_DB_USER="authentik" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 
-XMLSEC_VERSION="1.3.12"
-AUTHENTIK_VERSION="version/2026.8.5"
+XMLSEC_VERSION="1.3.13"
+AUTHENTIK_VERSION="version/2026.8.6"
 fetch_and_deploy_gh_release "xmlsec" "lsh123/xmlsec" "tarball" "${XMLSEC_VERSION}" "/opt/xmlsec"
 fetch_and_deploy_gh_release "authentik" "goauthentik/authentik" "tarball" "${AUTHENTIK_VERSION}" "/opt/authentik"
 GO_VERSION="$(grep -m1 '^go ' /opt/authentik/go.mod | awk '{print $2}')" setup_go
 fetch_and_deploy_gh_release "geoipupdate" "maxmind/geoipupdate" "binary"
-UV_PYTHON_INSTALL_DIR="/usr/local/bin" PYTHON_VERSION="3.14.7" UV_PROJECT_DIR="/opt/authentik" setup_uv
+UV_PYTHON_INSTALL_DIR="/usr/local/bin" PYTHON_VERSION="3.14.10" UV_PROJECT_DIR="/opt/authentik" setup_uv
 
 msg_info "Setting up xmlsec"
 cd /opt/xmlsec

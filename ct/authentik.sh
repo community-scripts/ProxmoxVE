@@ -47,9 +47,9 @@ function update_script() {
   RUST_PROFILE="minimal" RUST_TOOLCHAIN="stable" setup_rust
   setup_yq
 
-  AUTHENTIK_VERSION="version/2026.8.5"
+  AUTHENTIK_VERSION="version/2026.8.6"
   # Source: https://github.com/goauthentik/fips/blob/main/Makefile#L26
-  XMLSEC_VERSION="1.3.12"
+  XMLSEC_VERSION="1.3.13"
 
   if check_for_gh_release "geoipupdate" "maxmind/geoipupdate"; then
     fetch_and_deploy_gh_release "geoipupdate" "maxmind/geoipupdate" "binary"
@@ -93,7 +93,7 @@ function update_script() {
     fi
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "authentik" "goauthentik/authentik" "tarball" "${AUTHENTIK_VERSION}" "/opt/authentik"
-    UV_PYTHON_INSTALL_DIR="/usr/local/bin" PYTHON_VERSION="3.14.7" UV_PROJECT_DIR="/opt/authentik" setup_uv
+    UV_PYTHON_INSTALL_DIR="/usr/local/bin" PYTHON_VERSION="3.14.10" UV_PROJECT_DIR="/opt/authentik" setup_uv
     GO_VERSION="$(grep -m1 '^go ' /opt/authentik/go.mod | awk '{print $2}')" setup_go
 
     msg_info "Configuring rust"
