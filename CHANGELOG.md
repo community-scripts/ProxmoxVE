@@ -610,6 +610,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - core: Keep the root filesystem lookup a soft failure [@MickLesk](https://github.com/MickLesk) ([core#280](https://github.com/community-scripts/core/pull/280))
 - fix: vm - name why an image step failed and open one message for the disk import [@MickLesk](https://github.com/MickLesk) ([core#279](https://github.com/community-scripts/core/pull/279))
 
+### 🧰 Tools
+
+  - #### 🔧 Refactor
+
+    - LXC-Executer: run the execute command once per container and keep going on failure [@MickLesk](https://github.com/MickLesk) ([#18861](https://github.com/community-scripts/ProxmoxVE/pull/18861))
+
 ## 2026-11-19
 
 ### 🆕 New Scripts
