@@ -38,7 +38,7 @@ cd /opt/archivebox/data
 $STD archivebox init
 ADMIN_PASS=$(random_password 20)
 DJANGO_SUPERUSER_USERNAME=archivebox DJANGO_SUPERUSER_EMAIL=archivebox@archivebox.local DJANGO_SUPERUSER_PASSWORD="$ADMIN_PASS" $STD archivebox manage createsuperuser --noinput
-$STD archivebox config --set "BASE_URL=http://${LOCAL_IP}:5797"
+$STD archivebox config --set "BASE_URL=http://${LOCAL_IP}:8000"
 cat <<EOF >~/archivebox.creds
 ArchiveBox Credentials
 Username: archivebox
@@ -58,7 +58,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=/opt/archivebox/data
-ExecStart=/opt/archivebox/.venv/bin/archivebox server 0.0.0.0:5797
+ExecStart=/opt/archivebox/.venv/bin/archivebox server 0.0.0.0:8000
 Restart=always
 
 [Install]
