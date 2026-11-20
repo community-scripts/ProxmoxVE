@@ -599,6 +599,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - Plane: install the API from uv.lock, v1.5.0 dropped the requirements files [@MickLesk](https://github.com/MickLesk) ([#18856](https://github.com/community-scripts/ProxmoxVE/pull/18856))
     - Pi.Alert: install the crontab after the first scans [@MickLesk](https://github.com/MickLesk) ([#18858](https://github.com/community-scripts/ProxmoxVE/pull/18858))
 
 ### 💾 Core
