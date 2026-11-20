@@ -141,7 +141,8 @@ else
   # Check DNS resolution using multiple methods (dig may not be installed)
   dns_check_failed=true
   if command -v dig >/dev/null 2>&1; then
-    if dig +short pkgs.tailscale.com 2>/dev/null | grep -qvE "^127\.|^0\.0\.0\.0$|^$"; then
+    # dig prints its own errors (";; no servers could be reached") on stdout
+    if dig +short pkgs.tailscale.com 2>/dev/null | grep -E "^[0-9.]+$" | grep -qvE "^127\.|^0\.0\.0\.0$"; then
       dns_check_failed=false
     fi
   elif command -v host >/dev/null 2>&1; then
@@ -167,6 +168,8 @@ else
     cp "$ORIG_RESOLV" "$BACKUP_RESOLV"
     echo "nameserver 1.1.1.1" >"$ORIG_RESOLV"
   fi
+  RESTORE_RESOLV="[ ! -f $BACKUP_RESOLV ] || mv -f $BACKUP_RESOLV $ORIG_RESOLV"
+  trap "$RESTORE_RESOLV" EXIT
 
   if ! command -v curl >/dev/null 2>&1; then
     echo "[INFO] curl not found, installing..."
@@ -177,6 +180,8 @@ else
   # Reuse the shared repository helper instead of hand-rolling the sources entry
   source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/core/core.func")
   source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_URL:-https://raw.githubusercontent.com/community-scripts/core/main}/lib/tools.func")
+  # core.func sets its own EXIT trap
+  trap "$RESTORE_RESOLV" EXIT
   # A failed download is sourced as an empty file
   if ! declare -f load_functions setup_deb822_repo >/dev/null; then
     echo "[ERROR] Could not download the community-scripts helpers inside the container. Check its network and DNS." >&2
@@ -195,11 +200,6 @@ else
     "main"
 
   apt-get install -y tailscale
-
-  if [ -f /tmp/resolv.conf.backup ]; then
-    echo "[INFO] Restoring original /etc/resolv.conf"
-    mv /tmp/resolv.conf.backup /etc/resolv.conf
-  fi
 fi
 '
 
