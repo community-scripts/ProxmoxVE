@@ -90,7 +90,7 @@ function update_script() {
 
     # 9.0: the default space quota is read only under its new name, and thumbnails are cached in thumbnails/cache
     sed -i 's/^GRAPH_SPACES_DEFAULT_QUOTA=/OC_SPACES_DEFAULT_QUOTA=/' /etc/opencloud/opencloud.env
-    rm -rf /var/lib/opencloud/thumbnails/files
+    sudo -u opencloud rm -rf /var/lib/opencloud/thumbnails/files
 
     msg_info "Starting services"
     systemctl start opencloud opencloud-wopi
