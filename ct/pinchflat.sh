@@ -4,7 +4,7 @@ source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: nnsense
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/kieraneglin/pinchflat
+# Source: https://github.com/TheBadFella/Pinchflat-NGX
 
 APP="Pinchflat"
 var_tags="${var_tags:-media;youtube;downloader}"
@@ -32,17 +32,27 @@ function update_script() {
     exit 1
   fi
 
-  if check_for_gh_release "pinchflat" "kieraneglin/pinchflat"; then
+  if check_for_gh_release "pinchflat" "TheBadFella/Pinchflat-NGX"; then
     msg_info "Stopping Service"
     systemctl stop pinchflat
     msg_ok "Stopped Service"
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "pinchflat" "kieraneglin/pinchflat" "tarball" "latest" "/opt/pinchflat-src"
+    if [[ ! -f /opt/pinchflat-src/lib/pinchflat/legacy_migration.ex && ! -f /opt/pinchflat-pre-ngx.tar.gz ]]; then
+      NGX_SWITCH=1
+      msg_info "Backing up Pinchflat before the switch to Pinchflat-NGX"
+      tar -czf /opt/pinchflat-pre-ngx.tar.gz.part -C /opt/pinchflat --exclude=config/metadata --exclude=config/logs .env app config
+      mv /opt/pinchflat-pre-ngx.tar.gz.part /opt/pinchflat-pre-ngx.tar.gz
+      msg_ok "Backed up to /opt/pinchflat-pre-ngx.tar.gz"
+    fi
 
-    msg_info "Building Pinchflat"
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "pinchflat" "TheBadFella/Pinchflat-NGX" "tarball" "latest" "/opt/pinchflat-src"
+
+    msg_info "Building Pinchflat-NGX"
     cd /opt/pinchflat-src
     export MIX_ENV=prod
     export ERL_FLAGS="+JPperf true"
+    $STD mix local.hex --force
+    $STD mix local.rebar --force
     $STD mix deps.get --only prod
     $STD mix deps.compile
     $STD yarn --cwd assets install
@@ -51,11 +61,18 @@ function update_script() {
     $STD mix release --overwrite
     rm -rf /opt/pinchflat/app
     cp -r _build/prod/rel/pinchflat /opt/pinchflat/app
-    msg_ok "Built Pinchflat"
+    msg_ok "Built Pinchflat-NGX"
+
+    msg_info "Migrating Database"
+    $STD systemd-run --wait --pipe --quiet --collect -p EnvironmentFile=/opt/pinchflat/.env -p WorkingDirectory=/opt/pinchflat/app /opt/pinchflat/app/bin/migrate
+    msg_ok "Migrated Database"
 
     msg_info "Starting Service"
     systemctl start pinchflat
     msg_ok "Started Service"
+    if [[ -n "${NGX_SWITCH:-}" ]]; then
+      msg_warn "Open the web UI and confirm the migration review, downloads stay on hold until then"
+    fi
     msg_ok "Updated successfully!"
   fi
   exit
