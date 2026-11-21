@@ -24,9 +24,7 @@ msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.11" setup_uv
 NODE_VERSION="24" setup_nodejs
-# YouTube needs Deno plus yt-dlp-ejs from yt-dlp[default] to solve its JavaScript challenges
 fetch_and_deploy_gh_release "deno" "denoland/deno" "prebuild" "latest" "/usr/local/bin" "deno-$(arch_resolve "x86_64" "aarch64")-unknown-linux-gnu.zip"
-
 fetch_and_deploy_gh_release "soulsync" "Nezreka/SoulSync" "tarball"
 
 msg_info "Setting up Application"
