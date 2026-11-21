@@ -100,8 +100,6 @@ function update_script() {
     msg_ok "Replaced Browserless with SockPuppetBrowser"
   fi
 
-  # Containers that never had Browserless (installs before 2023-05) or lost the
-  # unit had SockPuppetBrowser deployed but nothing to start it.
   if [[ ! -f /etc/systemd/system/sockpuppetbrowser.service ]]; then
     msg_info "Creating SockPuppetBrowser Service"
     cat <<EOF >/etc/systemd/system/sockpuppetbrowser.service
