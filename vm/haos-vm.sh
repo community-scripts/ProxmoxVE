@@ -118,7 +118,6 @@ fi
 CACHE_FILE="$(vm_image_cache_path "$URL")"
 msg_ok "${CL}${BL}${URL}${CL}"
 
-# Home Assistant serves the same image from its own host.
 ALT_URL="https://os-artifacts.home-assistant.io/${BRANCH}/haos_ova-${BRANCH}.qcow2.xz"
 if ! vm_fetch_image "$URL" "$CACHE_FILE" --cache --verify-xz; then
   [ "$URL" != "$ALT_URL" ] && vm_fetch_image "$ALT_URL" "$CACHE_FILE" --cache --verify-xz || exit 115
