@@ -32,45 +32,24 @@ function update_script() {
     exit
   fi
 
-  local proceed=false
+  # Since 26.10 the REST API is off by default and answers 404, so compare the
+  # installed build with the version FileFlows' own updater asks for.
+  current_version=$(grep -h -m1 -oP '"FileFlows\.(Server|Agent)/\K[0-9.]+' /opt/fileflows/Server/FileFlows.Server.deps.json /opt/fileflows/Agent/FileFlows.Agent.deps.json 2>/dev/null | head -n1 || true)
+  latest_version=$(curl -fsSL --max-time 20 "https://fileflows.com/auto-update/latest-version?platform=linux" 2>/dev/null | tr -d '[:space:]' || true)
 
-  if systemctl list-unit-files 'fileflows.service' --no-legend 2>/dev/null | grep -q '^fileflows\.service'; then
-    tmp=$(mktemp)
-    http_code=$(curl -sSL -X 'GET' "http://localhost:19200/api/status/update-available" -H 'accept: application/json' -o "$tmp" -w '%{http_code}' 2>/dev/null) || http_code="000"
-    if [[ "$http_code" == "200" ]]; then
-      update_available=$(jq -r '.UpdateAvailable // false' "$tmp" 2>/dev/null)
-      rm -f "$tmp"
-      if [[ "${update_available}" == "true" ]]; then
-        proceed=true
-      else
-        msg_ok "No update required. ${APP} is already at latest version"
-        exit
-      fi
-    else
-      rm -f "$tmp"
-      if [[ "$http_code" == "401" ]]; then
-        msg_warn "Could not check for updates: API returned 401 (security may be enabled)."
-      else
-        msg_warn "Could not check for updates: API unreachable (HTTP ${http_code})."
-      fi
-      if [[ "${FORCE_UPDATE:-}" == "1" ]]; then
-        proceed=true
-      else
-        read -r -p "${TAB3}Force update without version check? [y/N]: " CONFIRM
-        if [[ "$CONFIRM" =~ ^([yY][eE][sS]|[yY])$ ]]; then
-          proceed=true
-        else
-          msg_error "Update aborted."
-          exit
-        fi
-      fi
+  if [[ "${FORCE_UPDATE:-}" == "1" ]]; then
+    msg_warn "FORCE_UPDATE=1: updating without the version check"
+  elif [[ ! "$latest_version" =~ ^[0-9]+(\.[0-9]+)+$ ]]; then
+    msg_warn "Could not get the latest ${APP} version from fileflows.com"
+    if ! prompt_confirm "${TAB3}Update without the version check?" "n" 60; then
+      msg_warn "Update skipped. Run 'FORCE_UPDATE=1 update' to update without the version check."
+      exit
     fi
-  else
-    proceed=true
-  fi
-
-  if [[ "$proceed" != "true" ]]; then
+  elif [[ -n "$current_version" && "$(printf '%s\n' "$current_version" "$latest_version" | sort -V | tail -n1)" == "$current_version" ]]; then
+    msg_ok "No update required. ${APP} is already at v${current_version}"
     exit
+  else
+    msg_ok "Update available: ${current_version:-unknown} -> ${latest_version}"
   fi
 
   msg_info "Stopping Service"
