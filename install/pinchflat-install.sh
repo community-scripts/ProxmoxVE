@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2026 community-scripts ORG
 # Author: nnsense
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/kieraneglin/pinchflat
+# Source: https://github.com/TheBadFella/Pinchflat-NGX
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 
@@ -48,7 +48,7 @@ export PIPX_BIN_DIR=/usr/local/bin
 $STD pipx install apprise
 msg_ok "Installed Apprise"
 
-fetch_and_deploy_gh_release "pinchflat" "kieraneglin/pinchflat" "tarball" "latest" "/opt/pinchflat-src"
+fetch_and_deploy_gh_release "pinchflat" "TheBadFella/Pinchflat-NGX" "tarball" "latest" "/opt/pinchflat-src"
 
 msg_info "Configuring Pinchflat"
 CONFIG_PATH="/opt/pinchflat/config"
@@ -81,7 +81,7 @@ SECRET_KEY_BASE=$(openssl rand -base64 48)
 EOF
 msg_ok "Configured Pinchflat"
 
-msg_info "Building Pinchflat"
+msg_info "Building Pinchflat-NGX"
 cd /opt/pinchflat-src
 export MIX_ENV=prod
 export ERL_FLAGS="+JPperf true"
@@ -95,7 +95,7 @@ $STD mix compile
 $STD mix release --overwrite
 rm -rf /opt/pinchflat/app
 cp -r _build/prod/rel/pinchflat /opt/pinchflat/app
-msg_ok "Built Pinchflat"
+msg_ok "Built Pinchflat-NGX"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/pinchflat.service
