@@ -48,7 +48,6 @@ $STD rm -rf /opt/fileflows/Server/runtimes/win-*
 install_server="${var_fileflows_mode:-}"
 [[ -n "$install_server" ]] || read -r -p "${TAB3}Do you want to install FileFlows Server or Agent? (S/a): " install_server || true
 
-# Without an answer (unattended, closed console) this installed an Agent with no web UI.
 if [[ ! "$install_server" =~ ^[Aa]$ ]]; then
   msg_info "Installing FileFlows Server"
   cd /opt/fileflows/Server
