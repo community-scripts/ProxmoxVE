@@ -108,7 +108,11 @@ function trim_container() {
   echo -e "${BL}[Info]${GN} Trimming ${BL}$container${CL} \n"
 
   local before_trim after_trim
-  local lv_name="vm-${container}-disk-0"
+  # A restored or moved container's root is not always disk-0; the volume comes
+  # from its config file, which needs no pct call.
+  local lv_name
+  lv_name="$(awk -F'[:,]' '/^rootfs:/ {print $3; exit}' "/etc/pve/lxc/${container}.conf" 2>/dev/null)"
+  [[ -n "$lv_name" ]] || lv_name="vm-${container}-disk-0"
   if lvs --noheadings -o lv_name 2>/dev/null | grep -qw "$lv_name"; then
     before_trim=$(lvs --noheadings -o lv_name,data_percent 2>/dev/null | awk -v ctid="$lv_name" '$1 == ctid {gsub(/%/, "", $2); print $2}')
     [[ -n "$before_trim" ]] && echo -e "${RD}Data before trim $before_trim%${CL}" || echo -e "${RD}Data before trim: not available${CL}"
