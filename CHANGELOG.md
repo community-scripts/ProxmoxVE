@@ -598,6 +598,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - FileFlows: check for updates without the REST API [@MickLesk](https://github.com/MickLesk) ([#18898](https://github.com/community-scripts/ProxmoxVE/pull/18898))
     - HAOS VM: fall back to Home Assistant's own hosts for version and image [@MickLesk](https://github.com/MickLesk) ([#18900](https://github.com/community-scripts/ProxmoxVE/pull/18900))
 
 ### 💾 Core
