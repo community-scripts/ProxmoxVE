@@ -93,6 +93,15 @@ function update_script() {
     rm -rf /opt/browserless /root/.cache/ms-playwright
     $STD apt purge -y microsoft-edge-stable
     rm -f /etc/apt/sources.list.d/microsoft-edge-stable.list
+    sed -i 's/browserless\.service/sockpuppetbrowser.service/g' "$SERVICE_FILE"
+    sed -i -e '/^WEBDRIVER_URL=/d' \
+      -e 's|^PLAYWRIGHT_DRIVER_URL=ws://localhost:3000/chrome.*|PLAYWRIGHT_DRIVER_URL=ws://127.0.0.1:3000/?headful=true\&--window-size=1920,1080|' \
+      /opt/changedetection/.env
+    msg_ok "Replaced Browserless with SockPuppetBrowser"
+  fi
+
+  if [[ ! -f /etc/systemd/system/sockpuppetbrowser.service ]]; then
+    msg_info "Creating SockPuppetBrowser Service"
     cat <<EOF >/etc/systemd/system/sockpuppetbrowser.service
 [Unit]
 Description=SockPuppetBrowser
@@ -110,13 +119,9 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
-    sed -i 's/browserless\.service/sockpuppetbrowser.service/g' "$SERVICE_FILE"
-    sed -i -e '/^WEBDRIVER_URL=/d' \
-      -e 's|^PLAYWRIGHT_DRIVER_URL=ws://localhost:3000/chrome.*|PLAYWRIGHT_DRIVER_URL=ws://127.0.0.1:3000/?headful=true\&--window-size=1920,1080|' \
-      /opt/changedetection/.env
     systemctl daemon-reload
     systemctl enable -q sockpuppetbrowser
-    msg_ok "Replaced Browserless with SockPuppetBrowser"
+    msg_ok "Created SockPuppetBrowser Service"
   fi
 
   systemctl daemon-reload
