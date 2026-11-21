@@ -18,6 +18,7 @@ DISK_SIZE="32G"
 
 for channel in stable beta dev; do
   channel_version=$(curl -fsSL "https://raw.githubusercontent.com/home-assistant/version/master/${channel}.json" | grep '"ova"' | cut -d '"' -f 4) || channel_version=""
+  [ -n "$channel_version" ] || channel_version=$(curl -fsSL "https://version.home-assistant.io/${channel}.json" | grep '"ova"' | cut -d '"' -f 4) || channel_version=""
   printf -v "$channel" '%s' "$channel_version"
 done
 if [ -z "$stable" ]; then
@@ -117,7 +118,11 @@ fi
 CACHE_FILE="$(vm_image_cache_path "$URL")"
 msg_ok "${CL}${BL}${URL}${CL}"
 
-vm_fetch_image "$URL" "$CACHE_FILE" --cache --verify-xz || exit 115
+# Home Assistant serves the same image from its own host.
+ALT_URL="https://os-artifacts.home-assistant.io/${BRANCH}/haos_ova-${BRANCH}.qcow2.xz"
+if ! vm_fetch_image "$URL" "$CACHE_FILE" --cache --verify-xz; then
+  [ "$URL" != "$ALT_URL" ] && vm_fetch_image "$ALT_URL" "$CACHE_FILE" --cache --verify-xz || exit 115
+fi
 
 msg_info "Creating Home Assistant OS VM shell"
 qm create $VMID${MACHINE} -bios ovmf -agent 1 -tablet 0 -localtime 1 ${CPU_TYPE} \
