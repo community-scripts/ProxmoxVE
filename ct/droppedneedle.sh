@@ -8,9 +8,9 @@ source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_
 
 APP="DroppedNeedle"
 var_tags="${var_tags:-arr;media}"
-var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-4096}"
-var_disk="${var_disk:-8}"
+var_cpu="${var_cpu:-4}"
+var_ram="${var_ram:-6144}"
+var_disk="${var_disk:-16}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_arm64="${var_arm64:-yes}"
@@ -35,52 +35,67 @@ function update_script() {
   [[ -d /opt/musicseerr ]] && MIGRATING=true
 
   if [[ "$MIGRATING" == "true" ]] || check_for_gh_release "droppedneedle" "DroppedNeedle/DroppedNeedle"; then
+    FROM_V2=false
+    [[ "$MIGRATING" == "true" || -d /opt/droppedneedle/venv ]] && FROM_V2=true
+    OLD_VERSION="$(cat ~/.droppedneedle 2>/dev/null || true)"
+
     if [[ "$MIGRATING" == "true" ]]; then
       msg_warn "Migrating Musicseerr to DroppedNeedle"
       msg_info "Stopping Musicseerr Service"
       systemctl disable -q --now musicseerr
       msg_ok "Stopped Musicseerr Service"
-      DATA_DIR="/opt/musicseerr/backend"
     else
       msg_info "Stopping Service"
       systemctl stop droppedneedle
       msg_ok "Stopped Service"
-      DATA_DIR="/opt/droppedneedle/backend"
     fi
 
-    create_backup "$DATA_DIR/config" "$DATA_DIR/cache"
+    msg_info "Installing Dependencies"
+    $STD apt install -y build-essential cmake pkg-config ffmpeg python3
+    msg_ok "Installed Dependencies"
 
-    PYTHON_VERSION="3.13" setup_uv
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "droppedneedle" "DroppedNeedle/DroppedNeedle" "tarball"
-    NODE_VERSION="25" NODE_MODULE="pnpm@10.33.0" setup_nodejs
+    RUST_PROFILE="minimal" setup_rust
+    NODE_VERSION="22" NODE_MODULE="pnpm@10.33.0" setup_nodejs
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="backend/config backend/cache backend/plugins backend/imports" fetch_and_deploy_gh_release "droppedneedle" "DroppedNeedle/DroppedNeedle" "tarball"
 
     msg_info "Building Frontend"
     cd /opt/droppedneedle/frontend
     export NODE_OPTIONS="--max-old-space-size=3072"
-    rm -rf node_modules build
-    $STD pnpm install --frozen-lockfile
-    $STD pnpm run build
+    $STD pnpm install --frozen-lockfile && DROPPEDNEEDLE_BASE_PATH_PLACEHOLDER=1 $STD pnpm run build || {
+      echo "$OLD_VERSION" >~/.droppedneedle
+      msg_error "Frontend build failed; the old version stays recorded, run update again"
+      exit 1
+    }
+    rm -rf node_modules
     msg_ok "Built Frontend"
 
-    msg_info "Updating Application"
-    mkdir -p /opt/droppedneedle/backend/config /opt/droppedneedle/backend/cache
-    $STD uv venv --clear /opt/droppedneedle/venv
-    $STD uv pip install -r /opt/droppedneedle/backend/requirements.txt --python=/opt/droppedneedle/venv/bin/python
-    rm -rf /opt/droppedneedle/backend/static
-    cp -r /opt/droppedneedle/frontend/build /opt/droppedneedle/backend/static
-    msg_ok "Updated Application"
-
-    restore_backup
+    msg_info "Building DroppedNeedle (Patience)"
+    cd /opt/droppedneedle
+    $STD cargo build --release --locked --manifest-path server/Cargo.toml --bins -p droppedneedle -p droppedneedle-tool || {
+      echo "$OLD_VERSION" >~/.droppedneedle
+      msg_error "Build failed; the old version stays recorded, run update again"
+      exit 1
+    }
+    cp server/target/release/droppedneedle server/target/release/droppedneedle-tool /usr/local/bin/
+    rm -rf server/target
+    msg_ok "Built DroppedNeedle"
 
     if [[ "$MIGRATING" == "true" ]]; then
       msg_info "Migrating Musicseerr Data"
       rm -rf /opt/droppedneedle/backend/config /opt/droppedneedle/backend/cache
+      mkdir -p /opt/droppedneedle/backend
       cp -a /opt/musicseerr/backend/config /opt/droppedneedle/backend/config
       cp -a /opt/musicseerr/backend/cache /opt/droppedneedle/backend/cache
+      rm -f /etc/systemd/system/musicseerr.service
+      sed -i 's/musicseerr/droppedneedle/g' /bin/update
+      rm -rf /opt/musicseerr
       msg_ok "Migrated Musicseerr Data"
+    fi
+    mkdir -p /opt/droppedneedle/backend/{config,cache,plugins,imports}
 
-      msg_info "Replacing systemd Service"
-      cat <<EOF >/etc/systemd/system/droppedneedle.service
+    msg_info "Writing systemd Service"
+    SLSKD_LINE="$(grep -s '^Environment=SLSKD_DOWNLOADS_PATH=' /etc/systemd/system/droppedneedle.service || echo '# Environment=SLSKD_DOWNLOADS_PATH=<path-to-slskd-downloads>')"
+    cat <<EOF >/etc/systemd/system/droppedneedle.service
 [Unit]
 Description=DroppedNeedle Service
 After=network.target
@@ -90,59 +105,31 @@ Type=simple
 User=root
 WorkingDirectory=/opt/droppedneedle/backend
 Environment=ROOT_APP_DIR=/opt/droppedneedle/backend
+Environment=DROPPEDNEEDLE_STATIC_DIR=/opt/droppedneedle/frontend/build
 Environment=PORT=8688
 Environment=COMMIT_TAG=v$(<~/.droppedneedle)
-# Environment=SLSKD_DOWNLOADS_PATH=<path-to-slskd-downloads>
-ExecStart=/opt/droppedneedle/venv/bin/python -m maintenance.automatic_upgrade --start-target
+${SLSKD_LINE}
+ExecStart=/usr/local/bin/droppedneedle
 Restart=on-failure
 RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
 EOF
-      rm -f /etc/systemd/system/musicseerr.service
-      msg_ok "Replaced systemd Service"
-    else
-      if ! grep -q 'SLSKD' /etc/systemd/system/droppedneedle.service; then
-        sed -i '\|=8688$|a# Environment=SLSKD_DOWNLOADS_PATH=<path-to-slskd-downloads>' /etc/systemd/system/droppedneedle.service
-      fi
-      sed -i 's|^ExecStart=.*|ExecStart=/opt/droppedneedle/venv/bin/python -m maintenance.automatic_upgrade --start-target|' /etc/systemd/system/droppedneedle.service
-      if grep -q '^Environment=COMMIT_TAG=' /etc/systemd/system/droppedneedle.service; then
-        sed -i "s|^Environment=COMMIT_TAG=.*|Environment=COMMIT_TAG=v$(<~/.droppedneedle)|" /etc/systemd/system/droppedneedle.service
-      else
-        sed -i "\|=8688$|a Environment=COMMIT_TAG=v$(<~/.droppedneedle)" /etc/systemd/system/droppedneedle.service
-      fi
-    fi
-
     systemctl daemon-reload
-    if [[ "$MIGRATING" == "true" ]]; then
-      msg_info "Enabling DroppedNeedle Service"
-      systemctl enable -q --now droppedneedle
-      msg_ok "Enabled DroppedNeedle Service"
+    systemctl enable -q droppedneedle
+    msg_ok "Wrote systemd Service"
 
-      sed -i 's/musicseerr/droppedneedle/g' /bin/update
-      rm -rf /opt/musicseerr
-
-      msg_info "Waiting up to 1min for backend to boot and retrieve Admin Username"
-      for i in {1..30}; do
-        username=$(/opt/droppedneedle/venv/bin/python -c 'import sqlite3; conn = sqlite3.connect("/opt/droppedneedle/backend/cache/library.db"); c = conn.cursor(); c.execute("SELECT username FROM auth_users WHERE role=\"admin\""); admin=c.fetchone(); print(admin[0]) if (admin and admin[0]) else None' 2>/dev/null || true)
-        if [[ -n "$username" ]]; then
-          break
-        fi
-        sleep 2
-      done
-      if [[ -n "$username" ]]; then
-        msg_ok "Admin Username retrieved (Admin Username is: ${username})"
-      else
-        msg_warn "Failed to retrieve Admin Username. The backend might still be starting."
-      fi
-      msg_ok "Migrated successfully!"
-    else
-      msg_info "Starting Service"
-      systemctl start droppedneedle
-      msg_ok "Started Service"
-      msg_ok "Updated successfully!"
+    rm -rf /opt/droppedneedle/venv
+    msg_info "Starting Service"
+    systemctl start droppedneedle
+    msg_ok "Started Service"
+    if [[ "$FROM_V2" == "true" ]]; then
+      msg_warn "DroppedNeedle 3 needs a one-time upgrade of the v2 data: open http://${LOCAL_IP}:8688 and sign in with a v2 admin."
+      msg_warn "Before pressing Upgrade: single sign-on and Spotify callback URLs move from /api/v1 to /api/v3. See docs/upgrading-from-v2.md upstream."
+      msg_warn "No v2 admin with a password? The one-time sign-in code is in: journalctl -u droppedneedle | grep 'upgrade sign-in code'"
     fi
+    msg_ok "Updated successfully!"
   fi
   exit
 }
