@@ -588,6 +588,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Change Detection: create the SockPuppetBrowser unit whenever it is missing [@MickLesk](https://github.com/MickLesk) ([#18895](https://github.com/community-scripts/ProxmoxVE/pull/18895))
+
+  - #### ✨ New Features
+
+    - Switch Pinchflat to the maintained Pinchflat-NGX fork [@MickLesk](https://github.com/MickLesk) ([#18897](https://github.com/community-scripts/ProxmoxVE/pull/18897))
+
   - #### 🔧 Refactor
 
     - HAOS VM: fall back to Home Assistant's own hosts for version and image [@MickLesk](https://github.com/MickLesk) ([#18900](https://github.com/community-scripts/ProxmoxVE/pull/18900))
@@ -595,6 +603,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 ### 💾 Core
 
   - Tell a dead connection from a non-JSON answer in forge API calls [@MickLesk](https://github.com/MickLesk) ([core#285](https://github.com/community-scripts/core/pull/285))
+
+### 🧰 Tools
+
+  - #### ✨ New Features
+
+    - fstrim: read the root volume from the container config [@MickLesk](https://github.com/MickLesk) ([#18894](https://github.com/community-scripts/ProxmoxVE/pull/18894))
 
 ## 2026-11-20
 
