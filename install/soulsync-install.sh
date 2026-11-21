@@ -24,13 +24,15 @@ msg_ok "Installed Dependencies"
 
 PYTHON_VERSION="3.11" setup_uv
 NODE_VERSION="24" setup_nodejs
+# YouTube needs Deno plus yt-dlp-ejs from yt-dlp[default] to solve its JavaScript challenges
+fetch_and_deploy_gh_release "deno" "denoland/deno" "prebuild" "latest" "/usr/local/bin" "deno-$(arch_resolve "x86_64" "aarch64")-unknown-linux-gnu.zip"
 
 fetch_and_deploy_gh_release "soulsync" "Nezreka/SoulSync" "tarball"
 
 msg_info "Setting up Application"
 cd /opt/soulsync
 $STD uv venv /opt/soulsync/.venv --python 3.11
-$STD uv pip install -r requirements.txt --python /opt/soulsync/.venv/bin/python
+$STD uv pip install -r requirements.txt "yt-dlp[default]" --python /opt/soulsync/.venv/bin/python
 mkdir -p /opt/soulsync/{config,data,logs}
 msg_ok "Set up Application"
 
