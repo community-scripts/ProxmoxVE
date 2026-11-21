@@ -603,7 +603,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - tools.func: check the new version's repository before purging the installed one [@MickLesk](https://github.com/MickLesk) ([core#287](https://github.com/community-scripts/core/pull/287))
+  - proxmox: accept a template that is on the storage when pveam list does not show it [@MickLesk](https://github.com/MickLesk) ([core#289](https://github.com/community-scripts/core/pull/289))
+- proxmox: fetch a template over HTTPS when pveam cannot download it [@MickLesk](https://github.com/MickLesk) ([core#288](https://github.com/community-scripts/core/pull/288))
+- tools.func: check the new version's repository before purging the installed one [@MickLesk](https://github.com/MickLesk) ([core#287](https://github.com/community-scripts/core/pull/287))
 - setup_uv: Fall back to PyPI and releases.astral.sh [@MickLesk](https://github.com/MickLesk) ([core#286](https://github.com/community-scripts/core/pull/286))
 - Keep the installed Go until the new one is downloaded, try dl.google.com as fallback [@MickLesk](https://github.com/MickLesk) ([core#284](https://github.com/community-scripts/core/pull/284))
 - Tell a dead connection from a non-JSON answer in forge API calls [@MickLesk](https://github.com/MickLesk) ([core#285](https://github.com/community-scripts/core/pull/285))
