@@ -584,6 +584,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-11-21
+
+### 💾 Core
+
+  - Tell a dead connection from a non-JSON answer in forge API calls [@MickLesk](https://github.com/MickLesk) ([core#285](https://github.com/community-scripts/core/pull/285))
+
 ## 2026-11-20
 
 ### 🆕 New Scripts
