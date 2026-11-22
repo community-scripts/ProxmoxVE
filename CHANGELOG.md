@@ -599,8 +599,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Keeper: set the build identity and tz data the services now require [@MickLesk](https://github.com/MickLesk) ([#18933](https://github.com/community-scripts/ProxmoxVE/pull/18933))
+    - Firecrawl: pin nodesig to the commit that matches the 2.11 release [@MickLesk](https://github.com/MickLesk) ([#18934](https://github.com/community-scripts/ProxmoxVE/pull/18934))
     - Update authentik to 2026.8.6 [@thieneret](https://github.com/thieneret) ([#18912](https://github.com/community-scripts/ProxmoxVE/pull/18912))
     - FIX: Add flag to Grimmory install script to mitigate CVE-2026-114938 [@zekaptain](https://github.com/zekaptain) ([#18923](https://github.com/community-scripts/ProxmoxVE/pull/18923))
+
+  - #### 🔧 Refactor
+
+    - splunk, immich: let var_* answer the last install prompts [@MickLesk](https://github.com/MickLesk) ([#18932](https://github.com/community-scripts/ProxmoxVE/pull/18932))
 
 ## 2026-11-21
 
