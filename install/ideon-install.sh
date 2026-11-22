@@ -14,9 +14,7 @@ network_check
 update_os
 
 msg_info "Installing Dependencies"
-$STD apt install -y \
-  build-essential \
-  python3
+$STD apt install -y build-essential
 msg_ok "Installed Dependencies"
 
 NODE_VERSION="24" setup_nodejs
@@ -36,9 +34,6 @@ msg_ok "Built Ideon"
 
 msg_info "Configuring Ideon"
 mkdir -p /opt/ideon_data/storage/{avatars,uploads,yjs}
-# Ideon keeps uploads, avatars and the canvas documents in ./storage, which is not configurable
-ln -s /opt/ideon_data/storage /opt/ideon/storage
-# Without AUTH_TRUST_HOST, Ideon's middleware rejects every session as UntrustedHost (upstream issue #133)
 cat <<EOF >/opt/ideon_data/.env
 NODE_ENV=production
 APP_PORT=3000
