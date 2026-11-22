@@ -591,7 +591,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Bytechef [@MickLesk](https://github.com/MickLesk) ([#18919](https://github.com/community-scripts/ProxmoxVE/pull/18919))
+  - NoteMark [@MickLesk](https://github.com/MickLesk) ([#18920](https://github.com/community-scripts/ProxmoxVE/pull/18920))
+- Bytechef [@MickLesk](https://github.com/MickLesk) ([#18919](https://github.com/community-scripts/ProxmoxVE/pull/18919))
 - Lidify [@angusmaul](https://github.com/angusmaul) ([#18918](https://github.com/community-scripts/ProxmoxVE/pull/18918))
 - Ideon [@MickLesk](https://github.com/MickLesk) ([#18915](https://github.com/community-scripts/ProxmoxVE/pull/18915))
 - Mathesar [@MickLesk](https://github.com/MickLesk) ([#18914](https://github.com/community-scripts/ProxmoxVE/pull/18914))
