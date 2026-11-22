@@ -589,6 +589,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-22
 
+### 🆕 New Scripts
+
+  - Mathesar [@MickLesk](https://github.com/MickLesk) ([#18914](https://github.com/community-scripts/ProxmoxVE/pull/18914))
+
 ## 2026-11-21
 
 ### 🚀 Updated Scripts
