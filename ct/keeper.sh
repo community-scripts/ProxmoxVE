@@ -51,6 +51,13 @@ function update_script() {
     $STD bun run --cwd applications/web build
     msg_ok "Built Keeper"
 
+    sed -i -e '/^COMMIT_SHA=/d' -e '/^VERSION=/d' -e '/^ICU_TIMEZONE_FILES_DIR=/d' /opt/keeper_data/.env
+    cat <<EOF >>/opt/keeper_data/.env
+COMMIT_SHA=v$(cat ~/.keeper)
+VERSION=$(cat ~/.keeper)
+ICU_TIMEZONE_FILES_DIR=/opt/keeper/docker/icu-timezone
+EOF
+
     msg_info "Migrating Keeper Database"
     $STD bun --env-file=/opt/keeper_data/.env packages/database/scripts/migrate.ts
     msg_ok "Migrated Keeper Database"
