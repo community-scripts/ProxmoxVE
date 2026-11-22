@@ -591,7 +591,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Lidify [@angusmaul](https://github.com/angusmaul) ([#18918](https://github.com/community-scripts/ProxmoxVE/pull/18918))
+  - Bytechef [@MickLesk](https://github.com/MickLesk) ([#18919](https://github.com/community-scripts/ProxmoxVE/pull/18919))
+- Lidify [@angusmaul](https://github.com/angusmaul) ([#18918](https://github.com/community-scripts/ProxmoxVE/pull/18918))
 - Ideon [@MickLesk](https://github.com/MickLesk) ([#18915](https://github.com/community-scripts/ProxmoxVE/pull/18915))
 - Mathesar [@MickLesk](https://github.com/MickLesk) ([#18914](https://github.com/community-scripts/ProxmoxVE/pull/18914))
 
@@ -611,7 +612,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Read github.com when the update check hits the API rate limit [@MickLesk](https://github.com/MickLesk) ([core#292](https://github.com/community-scripts/core/pull/292))
+  - Reload systemd units after a .deb install [@MickLesk](https://github.com/MickLesk) ([core#291](https://github.com/community-scripts/core/pull/291))
+- Read github.com when the update check hits the API rate limit [@MickLesk](https://github.com/MickLesk) ([core#292](https://github.com/community-scripts/core/pull/292))
 - Resume a VM image download that broke off [@MickLesk](https://github.com/MickLesk) ([core#290](https://github.com/community-scripts/core/pull/290))
 
 ## 2026-11-21
