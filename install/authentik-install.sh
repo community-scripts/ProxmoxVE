@@ -109,9 +109,7 @@ RetryFor 5m
 Parallelism 1
 EOF
 
-# GeoIP auto-update ships disabled (as the previous commented-out crontab entry did):
-# fill in MaxMind credentials in /usr/local/etc/GeoIP.conf, then enable it:
-#   systemctl enable --now authentik-geoipupdate.timer
+# Disabled by default like the old commented-out crontab entry; after filling in MaxMind keys: systemctl enable --now authentik-geoipupdate.timer
 cat <<EOF >/etc/systemd/system/authentik-geoipupdate.service
 [Unit]
 Description=authentik GeoIP database update
@@ -134,7 +132,6 @@ Unit=authentik-geoipupdate.service
 [Install]
 WantedBy=timers.target
 EOF
-systemctl daemon-reload
 
 msg_info "Building binary. It may take more than 10 minutes, please be patient."
 export AWS_LC_FIPS_SYS_CC="clang"

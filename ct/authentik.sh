@@ -56,7 +56,6 @@ function update_script() {
   fi
 
   msg_info "Migrating GeoIP auto-update from cron to systemd timer"
-  # Keep unit contents in sync with install/authentik-install.sh
   if [[ ! -f /etc/systemd/system/authentik-geoipupdate.service ]]; then
     cat <<EOF >/etc/systemd/system/authentik-geoipupdate.service
 [Unit]
@@ -81,20 +80,18 @@ Unit=authentik-geoipupdate.service
 WantedBy=timers.target
 EOF
   fi
-  # Remove only geoipupdate lines from the user's crontab; keep other entries intact
-  if command -v crontab &>/dev/null; then
-    existing_crontab=$(crontab -l 2>/dev/null || true)
+  if [[ -x /usr/bin/crontab ]]; then
+    existing_crontab=$(/usr/bin/crontab -l 2>&1 || true)
     if grep -q geoipupdate <<<"$existing_crontab"; then
       remaining_crontab=$(grep -v geoipupdate <<<"$existing_crontab")
       if [[ -n "$remaining_crontab" ]]; then
-        printf '%s\n' "$remaining_crontab" | crontab -
+        printf '%s\n' "$remaining_crontab" | /usr/bin/crontab -
       else
-        crontab -r 2>/dev/null || true
+        /usr/bin/crontab -r || true
       fi
     fi
   fi
-  systemctl daemon-reload
-  msg_ok "GeoIP auto-update migrated to systemd timer (still disabled by default; enable with: systemctl enable --now authentik-geoipupdate.timer)"
+  msg_ok "GeoIP auto-update migrated to systemd timer (still disabled by default)"
 
   if check_for_gh_release "xmlsec" "lsh123/xmlsec" "${XMLSEC_VERSION}"; then
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "xmlsec" "lsh123/xmlsec" "tarball" "${XMLSEC_VERSION}" "/opt/xmlsec"
@@ -249,7 +246,7 @@ EOF
   msg_info "Waiting for authentik to become ready"
   CODE=000
   for _ in {1..36}; do
-    CODE=$(curl -ksm 3 -o /dev/null -w '%{http_code}' https://127.0.0.1:9443/ || true)
+    CODE=$(curl -ksI -m 3 https://127.0.0.1:9443/ | sed -n 's,^HTTP/[0-9.]* \([0-9]\{3\}\).*,\1,p' || true)
     [[ "$CODE" == "200" || "$CODE" == "302" ]] && break
     sleep 5
   done
@@ -284,7 +281,7 @@ msg_ok "Started Services"
 msg_info "Waiting for authentik to become ready"
 CODE=000
 for _ in {1..36}; do
-  CODE=$(pct exec "$CTID" -- curl -ksm 3 -o /dev/null -w '%{http_code}' https://127.0.0.1:9443/ || true)
+  CODE=$(pct exec "$CTID" -- curl -ksI -m 3 https://127.0.0.1:9443/ | sed -n 's,^HTTP/[0-9.]* \([0-9]\{3\}\).*,\1,p' || true)
   [[ "$CODE" == "200" || "$CODE" == "302" ]] && break
   sleep 5
 done
