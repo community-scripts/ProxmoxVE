@@ -33,7 +33,7 @@ function update_script() {
 
   APP_VERSION=$(grep -o '"version": *"[^"]*"' /opt/gitea-mirror/package.json | cut -d'"' -f4)
   if [[ $APP_VERSION =~ ^2\. ]]; then
-    if [[ "${PHS_SILENT:-0}" == "1" ]]; then
+    if is_unattended; then
       msg_warn "Version $APP_VERSION detected. Major version upgrade requires interactive confirmation, skipping."
       exit 75
     fi

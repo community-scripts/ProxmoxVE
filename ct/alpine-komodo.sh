@@ -34,8 +34,7 @@ function update_script() {
   echo -e "${INFO}${YW}This is a one-time migration. After this, you can update ${APP} anytime with:${CL}"
   echo -e "${TAB}${TAB}${GN}update_komodo${CL}  or  ${GN}bash <(curl -fsSL ${ADDON_SCRIPT})${CL}"
   echo ""
-  read -r -p "${TAB}Migrate update function now? [y/N]: " CONFIRM
-  if [[ ! "${CONFIRM,,}" =~ ^(y|yes)$ ]]; then
+  if ! prompt_confirm "${TAB}Migrate update function now?" "n"; then
     msg_warn "Migration skipped. The old update will continue to work for now."
     msg_warn "⚠️  Komodo v2 uses :2 image tags. The :latest tag is deprecated and will not receive v2 updates."
     msg_warn "Please migrate to the addon script to receive Komodo v2."

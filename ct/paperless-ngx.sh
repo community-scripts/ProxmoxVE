@@ -63,7 +63,7 @@ function update_script() {
       echo -e "${GATEWAY}${BGN}https://docs.paperless-ngx.com/migration-v3/#encryption-support${CL}"
       msg_warn "Before continuing make sure that you do not use encryption or have decrypted all documents."
       echo ""
-      if [[ "${PHS_SILENT:-0}" == "1" ]]; then
+      if is_unattended; then
         msg_warn "Paperless-ngx v3 migration detected - skipping update, requires an interactive run"
         exit 75
       fi
@@ -75,7 +75,7 @@ function update_script() {
       fi
     fi
 
-    if [[ "${PHS_SILENT:-0}" == "1" ]] && ! grep -q "uv run" /etc/systemd/system/paperless-webserver.service; then
+    if is_unattended && ! grep -q "uv run" /etc/systemd/system/paperless-webserver.service; then
       msg_warn "Paperless-ngx uv migration detected - skipping update, requires an interactive run"
       exit 75
     fi

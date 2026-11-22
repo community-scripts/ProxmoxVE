@@ -224,8 +224,8 @@ EOF
     msg_custom "💾" "Your current config will be backed up to nginx.conf.bak"
     msg_custom "⚠️ " "Note: Custom modifications (reverse proxy, SSL) will be overwritten!"
     echo ""
-    read -rp "${TAB3}Update Nginx configuration? [Y/n]: " REPLY
-    if [[ "${REPLY,,}" =~ ^(y|yes|)$ ]]; then
+    # Unattended keeps the current file: the new one drops reverse-proxy and SSL edits.
+    if ! is_unattended && prompt_confirm "${TAB3}Update Nginx configuration?" "y"; then
       msg_info "Updating Nginx Configuration"
       cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
       curl -fsSL "https://raw.githubusercontent.com/Termix-SSH/Termix/main/docker/nginx.conf" -o /etc/nginx/nginx.conf
