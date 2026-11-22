@@ -611,7 +611,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Resume a VM image download that broke off [@MickLesk](https://github.com/MickLesk) ([core#290](https://github.com/community-scripts/core/pull/290))
+  - Read github.com when the update check hits the API rate limit [@MickLesk](https://github.com/MickLesk) ([core#292](https://github.com/community-scripts/core/pull/292))
+- Resume a VM image download that broke off [@MickLesk](https://github.com/MickLesk) ([core#290](https://github.com/community-scripts/core/pull/290))
 
 ## 2026-11-21
 
