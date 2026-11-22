@@ -50,6 +50,10 @@ function update_script() {
     if [[ -n "$STORAGE_KB" && -n "$FREE_KB" && "$FREE_KB" -lt "$STORAGE_KB" ]]; then
       echo -e "\n${RD}Warning: migration needs about $((STORAGE_KB / 1024))MB, only $((FREE_KB / 1024))MB free.${CL}"
       echo -e "${RD}The new bichon-blob store is written alongside the existing fjall data.${CL}"
+      if is_unattended; then
+        msg_warn "Not enough free space for the migration - skipping update, requires an interactive run"
+        exit 75
+      fi
       read -r -p "Are you sure you want to proceed with the update? (y/N): " proceed
       if [[ ! $proceed =~ ^[Yy]$ ]]; then
         msg_error "Update cancelled by user."

@@ -38,6 +38,10 @@ function update_script() {
     msg_warn "WARNING: Due to bugs with BoltDB database, update script will move your application"
     msg_warn "to use SQLite database instead. Make sure you have a backup of your data!"
     echo ""
+    if is_unattended; then
+      msg_warn "BoltDB to SQLite migration detected - skipping update, requires an interactive run"
+      exit 75
+    fi
     read -r -p "${TAB3}Do you want to continue? (y/N): " CONFIRM
     if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
       exit 0

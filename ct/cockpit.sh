@@ -36,8 +36,7 @@ function update_script() {
   msg_ok "Updated ${APP} LXC"
 
   if [[ ! -f /etc/apt/sources.list.d/45drives.sources ]]; then
-    [[ "$(arch_resolve)" == "arm64" ]] || read -r -p "Would you like to install 45Drives' cockpit-file-sharing, cockpit-identities, and cockpit-navigator now? <y/N> " prompt
-    if [[ "${prompt,,}" =~ ^(y|yes)$ ]]; then
+    if [[ "$(arch_resolve)" != "arm64" ]] && prompt_confirm "Would you like to install 45Drives' cockpit-file-sharing, cockpit-identities, and cockpit-navigator now?" "n"; then
       msg_info "Installing 45Drives' cockpit extensions"
       setup_deb822_repo "45drives" \
         "https://repo.45drives.com/key/gpg.asc" \

@@ -38,7 +38,7 @@ function update_script() {
     echo "Seerr is the new unified Jellyseerr and Overseerr."
     echo "More info: https://docs.seerr.dev/blog/seerr-release"
     echo
-    if [[ "${PHS_SILENT:-0}" == "1" ]]; then
+    if is_unattended; then
       msg_warn "Seerr migration detected - skipping update, requires an interactive run"
       exit 75
     fi

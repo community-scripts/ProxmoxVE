@@ -38,8 +38,7 @@ function update_script() {
   echo -e "${INFO}${YW}This is a one-time migration. After this, you can update ${APP} anytime with:${CL}"
   echo -e "${TAB}${TAB}${GN}update_runtipi${CL}  or  ${GN}bash <(curl -fsSL ${ADDON_SCRIPT})${CL}"
   echo ""
-  read -r -p "${TAB}Migrate update function now? [y/N]: " CONFIRM
-  if [[ ! "${CONFIRM,,}" =~ ^(y|yes)$ ]]; then
+  if ! prompt_confirm "${TAB}Migrate update function now?" "n"; then
     msg_warn "Migration skipped. The old update will continue to work for now."
     msg_info "Updating ${APP} (legacy)"
     cd /opt/runtipi && ./runtipi-cli update latest

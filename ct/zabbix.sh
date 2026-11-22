@@ -49,7 +49,7 @@ function update_script() {
   ZABBIX_SERIES="$(dpkg-query -W -f='${Version}' zabbix-release 2>/dev/null || true)"
   ZABBIX_SERIES="${ZABBIX_SERIES#*:}"
   ZABBIX_SERIES="${ZABBIX_SERIES%%[!0-9.]*}"
-  if [[ "${PHS_SILENT:-0}" == "1" ]]; then
+  if is_unattended; then
     if [[ ! "$ZABBIX_SERIES" =~ ^[0-9]+\.[0-9]+$ ]]; then
       msg_warn "Could not detect the installed Zabbix series - skipping update, requires an interactive run"
       exit 75
