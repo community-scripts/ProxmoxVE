@@ -204,6 +204,20 @@ EOF
 	    systemctl start authentik-radius
   	fi
   	msg_ok "Started Services"
+
+  msg_info "Waiting for authentik to become ready"
+  CODE=000
+  for _ in {1..36}; do
+    CODE=$(curl -ksm 3 -o /dev/null -w '%{http_code}' https://127.0.0.1:9443/ || true)
+    [[ "$CODE" == "200" || "$CODE" == "302" ]] && break
+    sleep 5
+  done
+  if [[ "$CODE" == "200" || "$CODE" == "302" ]]; then
+    msg_ok "authentik is responding (HTTP ${CODE})"
+  else
+    msg_warn "authentik did not start responding (HTTP ${CODE}) within 180s. It may still be booting (migrations after an upgrade can take longer); check: journalctl -eu authentik-server"
+  fi
+
   fi
   msg_ok "Updated successfully!"
   exit
@@ -225,6 +239,19 @@ msg_ok "Attached data storage volume"
 msg_info "Starting Services"
 ct_exec systemctl enable -q --now authentik-server authentik-worker
 msg_ok "Started Services"
+
+msg_info "Waiting for authentik to become ready"
+CODE=000
+for _ in {1..36}; do
+  CODE=$(pct exec "$CTID" -- curl -ksm 3 -o /dev/null -w '%{http_code}' https://127.0.0.1:9443/ || true)
+  [[ "$CODE" == "200" || "$CODE" == "302" ]] && break
+  sleep 5
+done
+if [[ "$CODE" == "200" || "$CODE" == "302" ]]; then
+  msg_ok "authentik is responding (HTTP ${CODE})"
+else
+  msg_warn "authentik did not start responding (HTTP ${CODE}) within 180s. It may still be booting (first boot runs migrations); check: pct exec ${CTID} -- journalctl -eu authentik-server"
+fi
 
 description
 
