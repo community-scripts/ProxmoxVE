@@ -55,6 +55,47 @@ function update_script() {
     fetch_and_deploy_gh_release "geoipupdate" "maxmind/geoipupdate" "binary"
   fi
 
+  msg_info "Migrating GeoIP auto-update from cron to systemd timer"
+  # Keep unit contents in sync with install/authentik-install.sh
+  if [[ ! -f /etc/systemd/system/authentik-geoipupdate.service ]]; then
+    cat <<EOF >/etc/systemd/system/authentik-geoipupdate.service
+[Unit]
+Description=authentik GeoIP database update
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/geoipupdate -f /usr/local/etc/GeoIP.conf
+EOF
+
+    cat <<EOF >/etc/systemd/system/authentik-geoipupdate.timer
+[Unit]
+Description=authentik GeoIP database update, twice a week (Thu/Sat 19:39)
+
+[Timer]
+OnCalendar=Thu,Sat *-*-* 19:39:00
+RandomizedDelaySec=15m
+Persistent=true
+Unit=authentik-geoipupdate.service
+
+[Install]
+WantedBy=timers.target
+EOF
+  fi
+  # Remove only geoipupdate lines from the user's crontab; keep other entries intact
+  if command -v crontab &>/dev/null; then
+    existing_crontab=$(crontab -l 2>/dev/null || true)
+    if grep -q geoipupdate <<<"$existing_crontab"; then
+      remaining_crontab=$(grep -v geoipupdate <<<"$existing_crontab")
+      if [[ -n "$remaining_crontab" ]]; then
+        printf '%s\n' "$remaining_crontab" | crontab -
+      else
+        crontab -r 2>/dev/null || true
+      fi
+    fi
+  fi
+  systemctl daemon-reload
+  msg_ok "GeoIP auto-update migrated to systemd timer (still disabled by default; enable with: systemctl enable --now authentik-geoipupdate.timer)"
+
   if check_for_gh_release "xmlsec" "lsh123/xmlsec" "${XMLSEC_VERSION}"; then
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "xmlsec" "lsh123/xmlsec" "tarball" "${XMLSEC_VERSION}" "/opt/xmlsec"
 
