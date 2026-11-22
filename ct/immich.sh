@@ -80,7 +80,7 @@ EOF
   fi
 
   cd /tmp
-  RELEASE="v3.4.1"
+  RELEASE="v3.4.2"
   if [[ -f ~/.intel_version ]]; then
     INTEL_SRC="https://raw.githubusercontent.com/immich-app/immich/${RELEASE}/machine-learning"
     curl -fsSL "${INTEL_SRC}/scripts/install-intel-runtime.sh" -o ./intel-runtime 2>/dev/null ||
@@ -270,7 +270,14 @@ EOF
     cp ./packages/plugin-core/manifest.json "$PLUGIN_DIR"
     msg_ok "Updated Immich server, web, cli and plugins"
 
-    RESTIC_REF="$(grep -oP 'futo-org/restic:sha-\K[0-9a-f]+' "$SRC_DIR"/server/Dockerfile)"
+    RESTIC_REF="$(grep -oP 'futo-org/restic:sha-\K[0-9a-f]+' "$SRC_DIR"/server/Dockerfile)" || true
+    if [[ -z "$RESTIC_REF" ]]; then
+      RESTIC_DIGEST="$(grep -oP 'futo-org/restic:[^@]+@\Ksha256:[0-9a-f]+' "$SRC_DIR"/server/Dockerfile)"
+      GHCR_TOKEN="$(curl -fsSL 'https://ghcr.io/token?scope=repository:futo-org/restic:pull' | jq -r .token)"
+      RESTIC_MANIFEST="$(curl -fsSL -H "Authorization: Bearer ${GHCR_TOKEN}" -H 'Accept: application/vnd.oci.image.index.v1+json' "https://ghcr.io/v2/futo-org/restic/manifests/${RESTIC_DIGEST}" | jq -r '[.manifests[] | select(.platform.os == "linux")][0].digest')"
+      RESTIC_CONFIG="$(curl -fsSL -H "Authorization: Bearer ${GHCR_TOKEN}" -H 'Accept: application/vnd.oci.image.manifest.v1+json' "https://ghcr.io/v2/futo-org/restic/manifests/${RESTIC_MANIFEST}" | jq -r .config.digest)"
+      RESTIC_REF="$(curl -fsSL -H "Authorization: Bearer ${GHCR_TOKEN}" "https://ghcr.io/v2/futo-org/restic/blobs/${RESTIC_CONFIG}" | jq -r '.config.Labels["org.opencontainers.image.revision"] // empty')"
+    fi
     RESTIC_PROXY_REF="$(grep -oP 'futo-org/backups/restic-proxy:\K[^@]+' "$SRC_DIR"/server/Dockerfile)"
     if [[ "$(cat ~/.immich_restic 2>/dev/null)" != "${RESTIC_REF} ${RESTIC_PROXY_REF}" || ! -x /usr/local/bin/restic ]]; then
       FUTO_DIR=/opt/staging/futo
