@@ -228,10 +228,9 @@ EOF
     else
       BRIDGE_UPDATE=1
       msg_warn "You are about to migrate your Paperless-ngx installation to uv!"
-      msg_custom "🔒" "It is strongly recommended to take a Proxmox snapshot first:"
-      echo -e "   1. Stop the container:  pct stop <CTID>"
-      echo -e "   2. Create a snapshot:  pct snapshot <CTID> pre-paperless-uv-migration"
-      echo -e "   3. Start the container again\n"
+      msg_custom "🔒" "It is strongly recommended to take a snapshot on the host first:"
+      echo -e "   Proxmox:  pct snapshot <CTID> pre-paperless-uv-migration"
+      echo -e "   Incus:    incus snapshot create <name> pre-paperless-uv-migration\n"
 
       read -rp "Have you created a snapshot? [y/N]: " confirm
       if [[ ! "$confirm" =~ ^([yY]|[yY][eE][sS])$ ]]; then

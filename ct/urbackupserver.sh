@@ -15,6 +15,7 @@ var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-0}"
+var_fuse="${var_fuse:-yes}"
 
 header_info "$APP"
 variables
@@ -39,9 +40,6 @@ function update_script() {
 start
 build_container
 description
-
-pct set "$CTID" -features fuse=1,nesting=1
-pct reboot "$CTID"
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
