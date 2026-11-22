@@ -80,18 +80,25 @@ Unit=authentik-geoipupdate.service
 WantedBy=timers.target
 EOF
   fi
+  TIMER_STATE="disabled by default"
   if [[ -x /usr/bin/crontab ]]; then
     existing_crontab=$(/usr/bin/crontab -l 2>&1 || true)
     if grep -q geoipupdate <<<"$existing_crontab"; then
-      remaining_crontab=$(grep -v geoipupdate <<<"$existing_crontab")
+      WAS_ACTIVE=false
+      grep -qE '^[[:space:]]*[^#[:space:]].*geoipupdate' <<<"$existing_crontab" && WAS_ACTIVE=true
+      remaining_crontab=$(grep -v geoipupdate <<<"$existing_crontab" || true)
       if [[ -n "$remaining_crontab" ]]; then
         printf '%s\n' "$remaining_crontab" | /usr/bin/crontab -
       else
         /usr/bin/crontab -r || true
       fi
+      if [[ "$WAS_ACTIVE" == true ]]; then
+        systemctl enable -q --now authentik-geoipupdate.timer
+        TIMER_STATE="enabled, taking over the active cron job"
+      fi
     fi
   fi
-  msg_ok "GeoIP auto-update migrated to systemd timer (still disabled by default)"
+  msg_ok "GeoIP auto-update migrated to systemd timer (${TIMER_STATE})"
 
   if check_for_gh_release "xmlsec" "lsh123/xmlsec" "${XMLSEC_VERSION}"; then
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "xmlsec" "lsh123/xmlsec" "tarball" "${XMLSEC_VERSION}" "/opt/xmlsec"
