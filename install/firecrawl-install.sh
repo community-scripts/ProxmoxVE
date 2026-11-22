@@ -134,6 +134,7 @@ msg_ok "Built Go Library"
 
 msg_info "Building Firecrawl API"
 cd /opt/firecrawl/apps/api
+grep -q '^kuchikiki = "0.8.2"' native/Cargo.toml && sed -i 's|^nodesig = { git = "https://github.com/firecrawl/nodesig" }|nodesig = { git = "https://github.com/firecrawl/nodesig", rev = "b8ebc4a71081" }|' native/Cargo.toml
 $STD pnpm install --frozen-lockfile
 $STD pnpm build
 CI=true $STD pnpm prune --prod --ignore-scripts
