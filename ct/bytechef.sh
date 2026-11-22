@@ -10,7 +10,7 @@ APP="ByteChef"
 var_tags="${var_tags:-automation;workflow;integration}"
 var_cpu="${var_cpu:-4}"
 var_ram="${var_ram:-6144}"
-var_disk="${var_disk:-12}"
+var_disk="${var_disk:-16}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 #var_arm64="${var_arm64:-no}" # unset = ask the user; set yes/no only when verified
@@ -46,11 +46,11 @@ function update_script() {
     $STD npm ci
     $STD npm run build
     cd /opt/bytechef-build
-    $STD ./gradlew --no-daemon :server:apps:server-app:bootJar -Pprod
+    $STD ./gradlew --no-daemon :server:apps:server-app:bootJar -Pprod -Pkotlin.compiler.execution.strategy=in-process
     mkdir -p /opt/bytechef/server
     mv /opt/bytechef-build/server/apps/server-app/build/libs/server-app-*.jar /opt/bytechef/server/server-app.jar
     mv /opt/bytechef-build/client/dist /opt/bytechef/client
-    rm -rf /opt/bytechef-build ~/.gradle ~/.npm
+    rm -rf /opt/bytechef-build
     msg_ok "Built ByteChef"
 
     msg_info "Starting ByteChef"

@@ -26,11 +26,11 @@ cd /opt/bytechef-build/client
 $STD npm ci
 $STD npm run build
 cd /opt/bytechef-build
-$STD ./gradlew --no-daemon :server:apps:server-app:bootJar -Pprod
+$STD ./gradlew --no-daemon :server:apps:server-app:bootJar -Pprod -Pkotlin.compiler.execution.strategy=in-process
 mkdir -p /opt/bytechef/server
 mv /opt/bytechef-build/server/apps/server-app/build/libs/server-app-*.jar /opt/bytechef/server/server-app.jar
 mv /opt/bytechef-build/client/dist /opt/bytechef/client
-rm -rf /opt/bytechef-build ~/.gradle ~/.npm
+rm -rf /opt/bytechef-build
 msg_ok "Built ByteChef"
 
 msg_info "Configuring ByteChef"
