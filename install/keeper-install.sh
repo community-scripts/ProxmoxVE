@@ -59,6 +59,9 @@ GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 MICROSOFT_CLIENT_ID=
 MICROSOFT_CLIENT_SECRET=
+COMMIT_SHA=v$(cat ~/.keeper)
+VERSION=$(cat ~/.keeper)
+ICU_TIMEZONE_FILES_DIR=/opt/keeper/docker/icu-timezone
 EOF
 chmod 600 /opt/keeper_data/.env
 msg_ok "Configured Keeper"
