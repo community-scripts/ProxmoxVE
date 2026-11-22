@@ -594,6 +594,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - Ideon [@MickLesk](https://github.com/MickLesk) ([#18915](https://github.com/community-scripts/ProxmoxVE/pull/18915))
 - Mathesar [@MickLesk](https://github.com/MickLesk) ([#18914](https://github.com/community-scripts/ProxmoxVE/pull/18914))
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - FIX: Add flag to Grimmory install script to mitigate CVE-2026-114938 [@zekaptain](https://github.com/zekaptain) ([#18923](https://github.com/community-scripts/ProxmoxVE/pull/18923))
+
 ## 2026-11-21
 
 ### 🚀 Updated Scripts
