@@ -17,7 +17,6 @@ fetch_and_deploy_gh_release "gopeed" "GopeedLab/gopeed" "prebuild" "latest" "/op
 
 msg_info "Configuring Gopeed"
 mkdir -p /opt/gopeed_data/{storage,downloads}
-# downloadConfig only seeds the first start; afterwards Gopeed keeps its settings in storage/gopeed.db
 cat <<EOF >/opt/gopeed_data/config.json
 {
   "address": "0.0.0.0",
