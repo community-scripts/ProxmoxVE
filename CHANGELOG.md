@@ -599,6 +599,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Update authentik to 2026.8.6 [@thieneret](https://github.com/thieneret) ([#18912](https://github.com/community-scripts/ProxmoxVE/pull/18912))
     - FIX: Add flag to Grimmory install script to mitigate CVE-2026-114938 [@zekaptain](https://github.com/zekaptain) ([#18923](https://github.com/community-scripts/ProxmoxVE/pull/18923))
 
 ## 2026-11-21
