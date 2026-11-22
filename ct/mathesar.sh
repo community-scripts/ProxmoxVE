@@ -37,7 +37,6 @@ function update_script() {
     msg_ok "Stopped Mathesar"
 
     PYTHON_VERSION="3.12" setup_uv
-    # Upstream reads these optional config files from its install directory only
     CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="sso.yml file_storage.yml login_page.yml" fetch_and_deploy_gh_release "mathesar" "mathesar-foundation/mathesar" "prebuild" "latest" "/opt/mathesar" "mathesar.tar.gz"
 
     msg_info "Updating Mathesar"
