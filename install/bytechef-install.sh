@@ -35,7 +35,6 @@ msg_ok "Built ByteChef"
 
 msg_info "Configuring ByteChef"
 mkdir -p /opt/bytechef_data/file-storage
-# ~/.bytechef is the version file, so ByteChef must not fall back to its ~/.bytechef home for keys or files
 cat <<EOF >/opt/bytechef_data/.env
 BYTECHEF_DATASOURCE_URL=jdbc:postgresql://localhost:5432/bytechef
 BYTECHEF_DATASOURCE_USERNAME=bytechef
