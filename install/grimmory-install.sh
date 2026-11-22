@@ -45,7 +45,7 @@ Requires=mariadb.service
 Type=simple
 WorkingDirectory=/opt/grimmory_data
 EnvironmentFile=/opt/grimmory_data/.env
-ExecStart=/usr/bin/java -XX:+UseCompactObjectHeaders -XX:MaxRAMPercentage=60.0 -XX:+ExitOnOutOfMemoryError --enable-native-access=ALL-UNNAMED --enable-preview -jar /opt/grimmory/grimmory.jar
+ExecStart=/usr/bin/java -XX:+UseCompactObjectHeaders -XX:MaxRAMPercentage=60.0 -XX:+ExitOnOutOfMemoryError -XX:-UseBASE64Intrinsics --enable-native-access=ALL-UNNAMED --enable-preview -jar /opt/grimmory/grimmory.jar
 SuccessExitStatus=143
 Restart=on-failure
 RestartSec=5
