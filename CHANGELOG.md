@@ -606,6 +606,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🔧 Refactor
 
+    - several scripts: update prompts - take the default or skip when nobody can answer [@MickLesk](https://github.com/MickLesk) ([#18931](https://github.com/community-scripts/ProxmoxVE/pull/18931))
     - splunk, immich: let var_* answer the last install prompts [@MickLesk](https://github.com/MickLesk) ([#18932](https://github.com/community-scripts/ProxmoxVE/pull/18932))
 
 ## 2026-11-21
