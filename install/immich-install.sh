@@ -25,17 +25,20 @@ fi
 
 RELEASE="v3.4.1"
 if lscpu | grep -q 'GenuineIntel'; then
-  echo ""
-  echo ""
-  echo -e "🤖 ${BL}Immich Machine-Learning Options${CL}"
-  echo "─────────────────────────────────────────"
-  echo "Please choose your machine-learning type:"
-  echo ""
-  echo " 1) CPU only (default)"
-  echo " 2) **NEW** Intel OpenVINO CPU or iGPU"
-  echo ""
+  ML_TYPE="${var_immich_ml_type:-}"
+  if [[ -z "$ML_TYPE" ]]; then
+    echo ""
+    echo ""
+    echo -e "🤖 ${BL}Immich Machine-Learning Options${CL}"
+    echo "─────────────────────────────────────────"
+    echo "Please choose your machine-learning type:"
+    echo ""
+    echo " 1) CPU only (default)"
+    echo " 2) **NEW** Intel OpenVINO CPU or iGPU"
+    echo ""
 
-  read -r -p "${TAB3}Select machine-learning type [1]: " ML_TYPE || true
+    read -r -p "${TAB3}Select machine-learning type [1]: " ML_TYPE || true
+  fi
   ML_TYPE="${ML_TYPE:-1}"
   if [[ "$ML_TYPE" == "2" ]]; then
     touch ~/.openvino
