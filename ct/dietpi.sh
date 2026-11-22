@@ -44,11 +44,7 @@ build_container
 description
 
 msg_info "Restarting ${APP} for DietPi's first boot"
-if command -v pct &>/dev/null; then
-  pct reboot "$CTID"
-else
-  incus restart "$CTID"
-fi
+ct_restart
 msg_ok "Restarted ${APP}"
 
 msg_ok "Completed successfully!"

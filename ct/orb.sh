@@ -45,4 +45,4 @@ description
 msg_ok "Completed Successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${TAB}${GATEWAY}${BGN}To link the sensor to your orb account run:${CL}"
-echo -e "${TAB}${GATEWAY}${BGN}pct exec ${CTID} -- runuser -u orb -- orb link${CL}"
+echo -e "${TAB}${GATEWAY}${BGN}$(ct_exec_hint runuser -u orb -- orb link)${CL}"
