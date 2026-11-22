@@ -609,6 +609,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - several scripts: update prompts - take the default or skip when nobody can answer [@MickLesk](https://github.com/MickLesk) ([#18931](https://github.com/community-scripts/ProxmoxVE/pull/18931))
     - splunk, immich: let var_* answer the last install prompts [@MickLesk](https://github.com/MickLesk) ([#18932](https://github.com/community-scripts/ProxmoxVE/pull/18932))
 
+### 💾 Core
+
+  - Resume a VM image download that broke off [@MickLesk](https://github.com/MickLesk) ([core#290](https://github.com/community-scripts/core/pull/290))
+
 ## 2026-11-21
 
 ### 🚀 Updated Scripts
