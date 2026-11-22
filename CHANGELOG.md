@@ -135,6 +135,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 
+
+
+
 <details>
 <summary><h2>📜 History</h2></summary>
 
@@ -144,7 +147,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 
 <details>
-<summary><h4>November (14 entries)</h4></summary>
+<summary><h4>November (21 entries)</h4></summary>
 
 [View November 2026 Changelog](.github/changelogs/2026/11.md)
 
@@ -1512,140 +1515,3 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 - general: allow Composer as root in every script [@MickLesk](https://github.com/MickLesk) ([core#161](https://github.com/community-scripts/core/pull/161))
 - lxc-updater: skip the resource check when the container cannot read its RAM [@MickLesk](https://github.com/MickLesk) ([core#160](https://github.com/community-scripts/core/pull/160))
 - vm-core: let vm_timezone_default survive a host without /etc/timezone [@MickLesk](https://github.com/MickLesk) ([core#159](https://github.com/community-scripts/core/pull/159))
-
-## 2026-10-22
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Zabbix: keep unattended updates on the installed series [@florianpunz](https://github.com/florianpunz) ([#18051](https://github.com/community-scripts/ProxmoxVE/pull/18051))
-
-  - #### 🔧 Refactor
-
-    - Refactor: Cryptpad [@MickLesk](https://github.com/MickLesk) ([#18065](https://github.com/community-scripts/ProxmoxVE/pull/18065))
-
-### 💾 Core
-
-  - Incus: drive a remote Incus server from the client's default remote [@MickLesk](https://github.com/MickLesk) ([core#154](https://github.com/community-scripts/core/pull/154))
-- Deploy the release again when an update is redone [@MickLesk](https://github.com/MickLesk) ([core#158](https://github.com/community-scripts/core/pull/158))
-
-### ❔ Uncategorized
-
-  - chore(ct): sync sparkyfitness defaults with PocketBase [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18061](https://github.com/community-scripts/ProxmoxVE/pull/18061))
-
-## 2026-10-21
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Immich: bump release version to v3.3.5 (CVE) [@CerberusStyle](https://github.com/CerberusStyle) ([#18057](https://github.com/community-scripts/ProxmoxVE/pull/18057))
-    - DroppedNeedle: pass release version to the app via COMMIT_TAG [@MickLesk](https://github.com/MickLesk) ([#18042](https://github.com/community-scripts/ProxmoxVE/pull/18042))
-
-### 💾 Core
-
-  - Keep the version an update started from across a redo [@MickLesk](https://github.com/MickLesk) ([core#156](https://github.com/community-scripts/core/pull/156))
-- Redo an update whose run did not finish after the deploy [@MickLesk](https://github.com/MickLesk) ([core#155](https://github.com/community-scripts/core/pull/155))
-
-## 2026-10-20
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Plane: give Silo its own HOME [@MickLesk](https://github.com/MickLesk) ([#18028](https://github.com/community-scripts/ProxmoxVE/pull/18028))
-    - Immich: Pin version to 3.3.4 [@vhsdream](https://github.com/vhsdream) ([#18036](https://github.com/community-scripts/ProxmoxVE/pull/18036))
-    - InvenTree: run apt under systemd so postinst can finish [@MickLesk](https://github.com/MickLesk) ([#18029](https://github.com/community-scripts/ProxmoxVE/pull/18029))
-    - Profilarr: pass the deno pin as the version [@MickLesk](https://github.com/MickLesk) ([#18025](https://github.com/community-scripts/ProxmoxVE/pull/18025))
-    - Silo: keep the version file out of ~/.silo [@MickLesk](https://github.com/MickLesk) ([#18030](https://github.com/community-scripts/ProxmoxVE/pull/18030))
-    - InvenTree: move to go.packager.io [@MickLesk](https://github.com/MickLesk) ([#18015](https://github.com/community-scripts/ProxmoxVE/pull/18015))
-    - Zitadel: run init and setup in the foreground [@MickLesk](https://github.com/MickLesk) ([#18016](https://github.com/community-scripts/ProxmoxVE/pull/18016))
-
-  - #### ✨ New Features
-
-    - Zitadel: Support v1 and v2 Login [@MickLesk](https://github.com/MickLesk) ([#18031](https://github.com/community-scripts/ProxmoxVE/pull/18031))
-
-  - #### 🔧 Refactor
-
-    - Refactor: OpenWebUI (remove numba pin)  [@MickLesk](https://github.com/MickLesk) ([#18026](https://github.com/community-scripts/ProxmoxVE/pull/18026))
-
-### 💾 Core
-
-  - Only treat an NVIDIA GPU as present when its device nodes are [@MickLesk](https://github.com/MickLesk) ([core#153](https://github.com/community-scripts/core/pull/153))
-
-## 2026-10-19
-
-### 🆕 New Scripts
-
-  - Calagopus ([#18012](https://github.com/community-scripts/ProxmoxVE/pull/18012))
-- Netronome ([#18011](https://github.com/community-scripts/ProxmoxVE/pull/18011))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - immich: record library revisions when the line is missing [@mazelado](https://github.com/mazelado) ([#17990](https://github.com/community-scripts/ProxmoxVE/pull/17990))
-    - Update authentik 2026.8.4 [@thieneret](https://github.com/thieneret) ([#18004](https://github.com/community-scripts/ProxmoxVE/pull/18004))
-
-  - #### ✨ New Features
-
-    - feat(mealie): add reverse proxy auth settings to mealie.env [@bferd](https://github.com/bferd) ([#18006](https://github.com/community-scripts/ProxmoxVE/pull/18006))
-
-## 2026-10-18
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Donetick: create selfhosted.yaml from the example [@MickLesk](https://github.com/MickLesk) ([#17992](https://github.com/community-scripts/ProxmoxVE/pull/17992))
-    - Wiki.js: only back up db.sqlite on SQLite installs [@MickLesk](https://github.com/MickLesk) ([#17993](https://github.com/community-scripts/ProxmoxVE/pull/17993))
-    - FlareSolverr: pass Chrome an en-US Accept-Language [@MickLesk](https://github.com/MickLesk) ([#17995](https://github.com/community-scripts/ProxmoxVE/pull/17995))
-    - 2FAuth: install the locked dependencies [@MickLesk](https://github.com/MickLesk) ([#17996](https://github.com/community-scripts/ProxmoxVE/pull/17996))
-    - Tracearr: drop the pnpm store after the update build [@gioxx](https://github.com/gioxx) ([#17869](https://github.com/community-scripts/ProxmoxVE/pull/17869))
-    - vaultwarden: build before stopping the service [@mazelado](https://github.com/mazelado) ([#17983](https://github.com/community-scripts/ProxmoxVE/pull/17983))
-
-  - #### 💥 Breaking Changes
-
-    - fix: geopulse 2.0.0 upgrade support (nginx .mjs, pg18, jwt cleanup) [@CrazyWolf13](https://github.com/CrazyWolf13) ([#17978](https://github.com/community-scripts/ProxmoxVE/pull/17978))
-
-### 💾 Core
-
-  - Let get_current_ip reach its IPv6 fallback [@MickLesk](https://github.com/MickLesk) ([core#151](https://github.com/community-scripts/core/pull/151))
-- Drop apt autoclean before apt clean [@MickLesk](https://github.com/MickLesk) ([core#152](https://github.com/community-scripts/core/pull/152))
-- Silence apt's script warning in $STD [@MickLesk](https://github.com/MickLesk) ([core#150](https://github.com/community-scripts/core/pull/150))
-
-## 2026-10-17
-
-### 🆕 New Scripts
-
-  - ProxCenter ([#17961](https://github.com/community-scripts/ProxmoxVE/pull/17961))
-- Listenarr ([#17963](https://github.com/community-scripts/ProxmoxVE/pull/17963))
-- Youtarr ([#17962](https://github.com/community-scripts/ProxmoxVE/pull/17962))
-- Norish ([#17964](https://github.com/community-scripts/ProxmoxVE/pull/17964))
-
-### 🚀 Updated Scripts
-
-  - #### 🔧 Refactor
-
-    - Sonarr: stay on the newest v4 (pin) [@MickLesk](https://github.com/MickLesk) ([#17958](https://github.com/community-scripts/ProxmoxVE/pull/17958))
-
-## 2026-10-16
-
-### 🆕 New Scripts
-
-  - Downtify ([#17959](https://github.com/community-scripts/ProxmoxVE/pull/17959))
-- openGym ([#17960](https://github.com/community-scripts/ProxmoxVE/pull/17960))
-
-### 🚀 Updated Scripts
-
-  - #### 🐞 Bug Fixes
-
-    - Pelican Panel: pass the URL to p:environment:setup [@MickLesk](https://github.com/MickLesk) ([#17948](https://github.com/community-scripts/ProxmoxVE/pull/17948))
-    - OneDev: use the onedev.server unit of 16.9 [@MickLesk](https://github.com/MickLesk) ([#17949](https://github.com/community-scripts/ProxmoxVE/pull/17949))
-    - ReadMeABook: start the scheduler with the service [@MickLesk](https://github.com/MickLesk) ([#17950](https://github.com/community-scripts/ProxmoxVE/pull/17950))
-
-### 💾 Core
-
-  - Clean up after installs and updates again [@MickLesk](https://github.com/MickLesk) ([core#147](https://github.com/community-scripts/core/pull/147))
-- Fix apt_conffile_report exiting 1 when uutils comm sees locale-sorted input [@BadFlo](https://github.com/BadFlo) ([core#146](https://github.com/community-scripts/core/pull/146))
