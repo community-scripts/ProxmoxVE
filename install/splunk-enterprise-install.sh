@@ -23,9 +23,16 @@ echo -e "${TAB3}Please review the terms at:"
 echo -e "${TAB3}${GATEWAY}${BGN}https://www.splunk.com/en_us/legal/splunk-general-terms.html${CL}"
 echo ""
 
+response="${var_splunk_accept_terms:-}"
 while true; do
-    echo -e "${TAB3}Do you accept the Splunk General Terms? (y/N): \c"
-    read -r response
+    if [[ -z "$response" ]]; then
+        echo -e "${TAB3}Do you accept the Splunk General Terms? (y/N): \c"
+        if ! read -r response; then
+            echo ""
+            msg_error "No terminal to accept the terms on. Set var_splunk_accept_terms=yes to install unattended."
+            exit 254
+        fi
+    fi
     case $response in
     [Yy] | [Yy][Ee][Ss])
         msg_ok "Terms accepted. Proceeding with installation..."
@@ -38,6 +45,7 @@ while true; do
         ;;
     *)
         msg_error "Invalid response. Please enter 'y' for yes or 'n' for no."
+        response=""
         ;;
     esac
 done
