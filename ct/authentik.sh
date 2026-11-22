@@ -250,9 +250,9 @@ EOF
   	fi
   	msg_ok "Started Services"
 
-  msg_info "Waiting for authentik to become ready"
+  msg_info "Waiting for authentik to become ready (up to 300s)"
   CODE=000
-  for _ in {1..36}; do
+  for _ in {1..60}; do
     CODE=$(curl -ksI -m 3 https://127.0.0.1:9443/ | sed -n 's,^HTTP/[0-9.]* \([0-9]\{3\}\).*,\1,p' || true)
     [[ "$CODE" == "200" || "$CODE" == "302" ]] && break
     sleep 5
@@ -260,7 +260,7 @@ EOF
   if [[ "$CODE" == "200" || "$CODE" == "302" ]]; then
     msg_ok "authentik is responding (HTTP ${CODE})"
   else
-    msg_warn "authentik did not start responding (HTTP ${CODE}) within 180s. It may still be booting (migrations after an upgrade can take longer); check: journalctl -eu authentik-server"
+    msg_warn "authentik did not start responding (HTTP ${CODE}) within 300s. It may still be booting (migrations after an upgrade can take longer); check: journalctl -eu authentik-server"
   fi
 
   fi
@@ -285,9 +285,9 @@ msg_info "Starting Services"
 ct_exec systemctl enable -q --now authentik-server authentik-worker
 msg_ok "Started Services"
 
-msg_info "Waiting for authentik to become ready"
+msg_info "Waiting for authentik to become ready (up to 300s)"
 CODE=000
-for _ in {1..36}; do
+for _ in {1..60}; do
   CODE=$(pct exec "$CTID" -- curl -ksI -m 3 https://127.0.0.1:9443/ | sed -n 's,^HTTP/[0-9.]* \([0-9]\{3\}\).*,\1,p' || true)
   [[ "$CODE" == "200" || "$CODE" == "302" ]] && break
   sleep 5
@@ -295,7 +295,7 @@ done
 if [[ "$CODE" == "200" || "$CODE" == "302" ]]; then
   msg_ok "authentik is responding (HTTP ${CODE})"
 else
-  msg_warn "authentik did not start responding (HTTP ${CODE}) within 180s. It may still be booting (first boot runs migrations); check: pct exec ${CTID} -- journalctl -eu authentik-server"
+  msg_warn "authentik did not start responding (HTTP ${CODE}) within 300s. It may still be booting (first boot runs migrations); check: pct exec ${CTID} -- journalctl -eu authentik-server"
 fi
 
 description
