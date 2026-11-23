@@ -612,6 +612,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Authentik, DietPi, Orb: use the engine's host-side helpers instead of pct [@MickLesk](https://github.com/MickLesk) ([#18949](https://github.com/community-scripts/ProxmoxVE/pull/18949))
     - UrBackup Server, Paperless-ngx: no pct calls in the ct script [@MickLesk](https://github.com/MickLesk) ([#18950](https://github.com/community-scripts/ProxmoxVE/pull/18950))
 
   - #### 🔧 Refactor
