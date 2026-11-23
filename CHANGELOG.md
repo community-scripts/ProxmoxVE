@@ -602,6 +602,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - DietPi: no console autologin, write the pre-login banner [@mews-se](https://github.com/mews-se) ([#18954](https://github.com/community-scripts/ProxmoxVE/pull/18954))
     - ideon: bump Node.js from 24 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18958](https://github.com/community-scripts/ProxmoxVE/pull/18958))
     - directus: bump Node.js from 22 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18987](https://github.com/community-scripts/ProxmoxVE/pull/18987))
     - portabase: bump Node.js from 22 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18988](https://github.com/community-scripts/ProxmoxVE/pull/18988))
