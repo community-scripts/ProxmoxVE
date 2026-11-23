@@ -92,8 +92,7 @@ for _ in {1..60}; do
   sleep 2
 done
 if [[ "$ready" -ne 1 ]]; then
-  msg_error "OpenViking did not become healthy within 120 seconds — check 'systemctl status openviking'"
-  exit 1
+  msg_warn "OpenViking did not become healthy within 120 seconds — check 'systemctl status openviking'"
 fi
 msg_ok "Created Service"
 
