@@ -591,7 +591,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - FreeScout [@MickLesk](https://github.com/MickLesk) ([#18930](https://github.com/community-scripts/ProxmoxVE/pull/18930))
+  - JumpServer [@opastorello](https://github.com/opastorello) ([#18947](https://github.com/community-scripts/ProxmoxVE/pull/18947))
+- FreeScout [@MickLesk](https://github.com/MickLesk) ([#18930](https://github.com/community-scripts/ProxmoxVE/pull/18930))
 - Anubis [@opastorello](https://github.com/opastorello) ([#18926](https://github.com/community-scripts/ProxmoxVE/pull/18926))
 - OpenViking [@mfelipe](https://github.com/mfelipe) ([#18979](https://github.com/community-scripts/ProxmoxVE/pull/18979))
 - Oracle Linux [@MickLesk](https://github.com/MickLesk) ([#18945](https://github.com/community-scripts/ProxmoxVE/pull/18945))
