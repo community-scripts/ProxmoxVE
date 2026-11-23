@@ -30,6 +30,8 @@ function update_script() {
     msg_error "No ${APP} Installation Found!"
     exit
   fi
+  
+  NODE_VERSION="26" setup_nodejs
 
   msg_info "Stopping Service"
   systemctl stop t3code
