@@ -16,10 +16,15 @@ update_os
 fetch_and_deploy_gh_release "airconnect" "philippe44/AirConnect" "prebuild" "latest" "/opt/airconnect" "AirConnect-*.zip"
 
 msg_info "Configuring AirConnect"
-chmod +x /opt/airconnect/airupnp-linux-$(arch_resolve x86_64 aarch64) /opt/airconnect/aircast-linux-$(arch_resolve x86_64 aarch64)
-ln -sf /opt/airconnect/airupnp-linux-$(arch_resolve x86_64 aarch64) /opt/airconnect/airupnp
-ln -sf /opt/airconnect/aircast-linux-$(arch_resolve x86_64 aarch64) /opt/airconnect/aircast
-find /opt/airconnect -maxdepth 1 -type f ! -name "air*linux-$(arch_resolve x86_64 aarch64)*" ! -name "airupnp" ! -name "aircast" ! -name "*.xml" -delete
+ARCH=$(arch_resolve x86_64 aarch64)
+chmod +x "/opt/airconnect/airupnp-linux-${ARCH}" "/opt/airconnect/aircast-linux-${ARCH}"
+ln -sf "/opt/airconnect/airupnp-linux-${ARCH}" /opt/airconnect/airupnp
+ln -sf "/opt/airconnect/aircast-linux-${ARCH}" /opt/airconnect/aircast
+find /opt/airconnect -maxdepth 1 -type f ! -name "airupnp-linux-${ARCH}" ! -name "aircast-linux-${ARCH}" ! -name "*.xml" -delete
+cat <<EOF >/etc/default/airconnect
+AIRUPNP_OPTS="-l 1000:2000"
+AIRCAST_OPTS=""
+EOF
 msg_ok "Configured AirConnect"
 
 msg_info "Creating Services"
@@ -33,7 +38,8 @@ Wants=network-online.target
 Type=simple
 User=root
 WorkingDirectory=/opt/airconnect
-ExecStart=/opt/airconnect/airupnp -l 1000:2000 -Z -x /opt/airconnect/airupnp.xml
+EnvironmentFile=-/etc/default/airconnect
+ExecStart=/opt/airconnect/airupnp -Z -x /opt/airconnect/airupnp.xml \$AIRUPNP_OPTS
 Restart=on-failure
 RestartSec=5
 
@@ -52,7 +58,8 @@ Wants=network-online.target
 Type=simple
 User=root
 WorkingDirectory=/opt/airconnect
-ExecStart=/opt/airconnect/aircast -Z -x /opt/airconnect/aircast.xml
+EnvironmentFile=-/etc/default/airconnect
+ExecStart=/opt/airconnect/aircast -Z -x /opt/airconnect/aircast.xml \$AIRCAST_OPTS
 Restart=on-failure
 RestartSec=5
 
