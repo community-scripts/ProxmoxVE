@@ -32,6 +32,7 @@ function update_script() {
   fi
 
   NODE_VERSION="24" setup_nodejs
+  fetch_and_deploy_gh_release "deno" "denoland/deno" "prebuild" "latest" "/usr/local/bin" "deno-$(arch_resolve "x86_64" "aarch64")-unknown-linux-gnu.zip"
 
   if check_for_gh_release "soulsync" "Nezreka/SoulSync"; then
     msg_info "Stopping Service"
@@ -47,7 +48,7 @@ function update_script() {
     msg_info "Updating Python Dependencies"
     cd /opt/soulsync
     $STD uv venv --clear /opt/soulsync/.venv --python 3.11
-    $STD uv pip install -r requirements.txt
+    $STD uv pip install -r requirements.txt "yt-dlp[default]"
     msg_ok "Updated Python Dependencies"
 
     msg_info "Building WebUI"
@@ -60,6 +61,13 @@ function update_script() {
     systemctl start soulsync
     msg_ok "Started Service"
     msg_ok "Updated ${APP}"
+  fi
+
+  if ! /opt/soulsync/.venv/bin/python -c "import yt_dlp_ejs" &>/dev/null; then
+    msg_info "Installing YouTube Challenge Solver"
+    $STD uv pip install "yt-dlp[default]" --python /opt/soulsync/.venv/bin/python
+    systemctl restart soulsync
+    msg_ok "Installed YouTube Challenge Solver"
   fi
   exit
 }
