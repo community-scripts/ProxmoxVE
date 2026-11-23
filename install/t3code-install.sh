@@ -20,7 +20,7 @@ $STD apt install -y \
   bubblewrap
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="24" setup_nodejs
+NODE_VERSION="26" setup_nodejs
 
 msg_info "Installing T3 Code and Provider CLIs"
 $STD npm install -g \
