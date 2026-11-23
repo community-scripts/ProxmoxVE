@@ -610,6 +610,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - airconnect: fix disabled service restart, static binary cleanup, and flag overrides [@cwmoriarty](https://github.com/cwmoriarty) ([#18955](https://github.com/community-scripts/ProxmoxVE/pull/18955))
     - bulwark: bump Node.js from 24 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18957](https://github.com/community-scripts/ProxmoxVE/pull/18957))
 
+  - #### ✨ New Features
+
+    - UrBackup Server, Paperless-ngx: no pct calls in the ct script [@MickLesk](https://github.com/MickLesk) ([#18950](https://github.com/community-scripts/ProxmoxVE/pull/18950))
+
   - #### 🔧 Refactor
 
     - several scripts: run the install's setup_nodejs in the update of 86 scripts [@MickLesk](https://github.com/MickLesk) ([#18981](https://github.com/community-scripts/ProxmoxVE/pull/18981))
