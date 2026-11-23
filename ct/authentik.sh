@@ -213,20 +213,8 @@ start
 build_container
 
 msg_info "Attaching data storage volume"
-$STD pct stop "$CTID"
-if [ "${PROTECT_CT:-}" == "1" ] || [ "${PROTECT_CT:-}" == "yes" ]; then
-  $STD pct set "$CTID" --protection 0
-  $STD pct set "$CTID" -mp0 "${CONTAINER_STORAGE}":1,mp=/opt/authentik-data,backup=1
-  $STD pct set "$CTID" --protection 1
-else
-  $STD pct set "$CTID" -mp0 "${CONTAINER_STORAGE}":1,mp=/opt/authentik-data,backup=1
-fi
-$STD pct start "$CTID"
-for i in {1..10}; do
-  pct status "$CTID" | grep -q "status: running" && break
-  sleep 1
-done
-$STD pct exec "$CTID" -- bash -c "mkdir -p /opt/authentik-data/{certs,media,geoip,templates}; \
+ct_attach_volume 1 /opt/authentik-data
+$STD ct_exec bash -c "mkdir -p /opt/authentik-data/{certs,media,geoip,templates}; \
   cp /opt/authentik/tests/geoip/GeoLite2-ASN-Test.mmdb /opt/authentik-data/geoip/GeoLite2-ASN.mmdb; \
   cp /opt/authentik/tests/geoip/GeoLite2-City-Test.mmdb /opt/authentik-data/geoip/GeoLite2-City.mmdb; \
   cp -r /opt/authentik/blueprints /opt/authentik-data/; \
@@ -235,7 +223,7 @@ $STD pct exec "$CTID" -- bash -c "mkdir -p /opt/authentik-data/{certs,media,geoi
 msg_ok "Attached data storage volume"
 
 msg_info "Starting Services"
-pct exec "$CTID" -- systemctl enable -q --now authentik-server authentik-worker
+ct_exec systemctl enable -q --now authentik-server authentik-worker
 msg_ok "Started Services"
 
 description
