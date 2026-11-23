@@ -602,6 +602,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - t3code: bump Node.js from 24 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18959](https://github.com/community-scripts/ProxmoxVE/pull/18959))
     - airconnect: fix disabled service restart, static binary cleanup, and flag overrides [@cwmoriarty](https://github.com/cwmoriarty) ([#18955](https://github.com/community-scripts/ProxmoxVE/pull/18955))
     - bulwark: bump Node.js from 24 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18957](https://github.com/community-scripts/ProxmoxVE/pull/18957))
 
