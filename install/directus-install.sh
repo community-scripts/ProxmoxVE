@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y build-essential
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" setup_nodejs
+NODE_VERSION="26" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="directus" PG_DB_USER="directus" setup_postgresql_db
 
