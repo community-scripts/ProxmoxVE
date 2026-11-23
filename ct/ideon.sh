@@ -34,6 +34,8 @@ function update_script() {
   $STD sudo -u postgres psql -c "ALTER ROLE ideon BYPASSRLS;"
 
   if check_for_gh_release "ideon" "3xpyth0n/ideon"; then
+    NODE_VERSION="26" setup_nodejs
+    
     msg_info "Stopping Ideon"
     systemctl stop ideon
     msg_ok "Stopped Ideon"
