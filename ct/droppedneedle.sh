@@ -8,9 +8,9 @@ source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_
 
 APP="DroppedNeedle"
 var_tags="${var_tags:-arr;media}"
-var_cpu="${var_cpu:-4}"
-var_ram="${var_ram:-6144}"
-var_disk="${var_disk:-16}"
+var_cpu="${var_cpu:-2}"
+var_ram="${var_ram:-4096}"
+var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
 var_arm64="${var_arm64:-yes}"
@@ -50,35 +50,14 @@ function update_script() {
       msg_ok "Stopped Service"
     fi
 
-    msg_info "Installing Dependencies"
-    $STD apt install -y build-essential cmake pkg-config ffmpeg python3
-    msg_ok "Installed Dependencies"
-
-    RUST_PROFILE="minimal" setup_rust
-    NODE_VERSION="22" NODE_MODULE="pnpm@10.33.0" setup_nodejs
-    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="backend/config backend/cache backend/plugins backend/imports" fetch_and_deploy_gh_release "droppedneedle" "DroppedNeedle/DroppedNeedle" "tarball"
-
-    msg_info "Building Frontend"
-    cd /opt/droppedneedle/frontend
-    export NODE_OPTIONS="--max-old-space-size=3072"
-    $STD pnpm install --frozen-lockfile && DROPPEDNEEDLE_BASE_PATH_PLACEHOLDER=1 $STD pnpm run build || {
+    ensure_dependencies ffmpeg python3
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="backend/config backend/cache backend/plugins backend/imports frontend" fetch_and_deploy_gh_release "droppedneedle" "DroppedNeedle/DroppedNeedle" "prebuild" "latest" "/opt/droppedneedle" "droppedneedle-v*-$(arch_resolve x86_64 aarch64)-linux.tar.gz" &&
+      CLEAN_INSTALL=1 fetch_and_deploy_gh_release "droppedneedle-frontend" "DroppedNeedle/DroppedNeedle" "prebuild" "latest" "/opt/droppedneedle/frontend" "droppedneedle-frontend-v*.tar.gz" || {
       echo "$OLD_VERSION" >~/.droppedneedle
-      msg_error "Frontend build failed; the old version stays recorded, run update again"
+      msg_error "Download failed; the old version stays recorded, run update again"
       exit 1
     }
-    rm -rf node_modules
-    msg_ok "Built Frontend"
-
-    msg_info "Building DroppedNeedle (Patience)"
-    cd /opt/droppedneedle
-    $STD cargo build --release --locked --manifest-path server/Cargo.toml --bins -p droppedneedle -p droppedneedle-tool || {
-      echo "$OLD_VERSION" >~/.droppedneedle
-      msg_error "Build failed; the old version stays recorded, run update again"
-      exit 1
-    }
-    cp server/target/release/droppedneedle server/target/release/droppedneedle-tool /usr/local/bin/
-    rm -rf server/target
-    msg_ok "Built DroppedNeedle"
+    rm -f /usr/local/bin/droppedneedle /usr/local/bin/droppedneedle-tool
 
     if [[ "$MIGRATING" == "true" ]]; then
       msg_info "Migrating Musicseerr Data"
@@ -105,11 +84,12 @@ Type=simple
 User=root
 WorkingDirectory=/opt/droppedneedle/backend
 Environment=ROOT_APP_DIR=/opt/droppedneedle/backend
-Environment=DROPPEDNEEDLE_STATIC_DIR=/opt/droppedneedle/frontend/build
+Environment=DROPPEDNEEDLE_STATIC_DIR=/opt/droppedneedle/frontend/static
 Environment=PORT=8688
 Environment=COMMIT_TAG=v$(<~/.droppedneedle)
+Environment=TZ=$(cat /etc/timezone 2>/dev/null || echo Etc/UTC)
 ${SLSKD_LINE}
-ExecStart=/usr/local/bin/droppedneedle
+ExecStart=/opt/droppedneedle/droppedneedle
 Restart=on-failure
 RestartSec=5
 

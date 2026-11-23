@@ -15,32 +15,13 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-  build-essential \
-  cmake \
-  pkg-config \
   ffmpeg \
   python3
 msg_ok "Installed Dependencies"
 
-RUST_PROFILE="minimal" setup_rust
-NODE_VERSION="22" NODE_MODULE="pnpm@10.33.0" setup_nodejs
-fetch_and_deploy_gh_release "droppedneedle" "DroppedNeedle/DroppedNeedle" "tarball"
-
-msg_info "Building Frontend"
-cd /opt/droppedneedle/frontend
-export NODE_OPTIONS="--max-old-space-size=3072"
-$STD pnpm install --frozen-lockfile
-DROPPEDNEEDLE_BASE_PATH_PLACEHOLDER=1 $STD pnpm run build
-rm -rf node_modules
-msg_ok "Built Frontend"
-
-msg_info "Building DroppedNeedle (Patience)"
-cd /opt/droppedneedle
-$STD cargo build --release --locked --manifest-path server/Cargo.toml --bins -p droppedneedle -p droppedneedle-tool
-cp server/target/release/droppedneedle server/target/release/droppedneedle-tool /usr/local/bin/
-rm -rf server/target
+fetch_and_deploy_gh_release "droppedneedle" "DroppedNeedle/DroppedNeedle" "prebuild" "latest" "/opt/droppedneedle" "droppedneedle-v*-$(arch_resolve x86_64 aarch64)-linux.tar.gz"
+fetch_and_deploy_gh_release "droppedneedle-frontend" "DroppedNeedle/DroppedNeedle" "prebuild" "latest" "/opt/droppedneedle/frontend" "droppedneedle-frontend-v*.tar.gz"
 mkdir -p /opt/droppedneedle/backend/{config,cache,plugins,imports}
-msg_ok "Built DroppedNeedle"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/droppedneedle.service
@@ -53,11 +34,12 @@ Type=simple
 User=root
 WorkingDirectory=/opt/droppedneedle/backend
 Environment=ROOT_APP_DIR=/opt/droppedneedle/backend
-Environment=DROPPEDNEEDLE_STATIC_DIR=/opt/droppedneedle/frontend/build
+Environment=DROPPEDNEEDLE_STATIC_DIR=/opt/droppedneedle/frontend/static
 Environment=PORT=8688
 Environment=COMMIT_TAG=v$(<~/.droppedneedle)
+Environment=TZ=$(cat /etc/timezone 2>/dev/null || echo Etc/UTC)
 # Environment=SLSKD_DOWNLOADS_PATH=<path-to-slskd-downloads>
-ExecStart=/usr/local/bin/droppedneedle
+ExecStart=/opt/droppedneedle/droppedneedle
 Restart=on-failure
 RestartSec=5
 
