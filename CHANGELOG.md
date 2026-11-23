@@ -616,6 +616,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### ✨ New Features
 
+    - Immich: bump to v3.4.2 | Node 26 [@MickLesk](https://github.com/MickLesk) ([#18939](https://github.com/community-scripts/ProxmoxVE/pull/18939))
     - SoulSync: install Deno and the yt-dlp challenge solver [@MickLesk](https://github.com/MickLesk) ([#18899](https://github.com/community-scripts/ProxmoxVE/pull/18899))
     - Authentik, DietPi, Orb: use the engine's host-side helpers instead of pct [@MickLesk](https://github.com/MickLesk) ([#18949](https://github.com/community-scripts/ProxmoxVE/pull/18949))
     - UrBackup Server, Paperless-ngx: no pct calls in the ct script [@MickLesk](https://github.com/MickLesk) ([#18950](https://github.com/community-scripts/ProxmoxVE/pull/18950))
