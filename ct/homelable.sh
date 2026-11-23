@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "homelable" "Pouzor/homelable"; then
+    NODE_VERSION="20" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop homelable
     msg_ok "Stopped Service"

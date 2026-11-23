@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "mastodon" "mastodon/mastodon"; then
+    NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
+
     msg_info "Stopping Services"
     systemctl stop mastodon-web mastodon-sidekiq mastodon-streaming
     msg_ok "Stopped Services"

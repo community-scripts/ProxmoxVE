@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if check_for_gh_tag "drawdb" "drawdb-io/drawdb"; then
+    NODE_VERSION="20" setup_nodejs
+
     CLEAN_INSTALL=1 fetch_and_deploy_gh_tag "drawdb" "drawdb-io/drawdb" "latest" "/opt/drawdb"
 
     msg_info "Rebuilding Frontend"

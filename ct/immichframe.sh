@@ -51,6 +51,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "immichframe" "immichFrame/ImmichFrame"; then
+    NODE_VERSION="22" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop immichframe
     msg_ok "Stopped Service"

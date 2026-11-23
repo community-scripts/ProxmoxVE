@@ -40,6 +40,8 @@ EOF
   fi
 
   if check_for_gh_release "invoiceshelf" "InvoiceShelf/InvoiceShelf"; then
+    NODE_VERSION="24" NODE_MODULE="corepack,pnpm" setup_nodejs
+
     msg_info "Stopping Services"
     systemctl stop caddy
     msg_ok "Stopped Services"

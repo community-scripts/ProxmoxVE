@@ -30,6 +30,8 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "pairdrop" "schlagmichdoch/PairDrop"; then
+    NODE_VERSION="22" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop pairdrop
     msg_ok "Stopped Service"

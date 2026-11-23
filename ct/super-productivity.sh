@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "super-productivity" "super-productivity/super-productivity"; then
+    NODE_VERSION="22" setup_nodejs
+
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "super-productivity" "super-productivity/super-productivity" "tarball"
 
     msg_info "Building Web App"

@@ -33,6 +33,8 @@ function update_script() {
   setup_meilisearch
 
   if check_for_gh_release "openarchiver" "LogicLabs-OU/OpenArchiver"; then
+    NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
+
     msg_info "Stopping Services"
     systemctl stop openarchiver
     msg_ok "Stopped Services"

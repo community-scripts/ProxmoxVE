@@ -35,6 +35,8 @@ function update_script() {
   SITE="$(ls /opt/frappe-bench/sites/*/site_config.json 2>/dev/null | head -1 | cut -d/ -f5)"
   [[ -z "$SITE" ]] && SITE="site1.local"
 
+  NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
+
   msg_info "Stopping ERPNext service"
   $STD supervisorctl stop all
   msg_ok "Stopped ERPNext service"

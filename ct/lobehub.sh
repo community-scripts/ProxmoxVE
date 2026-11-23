@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "lobehub" "lobehub/lobehub"; then
+    NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
+
     msg_info "Stopping Services"
     systemctl stop lobehub
     msg_ok "Stopped Services"

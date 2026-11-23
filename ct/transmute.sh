@@ -37,6 +37,8 @@ function update_script() {
   fetch_and_deploy_gh_release "pandoc" "jgm/pandoc" "binary" "latest" "" "pandoc-*-$(arch_resolve).deb"
 
   if check_for_gh_release "transmute" "transmute-app/transmute"; then
+    NODE_VERSION="25" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop transmute
     msg_ok "Stopped Service"

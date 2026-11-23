@@ -44,6 +44,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "docuseal" "docusealco/docuseal"; then
+    NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
+
     msg_info "Stopping Services"
     systemctl stop docuseal docuseal-sidekiq
     msg_ok "Stopped Services"

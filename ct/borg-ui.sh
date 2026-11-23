@@ -33,6 +33,8 @@ function update_script() {
 
   local changed=0
   if check_for_gh_release "borg-ui" "karanhudia/borg-ui"; then
+    NODE_VERSION="22" setup_nodejs
+
     changed=1
     msg_info "Stopping Service"
     systemctl stop borg-ui

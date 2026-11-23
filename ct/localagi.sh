@@ -33,6 +33,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "localagi" "mudler/LocalAGI"; then
+    NODE_VERSION="24" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop localagi
     msg_ok "Stopped Service"

@@ -37,6 +37,8 @@ function update_script() {
   check_for_gh_release "snapotter" "snapotter-hq/SnapOtter" && UPDATE_AVAILABLE=true
 
   if [[ "$NEEDS_V2_MIGRATION" == true || "$UPDATE_AVAILABLE" == true ]]; then
+    NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop snapotter
     msg_ok "Stopped Service"

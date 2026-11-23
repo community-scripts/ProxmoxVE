@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "nodecast-tv" "technomancer702/nodecast-tv"; then
+    NODE_VERSION="20" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop nodecast-tv
     msg_ok "Stopped Service"

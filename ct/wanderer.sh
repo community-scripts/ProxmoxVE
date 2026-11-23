@@ -175,6 +175,8 @@ EOF
   fi
 
   if check_for_gh_release "wanderer" "open-wanderer/wanderer"; then
+    NODE_VERSION="22" setup_nodejs
+
     msg_info "Stopping service"
     systemctl stop wanderer-web
     msg_ok "Stopped service"

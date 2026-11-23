@@ -31,6 +31,8 @@ function update_script() {
     exit
   fi
   setup_mariadb
+  NODE_VERSION="22" setup_nodejs
+
   msg_info "Updating Shinobi"
   cd /opt/Shinobi
   $STD sh UPDATE.sh

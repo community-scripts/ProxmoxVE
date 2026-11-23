@@ -34,6 +34,8 @@ function update_script() {
   ensure_dependencies ffmpeg
 
   if check_for_gh_release "bambuddy" "maziggy/bambuddy"; then
+    NODE_VERSION="22" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop bambuddy
     msg_ok "Stopped Service"

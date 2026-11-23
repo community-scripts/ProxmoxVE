@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "baserow" "baserow/baserow"; then
+    NODE_VERSION="24" setup_nodejs
+
     msg_info "Stopping Services"
     systemctl stop baserow-backend baserow-celery baserow-celery-beat baserow-celery-export baserow-frontend
     msg_ok "Stopped Services"

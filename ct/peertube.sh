@@ -33,6 +33,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "peertube" "Chocobozzz/PeerTube"; then
+    NODE_VERSION="22" NODE_MODULE="pnpm@^10" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop peertube
     msg_ok "Stopped Service"

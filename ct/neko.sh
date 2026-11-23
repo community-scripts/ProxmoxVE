@@ -33,6 +33,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "neko" "m1k1o/neko"; then
+    NODE_VERSION="22" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop neko
     msg_ok "Stopped Service"

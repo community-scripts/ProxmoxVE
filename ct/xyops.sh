@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "xyops" "pixlcore/xyops"; then
+    NODE_VERSION="24" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop xyops
     msg_ok "Stopped Service"

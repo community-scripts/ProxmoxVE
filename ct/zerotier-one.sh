@@ -35,6 +35,8 @@ function update_script() {
   systemctl stop zerotier-one
   msg_ok "Stopping Service"
 
+  NODE_VERSION="20" setup_nodejs
+
   msg_info "Updating Zerotier-One"
   apt_update_safe
   $STD apt upgrade -y

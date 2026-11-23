@@ -31,6 +31,8 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "bytestash" "jordan-dalby/ByteStash"; then
+    NODE_VERSION="22" setup_nodejs
+
     msg_info "Stopping Services"
     systemctl stop bytestash-backend bytestash-frontend
     msg_ok "Services Stopped"

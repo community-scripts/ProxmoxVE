@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "koel" "koel/koel"; then
+    NODE_VERSION="22" NODE_MODULE="pnpm" setup_nodejs
+
     msg_info "Stopping Services"
     systemctl stop nginx php8.4-fpm
     msg_ok "Stopped Services"

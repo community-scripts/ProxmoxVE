@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "checkmate" "bluewave-labs/Checkmate"; then
+    NODE_VERSION="24" setup_nodejs
+
     msg_info "Stopping Services"
     systemctl stop checkmate-server checkmate-client nginx
     msg_ok "Stopped Services"
