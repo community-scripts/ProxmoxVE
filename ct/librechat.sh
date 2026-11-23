@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if check_for_gh_tag "librechat" "danny-avila/LibreChat" "v"; then
+    NODE_VERSION="24" setup_nodejs
+
     msg_info "Stopping Services"
     systemctl stop librechat rag-api
     msg_ok "Stopped Services"

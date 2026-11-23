@@ -34,6 +34,8 @@ function update_script() {
   ensure_dependencies build-essential ccache
 
   if check_for_gh_release "firecrawl" "firecrawl/firecrawl"; then
+    NODE_VERSION="22" NODE_MODULE="pnpm@11.4.0" setup_nodejs
+
     msg_info "Stopping Services"
     systemctl stop firecrawl firecrawl-playwright
     msg_ok "Stopped Services"

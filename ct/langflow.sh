@@ -35,6 +35,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "langflow" "langflow-ai/langflow"; then
+    NODE_VERSION="24" setup_nodejs
+
     msg_info "Stopping Langflow"
     systemctl stop langflow
     msg_ok "Stopped Langflow"

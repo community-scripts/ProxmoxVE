@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "foldergram" "foldergram/foldergram"; then
+    NODE_VERSION=25 NODE_MODULE="corepack" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop foldergram
     msg_ok "Stopped Service"

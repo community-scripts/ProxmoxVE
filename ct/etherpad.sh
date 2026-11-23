@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "etherpad-lite" "ether/etherpad"; then
+    NODE_VERSION="24" NODE_MODULE="corepack" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop etherpad
     msg_ok "Stopped Service"

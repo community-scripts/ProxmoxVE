@@ -30,6 +30,8 @@ function update_script() {
 
   if [[ -d /opt/meilisearch-ui ]]; then
     if check_for_gh_release "meilisearch-ui" "riccox/meilisearch-ui"; then
+      NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
+
       msg_info "Stopping Meilisearch-UI"
       systemctl stop meilisearch-ui
       msg_ok "Stopped Meilisearch-UI"

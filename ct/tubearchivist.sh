@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if [[ ! -f /etc/systemd/system/bgutil-provider.service ]]; then
+    NODE_VERSION="24" setup_nodejs
+
     msg_info "Adding BgUtil POT Provider"
     ensure_dependencies ffmpeg libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev pkg-config
     fetch_and_deploy_gh_release "bgutil-ytdlp-pot-provider" "Brainicism/bgutil-ytdlp-pot-provider" "tarball"
@@ -58,6 +60,8 @@ EOF
   fi
 
   if check_for_gh_release "tubearchivist" "tubearchivist/tubearchivist"; then
+    NODE_VERSION="24" setup_nodejs
+
     msg_info "Stopping Services"
     systemctl stop bgutil-provider tubearchivist tubearchivist-celery tubearchivist-beat
     msg_ok "Stopped Services"

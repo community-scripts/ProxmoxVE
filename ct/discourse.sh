@@ -69,6 +69,8 @@ function update_script() {
     msg_ok "Built libvips"
   fi
 
+  NODE_VERSION="24" setup_nodejs
+
   msg_info "Updating Dependencies"
   RUBY_TARGET=$(grep -A1 '^RUBY VERSION' /opt/discourse/Gemfile.lock | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)
   RUBY_VERSION="${RUBY_TARGET:-4.0.7}" RUBY_INSTALL_RAILS="false" setup_ruby

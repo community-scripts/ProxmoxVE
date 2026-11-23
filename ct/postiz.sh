@@ -33,6 +33,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "postiz" "gitroomhq/postiz-app"; then
+    NODE_VERSION="24" setup_nodejs
+
     msg_info "Stopping Services"
     systemctl stop postiz-orchestrator postiz-frontend postiz-backend
     msg_ok "Stopped Services"

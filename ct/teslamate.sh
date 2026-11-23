@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "teslamate" "teslamate-org/teslamate"; then
+    NODE_VERSION="22" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop teslamate
     msg_ok "Stopped Service"

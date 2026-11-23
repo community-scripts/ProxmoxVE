@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "securo" "securo-finance/securo"; then
+    NODE_VERSION="22" setup_nodejs
+
     msg_info "Stopping Services"
     systemctl stop securo securo-worker securo-beat
     msg_ok "Stopped Services"

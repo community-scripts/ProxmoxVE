@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "convex" "get-convex/convex-backend"; then
+    NODE_VERSION="24" setup_nodejs
+
     msg_info "Stopping Convex"
     systemctl stop convex
     msg_ok "Stopped Convex"

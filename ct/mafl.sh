@@ -30,6 +30,8 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "mafl" "hywax/mafl"; then
+    NODE_VERSION="22" NODE_MODULE="yarn@latest" setup_nodejs
+
     msg_info "Stopping Mafl service"
     systemctl stop mafl
     msg_ok "Service stopped"

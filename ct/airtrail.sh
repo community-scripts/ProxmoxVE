@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "airtrail" "johanohly/AirTrail"; then
+    NODE_VERSION="22" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop airtrail
     msg_ok "Stopped Service"

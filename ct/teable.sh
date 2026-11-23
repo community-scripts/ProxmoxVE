@@ -43,6 +43,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "teable" "teableio/teable"; then
+    NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop teable
     msg_ok "Stopped Service"

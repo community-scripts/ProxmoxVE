@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "kutt" "thedevs-network/kutt"; then
+    NODE_VERSION="22" setup_nodejs
+
     msg_info "Stopping services"
     systemctl stop kutt
     msg_ok "Stopped services"

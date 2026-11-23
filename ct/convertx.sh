@@ -31,6 +31,8 @@ function update_script() {
     exit
   fi
   if check_for_gh_release "ConvertX" "C4illin/ConvertX"; then
+    NODE_VERSION="22" NODE_MODULE="bun" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop convertx
     msg_ok "Stopped Service"

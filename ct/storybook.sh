@@ -39,6 +39,8 @@ function update_script() {
     exit
   fi
 
+  NODE_VERSION="24" NODE_MODULE="pnpm" setup_nodejs
+
   msg_info "Updating Storybook"
   cd "$PROJECT_PATH"
   $STD npx storybook@latest upgrade --yes

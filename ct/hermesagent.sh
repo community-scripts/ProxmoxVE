@@ -78,6 +78,8 @@ EOF
   fi
   $STD runuser -l hermes -c 'systemctl --user daemon-reload && systemctl --user enable hermes-dashboard'
 
+  NODE_VERSION="22" setup_nodejs
+
   msg_info "Updating Hermes Agent"
   $STD setsid --wait runuser -l hermes -c '
     set -a; source /etc/default/hermes; set +a

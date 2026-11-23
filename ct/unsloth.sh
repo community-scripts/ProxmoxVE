@@ -40,6 +40,8 @@ function update_script() {
     ENABLE_GPU="yes" setup_hwaccel
   fi
 
+  NODE_VERSION="22" setup_nodejs
+
   msg_info "Updating ${APP} (Patience)"
   curl -fsSL https://unsloth.ai/install.sh -o /tmp/unsloth-install.sh
   export UNSLOTH_STUDIO_HOME=/opt/unsloth

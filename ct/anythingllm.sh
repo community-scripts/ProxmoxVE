@@ -36,6 +36,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "anythingllm" "Mintplex-Labs/anything-llm"; then
+    NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
+
     msg_info "Stopping Services"
     systemctl stop anythingllm anythingllm-collector
     msg_ok "Stopped Services"

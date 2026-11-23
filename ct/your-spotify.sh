@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "your-spotify" "Yooooomi/your_spotify"; then
+    NODE_VERSION="22" NODE_MODULE="pnpm@^10,serve" setup_nodejs
+
     msg_info "Stopping Services"
     systemctl stop your-spotify your-spotify-web
     msg_ok "Stopped Services"

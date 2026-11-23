@@ -31,6 +31,8 @@ function update_script() {
   fi
   ensure_dependencies memcached libmemcached-tools
   if check_for_gh_release "adventurelog" "seanmorley15/adventurelog"; then
+    NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
+
     msg_info "Stopping Services"
     systemctl stop adventurelog-backend
     systemctl stop adventurelog-frontend

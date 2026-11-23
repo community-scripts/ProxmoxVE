@@ -33,6 +33,8 @@ function update_script() {
   # Updates to 2026.10.0 finished without infra.js; run them again so it gets written
   [[ -f /opt/cryptpad/config/infra.example.js && ! -f /opt/cryptpad/config/infra.js ]] && rm -f ~/.cryptpad
   if check_for_gh_release "cryptpad" "cryptpad/cryptpad"; then
+    NODE_VERSION="22" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop cryptpad
     msg_ok "Stopped Service"

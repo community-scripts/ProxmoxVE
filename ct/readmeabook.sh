@@ -54,6 +54,8 @@ EOF
   fi
 
   if check_for_gh_release "readmeabook" "kikootwo/ReadMeABook"; then
+    NODE_VERSION="24" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop readmeabook
     msg_ok "Stopped Service"

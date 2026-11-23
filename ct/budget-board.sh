@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "budget-board" "teelur/budget-board"; then
+    NODE_VERSION=25 setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop budget-board
     msg_ok "Stopped Service"

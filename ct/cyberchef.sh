@@ -32,6 +32,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "cyberchef" "gchq/CyberChef"; then
+    NODE_VERSION="24" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop caddy
     msg_ok "Stopped Service"

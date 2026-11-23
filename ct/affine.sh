@@ -33,6 +33,8 @@ function update_script() {
 
   RELEASE="v0.27.3"
   if check_for_gh_release "affine_app" "toeverything/AFFiNE" "${RELEASE}" "each release is tested individually before the version is updated. Please do not open issues for this"; then
+    NODE_VERSION="22" setup_nodejs
+
     msg_info "Stopping Services"
     systemctl stop affine-web affine-worker
     msg_ok "Stopped Services"

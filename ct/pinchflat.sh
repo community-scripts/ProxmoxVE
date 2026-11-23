@@ -33,6 +33,8 @@ function update_script() {
   fi
 
   if check_for_gh_release "pinchflat" "TheBadFella/Pinchflat-NGX"; then
+    NODE_VERSION="24" NODE_MODULE="yarn" setup_nodejs
+
     msg_info "Stopping Service"
     systemctl stop pinchflat
     msg_ok "Stopped Service"
