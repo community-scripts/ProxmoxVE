@@ -20,7 +20,7 @@ $STD apt install -y \
   nginx
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="22" NODE_MODULE="pnpm@11.8.0" setup_nodejs
+NODE_VERSION="24" NODE_MODULE="pnpm@11.8.0" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="portabase" PG_DB_USER="portabase" setup_postgresql_db
 
