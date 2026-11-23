@@ -591,7 +591,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Anubis [@opastorello](https://github.com/opastorello) ([#18926](https://github.com/community-scripts/ProxmoxVE/pull/18926))
+  - FreeScout [@MickLesk](https://github.com/MickLesk) ([#18930](https://github.com/community-scripts/ProxmoxVE/pull/18930))
+- Anubis [@opastorello](https://github.com/opastorello) ([#18926](https://github.com/community-scripts/ProxmoxVE/pull/18926))
+- OpenViking [@mfelipe](https://github.com/mfelipe) ([#18979](https://github.com/community-scripts/ProxmoxVE/pull/18979))
 - Oracle Linux [@MickLesk](https://github.com/MickLesk) ([#18945](https://github.com/community-scripts/ProxmoxVE/pull/18945))
 - Kali Linux [@MickLesk](https://github.com/MickLesk) ([#18946](https://github.com/community-scripts/ProxmoxVE/pull/18946))
 - Linux Mint [@MickLesk](https://github.com/MickLesk) ([#18948](https://github.com/community-scripts/ProxmoxVE/pull/18948))
@@ -600,8 +602,18 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - portabase: bump Node.js from 22 to 24 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18988](https://github.com/community-scripts/ProxmoxVE/pull/18988))
+    - t3code: bump Node.js from 24 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18959](https://github.com/community-scripts/ProxmoxVE/pull/18959))
     - airconnect: fix disabled service restart, static binary cleanup, and flag overrides [@cwmoriarty](https://github.com/cwmoriarty) ([#18955](https://github.com/community-scripts/ProxmoxVE/pull/18955))
     - bulwark: bump Node.js from 24 to 26 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#18957](https://github.com/community-scripts/ProxmoxVE/pull/18957))
+
+### 🧰 Tools
+
+  - wg-easy ([#18972](https://github.com/community-scripts/ProxmoxVE/pull/18972))
+
+### 📚 Documentation
+
+  - github node drift: find the repo from the script's calls, check ct/ and install/ [@MickLesk](https://github.com/MickLesk) ([#18984](https://github.com/community-scripts/ProxmoxVE/pull/18984))
 
 ## 2026-11-22
 

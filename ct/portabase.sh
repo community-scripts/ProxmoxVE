@@ -78,7 +78,7 @@ EOF
 
     create_backup /opt/portabase/.env
 
-    NODE_VERSION="22" NODE_MODULE="pnpm@11.8.0" setup_nodejs
+    NODE_VERSION="24" NODE_MODULE="pnpm@11.8.0" setup_nodejs
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "portabase" "Portabase/portabase" "tarball"
 
