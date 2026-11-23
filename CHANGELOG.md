@@ -587,6 +587,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-11-23
+
+### 🆕 New Scripts
+
+  - Linux Mint [@MickLesk](https://github.com/MickLesk) ([#18948](https://github.com/community-scripts/ProxmoxVE/pull/18948))
+
 ## 2026-11-22
 
 ### 🆕 New Scripts
