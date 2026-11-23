@@ -591,7 +591,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Oracle Linux [@MickLesk](https://github.com/MickLesk) ([#18945](https://github.com/community-scripts/ProxmoxVE/pull/18945))
+  - Anubis [@opastorello](https://github.com/opastorello) ([#18926](https://github.com/community-scripts/ProxmoxVE/pull/18926))
+- Oracle Linux [@MickLesk](https://github.com/MickLesk) ([#18945](https://github.com/community-scripts/ProxmoxVE/pull/18945))
 - Kali Linux [@MickLesk](https://github.com/MickLesk) ([#18946](https://github.com/community-scripts/ProxmoxVE/pull/18946))
 - Linux Mint [@MickLesk](https://github.com/MickLesk) ([#18948](https://github.com/community-scripts/ProxmoxVE/pull/18948))
 
