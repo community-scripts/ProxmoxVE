@@ -34,20 +34,23 @@ function update_script() {
 
   if check_for_gh_release "airconnect" "philippe44/AirConnect"; then
     msg_info "Stopping AirConnect"
-    systemctl stop airupnp aircast
+    if systemctl is-active --quiet airupnp; then systemctl stop airupnp; fi
+    if systemctl is-active --quiet aircast; then systemctl stop aircast; fi
     msg_ok "Stopped AirConnect"
 
     CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="airupnp.xml aircast.xml" fetch_and_deploy_gh_release "airconnect" "philippe44/AirConnect" "prebuild" "latest" "/opt/airconnect" "AirConnect-*.zip"
 
     msg_info "Configuring AirConnect"
-    chmod +x /opt/airconnect/airupnp-linux-$(arch_resolve x86_64 aarch64) /opt/airconnect/aircast-linux-$(arch_resolve x86_64 aarch64)
-    ln -sf /opt/airconnect/airupnp-linux-$(arch_resolve x86_64 aarch64) /opt/airconnect/airupnp
-    ln -sf /opt/airconnect/aircast-linux-$(arch_resolve x86_64 aarch64) /opt/airconnect/aircast
-    find /opt/airconnect -maxdepth 1 -type f ! -name "air*linux-$(arch_resolve x86_64 aarch64)*" ! -name "airupnp" ! -name "aircast" ! -name "*.xml" -delete
+    ARCH=$(arch_resolve x86_64 aarch64)
+    chmod +x "/opt/airconnect/airupnp-linux-${ARCH}" "/opt/airconnect/aircast-linux-${ARCH}"
+    ln -sf "/opt/airconnect/airupnp-linux-${ARCH}" /opt/airconnect/airupnp
+    ln -sf "/opt/airconnect/aircast-linux-${ARCH}" /opt/airconnect/aircast
+    find /opt/airconnect -maxdepth 1 -type f ! -name "airupnp-linux-${ARCH}" ! -name "aircast-linux-${ARCH}" ! -name "*.xml" -delete
     msg_ok "Configured AirConnect"
 
     msg_info "Starting AirConnect"
-    systemctl start airupnp aircast
+    if systemctl is-enabled --quiet airupnp; then systemctl start airupnp; fi
+    if systemctl is-enabled --quiet aircast; then systemctl start aircast; fi
     msg_ok "Started AirConnect"
     msg_ok "Updated successfully!"
   fi
