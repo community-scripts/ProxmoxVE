@@ -609,6 +609,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - wg-easy ([#18972](https://github.com/community-scripts/ProxmoxVE/pull/18972))
 
+### 📚 Documentation
+
+  - github node drift: find the repo from the script's calls, check ct/ and install/ [@MickLesk](https://github.com/MickLesk) ([#18984](https://github.com/community-scripts/ProxmoxVE/pull/18984))
+
 ## 2026-11-22
 
 ### 🆕 New Scripts
