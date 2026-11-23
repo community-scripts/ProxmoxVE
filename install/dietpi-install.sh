@@ -41,14 +41,14 @@ fi
 rm -f /etc/apt/sources.list.d/debian.sources
 rm -f /etc/sysctl.d/97-dietpi.conf
 rm -f /etc/systemd/system/local-fs.target.wants/dietpi-fs_partition_resize.service
+# DietPi's installer skips the pre-login banner on its master branch (temporary guard since 17 Nov 2026), so write it here:
+# it shows the default credentials above the login prompt until the first run setup has finished
+$STD /boot/dietpi/func/dietpi-banner issue
 msg_ok "Configured DietPi"
 
 customize
-# Autologin on tty1 only: DietPi's first run setup runs on the first console that logs in, and the Proxmox UI attaches to tty1
-rm -f /etc/systemd/system/console-getty.service.d/override.conf
-if [[ -f /etc/systemd/system/container-getty@.service.d/override.conf ]]; then
-  mkdir -p /etc/systemd/system/container-getty@1.service.d
-  mv /etc/systemd/system/container-getty@.service.d/override.conf /etc/systemd/system/container-getty@1.service.d/
-  rmdir /etc/systemd/system/container-getty@.service.d
-fi
+# No console autologin: DietPi's first run setup starts on the console the user logs in on, not by itself on tty1,
+# and since DietPi v10.9 the login prompt shows the default credentials until the first run setup has finished
+rm -f /etc/systemd/system/console-getty.service.d/override.conf /etc/systemd/system/container-getty@.service.d/override.conf
+rmdir /etc/systemd/system/console-getty.service.d /etc/systemd/system/container-getty@.service.d 2>/dev/null || true
 cleanup_lxc
