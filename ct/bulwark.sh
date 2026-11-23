@@ -38,7 +38,7 @@ function update_script() {
     systemctl stop bulwark
     msg_ok "Stopped Bulwark"
 
-    NODE_VERSION="24" setup_nodejs
+    NODE_VERSION="26" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bulwark" "bulwarkmail/webmail" "prebuild" "latest" "/opt/bulwark" "bulwark-standalone-*-linux-$(arch_resolve).tar.gz"
 
     msg_info "Starting Bulwark"
