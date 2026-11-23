@@ -32,6 +32,7 @@ function update_script() {
   fi
 
   if check_for_gh_release "directus" "directus/directus"; then
+    NODE_VERSION="26" setup_nodejs
     msg_info "Stopping Service"
     systemctl stop directus
     msg_ok "Stopped Service"
