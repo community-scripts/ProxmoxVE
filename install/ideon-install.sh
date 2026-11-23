@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y build-essential
 msg_ok "Installed Dependencies"
 
-NODE_VERSION="24" setup_nodejs
+NODE_VERSION="26" setup_nodejs
 PG_VERSION="18" setup_postgresql
 PG_DB_NAME="ideon" PG_DB_USER="ideon" setup_postgresql_db
 $STD sudo -u postgres psql -c "ALTER ROLE ideon BYPASSRLS;"
