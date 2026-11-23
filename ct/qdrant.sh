@@ -33,6 +33,9 @@ function update_script() {
     fetch_and_deploy_gh_release "qdrant" "qdrant/qdrant" "binary" "latest" "/usr/bin/qdrant"
     chown -R root:root /var/lib/qdrant
     chmod -R 755 /var/lib/qdrant
+    msg_info "Restarting Service"
+    systemctl restart qdrant
+    msg_ok "Restarted Service"
   fi
   exit
 }
