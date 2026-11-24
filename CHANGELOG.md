@@ -589,6 +589,15 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-24
 
+### 🆕 New Scripts
+
+  - HedgeDoc [@MickLesk](https://github.com/MickLesk) ([#18978](https://github.com/community-scripts/ProxmoxVE/pull/18978))
+- Typecho [@MickLesk](https://github.com/MickLesk) ([#18974](https://github.com/community-scripts/ProxmoxVE/pull/18974))
+- Kyoo [@MickLesk](https://github.com/MickLesk) ([#18971](https://github.com/community-scripts/ProxmoxVE/pull/18971))
+- Activepieces [@MickLesk](https://github.com/MickLesk) ([#18970](https://github.com/community-scripts/ProxmoxVE/pull/18970))
+- Windmill [@MickLesk](https://github.com/MickLesk) ([#18977](https://github.com/community-scripts/ProxmoxVE/pull/18977))
+- Databasement [@MickLesk](https://github.com/MickLesk) ([#18976](https://github.com/community-scripts/ProxmoxVE/pull/18976))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
