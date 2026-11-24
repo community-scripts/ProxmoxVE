@@ -587,6 +587,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-11-24
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Nginx Proxy Manager: bump OpenResty to 1.31.9.1 [@rudydelorenzo](https://github.com/rudydelorenzo) ([#19008](https://github.com/community-scripts/ProxmoxVE/pull/19008))
+
 ## 2026-11-23
 
 ### 🆕 New Scripts
