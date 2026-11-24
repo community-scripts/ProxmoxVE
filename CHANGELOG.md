@@ -591,7 +591,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Woodpecker-CI [@MickLesk](https://github.com/MickLesk) ([#18973](https://github.com/community-scripts/ProxmoxVE/pull/18973))
+  - 8mblocal [@MickLesk](https://github.com/MickLesk) ([#18975](https://github.com/community-scripts/ProxmoxVE/pull/18975))
+- Woodpecker-CI [@MickLesk](https://github.com/MickLesk) ([#18973](https://github.com/community-scripts/ProxmoxVE/pull/18973))
 - HedgeDoc [@MickLesk](https://github.com/MickLesk) ([#18978](https://github.com/community-scripts/ProxmoxVE/pull/18978))
 - Typecho [@MickLesk](https://github.com/MickLesk) ([#18974](https://github.com/community-scripts/ProxmoxVE/pull/18974))
 - Kyoo [@MickLesk](https://github.com/MickLesk) ([#18971](https://github.com/community-scripts/ProxmoxVE/pull/18971))
