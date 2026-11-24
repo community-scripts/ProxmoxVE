@@ -604,6 +604,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Odoo: install PDFKiln instead of the archived wkhtmltox build [@Jamalofski](https://github.com/Jamalofski) ([#19014](https://github.com/community-scripts/ProxmoxVE/pull/19014))
     - Traefik: actually upgrade and restart traefik on Alpine update [@Tonomis](https://github.com/Tonomis) ([#19005](https://github.com/community-scripts/ProxmoxVE/pull/19005))
     - Nginx Proxy Manager: bump OpenResty to 1.31.9.1 [@rudydelorenzo](https://github.com/rudydelorenzo) ([#19008](https://github.com/community-scripts/ProxmoxVE/pull/19008))
 
