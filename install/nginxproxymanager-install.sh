@@ -36,18 +36,9 @@ $STD /opt/certbot/bin/pip install certbot certbot-dns-cloudflare
 ln -sf /opt/certbot/bin/certbot /usr/local/bin/certbot
 msg_ok "Set up Certbot"
 
-OPENRESTY_VERSION="1.31.8.1"
+OPENRESTY_VERSION="1.31.9.1"
 fetch_and_deploy_from_url "https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz" "/opt/openresty" ||
   fetch_and_deploy_from_url "https://distfiles.alpinelinux.org/distfiles/edge/openresty-${OPENRESTY_VERSION}.tar.gz" "/opt/openresty"
-
-msg_info "Patching nginx HTTP/2 (CVE-2026-123007, CVE-2026-123633)"
-for commit in 61031503dc8087c2c17cd2142c9b4b19062f90c4 2df48a501d0fb8212b7d39dffeeff5876332ba59 e27f5fa84fe6e98505e70bc543b748747dad0a3b; do
-  curl_with_retry "https://api.github.com/repos/nginx/nginx/commits/${commit}" "/tmp/nginx-${commit}.patch" "-HAccept:application/vnd.github.patch" ||
-    curl_with_retry "https://github.com/nginx/nginx/commit/${commit}.patch" "/tmp/nginx-${commit}.patch"
-  patch -d /opt/openresty/bundle/nginx-1.31.8 -p1 --forward -s <"/tmp/nginx-${commit}.patch"
-  rm -f "/tmp/nginx-${commit}.patch"
-done
-msg_ok "Patched nginx HTTP/2"
 
 msg_info "Building OpenResty"
 cd /opt/openresty
