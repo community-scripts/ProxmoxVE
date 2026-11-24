@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "wkhtmltopdf" "wkhtmltopdf/packaging" "binary" "latest" "" "wkhtmltox_*.bookworm_$(arch_resolve).deb"
+fetch_and_deploy_gh_release "pdfkiln" "pdfkiln/pdfkiln" "binary" "latest" "" "pdfkiln_*_$(arch_resolve).deb"
 
 PG_VERSION="18" setup_postgresql
 
@@ -38,6 +38,9 @@ sed -i \
   -e "s|^;*db_user *=.*|db_user = odoo_usr|" \
   -e "s|^;*db_password *=.*|db_password = $PG_DB_PASS|" \
   /etc/odoo/odoo.conf
+cat <<EOF >>/etc/odoo/odoo.conf
+http_interface = 0.0.0.0
+EOF
 $STD sudo -u odoo odoo -c /etc/odoo/odoo.conf -d odoo -i base --stop-after-init
 rm -f /opt/odoo.deb
 echo "${LATEST_VERSION}" >/opt/${APPLICATION}_version.txt
