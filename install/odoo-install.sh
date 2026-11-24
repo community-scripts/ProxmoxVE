@@ -13,7 +13,7 @@ setting_up_container
 network_check
 update_os
 
-fetch_and_deploy_gh_release "wkhtmltopdf" "wkhtmltopdf/packaging" "binary" "latest" "" "wkhtmltox_*.bookworm_$(arch_resolve).deb"
+fetch_and_deploy_gh_release "pdfkiln" "pdfkiln/pdfkiln" "binary" "latest" "" "pdfkiln_*_$(arch_resolve).deb"
 
 PG_VERSION="18" setup_postgresql
 

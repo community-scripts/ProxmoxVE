@@ -40,7 +40,7 @@ function update_script() {
   if dpkg -s wkhtmltopdf &>/dev/null; then
     systemctl stop odoo
     $STD apt remove --purge -y wkhtmltopdf
-    fetch_and_deploy_gh_release "wkhtmltopdf" "wkhtmltopdf/packaging" "binary" "latest" "" "wkhtmltox_*.bookworm_$(arch_resolve).deb"
+    fetch_and_deploy_gh_release "pdfkiln" "pdfkiln/pdfkiln" "binary" "latest" "" "pdfkiln_*_$(arch_resolve).deb"
     systemctl start odoo
   fi
 
