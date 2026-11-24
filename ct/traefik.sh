@@ -58,8 +58,12 @@ update_alpine() {
   msg_ok "Updated Alpine Packages"
 
   msg_info "Updating traefik from edge"
-  $STD apk add traefik --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community
+  $STD apk upgrade traefik --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community
   msg_ok "Updated traefik"
+
+  msg_info "Restarting traefik"
+  $STD rc-service traefik restart
+  msg_ok "Restarted traefik"
   msg_ok "Updated successfully!"
 }
 
