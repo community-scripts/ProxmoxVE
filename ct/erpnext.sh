@@ -43,6 +43,9 @@ function update_script() {
 
   if dpkg -s wkhtmltox &>/dev/null; then
     $STD apt remove --purge -y wkhtmltox
+  fi
+
+  if check_for_gh_release "pdfkiln" "pdfkiln/pdfkiln"; then
     fetch_and_deploy_gh_release "pdfkiln" "pdfkiln/pdfkiln" "binary" "latest" "" "pdfkiln_*_$(arch_resolve).deb"
   fi
 
