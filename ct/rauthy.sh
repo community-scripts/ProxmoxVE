@@ -9,7 +9,7 @@ source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_
 APP="Rauthy"
 var_tags="${var_tags:-auth;sso;oidc}"
 var_cpu="${var_cpu:-4}"
-var_ram="${var_ram:-4096}"
+var_ram="${var_ram:-6144}"
 var_disk="${var_disk:-12}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
@@ -47,11 +47,10 @@ function update_script() {
 
     msg_info "Stopping Rauthy"
     systemctl stop rauthy
-    msg_ok "Stopped Rauthy"
-
     mv /opt/rauthy-build/target/release/rauthy /opt/rauthy/rauthy
     cd /opt
     rm -rf /opt/rauthy-build ~/.cargo/registry
+    msg_ok "Stopped Rauthy"
 
     msg_info "Starting Rauthy"
     systemctl start rauthy
