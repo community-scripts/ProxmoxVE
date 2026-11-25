@@ -597,6 +597,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - Odoo: update PDFKiln on each release, and replace wkhtmltox too [@Jamalofski](https://github.com/Jamalofski) ([#19035](https://github.com/community-scripts/ProxmoxVE/pull/19035))
+
   - #### 🔧 Refactor
 
     - ERPNext: install PDFKiln instead of the archived wkhtmltox build [@Jamalofski](https://github.com/Jamalofski) ([#19025](https://github.com/community-scripts/ProxmoxVE/pull/19025))
