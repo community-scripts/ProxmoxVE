@@ -288,7 +288,7 @@ msg_ok "Started Services"
 msg_info "Waiting for authentik to become ready (up to 300s)"
 CODE=000
 for _ in {1..60}; do
-  CODE=$(pct exec "$CTID" -- curl -ksI -m 3 https://127.0.0.1:9443/ | sed -n 's,^HTTP/[0-9.]* \([0-9]\{3\}\).*,\1,p' || true)
+  CODE=$(ct_exec curl -ksI -m 3 https://127.0.0.1:9443/ | sed -n 's,^HTTP/[0-9.]* \([0-9]\{3\}\).*,\1,p' || true)
   [[ "$CODE" == "200" || "$CODE" == "302" ]] && break
   sleep 5
 done
