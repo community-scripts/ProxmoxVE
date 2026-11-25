@@ -170,6 +170,8 @@ exec .venv/bin/uwsgi \\
     --master \\
     --workers=4 \\
     --gevent=400 \\
+    --gevent-early-monkey-patch \\
+    --import=dispatcharr.gevent_patch \\
     --http=0.0.0.0:5656 \\
     --http-keepalive=1 \\
     --http-timeout=600 \\
