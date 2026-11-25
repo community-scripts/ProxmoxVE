@@ -587,6 +587,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-11-25
+
+### 🧰 Tools
+
+  - VueTorrent ([#19024](https://github.com/community-scripts/ProxmoxVE/pull/19024))
+
 ## 2026-11-24
 
 ### 🆕 New Scripts
