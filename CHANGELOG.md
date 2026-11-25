@@ -591,7 +591,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - NextDNS [@nberardi](https://github.com/nberardi) ([#18980](https://github.com/community-scripts/ProxmoxVE/pull/18980))
+  - Hister is now Nogon [@MickLesk](https://github.com/MickLesk) ([#19031](https://github.com/community-scripts/ProxmoxVE/pull/19031))
+- NextDNS [@nberardi](https://github.com/nberardi) ([#18980](https://github.com/community-scripts/ProxmoxVE/pull/18980))
 - Rauthy [@MickLesk](https://github.com/MickLesk) ([#19021](https://github.com/community-scripts/ProxmoxVE/pull/19021))
 - Formbricks [@MickLesk](https://github.com/MickLesk) ([#19022](https://github.com/community-scripts/ProxmoxVE/pull/19022))
 
