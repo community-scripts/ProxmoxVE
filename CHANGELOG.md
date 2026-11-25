@@ -612,7 +612,11 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - core: add PVE 9.3 version support [@charles-young](https://github.com/charles-young) ([core#301](https://github.com/community-scripts/core/pull/301))
+  - core: end the wait for an address once the bridge shows no DHCP server [@MickLesk](https://github.com/MickLesk) ([core#300](https://github.com/community-scripts/core/pull/300))
+- pve: wait for a container's state to settle before calling it unenterable [@MickLesk](https://github.com/MickLesk) ([core#299](https://github.com/community-scripts/core/pull/299))
+- incus: keep apt's output and say what the container reaches when Incus base packages fail [@MickLesk](https://github.com/MickLesk) ([core#297](https://github.com/community-scripts/core/pull/297))
+- incus: share the VM image download between the Proxmox and Incus backends [@MickLesk](https://github.com/MickLesk) ([core#296](https://github.com/community-scripts/core/pull/296))
+- core: add PVE 9.3 version support [@charles-young](https://github.com/charles-young) ([core#301](https://github.com/community-scripts/core/pull/301))
 - core: back up and restore around a mount below the path [@MickLesk](https://github.com/MickLesk) ([core#295](https://github.com/community-scripts/core/pull/295))
 
 ### 🧰 Tools
