@@ -47,8 +47,8 @@ function update_script() {
   RUST_PROFILE="minimal" RUST_TOOLCHAIN="stable" setup_rust
   setup_yq
 
-  AUTHENTIK_VERSION="version/2026.8.6"
-  # Source: https://github.com/goauthentik/fips/blob/main/Makefile#L26
+  AUTHENTIK_VERSION="version/2026.8.7"
+  # Source: https://github.com/goauthentik/fips/blob/main/Makefile#L28
   XMLSEC_VERSION="1.3.13"
 
   if check_for_gh_release "geoipupdate" "maxmind/geoipupdate"; then
