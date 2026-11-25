@@ -38,8 +38,14 @@ function update_script() {
   fi
 
   if dpkg -s wkhtmltopdf &>/dev/null; then
-    systemctl stop odoo
     $STD apt remove --purge -y wkhtmltopdf
+  fi
+  if dpkg -s wkhtmltox &>/dev/null; then
+    $STD apt remove --purge -y wkhtmltox
+  fi
+
+  if [[ ! -f ~/.pdfkiln ]] || check_for_gh_release "pdfkiln" "pdfkiln/pdfkiln"; then
+    systemctl stop odoo
     fetch_and_deploy_gh_release "pdfkiln" "pdfkiln/pdfkiln" "binary" "latest" "" "pdfkiln_*_$(arch_resolve).deb"
     systemctl start odoo
   fi
