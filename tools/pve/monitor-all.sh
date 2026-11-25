@@ -111,9 +111,18 @@ while true; do
         continue
       fi
       # Read the IP from the host side; pct exec depends on tools inside the
-      # guest, which minimal/OCI images may lack.
-      IP=$(lxc-info -n "$instance" -iH 2>/dev/null | awk '/^[0-9.]+$/ && !/^(127|169\.254)\./ {print; exit}')
-      if [ -z "$IP" ] || ! ping -c 1 -W 2 "$IP" >/dev/null 2>&1; then
+      # guest, which minimal/OCI images may lack. net0's address comes first:
+      # lxc-info lists Docker bridges and VPN tunnels too, often before it.
+      net0=$(value_of net0)
+      IP=$(grep -oP '(^|,)ip=\K[0-9.]+(?=/)' <<<"$net0" || true)
+      if [ -z "$IP" ]; then
+        iface=$(grep -oP '(^|,)name=\K[^,]+' <<<"$net0" || true)
+        pid=$(lxc-info -n "$instance" -pH 2>/dev/null)
+        [ -n "$pid" ] && IP=$(nsenter -t "$pid" -n ip -4 -o addr show dev "${iface:-eth0}" scope global 2>/dev/null | awk '{sub(/\/.*/, "", $4); print $4; exit}')
+      fi
+      [ -z "$IP" ] && IP=$(lxc-info -n "$instance" -iH 2>/dev/null | awk '/^[0-9.]+$/ && !/^(127|169\.254)\./ {print; exit}')
+      # Two rounds of three pings, so one lost packet does not restart it.
+      if [ -z "$IP" ] || ! { ping -c 3 -W 2 "$IP" >/dev/null 2>&1 || { sleep 5 && ping -c 3 -W 2 "$IP" >/dev/null 2>&1; }; }; then
         echo "$(date): CT $instance is not responding, restarting..."
         pct stop "$instance" >/dev/null 2>&1
         sleep 5
