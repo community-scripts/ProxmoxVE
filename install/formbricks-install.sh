@@ -30,14 +30,10 @@ NODE_VERSION="24" NODE_MODULE="pnpm@$(jq -r '.packageManager | split("@")[1]' /o
 
 msg_info "Building Formbricks (Patience)"
 cd /opt/formbricks
-# CI stamps the release here, at 0.0.0 the app offers its own release as an upgrade; before pnpm install, or pnpm build reinstalls
 sed -i "s/\"version\": \"0.0.0\"/\"version\": \"$(cat ~/.formbricks)\"/" apps/web/package.json
-# type-checking the released tag needs about 6 GB on top of the Turbopack compile
 sed -i 's/^const nextConfig = {$/&\n  typescript: { ignoreBuildErrors: true },/' apps/web/next.config.mjs
-# next build stats apps/web/.env, a symlink to the repo root .env that the tarball does not ship
 touch apps/web/.env
 $STD pnpm install --ignore-scripts --frozen-lockfile
-# upstream's image build wrapper supplies placeholder values for the build-time env check, so no instance URL is baked into the bundle
 $STD sh apps/web/scripts/docker/read-secrets.sh pnpm build --filter=@formbricks/web...
 cp -r apps/web/.next/static apps/web/.next/standalone/apps/web/.next/
 cp -r apps/web/public apps/web/.next/standalone/apps/web/
