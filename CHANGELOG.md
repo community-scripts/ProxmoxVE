@@ -591,7 +591,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Formbricks [@MickLesk](https://github.com/MickLesk) ([#19022](https://github.com/community-scripts/ProxmoxVE/pull/19022))
+  - Rauthy [@MickLesk](https://github.com/MickLesk) ([#19021](https://github.com/community-scripts/ProxmoxVE/pull/19021))
+- Formbricks [@MickLesk](https://github.com/MickLesk) ([#19022](https://github.com/community-scripts/ProxmoxVE/pull/19022))
 
 ### 🧰 Tools
 
