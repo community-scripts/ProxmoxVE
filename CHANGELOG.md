@@ -594,6 +594,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
   - Rauthy [@MickLesk](https://github.com/MickLesk) ([#19021](https://github.com/community-scripts/ProxmoxVE/pull/19021))
 - Formbricks [@MickLesk](https://github.com/MickLesk) ([#19022](https://github.com/community-scripts/ProxmoxVE/pull/19022))
 
+### 🚀 Updated Scripts
+
+  - #### 🔧 Refactor
+
+    - ERPNext: install PDFKiln instead of the archived wkhtmltox build [@Jamalofski](https://github.com/Jamalofski) ([#19025](https://github.com/community-scripts/ProxmoxVE/pull/19025))
+
 ### 🧰 Tools
 
   - Immich Power Tools ([#19023](https://github.com/community-scripts/ProxmoxVE/pull/19023))
