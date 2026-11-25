@@ -600,6 +600,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Dispatcharr: load the gevent monkey-patch in uWSGI like upstream [@mandishshah](https://github.com/mandishshah) ([#19045](https://github.com/community-scripts/ProxmoxVE/pull/19045))
     - Odoo: update PDFKiln on each release, and replace wkhtmltox too [@Jamalofski](https://github.com/Jamalofski) ([#19035](https://github.com/community-scripts/ProxmoxVE/pull/19035))
 
   - #### 🔧 Refactor
@@ -608,7 +609,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - core: back up and restore around a mount below the path [@MickLesk](https://github.com/MickLesk) ([core#295](https://github.com/community-scripts/core/pull/295))
+  - core: add PVE 9.3 version support [@charles-young](https://github.com/charles-young) ([core#301](https://github.com/community-scripts/core/pull/301))
+- core: back up and restore around a mount below the path [@MickLesk](https://github.com/MickLesk) ([core#295](https://github.com/community-scripts/core/pull/295))
 
 ### 🧰 Tools
 
