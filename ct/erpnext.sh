@@ -41,6 +41,14 @@ function update_script() {
   $STD supervisorctl stop all
   msg_ok "Stopped ERPNext service"
 
+  if dpkg -s wkhtmltox &>/dev/null; then
+    $STD apt remove --purge -y wkhtmltox
+  fi
+
+  if check_for_gh_release "pdfkiln" "pdfkiln/pdfkiln"; then
+    fetch_and_deploy_gh_release "pdfkiln" "pdfkiln/pdfkiln" "binary" "latest" "" "pdfkiln_*_$(arch_resolve).deb"
+  fi
+
   if [[ "${FRAPPE_MAJOR:-0}" -lt 16 ]] && { [[ "${PHS_SILENT:-0}" == "1" ]] || whiptail --backtitle "Proxmox VE Helper Scripts" --title "ERPNext v16 Major Upgrade" \
     --yesno "A major upgrade from Frappe/ERPNext v15 to v16 is available.\n\nUpgrade to v16 now?" 16 78; }; then
 

@@ -51,7 +51,7 @@ EOF
 $STD systemctl restart mariadb
 msg_ok "Configured MariaDB for ERPNext"
 
-fetch_and_deploy_gh_release "wkhtmltopdf" "wkhtmltopdf/packaging" "binary" "latest" "" "wkhtmltox_*.bookworm_$(arch_resolve).deb"
+fetch_and_deploy_gh_release "pdfkiln" "pdfkiln/pdfkiln" "binary" "latest" "" "pdfkiln_*_$(arch_resolve).deb"
 
 msg_info "Installing Frappe Bench"
 useradd -m -s /bin/bash frappe
