@@ -606,10 +606,18 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - ERPNext: install PDFKiln instead of the archived wkhtmltox build [@Jamalofski](https://github.com/Jamalofski) ([#19025](https://github.com/community-scripts/ProxmoxVE/pull/19025))
 
+### 💾 Core
+
+  - core: back up and restore around a mount below the path [@MickLesk](https://github.com/MickLesk) ([core#295](https://github.com/community-scripts/core/pull/295))
+
 ### 🧰 Tools
 
   - Immich Power Tools ([#19023](https://github.com/community-scripts/ProxmoxVE/pull/19023))
 - VueTorrent ([#19024](https://github.com/community-scripts/ProxmoxVE/pull/19024))
+
+  - #### 🐞 Bug Fixes
+
+    - Monitor-All: ping the container's net0 address [@MickLesk](https://github.com/MickLesk) ([#19030](https://github.com/community-scripts/ProxmoxVE/pull/19030))
 
 ## 2026-11-24
 
