@@ -591,8 +591,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Hister is now Nogon [@MickLesk](https://github.com/MickLesk) ([#19031](https://github.com/community-scripts/ProxmoxVE/pull/19031))
-- NextDNS [@nberardi](https://github.com/nberardi) ([#18980](https://github.com/community-scripts/ProxmoxVE/pull/18980))
+  - NextDNS [@nberardi](https://github.com/nberardi) ([#18980](https://github.com/community-scripts/ProxmoxVE/pull/18980))
 - Rauthy [@MickLesk](https://github.com/MickLesk) ([#19021](https://github.com/community-scripts/ProxmoxVE/pull/19021))
 - Formbricks [@MickLesk](https://github.com/MickLesk) ([#19022](https://github.com/community-scripts/ProxmoxVE/pull/19022))
 
@@ -602,6 +601,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - Dispatcharr: load the gevent monkey-patch in uWSGI like upstream [@mandishshah](https://github.com/mandishshah) ([#19045](https://github.com/community-scripts/ProxmoxVE/pull/19045))
     - Odoo: update PDFKiln on each release, and replace wkhtmltox too [@Jamalofski](https://github.com/Jamalofski) ([#19035](https://github.com/community-scripts/ProxmoxVE/pull/19035))
+
+  - #### 💥 Breaking Changes
+
+    - Hister is now Nogon [@MickLesk](https://github.com/MickLesk) ([#19031](https://github.com/community-scripts/ProxmoxVE/pull/19031))
 
   - #### 🔧 Refactor
 
