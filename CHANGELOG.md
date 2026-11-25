@@ -589,9 +589,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-25
 
+### 🆕 New Scripts
+
+  - Formbricks [@MickLesk](https://github.com/MickLesk) ([#19022](https://github.com/community-scripts/ProxmoxVE/pull/19022))
+
 ### 🧰 Tools
 
-  - VueTorrent ([#19024](https://github.com/community-scripts/ProxmoxVE/pull/19024))
+  - Immich Power Tools ([#19023](https://github.com/community-scripts/ProxmoxVE/pull/19023))
+- VueTorrent ([#19024](https://github.com/community-scripts/ProxmoxVE/pull/19024))
 
 ## 2026-11-24
 
