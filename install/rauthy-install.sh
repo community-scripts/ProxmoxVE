@@ -1,0 +1,119 @@
+#!/usr/bin/env bash
+
+# Copyright (c) 2021-2026 community-scripts ORG
+# Author: MickLesk (CanbiZ)
+# License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
+# Source: https://github.com/sebadob/rauthy
+
+source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
+color
+verb_ip6
+catch_errors
+setting_up_container
+network_check
+update_os
+
+msg_info "Installing Dependencies"
+$STD apt install -y \
+  build-essential \
+  pkg-config
+msg_ok "Installed Dependencies"
+
+setup_rust
+fetch_and_deploy_gh_release "rauthy" "sebadob/rauthy" "tarball" "latest" "/opt/rauthy-build"
+
+msg_info "Building Rauthy (Patience)"
+cd /opt/rauthy-build
+# The prebuilt UI ships in every release, so Node.js and wasm-pack are not needed
+tar -xf assets/static_html/static_v1.tar.gz
+tar -xf assets/static_html/templates_html.tar.gz
+# The FIDO MDS dataset is optional at compile time: without it build.rs embeds an empty placeholder and
+# Rauthy's scheduler fetches it at runtime. The alliance rate-limits downloads (429), so this is best-effort.
+if curl_with_retry "https://mds.fidoalliance.org/" "/opt/rauthy-build/mds.jwt"; then
+  CARGO_PROFILE_DEV_DEBUG=0 $STD cargo run --bin fido-mds-prep -- --source mds.jwt
+else
+  msg_warn "FIDO MDS download failed; Rauthy will fetch the dataset at runtime"
+fi
+# Upstream's fat LTO with a single codegen unit takes over an hour and close to 4 GB of RAM on 4 cores
+CARGO_PROFILE_RELEASE_LTO=thin CARGO_PROFILE_RELEASE_CODEGEN_UNITS=16 \
+  $STD cargo build --release --bin rauthy
+mkdir -p /opt/rauthy
+mv target/release/rauthy /opt/rauthy/rauthy
+cd /opt
+rm -rf /opt/rauthy-build ~/.cargo/registry
+msg_ok "Built Rauthy"
+
+create_self_signed_cert "rauthy"
+
+msg_info "Configuring Rauthy"
+mkdir -p /opt/rauthy_data
+ENC_KEY_ID=$(openssl rand -hex 4)
+cat <<EOF >/opt/rauthy_data/config.toml
+## Reference: https://sebadob.github.io/rauthy/config/config.html
+
+[bootstrap]
+# Password for admin@localhost, only read when the database is created on the first start
+password_plain = '$(random_password)'
+
+[cluster]
+node_id = 1
+nodes = ['1 localhost:8100 localhost:8200']
+data_dir = '/opt/rauthy_data/hiqlite'
+secret_raft = '$(random_password 48)'
+secret_api = '$(random_password 48)'
+
+[email]
+#smtp_url = 'smtp.example.com'
+#smtp_username = 'rauthy@example.com'
+#smtp_password = ''
+#smtp_from = 'Rauthy <rauthy@example.com>'
+
+[encryption]
+keys = ['${ENC_KEY_ID}/$(openssl rand -base64 32)']
+key_active = '${ENC_KEY_ID}'
+
+[mfa]
+# Passkeys need a DNS name, so admin MFA cannot be set up while Rauthy is reached by IP
+admin_force_mfa = false
+
+[server]
+scheme = 'https'
+pub_url = '${LOCAL_IP}:8443'
+
+[tls]
+cert_path = '/etc/ssl/rauthy/rauthy.crt'
+key_path = '/etc/ssl/rauthy/rauthy.key'
+
+[webauthn]
+# Must be a domain, an IP is rejected; set both to the public DNS name before registering passkeys
+rp_id = 'localhost'
+rp_origin = 'https://localhost:8443'
+EOF
+chmod 600 /opt/rauthy_data/config.toml
+msg_ok "Configured Rauthy"
+
+msg_info "Creating Service"
+cat <<EOF >/etc/systemd/system/rauthy.service
+[Unit]
+Description=Rauthy
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/rauthy_data
+Environment=MALLOC_CONF=abort_conf:true,narenas:8,tcache_max:4096,dirty_decay_ms:5000,muzzy_decay_ms:5000
+ExecStart=/opt/rauthy/rauthy serve -c /opt/rauthy_data/config.toml
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable -q --now rauthy
+msg_ok "Created Service"
+
+motd_ssh
+customize
+cleanup_lxc
