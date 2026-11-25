@@ -26,11 +26,11 @@ msg_info "Building Rauthy (Patience)"
 cd /opt/rauthy-build
 tar -xf assets/static_html/static_v1.tar.gz
 tar -xf assets/static_html/templates_html.tar.gz
-if curl_with_retry "https://mds.fidoalliance.org/" "/opt/rauthy-build/mds.jwt"; then
-  CARGO_PROFILE_DEV_DEBUG=0 $STD cargo run --bin fido-mds-prep -- --source mds.jwt
-else
-  msg_warn "FIDO MDS download failed; Rauthy will fetch the dataset at runtime"
+if ! CURL_RETRIES=8 curl_with_retry "https://mds.fidoalliance.org/" "/opt/rauthy-build/mds.jwt"; then
+  msg_error "The FIDO MDS download was rate-limited (HTTP 429); run the script again in a few minutes"
+  exit 7
 fi
+CARGO_PROFILE_DEV_DEBUG=0 $STD cargo run --bin fido-mds-prep -- --source mds.jwt
 CARGO_PROFILE_RELEASE_LTO=thin CARGO_PROFILE_RELEASE_CODEGEN_UNITS=16 \
   $STD cargo build --release --bin rauthy
 mkdir -p /opt/rauthy
