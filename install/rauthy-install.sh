@@ -24,17 +24,13 @@ fetch_and_deploy_gh_release "rauthy" "sebadob/rauthy" "tarball" "latest" "/opt/r
 
 msg_info "Building Rauthy (Patience)"
 cd /opt/rauthy-build
-# The prebuilt UI ships in every release, so Node.js and wasm-pack are not needed
 tar -xf assets/static_html/static_v1.tar.gz
 tar -xf assets/static_html/templates_html.tar.gz
-# The FIDO MDS dataset is optional at compile time: without it build.rs embeds an empty placeholder and
-# Rauthy's scheduler fetches it at runtime. The alliance rate-limits downloads (429), so this is best-effort.
 if curl_with_retry "https://mds.fidoalliance.org/" "/opt/rauthy-build/mds.jwt"; then
   CARGO_PROFILE_DEV_DEBUG=0 $STD cargo run --bin fido-mds-prep -- --source mds.jwt
 else
   msg_warn "FIDO MDS download failed; Rauthy will fetch the dataset at runtime"
 fi
-# Upstream's fat LTO with a single codegen unit takes over an hour and close to 4 GB of RAM on 4 cores
 CARGO_PROFILE_RELEASE_LTO=thin CARGO_PROFILE_RELEASE_CODEGEN_UNITS=16 \
   $STD cargo build --release --bin rauthy
 mkdir -p /opt/rauthy
