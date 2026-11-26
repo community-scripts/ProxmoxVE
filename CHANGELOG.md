@@ -598,6 +598,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - LibreChat: rebuild the RAG API venv on update, keep uploads [@MickLesk](https://github.com/MickLesk) ([#19056](https://github.com/community-scripts/ProxmoxVE/pull/19056))
     - Cloudflare-DDNS: give the Go build 1 GB [@MickLesk](https://github.com/MickLesk) ([#19059](https://github.com/community-scripts/ProxmoxVE/pull/19059))
     - Vane: skip the CUDA binaries of onnxruntime-node [@MickLesk](https://github.com/MickLesk) ([#19060](https://github.com/community-scripts/ProxmoxVE/pull/19060))
     - UniFi OS Server: retry the installer download [@MickLesk](https://github.com/MickLesk) ([#19062](https://github.com/community-scripts/ProxmoxVE/pull/19062))
