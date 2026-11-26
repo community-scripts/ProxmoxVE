@@ -607,7 +607,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - fix(incus): check VM support on the target remote instead of local /dev/kvm [@MickLesk](https://github.com/MickLesk) ([core#306](https://github.com/community-scripts/core/pull/306))
+  - core: say what the container reaches when its base packages fail [@MickLesk](https://github.com/MickLesk) ([core#305](https://github.com/community-scripts/core/pull/305))
+- Incus: check VM support on the target remote instead of local /dev/kvm [@MickLesk](https://github.com/MickLesk) ([core#306](https://github.com/community-scripts/core/pull/306))
 
 ### 🧰 Tools
 
