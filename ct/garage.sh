@@ -93,5 +93,5 @@ description
 
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
-echo -e "${INFO}${YW}Access it using the following URL:${CL}"
-echo -e "${GATEWAY}${BGN}http://${IP}${CL}"
+echo -e "${INFO}${YW}Use this Garage S3 API endpoint${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:3900${CL}"
