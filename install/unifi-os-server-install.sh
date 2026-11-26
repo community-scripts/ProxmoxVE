@@ -74,7 +74,7 @@ msg_ok "Found UniFi OS Server ${UOS_VERSION}"
 
 msg_info "Downloading UniFi OS Server installer"
 mkdir -p /usr/local/sbin
-curl -fsSL "$UOS_URL" -o /usr/local/sbin/unifi-os-server.bin
+curl_download /usr/local/sbin/unifi-os-server.bin "$UOS_URL"
 chmod +x /usr/local/sbin/unifi-os-server.bin
 msg_ok "Downloaded UniFi OS Server installer"
 
