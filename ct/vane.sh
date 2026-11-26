@@ -41,6 +41,7 @@ function update_script() {
 
     msg_info "Building Vane"
     cd /opt/vane
+    export ONNXRUNTIME_NODE_INSTALL_CUDA=skip
     $STD yarn install --frozen-lockfile --network-timeout 600000
     $STD yarn build
     $STD yarn cache clean
