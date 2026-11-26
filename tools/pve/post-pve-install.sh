@@ -99,14 +99,14 @@ main() {
     fi
     start_routines_8
   elif [[ "$PVE_MAJOR" == "9" ]]; then
-    if ((PVE_MINOR < 0 || PVE_MINOR > 2)); then
-      msg_error "Only Proxmox 9.0-9.2.x is currently supported"
+    if ((PVE_MINOR < 0 || PVE_MINOR > 3)); then
+      msg_error "Only Proxmox 9.0-9.3.x is currently supported"
       exit 105
     fi
     start_routines_9 "$PVE_MINOR"
   else
     msg_error "Unsupported Proxmox VE major version: $PVE_MAJOR"
-    echo -e "Supported: 8.0–8.9.x and 9.0–9.2.x"
+    echo -e "Supported: 8.0–8.9.x and 9.0–9.3.x"
     exit 105
   fi
 }
