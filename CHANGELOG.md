@@ -591,12 +591,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - SurfSense [@MickLesk](https://github.com/MickLesk) ([#19029](https://github.com/community-scripts/ProxmoxVE/pull/19029))
+  - Bifrost [@cheesejaguar](https://github.com/cheesejaguar) ([#19028](https://github.com/community-scripts/ProxmoxVE/pull/19028))
+- SurfSense [@MickLesk](https://github.com/MickLesk) ([#19029](https://github.com/community-scripts/ProxmoxVE/pull/19029))
 
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
 
+    - Umami: pin pnpm from engines.pnpm on install, set APP_SECRET [@MickLesk](https://github.com/MickLesk) ([#19057](https://github.com/community-scripts/ProxmoxVE/pull/19057))
     - FreshRSS: fix automatic feeds update [@CrazyWolf13](https://github.com/CrazyWolf13) ([#19044](https://github.com/community-scripts/ProxmoxVE/pull/19044))
 
 ### 🧰 Tools
