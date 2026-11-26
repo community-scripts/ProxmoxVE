@@ -595,6 +595,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - FreshRSS: fix automatic feeds update [@CrazyWolf13](https://github.com/CrazyWolf13) ([#19044](https://github.com/community-scripts/ProxmoxVE/pull/19044))
 
+### 🧰 Tools
+
+  - #### ✨ New Features
+
+    - PVE Post Install: support Proxmox VE 9.3 [@MickLesk](https://github.com/MickLesk) ([#19053](https://github.com/community-scripts/ProxmoxVE/pull/19053))
+
 ## 2026-11-25
 
 ### 🆕 New Scripts
