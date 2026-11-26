@@ -147,6 +147,11 @@ EOF
   NODE_VERSION="$N8N_NODE_MAJOR" setup_nodejs
   install_n8n_image "$target"
 
+  # Patch an optional oidc_hook, that may exist: https://github.com/cweagans/n8n-oidc/ 
+  if grep -qs '/usr/lib/node_modules/n8n' /opt/n8n_oidc_hook.js; then
+    sed -i 's#/usr/lib/node_modules/n8n#/opt/n8n#g' /opt/n8n_oidc_hook.js
+  fi
+
   msg_info "Starting n8n"
   systemctl start n8n
   msg_ok "Started n8n"
