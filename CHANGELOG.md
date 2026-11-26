@@ -589,6 +589,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-26
 
+### 🆕 New Scripts
+
+  - SurfSense [@MickLesk](https://github.com/MickLesk) ([#19029](https://github.com/community-scripts/ProxmoxVE/pull/19029))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
