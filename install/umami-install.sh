@@ -13,15 +13,18 @@ setting_up_container
 network_check
 update_os
 
-NODE_VERSION="22" NODE_MODULE="pnpm@latest" setup_nodejs
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="umamidb" PG_DB_USER="umami" setup_postgresql_db
 fetch_and_deploy_gh_release "umami" "umami-software/umami" "tarball"
+
+PNPM_VERSION=$(jq -r '.engines.pnpm // "latest"' /opt/umami/package.json)
+NODE_VERSION="22" NODE_MODULE="pnpm@${PNPM_VERSION}" setup_nodejs
 
 msg_info "Configuring Umami"
 cd /opt/umami
 $STD pnpm install
 echo -e "DATABASE_URL=postgresql://$PG_DB_USER:$PG_DB_PASS@localhost:5432/$PG_DB_NAME" >>/opt/umami/.env
+echo "APP_SECRET=$(openssl rand -hex 32)" >>/opt/umami/.env
 $STD pnpm run build
 msg_ok "Configured Umami"
 

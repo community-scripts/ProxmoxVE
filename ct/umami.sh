@@ -9,7 +9,7 @@ source "$_cs_boot" 2>/dev/null || source <(curl -fsSL "${COMMUNITY_SCRIPTS_CORE_
 APP="Umami"
 var_tags="${var_tags:-analytics}"
 var_cpu="${var_cpu:-2}"
-var_ram="${var_ram:-2048}"
+var_ram="${var_ram:-4096}"
 var_disk="${var_disk:-12}"
 var_os="${var_os:-debian}"
 var_version="${var_version:-13}"
@@ -28,6 +28,15 @@ function update_script() {
   if [[ ! -d /opt/umami ]]; then
     msg_error "No ${APP} Installation Found!"
     exit
+  fi
+
+  if ! grep -q '^APP_SECRET=' /opt/umami/.env 2>/dev/null; then
+    msg_info "Setting APP_SECRET"
+    # 3.5 dropped the DATABASE_URL fallback; the same value keeps logins and session IDs valid
+    DB_URL=$(sed -n 's/^DATABASE_URL=//p' /opt/umami/.env 2>/dev/null | head -n1)
+    echo "APP_SECRET=${DB_URL:-$(openssl rand -hex 32)}" >>/opt/umami/.env
+    systemctl restart umami
+    msg_ok "Set APP_SECRET"
   fi
 
   if check_for_gh_release "umami" "umami-software/umami"; then
