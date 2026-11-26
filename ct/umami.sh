@@ -30,6 +30,15 @@ function update_script() {
     exit
   fi
 
+  if ! grep -q '^APP_SECRET=' /opt/umami/.env 2>/dev/null; then
+    msg_info "Setting APP_SECRET"
+    # 3.5 dropped the DATABASE_URL fallback; the same value keeps logins and session IDs valid
+    DB_URL=$(sed -n 's/^DATABASE_URL=//p' /opt/umami/.env 2>/dev/null | head -n1)
+    echo "APP_SECRET=${DB_URL:-$(openssl rand -hex 32)}" >>/opt/umami/.env
+    systemctl restart umami
+    msg_ok "Set APP_SECRET"
+  fi
+
   if check_for_gh_release "umami" "umami-software/umami"; then
     msg_info "Stopping Service"
     systemctl stop umami
