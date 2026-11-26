@@ -607,7 +607,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Incus: pick the VM storage pool from the host instead of assuming 'default' [@MickLesk](https://github.com/MickLesk) ([core#307](https://github.com/community-scripts/core/pull/307))
+  - Incus: read architecture, GPUs and pool space from the target remote [@MickLesk](https://github.com/MickLesk) ([core#308](https://github.com/community-scripts/core/pull/308))
+- Incus: pick the VM storage pool from the host instead of assuming 'default' [@MickLesk](https://github.com/MickLesk) ([core#307](https://github.com/community-scripts/core/pull/307))
 - core: say what the container reaches when its base packages fail [@MickLesk](https://github.com/MickLesk) ([core#305](https://github.com/community-scripts/core/pull/305))
 - Incus: check VM support on the target remote instead of local /dev/kvm [@MickLesk](https://github.com/MickLesk) ([core#306](https://github.com/community-scripts/core/pull/306))
 
