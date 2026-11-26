@@ -598,6 +598,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Vane: skip the CUDA binaries of onnxruntime-node [@MickLesk](https://github.com/MickLesk) ([#19060](https://github.com/community-scripts/ProxmoxVE/pull/19060))
     - UniFi OS Server: retry the installer download [@MickLesk](https://github.com/MickLesk) ([#19062](https://github.com/community-scripts/ProxmoxVE/pull/19062))
     - Umami: pin pnpm from engines.pnpm on install, set APP_SECRET [@MickLesk](https://github.com/MickLesk) ([#19057](https://github.com/community-scripts/ProxmoxVE/pull/19057))
     - FreshRSS: fix automatic feeds update [@CrazyWolf13](https://github.com/CrazyWolf13) ([#19044](https://github.com/community-scripts/ProxmoxVE/pull/19044))
