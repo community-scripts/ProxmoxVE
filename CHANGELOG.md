@@ -587,6 +587,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-11-26
+
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - FreshRSS: fix automatic feeds update [@CrazyWolf13](https://github.com/CrazyWolf13) ([#19044](https://github.com/community-scripts/ProxmoxVE/pull/19044))
+
 ## 2026-11-25
 
 ### 🆕 New Scripts
