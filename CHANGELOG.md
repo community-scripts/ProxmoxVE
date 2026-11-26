@@ -605,6 +605,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
     - Umami: pin pnpm from engines.pnpm on install, set APP_SECRET [@MickLesk](https://github.com/MickLesk) ([#19057](https://github.com/community-scripts/ProxmoxVE/pull/19057))
     - FreshRSS: fix automatic feeds update [@CrazyWolf13](https://github.com/CrazyWolf13) ([#19044](https://github.com/community-scripts/ProxmoxVE/pull/19044))
 
+### 💾 Core
+
+  - fix(incus): check VM support on the target remote instead of local /dev/kvm [@MickLesk](https://github.com/MickLesk) ([core#306](https://github.com/community-scripts/core/pull/306))
+
 ### 🧰 Tools
 
   - #### ✨ New Features
