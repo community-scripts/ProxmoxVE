@@ -273,10 +273,15 @@ function dry_run_container() {
 
 # The line of vzdump or pct restore output that says why it failed.
 function failure_reason() {
-  local reason
+  local reason tool q="'"
   reason=$(grep -m1 '^ERROR:' <<<"$1" | sed 's/^ERROR: //')
   # A rejected option ends in the usage line, the option's error is above it.
   [[ -n "$reason" ]] || reason=$(grep -v -e '^[[:space:]]*$' -e '\[OPTIONS\]$' <<<"$1" | tail -n1)
+  # vzdump quotes its whole tar pipeline there; what tar or zstd said is above it.
+  if [[ "$reason" == *" failed - command '"* ]]; then
+    tool=$(sed '/^ERROR:/q' <<<"$1" | grep -E '^INFO: (tar|zstd|gzip|lzop|rsync|proxmox-backup-client|lxc-usernsexec|Error)[: ]' | tail -n1 | sed 's/^INFO: //; s/[[:space:]]*$//')
+    reason="${reason%% - command ${q}*} (${reason##*failed: })${tool:+: $tool}"
+  fi
   printf '%s' "$reason"
 }
 
@@ -292,7 +297,13 @@ function backup_container() {
       msg_error "Backup of container $1 was interrupted (Ctrl+C or the task was stopped)"
       exit 130
     fi
-    msg_error "Backup failed for container $1: $(failure_reason "$output")"
+    local reason
+    reason=$(failure_reason "$output")
+    # zstd writes the archive itself, so its "No space left" is the backup storage.
+    if [[ "$reason" == *"zstd:"*"No space left on device"* ]]; then
+      reason+=" - storage '$STORAGE_CHOICE' has $(pvesm status --storage "$STORAGE_CHOICE" 2>/dev/null | awk 'NR==2 {printf "%.1f", $6 / 1048576}') GiB free"
+    fi
+    msg_error "Backup failed for container $1: $reason"
     exit 235
   fi
 }
