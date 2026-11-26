@@ -40,7 +40,7 @@ function update_script() {
 
     create_backup /opt/librechat/.env
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_tag "librechat" "danny-avila/LibreChat"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="librechat.yaml uploads client/public/images api/logs" fetch_and_deploy_gh_tag "librechat" "danny-avila/LibreChat"
 
     restore_backup
 
@@ -68,13 +68,17 @@ function update_script() {
 
     create_backup /opt/rag-api/.env
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "rag-api" "danny-avila/rag_api" "tarball"
+    CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="uploads" fetch_and_deploy_gh_release "rag-api" "danny-avila/rag_api" "tarball"
 
     restore_backup
 
+    PYTHON_VERSION="3.12" setup_uv
+
     msg_info "Updating RAG API Dependencies"
     cd /opt/rag-api
+    $STD uv venv --python 3.12 --seed .venv
     $STD .venv/bin/pip install -r requirements.lite.txt
+    mkdir -p /opt/rag-api/uploads
     msg_ok "Updated RAG API Dependencies"
 
     msg_info "Starting RAG API"
