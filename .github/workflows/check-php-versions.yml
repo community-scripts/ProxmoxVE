@@ -1,0 +1,685 @@
+name: Check PHP Version Drift
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Weekly on Monday at 08:00 UTC, after the Node.js and Python checks
+    - cron: "0 8 * * 1"
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  check-php-versions:
+    if: github.repository == 'community-scripts/ProxmoxVE'
+    runs-on: coolify-runner
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq jq curl > /dev/null 2>&1
+
+      - name: Check upstream PHP versions
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          echo "================================================"
+          echo "  Checking PHP version drift in install scripts"
+          echo "================================================"
+
+          # Versions are compared minor-granular as major*100+minor: 8.4 -> 804.
+          vstr() { echo "$(($1 / 100)).$(($1 % 100))"; }
+
+          # One comparison as a range. Sets T_LO / T_HI, empty when open.
+          # Returns 1 for a clause that bounds nothing (!=).
+          clause_range() {
+            local op="$1" maj="$2" mi="$3" pat="$4"
+            T_LO="" T_HI=""
+            [[ "$mi" == "*" ]] && mi=""
+            [[ "$pat" == "*" ]] && pat=""
+            case "$op" in
+            "!=") return 1 ;;
+            ">=") T_LO=$((maj * 100 + ${mi:-0})) ;;
+            ">")
+              if [[ -n "$pat" ]]; then T_LO=$((maj * 100 + mi))
+              elif [[ -n "$mi" ]]; then T_LO=$((maj * 100 + mi + 1))
+              else T_LO=$(((maj + 1) * 100)); fi
+              ;;
+            "<")
+              if [[ -n "$pat" && "$pat" -gt 0 ]]; then T_HI=$((maj * 100 + mi))
+              elif [[ -n "$mi" ]]; then T_HI=$((maj * 100 + mi - 1))
+              else T_HI=$(((maj - 1) * 100 + 99)); fi
+              ;;
+            "<=")
+              if [[ -n "$mi" ]]; then T_HI=$((maj * 100 + mi)); else T_HI=$((maj * 100 + 99)); fi
+              ;;
+            "^")
+              T_LO=$((maj * 100 + ${mi:-0}))
+              T_HI=$((maj * 100 + 99))
+              ;;
+            "~")
+              # Composer: ~8.2 is >=8.2 <9.0, ~8.2.1 is >=8.2.1 <8.3
+              T_LO=$((maj * 100 + ${mi:-0}))
+              if [[ -n "$pat" ]]; then T_HI=$T_LO; else T_HI=$((maj * 100 + 99)); fi
+              ;;
+            "" | "=" | "==")
+              if [[ -n "$mi" ]]; then T_LO=$((maj * 100 + mi)) T_HI=$T_LO
+              else T_LO=$((maj * 100)) T_HI=$((maj * 100 + 99)); fi
+              ;;
+            *) return 1 ;;
+            esac
+          }
+
+          # A Composer constraint as a range: space or comma = AND, | or || = OR,
+          # "a - b" ranges, @stability flags. Sets C_MIN / C_MAX, empty when open.
+          parse_constraint() {
+            local spec="$1" alt part a_lo a_hi lo_open=0 hi_open=0 seen=0
+            local -a alts parts
+            C_MIN="" C_MAX=""
+            spec=$(sed -E 's/@[a-zA-Z]+//g; s/(>=|<=|==|!=|>|<|\^|~)[[:space:]]+/\1/g' <<<"$spec")
+            spec="${spec//||/|}"
+            IFS='|' read -ra alts <<<"$spec"
+            for alt in "${alts[@]}"; do
+              alt=$(sed -E 's/^[[:space:],]+|[[:space:],]+$//g' <<<"$alt")
+              [[ -z "$alt" || "$alt" == "*" ]] && { lo_open=1; hi_open=1; seen=1; continue; }
+              a_lo="" a_hi=""
+              if [[ "$alt" =~ ^v?([0-9]+)(\.([0-9]+))?[^[:space:]]*[[:space:]]+-[[:space:]]+v?([0-9]+)(\.([0-9]+))? ]]; then
+                a_lo=$((BASH_REMATCH[1] * 100 + ${BASH_REMATCH[3]:-0}))
+                if [[ -n "${BASH_REMATCH[6]}" ]]; then a_hi=$((BASH_REMATCH[4] * 100 + BASH_REMATCH[6]))
+                else a_hi=$((BASH_REMATCH[4] * 100 + 99)); fi
+              else
+                IFS=', ' read -ra parts <<<"$alt"
+                for part in "${parts[@]}"; do
+                  [[ -z "$part" ]] && continue
+                  [[ "$part" =~ ^(==|!=|>=|<=|>|<|\^|~|=)?v?([0-9]+)(\.([0-9]+|\*))?(\.([0-9]+|\*))?(\.[0-9]+)*$ ]] || continue
+                  clause_range "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[4]}" "${BASH_REMATCH[6]}" || continue
+                  [[ -n "$T_LO" ]] && { [[ -z "$a_lo" ]] || ((T_LO > a_lo)); } && a_lo=$T_LO
+                  [[ -n "$T_HI" ]] && { [[ -z "$a_hi" ]] || ((T_HI < a_hi)); } && a_hi=$T_HI
+                done
+              fi
+              seen=1
+              if [[ -z "$a_lo" ]]; then lo_open=1; elif [[ -z "$C_MIN" ]] || ((a_lo < C_MIN)); then C_MIN=$a_lo; fi
+              if [[ -z "$a_hi" ]]; then hi_open=1; elif [[ -z "$C_MAX" ]] || ((a_hi > C_MAX)); then C_MAX=$a_hi; fi
+            done
+            ((seen)) || return 0
+            ((lo_open)) && C_MIN=""
+            ((hi_open)) && C_MAX=""
+            return 0
+          }
+
+          # Inside the range Composer enforces for the current script ($lo/$hi)
+          within() { [[ -z "$lo" || "$1" -ge "$lo" ]] && [[ -z "$hi" || "$1" -le "$hi" ]]; }
+
+          # Same name in the core sense (_forge_is_script_app): case and punctuation
+          # ignored, equal, or one containing the other with the shorter at least 4 long.
+          name_matches() {
+            local a="${1,,}" b="${2,,}" short
+            a="${a//[^a-z0-9]/}"
+            b="${b//[^a-z0-9]/}"
+            [[ -n "$a" && -n "$b" ]] || return 1
+            [[ "$a" == "$b" ]] && return 0
+            short="$a"
+            ((${#b} < ${#a})) && short="$b"
+            ((${#short} >= 4)) || return 1
+            [[ "$a" == *"$b"* || "$b" == *"$a"* ]]
+          }
+
+          # The app's own repo from the GitHub calls in its scripts, for a Source line
+          # that names a website. Only a repo or app argument matching the script's
+          # name counts, so a deployed dependency is not taken for the app.
+          # Usage: repo_from_calls "slug" file... => sets REPLY to owner/repo or empty
+          repo_from_calls() {
+            local slug="$1" text app repo
+            shift
+            REPLY=""
+            text=$(cat "$@" 2>/dev/null | grep -v '^[[:space:]]*#' || true)
+            while read -r app repo; do
+              [[ -z "$repo" || "${repo,,}" == community-scripts/* ]] && continue
+              if name_matches "$slug" "${repo#*/}" || { [[ "$app" != "-" ]] && name_matches "$slug" "$app"; }; then
+                REPLY="$repo"
+                return
+              fi
+            done < <(
+              grep -oP '\b(?:fetch_and_deploy|check_for)_gh_(?:release|tag)\s+"?[^"\s]+"?\s+"?[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+' <<<"$text" |
+                sed -E 's/^[a-z_]+[[:space:]]+"?([^"[:space:]]+)"?[[:space:]]+"?/\1 /' || true
+              grep -oP '(?:get_latest_github_release\s+"?|(?<![\w.])github\.com/|api\.github\.com/repos/|codeload\.github\.com/)\K[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+' <<<"$text" |
+                sed -E 's/\.git$//; s/^/- /' || true
+            )
+          }
+
+          # PHP a script pins: X.Y, "dynamic", or "unset" (core's default).
+          php_version_of() {
+            local v
+            v=$(grep -oP '^[^#]*PHP_VERSION="?\K\d\.\d+' "$1" | head -1 || true)
+            if [[ -n "$v" ]]; then
+              echo "$v"
+            elif grep -qE '^[^#]*PHP_VERSION=\$\(' "$1"; then
+              echo "dynamic"
+            else
+              echo "unset"
+            fi
+          }
+
+          # One recursive tree per repo; files are looked up in it instead of
+          # probing raw URLs one by one. A truncated tree (very large repos)
+          # falls back to the repo root.
+          load_tree() {
+            local json
+            TREE_PATHS=""
+            TREE_TRUNCATED="true"
+            json=$(curl -sf -H "Authorization: token $GH_TOKEN" \
+              "https://api.github.com/repos/${REPO}/git/trees/${BRANCH//\//%2F}?recursive=1" 2>/dev/null || echo "")
+            [[ -z "$json" ]] && return
+            TREE_TRUNCATED=$(jq -r '.truncated // false' <<<"$json" 2>/dev/null || echo "true")
+            TREE_PATHS=$(jq -r '.tree[]? | select(.type == "blob") | .path' <<<"$json" 2>/dev/null || echo "")
+          }
+
+          # Shallowest file of that name. Below the repo root it only counts in a
+          # directory the scripts name, or for a Dockerfile in docker/ or build/:
+          # a composer.json beside a side tool says nothing about the app we install.
+          # Usage: fetch_file "composer.json" => sets REPLY to its content and
+          # FETCHED_PATH to its path, both empty when there is none
+          fetch_file() {
+            local name="$1" path="" p dir
+            REPLY=""
+            FETCHED_PATH=""
+            if [[ -n "$TREE_PATHS" ]]; then
+              while IFS= read -r p; do
+                dir="${p%/*}"
+                if [[ "$p" != */* || "$SCRIPT_TEXT" == *"/${dir}"* ]] ||
+                  { [[ "$name" == "Dockerfile" ]] && [[ "$dir" =~ ^\.?(docker|build|deploy|container)s?$ ]]; }; then
+                  path="$p"
+                  break
+                fi
+              done < <(grep -E "(^|/)${name//./\\.}$" <<<"$TREE_PATHS" |
+                grep -vE '(^|/)(tests?|docs?|examples?|samples?|fixtures|vendor|node_modules|third_party|\.github)/' |
+                awk -F/ '{print NF "\t" $0}' | sort -n | cut -f2- || true)
+            fi
+            [[ -z "$path" && "$TREE_TRUNCATED" == "true" ]] && path="$name"
+            [[ -z "$path" ]] && return
+            REPLY=$(curl -sf "https://raw.githubusercontent.com/${REPO}/${BRANCH}/${path}" 2>/dev/null || echo "")
+            if [[ -n "$REPLY" ]]; then
+              FETCHED_PATH="$path"
+            fi
+          }
+
+          # Collect results
+          declare -a issue_scripts=()
+          declare -a sync_scripts=()
+          declare -a report_lines=()
+          total=0
+          checked=0
+          drift_count=0
+
+          for script in install/*-install.sh; do
+            [[ ! -f "$script" ]] && continue
+            grep -qE '^[^#]*(\bsetup_php\b|PHP_VERSION=)' "$script" || continue
+
+            total=$((total + 1))
+            slug=$(basename "$script" | sed 's/-install\.sh$//')
+            our_version=$(php_version_of "$script")
+
+            # The update has to set up the same PHP, or a bump in install/ reaches
+            # new containers only. setup_php without PHP_VERSION switches to core's
+            # default, so that counts as out of step too.
+            ct_file="ct/${slug}.sh"
+            ct_display="—"
+            if [[ -f "$ct_file" ]] &&
+              grep -qE '^[^#]*(\b(check_for|fetch_and_deploy)_|(^|[[:space:];&|(])(composer|php)[[:space:]])' "$ct_file"; then
+              if grep -qE '^[^#]*\bsetup_php\b' "$ct_file"; then
+                ct_version=$(php_version_of "$ct_file")
+              else
+                ct_version="none"
+              fi
+              ct_display="$ct_version"
+              if [[ "$ct_version" != "$our_version" ]]; then
+                ct_display="⚠️ $ct_version"
+                sync_scripts+=("$slug|$our_version|$ct_version")
+              fi
+            fi
+
+            source_url=$(head -20 "$script" | grep -i '# Source:' | grep -oP 'https://github\.com/[^\s|]+' | head -1 || echo "")
+            REPO=$(sed -E 's|https://github\.com/||; s|\.git$||' <<<"$source_url" | cut -d/ -f1,2)
+            repo_note=""
+            if [[ ! "$REPO" =~ ^[^/]+/[^/]+$ ]]; then
+              repo_from_calls "$slug" "$script" "$ct_file"
+              REPO="$REPLY"
+              repo_note=" (from calls)"
+            fi
+            if [[ -z "$REPO" ]]; then
+              report_lines+=("| \`$slug\` | $our_version | $ct_display | — | — | — | — | ⏭️ No GitHub source |")
+              continue
+            fi
+
+            checked=$((checked + 1))
+
+            # A script that deploys a release is judged by that release: the default
+            # branch may already target a PHP no release needs yet. Both the tree
+            # API and raw.githubusercontent.com resolve HEAD to the default branch.
+            SCRIPT_TEXT=$(cat "$script" "$ct_file" 2>/dev/null || true)
+            BRANCH="HEAD"
+            ref_note=""
+            rel_lines=$(grep -iE '(fetch_and_deploy|check_for)_gh_(release|tag)|get_latest_github_release' <<<"$SCRIPT_TEXT" || true)
+            if [[ "${rel_lines,,}" == *"${REPO,,}"* ]]; then
+              tag=$(curl -sf -H "Authorization: token $GH_TOKEN" "https://api.github.com/repos/${REPO}/releases/latest" 2>/dev/null |
+                jq -r '.tag_name // empty' 2>/dev/null || echo "")
+              if [[ -n "$tag" ]]; then
+                BRANCH="$tag"
+                ref_note=" @ \`${tag}\`"
+              fi
+            fi
+            load_tree
+
+            # Composer enforces a locked package's upper bound only when the script
+            # runs it; a release that ships vendor/ is held to the lower bounds alone,
+            # which its code needs at run time.
+            runs_composer=0
+            grep -qE '^[^#]*\bcomposer (install|update)\b' "$script" && runs_composer=1
+
+            # require.php is the project's own range; composer.lock beside it holds
+            # what its locked packages need, and Composer refuses either breach.
+            requires="" platform="" lock_lo="" lock_hi="" lock_lo_pkg="" lock_hi_pkg=""
+            fetch_file "composer.json"
+            if [[ -n "$REPLY" ]]; then
+              requires=$(jq -r '.require.php // empty' <<<"$REPLY" 2>/dev/null || true)
+              platform=$(jq -r '.config.platform.php // empty' <<<"$REPLY" 2>/dev/null | grep -oP '^\d\.\d+' || true)
+              lock_path="composer.lock"
+              [[ "$FETCHED_PATH" == */* ]] && lock_path="${FETCHED_PATH%/*}/composer.lock"
+              lock=""
+              if [[ "$TREE_TRUNCATED" == "true" ]] || grep -qxF "$lock_path" <<<"$TREE_PATHS"; then
+                lock=$(curl -sf "https://raw.githubusercontent.com/${REPO}/${BRANCH}/${lock_path}" 2>/dev/null || echo "")
+              fi
+              if [[ -n "$lock" ]]; then
+                while IFS=$'\t' read -r pkg spec; do
+                  [[ -z "$spec" ]] && continue
+                  parse_constraint "$spec"
+                  if [[ -n "$C_MIN" ]] && { [[ -z "$lock_lo" ]] || ((C_MIN > lock_lo)); }; then
+                    lock_lo=$C_MIN lock_lo_pkg="$pkg"
+                  fi
+                  if ((runs_composer)) && [[ -n "$C_MAX" ]] && { [[ -z "$lock_hi" ]] || ((C_MAX < lock_hi)); }; then
+                    lock_hi=$C_MAX lock_hi_pkg="$pkg"
+                  fi
+                done < <(jq -r '.packages[]? | select(.require.php != null) | "\(.name)\t\(.require.php)"' <<<"$lock" 2>/dev/null || true)
+              fi
+            fi
+
+            # What upstream runs: the last php image in the Dockerfile, else
+            # config.platform.php, the version it resolves its lock against
+            docker_php=""
+            fetch_file "Dockerfile"
+            if [[ -n "$REPLY" ]]; then
+              docker_php=$(grep -oiP '^\s*FROM\s+(?:--platform=\S+\s+)?\S*?php[:-]?\K\d\.\d+(?![.\d]*-?(?:rc|alpha|beta))' <<<"$REPLY" | tail -1 || true)
+              [[ -z "$docker_php" ]] && docker_php=$(grep -oP '\bphp\K\d\.\d+(?=-(?:fpm|cli|common))' <<<"$REPLY" | head -1 || true)
+            fi
+            rec="" rec_hint=""
+            if [[ -n "$docker_php" ]]; then
+              rec=$((${docker_php%%.*} * 100 + ${docker_php#*.})) rec_hint="Dockerfile"
+            elif [[ -n "$platform" ]]; then
+              rec=$((${platform%%.*} * 100 + ${platform#*.})) rec_hint="config.platform.php"
+            fi
+
+            # The range Composer enforces: the project's, narrowed by its packages
+            parse_constraint "$requires"
+            lo="$C_MIN" hi="$C_MAX"
+            lo_hint="require.php: $requires" hi_hint="require.php: $requires"
+            if [[ -n "$lock_lo" ]] && { [[ -z "$lo" ]] || ((lock_lo > lo)); }; then
+              lo=$lock_lo lo_hint="composer.lock: ${lock_lo_pkg} needs ≥$(vstr "$lock_lo")"
+            fi
+            if [[ -n "$lock_hi" ]] && { [[ -z "$hi" ]] || ((lock_hi < hi)); }; then
+              hi=$lock_hi hi_hint="composer.lock: ${lock_hi_pkg} allows ≤$(vstr "$lock_hi")"
+            fi
+
+            status="✅"
+            target=""
+            hint=""
+            if [[ "$our_version" == "dynamic" ]]; then
+              status="🔄 Dynamic"
+            elif [[ "$our_version" == "unset" ]]; then
+              status="🔄 core default (no version pinned)"
+            else
+              ours=$((${our_version%%.*} * 100 + ${our_version#*.}))
+              if [[ -n "$lo" ]] && ((ours < lo)); then
+                target=$lo
+                [[ -n "$rec" ]] && within "$rec" && ((rec > ours)) && target=$rec
+                hint="$lo_hint"
+                status="🔴 Too old → $(vstr "$target") ($hint)"
+              elif [[ -n "$hi" ]] && ((ours > hi)); then
+                target=$hi
+                [[ -n "$rec" ]] && within "$rec" && target=$rec
+                hint="$hi_hint"
+                status="🔴 Too new → $(vstr "$target") ($hint)"
+              elif [[ -n "$lo" || -n "$hi" ]]; then
+                [[ -n "$rec" && "$rec" -ne "$ours" ]] && status="✅ (upstream runs $(vstr "$rec") via $rec_hint)"
+              elif [[ -n "$rec" ]] && ((ours < rec)); then
+                target=$rec
+                hint="$rec_hint"
+                status="🔸 Drift → upstream=$(vstr "$rec") ($rec_hint)"
+              elif [[ -n "$rec" ]] && ((ours > rec)); then
+                status="✅ Ahead of upstream ($(vstr "$rec") via $rec_hint)"
+              fi
+            fi
+            if [[ -n "$target" ]]; then
+              issue_scripts+=("$slug|$our_version|$(vstr "$target")|$hint|$REPO")
+              drift_count=$((drift_count + 1))
+            fi
+
+            lock_display="—"
+            if [[ -n "$lock_lo" || -n "$lock_hi" ]]; then
+              lock_display="${lock_lo:+≥$(vstr "$lock_lo")}${lock_lo:+${lock_hi:+ }}${lock_hi:+≤$(vstr "$lock_hi")}"
+            fi
+            # A | inside a cell ends it
+            requires_md="${requires:-—}"
+            report_lines+=("| \`$slug\` | $our_version | $ct_display | ${requires_md//|/\\|} | $lock_display | ${docker_php:-—} | [$REPO](https://github.com/$REPO)$repo_note$ref_note | ${status//|/\\|} |")
+
+            # Rate-limit to avoid GitHub secondary rate limits
+            sleep 0.3
+          done
+
+          sync_count=${#sync_scripts[@]}
+
+          echo ""
+          echo "========================================="
+          echo "  Total scripts using PHP:         $total"
+          echo "  Checked (with GitHub source):    $checked"
+          echo "  Version drift detected:          $drift_count"
+          echo "  ct/ update out of step:          $sync_count"
+          echo "========================================="
+
+          {
+            echo "drift_count=$drift_count"
+            echo "sync_count=$sync_count"
+            echo "total=$total"
+            echo "checked=$checked"
+          } >> "$GITHUB_OUTPUT"
+
+          printf '%s\n' "${issue_scripts[@]}" > /tmp/drift_scripts.txt 2>/dev/null || touch /tmp/drift_scripts.txt
+          printf '%s\n' "${sync_scripts[@]}" > /tmp/sync_scripts.txt 2>/dev/null || touch /tmp/sync_scripts.txt
+
+          {
+            echo "## PHP Version Drift Report"
+            echo ""
+            echo "**Generated:** $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "**Scripts checked:** $total | **With GitHub source:** $checked | **Drift detected:** $drift_count | **ct/ out of step:** $sync_count"
+            echo ""
+            echo "| Script | Our Version | ct/ update | require.php | composer.lock | Dockerfile | Upstream Repo | Status |"
+            echo "|--------|-------------|------------|-------------|---------------|------------|---------------|--------|"
+            printf '%s\n' "${report_lines[@]}" | sort
+          } > /tmp/drift_report.md
+
+          cat /tmp/drift_report.md
+
+      # One PR per script: the bumps are judged individually, and a combined PR
+      # is blocked by its worst member.
+      - name: Open a pull request per drifting script
+        if: steps.check.outputs.drift_count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          : >/tmp/drift_prs.txt
+
+          while IFS='|' read -r slug our upstream hint repo; do
+            [[ -z "$slug" ]] && continue
+
+            if [[ ! "$our" =~ ^[0-9]+\.[0-9]+$ || ! "$upstream" =~ ^[0-9]+\.[0-9]+$ ]]; then
+              printf '%s|manual||\n' "$slug" >>/tmp/drift_prs.txt
+              continue
+            fi
+
+            # The branch name carries the exact bump: open means waiting for a
+            # review, closed means someone said no to this bump.
+            branch="php-drift/${slug}-${our}-to-${upstream}"
+
+            existing=$(gh pr list --head "$branch" --state all \
+              --json number,state,url,labels --jq '.[0] // empty' 2>/dev/null || echo "")
+
+            if [[ -n "$existing" ]]; then
+              state=$(jq -r '.state' <<<"$existing")
+              url=$(jq -r '.url' <<<"$existing")
+              stale=$(jq -r '[.labels[]?.name] | index("stale") // empty' <<<"$existing")
+
+              case "$state" in
+              OPEN)
+                printf '%s|open|%s\n' "$slug" "$url" >>/tmp/drift_prs.txt
+                continue
+                ;;
+              MERGED)
+                printf '%s|merged|%s\n' "$slug" "$url" >>/tmp/drift_prs.txt
+                continue
+                ;;
+              *)
+                # A close by the stale bot is no verdict on the bump; any other close is.
+                if [[ -z "$stale" ]]; then
+                  printf '%s|declined|%s\n' "$slug" "$url" >>/tmp/drift_prs.txt
+                  continue
+                fi
+                git push origin --delete "$branch" >/dev/null 2>&1 || true
+                ;;
+              esac
+            fi
+
+            git checkout -q -B "$branch"
+
+            # PHP_VERSION plus the package, service, socket and /etc/php names.
+            old_re="${our//./\\.}"
+            changed=()
+            leftovers=""
+            uses_fpm=0
+            for f in "install/${slug}-install.sh" "ct/${slug}.sh"; do
+              [[ -f "$f" ]] || continue
+              grep -qE 'PHP_FPM="?YES|php[0-9.]*-fpm|php-fpm' "$f" && uses_fpm=1
+              if grep -qE "PHP_VERSION=\"?${old_re}([^0-9]|$)|php${old_re}([^0-9]|$)|/php/${old_re}/" "$f"; then
+                sed -i -E \
+                  -e "s/(PHP_VERSION=)\"?${old_re}\"?([^0-9]|$)/\1\"${upstream}\"\2/g" \
+                  -e "s/php${old_re}([^0-9]|$)/php${upstream}\1/g" \
+                  -e "s#/php/${old_re}/#/php/${upstream}/#g" "$f"
+                changed+=("$f")
+              fi
+              rest=$(grep -nE "(^|[^0-9.])${old_re}([^0-9]|$)" "$f" | grep -vE '^[0-9]+:[[:space:]]*#' | head -10 || true)
+              [[ -n "$rest" ]] && leftovers+="${f}:"$'\n'"${rest}"$'\n'
+            done
+
+            if [[ ${#changed[@]} -eq 0 ]]; then
+              printf '%s|manual||\n' "$slug" >>/tmp/drift_prs.txt
+              git checkout -q main
+              continue
+            fi
+
+            git add "${changed[@]}"
+            git commit -q -m "${slug}: bump PHP from ${our} to ${upstream}"
+
+            if ! git push -q -u origin "$branch" 2>/dev/null; then
+              printf '%s|failed||\n' "$slug" >>/tmp/drift_prs.txt
+              git checkout -q main
+              continue
+            fi
+
+            # Only an update that runs setup_php with the new version moves an
+            # existing container; renamed php${our} paths alone point it at nothing.
+            ct_sets_php=0
+            grep -qE "^[^#]*PHP_VERSION=\"?${upstream//./\\.}\"?[^0-9]" "ct/${slug}.sh" 2>/dev/null && ct_sets_php=1
+            notes=""
+            if [[ -f "ct/${slug}.sh" ]] && ((!ct_sets_php)); then
+              notes+="> [!WARNING]
+          > \`ct/${slug}.sh\` runs no \`setup_php\` for ${upstream} in its update, so existing containers stay on PHP ${our}. Add \`PHP_VERSION=\"${upstream}\" setup_php\` to the update before merging.
+
+          "
+            fi
+            if ((uses_fpm && ct_sets_php)); then
+              notes+="> [!IMPORTANT]
+          > On the next update setup_php removes PHP ${our} and installs ${upstream}. The web server config an existing container got at install time still names \`php${our}-fpm\` (socket or service): the update has to switch it, or the site goes down.
+
+          "
+            fi
+            if [[ -n "$leftovers" ]]; then
+              notes+="Still naming ${our} after the rewrite, check by hand:
+
+          \`\`\`
+          ${leftovers}\`\`\`
+
+          "
+            fi
+
+            # The test command is written here: a PR opened with GITHUB_TOKEN does
+            # not start pr-test-command.yml.
+            body=$(cat <<PR_EOF
+          \`${slug}\` pins PHP **${our}**, upstream indicates **${upstream}** (${hint}) — [upstream repo](https://github.com/${repo}).
+
+          ${notes}Opened automatically by the weekly PHP version drift check. **Nothing here has been tested.** Run it against a host before merging:
+
+          \`\`\`bash
+          export COMMUNITY_SCRIPTS_URL=https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${branch}
+          bash -c "\$(curl -fsSL "\$COMMUNITY_SCRIPTS_URL/ct/${slug}.sh")"
+          \`\`\`
+
+          Both lines are needed — without \`COMMUNITY_SCRIPTS_URL\` the engine takes the \`install/\` script from \`main\`.
+
+          If the bump is wrong, **close this PR**. It gets recorded on the drift report and this exact bump is not proposed again.
+          PR_EOF
+            )
+
+            # Labels go on at creation: they exempt the PR from the template check,
+            # which runs on "opened". "keep-open" rather than "automated pr", which
+            # changelog-pr.yml drops.
+            if url=$(gh pr create \
+              --title "${slug}: bump PHP from ${our} to ${upstream}" \
+              --body "$body" \
+              --base main \
+              --head "$branch" \
+              --label "keep-open" \
+              --label "update script" \
+              --label "bugfix" 2>/dev/null); then
+              printf '%s|open|%s\n' "$slug" "$url" >>/tmp/drift_prs.txt
+            else
+              printf '%s|failed||\n' "$slug" >>/tmp/drift_prs.txt
+            fi
+
+            git checkout -q main
+          done </tmp/drift_scripts.txt
+
+          echo "Pull request status per script:"
+          cat /tmp/drift_prs.txt
+
+      - name: Create or update summary issue
+        if: steps.check.outputs.drift_count != '0' || steps.check.outputs.sync_count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          TITLE="[Automated] PHP Version Drift Report"
+          DATE=$(date -u +%Y-%m-%d)
+          DRIFT_COUNT="${{ steps.check.outputs.drift_count }}"
+          SYNC_COUNT="${{ steps.check.outputs.sync_count }}"
+          TOTAL="${{ steps.check.outputs.total }}"
+          CHECKED="${{ steps.check.outputs.checked }}"
+
+          CHECKLIST=""
+          while IFS='|' read -r slug our_version upstream hint repo; do
+            [[ -z "$slug" ]] && continue
+
+            pr_state=""
+            pr_url=""
+            if [[ -f /tmp/drift_prs.txt ]]; then
+              pr_line=$(grep -m1 "^${slug}|" /tmp/drift_prs.txt || echo "")
+              pr_state=$(cut -d'|' -f2 <<<"$pr_line")
+              pr_url=$(cut -d'|' -f3 <<<"$pr_line")
+            fi
+
+            case "$pr_state" in
+            open)     mark="- [ ]"; note="— ${pr_url}" ;;
+            declined) mark="- [x]"; note="— declined in ${pr_url}, not proposed again" ;;
+            merged)   mark="- [x]"; note="— merged in ${pr_url}" ;;
+            manual)   mark="- [ ]"; note="— needs a manual change (no fixed PHP version to rewrite)" ;;
+            failed)   mark="- [ ]"; note="— could not open a PR automatically" ;;
+            *)        mark="- [ ]"; note="" ;;
+            esac
+
+            CHECKLIST+="${mark} **\`${slug}\`** — ours: \`${our_version}\` → upstream: \`${upstream}\` (${hint}) — [repo](https://github.com/${repo}) ${note}"$'\n'
+          done < /tmp/drift_scripts.txt
+
+          SYNC_SECTION=""
+          if [[ "$SYNC_COUNT" != "0" ]]; then
+            SYNC_SECTION="### ct/ update out of step with install/"$'\n\n'
+            SYNC_SECTION+="The update does not set up the install's PHP, so a bump reaches new containers only. \`none\` means the update has no setup_php; \`unset\` means it switches to core's default."$'\n\n'
+            while IFS='|' read -r slug our_version ct_version; do
+              [[ -z "$slug" ]] && continue
+              SYNC_SECTION+="- [ ] **\`${slug}\`** — install/: \`${our_version}\`, ct/ update: \`${ct_version}\`"$'\n'
+            done < /tmp/sync_scripts.txt
+          fi
+
+          REPORT=$(cat /tmp/drift_report.md)
+
+          BODY=$(cat <<ISSUE_EOF
+          ## PHP Version Drift Report — ${DATE}
+
+          **${DRIFT_COUNT}** script(s) with version drift detected (out of ${CHECKED} checked / ${TOTAL} total), **${SYNC_COUNT}** ct/ update(s) out of step.
+
+          🔴 means our PHP is outside what Composer accepts (\`require.php\` or a locked package), so the install breaks. 🔸 means upstream runs a newer PHP and declares no range.
+
+          ### Scripts requiring investigation
+
+          ${CHECKLIST:-None.}
+
+          ${SYNC_SECTION}
+
+          ### How to resolve
+
+          Each item above has its own pull request with the bump applied and a ready-to-run test command in the description.
+
+          1. Check upstream's composer.json / Dockerfile to confirm the PHP version
+          2. Run the test command from the PR against a host: a fresh install and an update of an existing container
+          3. Merge the PR if it works — the item disappears from this list on the next run
+          4. Close the PR if the bump is wrong: this exact bump is never proposed again
+
+          <details>
+          <summary>Full report</summary>
+
+          ${REPORT}
+
+          </details>
+
+          ---
+          *This issue is automatically created/updated weekly by the PHP version drift check workflow.*
+          *Last updated: ${DATE}*
+          ISSUE_EOF
+          )
+
+          EXISTING=$(gh issue list --state open --label "automated,dependencies" --search "\"[Automated] PHP Version Drift Report\"" --json number --jq '.[0].number // empty' 2>/dev/null || echo "")
+
+          if [[ -n "$EXISTING" ]]; then
+            gh issue edit "$EXISTING" --body "$BODY"
+            echo "Updated existing issue #$EXISTING"
+          else
+            gh issue create \
+              --title "$TITLE" \
+              --body "$BODY" \
+              --label "automated,dependencies"
+            echo "Created new summary issue"
+          fi
+
+      - name: Close issue if no drift
+        if: steps.check.outputs.drift_count == '0' && steps.check.outputs.sync_count == '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          EXISTING=$(gh issue list --state open --label "automated,dependencies" --search "\"[Automated] PHP Version Drift Report\"" --json number --jq '.[0].number // empty' 2>/dev/null || echo "")
+          if [[ -n "$EXISTING" ]]; then
+            gh issue close "$EXISTING" --comment "All PHP versions are in sync with upstream. Closing automatically."
+            echo "Closed issue #$EXISTING"
+          fi
