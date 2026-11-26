@@ -37,6 +37,14 @@ function update_script() {
     msg_ok "Fixed wrong permissions"
   fi
 
+  if ! php -r 'exit((extension_loaded("intl") && extension_loaded("xml")) ? 0 : 1);' 2>/dev/null; then
+    msg_info "Installing missing PHP extensions"
+    apt_update_safe
+    $STD apt install -y php-xml php-intl
+    systemctl reload apache2
+    msg_ok "Installed missing PHP extensions"
+  fi
+
   if check_for_gh_release "freshrss" "FreshRSS/FreshRSS"; then
     msg_info "Stopping Apache2"
     systemctl stop apache2
