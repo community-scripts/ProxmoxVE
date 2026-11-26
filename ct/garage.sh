@@ -33,73 +33,58 @@ color
 catch_errors
 
 update_deb_based() {
-  if [[ ! -f /usr/local/bin/garage ]]; then
-    msg_error "No ${APP} Installation Found!"
-    exit
-  fi
-  GITEA_RELEASE=$(curl -fsSL https://api.github.com/repos/deuxfleurs-org/garage/tags | jq -r '.[0].name')
-  if [[ "${GITEA_RELEASE}" != "$(cat ~/.garage 2>/dev/null)" ]] || [[ ! -f ~/.garage ]]; then
-    msg_info "Stopping Service"
-    systemctl stop garage
-    msg_ok "Stopped Service"
-
-    msg_info "Backing Up Data"
-    cp /usr/local/bin/garage /usr/local/bin/garage.old 2>/dev/null || true
-    cp /etc/garage.toml /etc/garage.toml.bak 2>/dev/null || true
-    msg_ok "Backed Up Data"
-
-    msg_info "Updating Garage"
-    curl -fsSL "https://garagehq.deuxfleurs.fr/_releases/${GITEA_RELEASE}/$(arch_resolve "x86_64" "aarch64")-unknown-linux-musl/garage" -o /usr/local/bin/garage
-    chmod +x /usr/local/bin/garage
-    echo "${GITEA_RELEASE}" >~/.garage
-    msg_ok "Updated Garage"
-
-    msg_info "Starting Service"
-    systemctl start garage
-    msg_ok "Started Service"
-    msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. Garage is already at ${GITEA_RELEASE}"
-  fi
+  systemctl restart garage
 }
 
 update_alpine() {
-  if [[ ! -f /usr/local/bin/garage ]]; then
-    msg_error "No ${APP} Installation Found!"
-    exit
-  fi
-
-  GITEA_RELEASE=$(curl -fsSL https://api.github.com/repos/deuxfleurs-org/garage/tags | jq -r '.[0].name')
-  if [[ "${GITEA_RELEASE}" != "$(cat ~/.garage 2>/dev/null)" ]] || [[ ! -f ~/.garage ]]; then
-    msg_info "Stopping Service"
-    rc-service garage stop || true
-    msg_ok "Stopped Service"
-
-    msg_info "Backing Up Data"
-    cp /usr/local/bin/garage /usr/local/bin/garage.old 2>/dev/null || true
-    cp /etc/garage.toml /etc/garage.toml.bak 2>/dev/null || true
-    msg_ok "Backed Up Data"
-
-    msg_info "Updating Garage"
-    curl -fsSL "https://garagehq.deuxfleurs.fr/_releases/${GITEA_RELEASE}/$(arch_resolve "x86_64" "aarch64")-unknown-linux-musl/garage" -o /usr/local/bin/garage
-    chmod +x /usr/local/bin/garage
-    echo "${GITEA_RELEASE}" >~/.garage
-    msg_ok "Updated Garage"
-
-    msg_info "Starting Service"
-    rc-service garage start || rc-service garage restart
-    msg_ok "Started Service"
-    msg_ok "Updated successfully!"
-  else
-    msg_ok "No update required. Garage is already at ${GITEA_RELEASE}"
-  fi
+  rc-service garage restart || rc-service garage start
 }
 
 function update_script() {
   header_info
   check_container_storage
   check_container_resources
+
+  if [[ ! -f /usr/local/bin/garage ]]; then
+    msg_error "No Garage installation found"
+    exit 1
+  fi
+
+  local garage_release garage_binary
+  garage_release=$(curl -fsSL https://git.deuxfleurs.fr/api/v1/repos/Deuxfleurs/garage/releases/latest |
+    jq -er 'select(.draft == false and .prerelease == false) | .tag_name | strings | select(length > 0)') || {
+    msg_error "Could not determine the latest stable Garage release"
+    exit 1
+  }
+  if [[ -f ~/.garage && "$garage_release" == "$(<~/.garage)" ]]; then
+    msg_ok "No update required. Garage is already at ${garage_release}"
+    exit 0
+  fi
+
+  msg_info "Downloading Garage ${garage_release}"
+  garage_binary=$(mktemp /usr/local/bin/garage.XXXXXX)
+  if ! download_file "https://garagehq.deuxfleurs.fr/_releases/${garage_release}/$(arch_resolve "x86_64" "aarch64")-unknown-linux-musl/garage" "$garage_binary"; then
+    rm -f "$garage_binary"
+    exit 1
+  fi
+  msg_ok "Downloaded Garage ${garage_release}"
+
+  msg_info "Backing up Garage"
+  cp /usr/local/bin/garage /usr/local/bin/garage.old 2>/dev/null || true
+  cp /etc/garage.toml /etc/garage.toml.bak 2>/dev/null || true
+  msg_ok "Backed up Garage"
+
+  msg_info "Updating Garage"
+  chmod 755 "$garage_binary"
+  mv -f "$garage_binary" /usr/local/bin/garage
+  msg_ok "Updated Garage"
+
+  msg_info "Restarting Garage"
   run_os_update
+  msg_ok "Restarted Garage"
+  printf '%s\n' "$garage_release" >~/.garage
+  msg_ok "Updated Garage successfully"
+  exit 0
 }
 
 start
