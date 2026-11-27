@@ -19,7 +19,7 @@ msg_ok "Installed Dependencies"
 
 PG_VERSION="17" setup_postgresql
 PG_DB_NAME="norish" PG_DB_USER="norish" setup_postgresql_db
-PYTHON_VERSION="3.14" setup_uv
+PYTHON_VERSION="3.15" setup_uv
 
 fetch_and_deploy_gh_release "norish" "norish-recipes/norish" "tarball"
 NODE_VERSION="26" NODE_MODULE="pnpm@$(jq -r '.packageManager | split("@")[1]' /opt/norish/package.json)" setup_nodejs
