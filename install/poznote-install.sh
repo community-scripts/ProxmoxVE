@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y nginx
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.4" PHP_FPM="YES" setup_php
+PHP_VERSION="8.5" PHP_FPM="YES" setup_php
 
 fetch_and_deploy_gh_release "poznote" "timothepoznanski/poznote" "tarball"
 
