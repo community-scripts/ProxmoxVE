@@ -33,7 +33,7 @@ msg_ok "Installed Dependencies"
 NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
 fetch_and_deploy_gh_release "tandoor" "TandoorRecipes/recipes" "tarball" "latest" "/opt/tandoor"
 PG_VERSION="17" setup_postgresql
-PYTHON_VERSION="3.13" setup_uv
+PYTHON_VERSION="3.14" setup_uv
 PG_DB_USER="tandoor" PG_DB_NAME="db_recipes" PG_DB_EXTENSIONS="unaccent,pg_trgm" setup_postgresql_db
 SECRET_KEY=$(openssl rand -base64 45 | sed 's/\//\\\//g')
 
