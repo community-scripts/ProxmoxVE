@@ -38,6 +38,7 @@ function update_script() {
 
     create_backup /opt/yourls/user
 
+    PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="mysql,mbstring,gd,xml,curl" setup_php
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "yourls" "YOURLS/YOURLS" "tarball"
 
     restore_backup
