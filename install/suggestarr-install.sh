@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y build-essential
 msg_ok "Installed Dependencies"
 
-PYTHON_VERSION="3.12" setup_uv
+PYTHON_VERSION="3.13" setup_uv
 NODE_VERSION="22" setup_nodejs
 
 fetch_and_deploy_gh_release "suggestarr" "giuseppe99barchetta/SuggestArr" "tarball"
@@ -33,7 +33,7 @@ msg_ok "Built Frontend"
 
 msg_info "Setting up Python Environment"
 cd /opt/suggestarr
-$STD uv venv --python 3.12 /opt/suggestarr/.venv
+$STD uv venv --python 3.13 /opt/suggestarr/.venv
 $STD uv pip install --python /opt/suggestarr/.venv -r /opt/suggestarr/api_service/requirements.txt
 msg_ok "Set up Python Environment"
 

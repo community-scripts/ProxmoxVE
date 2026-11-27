@@ -62,7 +62,7 @@ function update_script() {
 
     msg_info "Updating Python Environment"
     cd /opt/suggestarr
-    $STD uv venv --python 3.12 /opt/suggestarr/.venv
+    $STD uv venv --python 3.13 /opt/suggestarr/.venv
     $STD uv pip install --python /opt/suggestarr/.venv -r /opt/suggestarr/api_service/requirements.txt
     msg_ok "Updated Python Environment"
 
