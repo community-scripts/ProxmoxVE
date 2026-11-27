@@ -597,6 +597,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - yourls: bump PHP from 8.3 to 8.4 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#19104](https://github.com/community-scripts/ProxmoxVE/pull/19104))
     - tandoor: bump Python from 3.13 to 3.14 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#19110](https://github.com/community-scripts/ProxmoxVE/pull/19110))
     - poznote: bump PHP from 8.4 to 8.5 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#19102](https://github.com/community-scripts/ProxmoxVE/pull/19102))
     - suggestarr: bump Python from 3.12 to 3.13 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#19109](https://github.com/community-scripts/ProxmoxVE/pull/19109))
