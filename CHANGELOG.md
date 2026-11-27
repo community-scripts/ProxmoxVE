@@ -591,7 +591,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - incus: check an imported VM image on the target remote  [@MickLesk](https://github.com/MickLesk) ([core#309](https://github.com/community-scripts/core/pull/309))
+  - Protect a container once its install succeeded, not at creation [@MickLesk](https://github.com/MickLesk) ([core#311](https://github.com/community-scripts/core/pull/311))
+- Refuse a static address without a gateway before pct create [@MickLesk](https://github.com/MickLesk) ([core#312](https://github.com/community-scripts/core/pull/312))
+- Offer no DNS retry to a container without a connection out [@MickLesk](https://github.com/MickLesk) ([core#310](https://github.com/community-scripts/core/pull/310))
+- incus: check an imported VM image on the target remote  [@MickLesk](https://github.com/MickLesk) ([core#309](https://github.com/community-scripts/core/pull/309))
 
 ### 🧰 Tools
 
