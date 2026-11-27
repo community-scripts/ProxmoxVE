@@ -1,0 +1,54 @@
+name: Record closed Python drift PR
+
+# The drift check opens one PR per script and treats a closed one as a verdict:
+# that bump is not proposed again. Record it on the report so the decision is
+# visible there.
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  record:
+    if: >
+      github.repository == 'community-scripts/ProxmoxVE' &&
+      github.event.pull_request.merged == false &&
+      startsWith(github.event.pull_request.head.ref, 'python-drift/')
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/github-script@v9
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            // python-drift/<slug>-<from>-to-<to>
+            const m = pr.head.ref.match(/^python-drift\/(.+)-(\d+\.\d+)-to-(\d+\.\d+)$/);
+            if (!m) return;
+            const [, slug, from, to] = m;
+
+            // A close by the stale bot is a lapsed review, not a decision on
+            // the bump, and the drift check reopens those.
+            const stale = pr.labels.some((l) => l.name === 'stale');
+
+            const issues = await github.rest.issues.listForRepo({
+              owner, repo, state: 'open', labels: 'automated,dependencies', per_page: 100,
+            });
+            const issue = issues.data.find(
+              (i) => !i.pull_request && i.title === '[Automated] Python Version Drift Report',
+            );
+            if (!issue) return;
+
+            const body = stale
+              ? `\`${slug}\` — PR #${pr.number} (Python ${from} → ${to}) was closed as stale. `
+                + `No decision was recorded, so the next drift check opens it again.`
+              : `\`${slug}\` — PR #${pr.number} (Python ${from} → ${to}) was closed without merging. `
+                + `The script keeps Python ${from} and this bump will not be proposed again. `
+                + `If it was closed by mistake, reopen the PR.`;
+
+            await github.rest.issues.createComment({
+              owner, repo, issue_number: issue.number, body,
+            });

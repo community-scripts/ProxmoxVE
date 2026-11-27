@@ -1,0 +1,654 @@
+name: Check Python Version Drift
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Weekly on Monday at 07:00 UTC, an hour after the Node.js check
+    - cron: "0 7 * * 1"
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  check-python-versions:
+    if: github.repository == 'community-scripts/ProxmoxVE'
+    runs-on: coolify-runner
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq jq curl > /dev/null 2>&1
+
+      - name: Check upstream Python versions
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          echo "================================================"
+          echo "  Checking Python version drift in install scripts"
+          echo "================================================"
+
+          # Versions are compared minor-granular as major*100+minor: 3.12 -> 312.
+          vstr() { echo "$(($1 / 100)).$(($1 % 100))"; }
+
+          # One comparison as a range. Sets T_LO / T_HI, empty when open.
+          # Returns 1 for a clause that bounds nothing (!=).
+          clause_range() {
+            local op="$1" maj="$2" mi="$3" pat="$4"
+            T_LO="" T_HI=""
+            [[ "$mi" == "*" ]] && mi=""
+            [[ "$pat" == "*" ]] && pat=""
+            case "$op" in
+            "!=") return 1 ;;
+            ">=") T_LO=$((maj * 100 + ${mi:-0})) ;;
+            ">")
+              if [[ -n "$pat" ]]; then T_LO=$((maj * 100 + mi))
+              elif [[ -n "$mi" ]]; then T_LO=$((maj * 100 + mi + 1))
+              else T_LO=$(((maj + 1) * 100)); fi
+              ;;
+            "<")
+              if [[ -n "$pat" && "$pat" -gt 0 ]]; then T_HI=$((maj * 100 + mi))
+              elif [[ -n "$mi" ]]; then T_HI=$((maj * 100 + mi - 1))
+              else T_HI=$(((maj - 1) * 100 + 99)); fi
+              ;;
+            "<=")
+              if [[ -n "$mi" ]]; then T_HI=$((maj * 100 + mi)); else T_HI=$((maj * 100 + 99)); fi
+              ;;
+            "~=")
+              T_LO=$((maj * 100 + ${mi:-0}))
+              if [[ -n "$pat" ]]; then T_HI=$T_LO; else T_HI=$((maj * 100 + 99)); fi
+              ;;
+            "^")
+              T_LO=$((maj * 100 + ${mi:-0}))
+              T_HI=$((maj * 100 + 99))
+              ;;
+            "~")
+              # Poetry: ~3.11 is >=3.11,<3.12
+              T_LO=$((maj * 100 + ${mi:-0}))
+              if [[ -n "$mi" ]]; then T_HI=$T_LO; else T_HI=$((maj * 100 + 99)); fi
+              ;;
+            "" | "=" | "==" | "===")
+              if [[ -n "$mi" ]]; then T_LO=$((maj * 100 + mi)) T_HI=$T_LO
+              else T_LO=$((maj * 100)) T_HI=$((maj * 100 + 99)); fi
+              ;;
+            *) return 1 ;;
+            esac
+          }
+
+          # requires-python (PEP 440) or a Poetry python constraint as a range:
+          # comma = AND, || = OR. Sets C_MIN / C_MAX, empty when open.
+          parse_constraint() {
+            local spec="$1" alt part a_lo a_hi lo_open=0 hi_open=0 seen=0
+            local -a alts parts
+            C_MIN="" C_MAX=""
+            spec="${spec//[[:space:]]/}"
+            spec="${spec//||/|}"
+            IFS='|' read -ra alts <<<"$spec"
+            for alt in "${alts[@]}"; do
+              alt="${alt#,}"
+              alt="${alt%,}"
+              [[ -z "$alt" || "$alt" == "*" ]] && { lo_open=1; hi_open=1; seen=1; continue; }
+              a_lo="" a_hi=""
+              IFS=',' read -ra parts <<<"$alt"
+              for part in "${parts[@]}"; do
+                [[ "$part" =~ ^(~=|===|==|!=|>=|<=|>|<|\^|~|=)?v?([0-9]+)(\.([0-9]+|\*))?(\.([0-9]+|\*))?(\.[0-9]+)*$ ]] || continue
+                clause_range "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}" "${BASH_REMATCH[4]}" "${BASH_REMATCH[6]}" || continue
+                [[ -n "$T_LO" ]] && { [[ -z "$a_lo" ]] || ((T_LO > a_lo)); } && a_lo=$T_LO
+                [[ -n "$T_HI" ]] && { [[ -z "$a_hi" ]] || ((T_HI < a_hi)); } && a_hi=$T_HI
+              done
+              seen=1
+              if [[ -z "$a_lo" ]]; then lo_open=1; elif [[ -z "$C_MIN" ]] || ((a_lo < C_MIN)); then C_MIN=$a_lo; fi
+              if [[ -z "$a_hi" ]]; then hi_open=1; elif [[ -z "$C_MAX" ]] || ((a_hi > C_MAX)); then C_MAX=$a_hi; fi
+            done
+            ((seen)) || return 0
+            ((lo_open)) && C_MIN=""
+            ((hi_open)) && C_MAX=""
+            return 0
+          }
+
+          # Inside the range parse_constraint last set
+          within() { [[ -z "$C_MIN" || "$1" -ge "$C_MIN" ]] && [[ -z "$C_MAX" || "$1" -le "$C_MAX" ]]; }
+
+          # Same name in the core sense (_forge_is_script_app): case and punctuation
+          # ignored, equal, or one containing the other with the shorter at least 4 long.
+          name_matches() {
+            local a="${1,,}" b="${2,,}" short
+            a="${a//[^a-z0-9]/}"
+            b="${b//[^a-z0-9]/}"
+            [[ -n "$a" && -n "$b" ]] || return 1
+            [[ "$a" == "$b" ]] && return 0
+            short="$a"
+            ((${#b} < ${#a})) && short="$b"
+            ((${#short} >= 4)) || return 1
+            [[ "$a" == *"$b"* || "$b" == *"$a"* ]]
+          }
+
+          # The app's own repo from the GitHub calls in its scripts, for a Source line
+          # that names a website. Only a repo or app argument matching the script's
+          # name counts, so a deployed dependency is not taken for the app.
+          # Usage: repo_from_calls "slug" file... => sets REPLY to owner/repo or empty
+          repo_from_calls() {
+            local slug="$1" text app repo
+            shift
+            REPLY=""
+            text=$(cat "$@" 2>/dev/null | grep -v '^[[:space:]]*#' || true)
+            while read -r app repo; do
+              [[ -z "$repo" || "${repo,,}" == community-scripts/* ]] && continue
+              if name_matches "$slug" "${repo#*/}" || { [[ "$app" != "-" ]] && name_matches "$slug" "$app"; }; then
+                REPLY="$repo"
+                return
+              fi
+            done < <(
+              grep -oP '\b(?:fetch_and_deploy|check_for)_gh_(?:release|tag)\s+"?[^"\s]+"?\s+"?[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+' <<<"$text" |
+                sed -E 's/^[a-z_]+[[:space:]]+"?([^"[:space:]]+)"?[[:space:]]+"?/\1 /' || true
+              grep -oP '(?:get_latest_github_release\s+"?|(?<![\w.])github\.com/|api\.github\.com/repos/|codeload\.github\.com/)\K[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+' <<<"$text" |
+                sed -E 's/\.git$//; s/^/- /' || true
+            )
+          }
+
+          # Python a script pins: X.Y, "dynamic", or "unset" (uv then picks one
+          # that satisfies the project's requires-python). setup_uv only installs
+          # PYTHON_VERSION; the venv takes its version from --python and the like.
+          python_version_of() {
+            local f="$1" v
+            v=$(grep -oP '^[^#]*PYTHON_VERSION="?\K3\.\d+' "$f" | head -1 || true)
+            [[ -z "$v" ]] && v=$(grep -oP '^[^#]*(?:--python[ =]"?|-p "?python|uv python install "?|UV_PYTHON="?)\K3\.\d+' "$f" | head -1 || true)
+            if [[ -n "$v" ]]; then
+              echo "$v"
+            elif grep -qE '^[^#]*PYTHON_VERSION=\$\(' "$f"; then
+              echo "dynamic"
+            else
+              echo "unset"
+            fi
+          }
+
+          # One recursive tree per repo; files are looked up in it instead of
+          # probing raw URLs one by one. A truncated tree (very large repos)
+          # falls back to the repo root.
+          load_tree() {
+            local json
+            TREE_PATHS=""
+            TREE_TRUNCATED="true"
+            json=$(curl -sf -H "Authorization: token $GH_TOKEN" \
+              "https://api.github.com/repos/${REPO}/git/trees/${BRANCH//\//%2F}?recursive=1" 2>/dev/null || echo "")
+            [[ -z "$json" ]] && return
+            TREE_TRUNCATED=$(jq -r '.truncated // false' <<<"$json" 2>/dev/null || echo "true")
+            TREE_PATHS=$(jq -r '.tree[]? | select(.type == "blob") | .path' <<<"$json" 2>/dev/null || echo "")
+          }
+
+          # Shallowest file of that name. Below the repo root it only counts in a
+          # directory the scripts name (apps/parser-api), or for a Dockerfile in
+          # docker/ or build/: a pyproject.toml beside a side tool says nothing
+          # about the app we install.
+          # Usage: fetch_file "pyproject.toml" => sets REPLY to its content or empty
+          fetch_file() {
+            local name="$1" path="" p dir
+            REPLY=""
+            if [[ -n "$TREE_PATHS" ]]; then
+              while IFS= read -r p; do
+                dir="${p%/*}"
+                if [[ "$p" != */* || "$SCRIPT_TEXT" == *"/${dir}"* ]] ||
+                  { [[ "$name" == "Dockerfile" ]] && [[ "$dir" =~ ^\.?(docker|build|deploy|container)s?$ ]]; }; then
+                  path="$p"
+                  break
+                fi
+              done < <(grep -E "(^|/)${name//./\\.}$" <<<"$TREE_PATHS" |
+                grep -vE '(^|/)(tests?|docs?|examples?|samples?|fixtures|vendor|node_modules|third_party|\.github)/' |
+                awk -F/ '{print NF "\t" $0}' | sort -n | cut -f2- || true)
+            fi
+            [[ -z "$path" && "$TREE_TRUNCATED" == "true" ]] && path="$name"
+            [[ -z "$path" ]] && return
+            REPLY=$(curl -sf "https://raw.githubusercontent.com/${REPO}/${BRANCH}/${path}" 2>/dev/null || echo "")
+          }
+
+          # Collect results
+          declare -a issue_scripts=()
+          declare -a sync_scripts=()
+          declare -a report_lines=()
+          total=0
+          checked=0
+          drift_count=0
+
+          for script in install/*-install.sh; do
+            [[ ! -f "$script" ]] && continue
+            grep -qE '^[^#]*(\bsetup_uv\b|PYTHON_VERSION=)' "$script" || continue
+
+            total=$((total + 1))
+            slug=$(basename "$script" | sed 's/-install\.sh$//')
+            our_version=$(python_version_of "$script")
+
+            # The update has to use the same Python, or a bump in install/
+            # reaches new containers only: an existing venv keeps its version
+            # until the update recreates it.
+            ct_file="ct/${slug}.sh"
+            ct_display="—"
+            if [[ -f "$ct_file" ]] &&
+              grep -qE '^[^#]*(\b(check_for|fetch_and_deploy)_|(^|[[:space:];&|(])(uv|pip|pip3)[[:space:]])' "$ct_file"; then
+              ct_version=$(python_version_of "$ct_file")
+              # uv sync rebuilds the venv itself once requires-python excludes its Python
+              if [[ "$ct_version" == "unset" ]] && grep -qE '^[^#]*\buv sync\b' "$ct_file"; then
+                ct_version="$our_version"
+              fi
+              ct_display="$ct_version"
+              if [[ "$ct_version" != "$our_version" ]]; then
+                ct_display="⚠️ $ct_version"
+                sync_scripts+=("$slug|$our_version|$ct_version")
+              fi
+            fi
+
+            source_url=$(head -20 "$script" | grep -i '# Source:' | grep -oP 'https://github\.com/[^\s|]+' | head -1 || echo "")
+            REPO=$(sed -E 's|https://github\.com/||; s|\.git$||' <<<"$source_url" | cut -d/ -f1,2)
+            repo_note=""
+            if [[ ! "$REPO" =~ ^[^/]+/[^/]+$ ]]; then
+              repo_from_calls "$slug" "$script" "$ct_file"
+              REPO="$REPLY"
+              repo_note=" (from calls)"
+            fi
+            if [[ -z "$REPO" ]]; then
+              report_lines+=("| \`$slug\` | $our_version | $ct_display | — | — | — | — | ⏭️ No GitHub source |")
+              continue
+            fi
+
+            checked=$((checked + 1))
+
+            # A script that deploys a release is judged by that release: the default
+            # branch may already target a Python no release needs yet. Both the tree
+            # API and raw.githubusercontent.com resolve HEAD to the default branch.
+            SCRIPT_TEXT=$(cat "$script" "$ct_file" 2>/dev/null || true)
+            BRANCH="HEAD"
+            ref_note=""
+            rel_lines=$(grep -iE '(fetch_and_deploy|check_for)_gh_(release|tag)|get_latest_github_release' <<<"$SCRIPT_TEXT" || true)
+            if [[ "${rel_lines,,}" == *"${REPO,,}"* ]]; then
+              tag=$(curl -sf -H "Authorization: token $GH_TOKEN" "https://api.github.com/repos/${REPO}/releases/latest" 2>/dev/null |
+                jq -r '.tag_name // empty' 2>/dev/null || echo "")
+              if [[ -n "$tag" ]]; then
+                BRANCH="$tag"
+                ref_note=" @ \`${tag}\`"
+              fi
+            fi
+            load_tree
+
+            # uv sync takes the interpreter from requires-python itself, so a pin
+            # outside that range is unused rather than broken.
+            uv_sync=0
+            if grep -qE '^[^#]*\buv sync\b' "$script" && ! grep -qE '^[^#]*\buv sync\b.*(--python|-p )' "$script"; then
+              uv_sync=1
+            fi
+
+            # requires-python (PEP 621), Poetry's python dependency, or setup.py/cfg
+            requires=""
+            fetch_file "pyproject.toml"
+            if [[ -n "$REPLY" ]]; then
+              requires=$(grep -oP '^\s*requires-python\s*=\s*["\x27]\K[^"\x27]+' <<<"$REPLY" | head -1 || true)
+              [[ -z "$requires" ]] && requires=$(awk '
+                /^\[/ { in_deps = ($0 ~ /^\[tool\.poetry\.dependencies\]/) }
+                in_deps && /^[[:space:]]*python[[:space:]]*=/ { print; exit }' <<<"$REPLY" |
+                grep -oP '=\s*["\x27]\K[^"\x27]+' || true)
+            fi
+            if [[ -z "$requires" ]]; then
+              for f in setup.cfg setup.py; do
+                fetch_file "$f"
+                requires=$(grep -oP 'python_requires\s*=\s*["\x27]?\K[^"\x27\n]+' <<<"$REPLY" | head -1 | sed 's/[[:space:],]*$//' || true)
+                [[ -n "$requires" ]] && break
+              done
+            fi
+
+            # What upstream runs: .python-version, else the last python image in the Dockerfile
+            pyver_file=""
+            fetch_file ".python-version"
+            [[ -n "$REPLY" ]] && pyver_file=$(grep -oP '^\s*(?:cpython-)?\K3\.\d+' <<<"$REPLY" | head -1 || true)
+            docker_py=""
+            fetch_file "Dockerfile"
+            [[ -n "$REPLY" ]] && docker_py=$(grep -oiP '^\s*FROM\s+(?:--platform=\S+\s+)?\S*?python:?\K3\.\d+(?![.\d]*-?(?:rc|alpha|beta|a\d|b\d))' <<<"$REPLY" | tail -1 || true)
+
+            rec="" rec_hint=""
+            if [[ -n "$pyver_file" ]]; then
+              rec=$((${pyver_file%%.*} * 100 + ${pyver_file#*.})) rec_hint=".python-version"
+            elif [[ -n "$docker_py" ]]; then
+              rec=$((${docker_py%%.*} * 100 + ${docker_py#*.})) rec_hint="Dockerfile"
+            fi
+
+            parse_constraint "$requires"
+            status="✅"
+            target=""
+            hint=""
+            if [[ "$our_version" == "dynamic" ]]; then
+              status="🔄 Dynamic"
+            elif [[ "$our_version" == "unset" ]]; then
+              status="🔄 uv picks (no version pinned)"
+            else
+              ours=$((${our_version%%.*} * 100 + ${our_version#*.}))
+              if [[ -n "$C_MIN" ]] && ((ours < C_MIN)); then
+                target=$C_MIN
+                [[ -n "$rec" ]] && within "$rec" && ((rec > ours)) && target=$rec
+                hint="requires-python: $requires"
+                status="🔴 Too old → $(vstr "$target") ($hint)"
+              elif [[ -n "$C_MAX" ]] && ((ours > C_MAX)); then
+                target=$C_MAX
+                [[ -n "$rec" ]] && within "$rec" && target=$rec
+                hint="requires-python: $requires"
+                status="🔴 Too new → $(vstr "$target") ($hint)"
+              fi
+              if [[ -n "$target" ]] && ((uv_sync)); then
+                hint="uv sync follows requires-python: $requires"
+                status="🔸 Pin unused → $(vstr "$target") ($hint)"
+              elif [[ -n "$target" ]]; then
+                :
+              elif [[ -n "$requires" ]]; then
+                [[ -n "$rec" && "$rec" -ne "$ours" ]] && status="✅ (upstream runs $(vstr "$rec") via $rec_hint)"
+              elif [[ -n "$rec" ]] && ((ours < rec)); then
+                target=$rec
+                hint="$rec_hint"
+                status="🔸 Drift → upstream=$(vstr "$rec") ($rec_hint)"
+              elif [[ -n "$rec" ]] && ((ours > rec)); then
+                status="✅ Ahead of upstream ($(vstr "$rec") via $rec_hint)"
+              fi
+            fi
+            if [[ -n "$target" ]]; then
+              issue_scripts+=("$slug|$our_version|$(vstr "$target")|$hint|$REPO")
+              drift_count=$((drift_count + 1))
+            fi
+
+            # A | inside a cell ends it
+            requires_md="${requires:-—}"
+            report_lines+=("| \`$slug\` | $our_version | $ct_display | ${requires_md//|/\\|} | ${pyver_file:-—} | ${docker_py:-—} | [$REPO](https://github.com/$REPO)$repo_note$ref_note | ${status//|/\\|} |")
+
+            # Rate-limit to avoid GitHub secondary rate limits
+            sleep 0.3
+          done
+
+          sync_count=${#sync_scripts[@]}
+
+          echo ""
+          echo "========================================="
+          echo "  Total scripts using Python:      $total"
+          echo "  Checked (with GitHub source):    $checked"
+          echo "  Version drift detected:          $drift_count"
+          echo "  ct/ update out of step:          $sync_count"
+          echo "========================================="
+
+          {
+            echo "drift_count=$drift_count"
+            echo "sync_count=$sync_count"
+            echo "total=$total"
+            echo "checked=$checked"
+          } >> "$GITHUB_OUTPUT"
+
+          printf '%s\n' "${issue_scripts[@]}" > /tmp/drift_scripts.txt 2>/dev/null || touch /tmp/drift_scripts.txt
+          printf '%s\n' "${sync_scripts[@]}" > /tmp/sync_scripts.txt 2>/dev/null || touch /tmp/sync_scripts.txt
+
+          {
+            echo "## Python Version Drift Report"
+            echo ""
+            echo "**Generated:** $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "**Scripts checked:** $total | **With GitHub source:** $checked | **Drift detected:** $drift_count | **ct/ out of step:** $sync_count"
+            echo ""
+            echo "| Script | Our Version | ct/ update | requires-python | .python-version | Dockerfile | Upstream Repo | Status |"
+            echo "|--------|-------------|------------|-----------------|-----------------|------------|---------------|--------|"
+            printf '%s\n' "${report_lines[@]}" | sort
+          } > /tmp/drift_report.md
+
+          cat /tmp/drift_report.md
+
+      # One PR per script: the bumps are judged individually, and a combined PR
+      # is blocked by its worst member.
+      - name: Open a pull request per drifting script
+        if: steps.check.outputs.drift_count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          : >/tmp/drift_prs.txt
+
+          while IFS='|' read -r slug our upstream hint repo; do
+            [[ -z "$slug" ]] && continue
+
+            if [[ ! "$our" =~ ^[0-9]+\.[0-9]+$ || ! "$upstream" =~ ^[0-9]+\.[0-9]+$ ]]; then
+              printf '%s|manual||\n' "$slug" >>/tmp/drift_prs.txt
+              continue
+            fi
+
+            # The branch name carries the exact bump: open means waiting for a
+            # review, closed means someone said no to this bump.
+            branch="python-drift/${slug}-${our}-to-${upstream}"
+
+            existing=$(gh pr list --head "$branch" --state all \
+              --json number,state,url,labels --jq '.[0] // empty' 2>/dev/null || echo "")
+
+            if [[ -n "$existing" ]]; then
+              state=$(jq -r '.state' <<<"$existing")
+              url=$(jq -r '.url' <<<"$existing")
+              stale=$(jq -r '[.labels[]?.name] | index("stale") // empty' <<<"$existing")
+
+              case "$state" in
+              OPEN)
+                printf '%s|open|%s\n' "$slug" "$url" >>/tmp/drift_prs.txt
+                continue
+                ;;
+              MERGED)
+                printf '%s|merged|%s\n' "$slug" "$url" >>/tmp/drift_prs.txt
+                continue
+                ;;
+              *)
+                # A close by the stale bot is no verdict on the bump; any other close is.
+                if [[ -z "$stale" ]]; then
+                  printf '%s|declined|%s\n' "$slug" "$url" >>/tmp/drift_prs.txt
+                  continue
+                fi
+                git push origin --delete "$branch" >/dev/null 2>&1 || true
+                ;;
+              esac
+            fi
+
+            git checkout -q -B "$branch"
+
+            # PYTHON_VERSION plus the places a venv or uv names the version.
+            old_re="${our//./\\.}"
+            uv_re='(--python[ =]"?|-p "?python|uv python install "?|UV_PYTHON="?)'
+            changed=()
+            leftovers=""
+            for f in "install/${slug}-install.sh" "ct/${slug}.sh"; do
+              [[ -f "$f" ]] || continue
+              if grep -qE "(PYTHON_VERSION=\"?|${uv_re})${old_re}([^0-9]|$)" "$f"; then
+                sed -i -E \
+                  -e "s/(PYTHON_VERSION=)\"?${old_re}(\.[0-9]+)?\"?/\1\"${upstream}\"/g" \
+                  -e "s/${uv_re}${old_re}([^0-9]|$)/\1${upstream}\2/g" "$f"
+                changed+=("$f")
+              fi
+              rest=$(grep -nE "(^|[^0-9.])${old_re}([^0-9]|$)" "$f" | grep -vE '^[0-9]+:[[:space:]]*#' | head -10 || true)
+              [[ -n "$rest" ]] && leftovers+="${f}:"$'\n'"${rest}"$'\n'
+            done
+
+            if [[ ${#changed[@]} -eq 0 ]]; then
+              printf '%s|manual||\n' "$slug" >>/tmp/drift_prs.txt
+              git checkout -q main
+              continue
+            fi
+
+            git add "${changed[@]}"
+            git commit -q -m "${slug}: bump Python from ${our} to ${upstream}"
+
+            if ! git push -q -u origin "$branch" 2>/dev/null; then
+              printf '%s|failed||\n' "$slug" >>/tmp/drift_prs.txt
+              git checkout -q main
+              continue
+            fi
+
+            notes=""
+            if [[ -f "ct/${slug}.sh" && " ${changed[*]} " != *" ct/${slug}.sh "* ]]; then
+              notes+="> [!WARNING]
+          > \`ct/${slug}.sh\` names no Python ${our} in its update, so existing containers keep their venv on it. Make the update recreate the venv with ${upstream} before merging.
+
+          "
+            fi
+            if [[ -n "$leftovers" ]]; then
+              notes+="Still naming ${our} after the rewrite, check by hand:
+
+          \`\`\`
+          ${leftovers}\`\`\`
+
+          "
+            fi
+
+            # The test command is written here: a PR opened with GITHUB_TOKEN does
+            # not start pr-test-command.yml.
+            body=$(cat <<PR_EOF
+          \`${slug}\` pins Python **${our}**, upstream indicates **${upstream}** (${hint}) — [upstream repo](https://github.com/${repo}).
+
+          ${notes}Opened automatically by the weekly Python version drift check. **Nothing here has been tested.** Run it against a host before merging:
+
+          \`\`\`bash
+          export COMMUNITY_SCRIPTS_URL=https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${branch}
+          bash -c "\$(curl -fsSL "\$COMMUNITY_SCRIPTS_URL/ct/${slug}.sh")"
+          \`\`\`
+
+          Both lines are needed — without \`COMMUNITY_SCRIPTS_URL\` the engine takes the \`install/\` script from \`main\`.
+
+          If the bump is wrong, **close this PR**. It gets recorded on the drift report and this exact bump is not proposed again.
+          PR_EOF
+            )
+
+            # Labels go on at creation: they exempt the PR from the template check,
+            # which runs on "opened". "keep-open" rather than "automated pr", which
+            # changelog-pr.yml drops.
+            if url=$(gh pr create \
+              --title "${slug}: bump Python from ${our} to ${upstream}" \
+              --body "$body" \
+              --base main \
+              --head "$branch" \
+              --label "keep-open" \
+              --label "update script" \
+              --label "bugfix" 2>/dev/null); then
+              printf '%s|open|%s\n' "$slug" "$url" >>/tmp/drift_prs.txt
+            else
+              printf '%s|failed||\n' "$slug" >>/tmp/drift_prs.txt
+            fi
+
+            git checkout -q main
+          done </tmp/drift_scripts.txt
+
+          echo "Pull request status per script:"
+          cat /tmp/drift_prs.txt
+
+      - name: Create or update summary issue
+        if: steps.check.outputs.drift_count != '0' || steps.check.outputs.sync_count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          TITLE="[Automated] Python Version Drift Report"
+          DATE=$(date -u +%Y-%m-%d)
+          DRIFT_COUNT="${{ steps.check.outputs.drift_count }}"
+          SYNC_COUNT="${{ steps.check.outputs.sync_count }}"
+          TOTAL="${{ steps.check.outputs.total }}"
+          CHECKED="${{ steps.check.outputs.checked }}"
+
+          CHECKLIST=""
+          while IFS='|' read -r slug our_version upstream hint repo; do
+            [[ -z "$slug" ]] && continue
+
+            pr_state=""
+            pr_url=""
+            if [[ -f /tmp/drift_prs.txt ]]; then
+              pr_line=$(grep -m1 "^${slug}|" /tmp/drift_prs.txt || echo "")
+              pr_state=$(cut -d'|' -f2 <<<"$pr_line")
+              pr_url=$(cut -d'|' -f3 <<<"$pr_line")
+            fi
+
+            case "$pr_state" in
+            open)     mark="- [ ]"; note="— ${pr_url}" ;;
+            declined) mark="- [x]"; note="— declined in ${pr_url}, not proposed again" ;;
+            merged)   mark="- [x]"; note="— merged in ${pr_url}" ;;
+            manual)   mark="- [ ]"; note="— needs a manual change (no fixed Python version to rewrite)" ;;
+            failed)   mark="- [ ]"; note="— could not open a PR automatically" ;;
+            *)        mark="- [ ]"; note="" ;;
+            esac
+
+            CHECKLIST+="${mark} **\`${slug}\`** — ours: \`${our_version}\` → upstream: \`${upstream}\` (${hint}) — [repo](https://github.com/${repo}) ${note}"$'\n'
+          done < /tmp/drift_scripts.txt
+
+          SYNC_SECTION=""
+          if [[ "$SYNC_COUNT" != "0" ]]; then
+            SYNC_SECTION="### ct/ update out of step with install/"$'\n\n'
+            SYNC_SECTION+="The update does not use the install's Python, so a bump reaches new containers only: an existing venv keeps its version until the update recreates it."$'\n\n'
+            while IFS='|' read -r slug our_version ct_version; do
+              [[ -z "$slug" ]] && continue
+              SYNC_SECTION+="- [ ] **\`${slug}\`** — install/: \`${our_version}\`, ct/ update: \`${ct_version}\`"$'\n'
+            done < /tmp/sync_scripts.txt
+          fi
+
+          REPORT=$(cat /tmp/drift_report.md)
+
+          BODY=$(cat <<ISSUE_EOF
+          ## Python Version Drift Report — ${DATE}
+
+          **${DRIFT_COUNT}** script(s) with version drift detected (out of ${CHECKED} checked / ${TOTAL} total), **${SYNC_COUNT}** ct/ update(s) out of step.
+
+          🔴 means our Python is outside upstream's \`requires-python\`, so the install breaks. 🔸 *Pin unused* means the install runs \`uv sync\`, which takes its Python from \`requires-python\`, so the pin only installs an interpreter nobody uses. 🔸 *Drift* means upstream runs a newer Python and declares no range.
+
+          ### Scripts requiring investigation
+
+          ${CHECKLIST:-None.}
+
+          ${SYNC_SECTION}
+
+          ### How to resolve
+
+          Each item above has its own pull request with the bump applied and a ready-to-run test command in the description.
+
+          1. Check upstream's pyproject.toml / Dockerfile to confirm the Python version
+          2. Run the test command from the PR against a host
+          3. Merge the PR if it works — the item disappears from this list on the next run
+          4. Close the PR if the bump is wrong: this exact bump is never proposed again
+
+          <details>
+          <summary>Full report</summary>
+
+          ${REPORT}
+
+          </details>
+
+          ---
+          *This issue is automatically created/updated weekly by the Python version drift check workflow.*
+          *Last updated: ${DATE}*
+          ISSUE_EOF
+          )
+
+          EXISTING=$(gh issue list --state open --label "automated,dependencies" --search "\"[Automated] Python Version Drift Report\"" --json number --jq '.[0].number // empty' 2>/dev/null || echo "")
+
+          if [[ -n "$EXISTING" ]]; then
+            gh issue edit "$EXISTING" --body "$BODY"
+            echo "Updated existing issue #$EXISTING"
+          else
+            gh issue create \
+              --title "$TITLE" \
+              --body "$BODY" \
+              --label "automated,dependencies"
+            echo "Created new summary issue"
+          fi
+
+      - name: Close issue if no drift
+        if: steps.check.outputs.drift_count == '0' && steps.check.outputs.sync_count == '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          EXISTING=$(gh issue list --state open --label "automated,dependencies" --search "\"[Automated] Python Version Drift Report\"" --json number --jq '.[0].number // empty' 2>/dev/null || echo "")
+          if [[ -n "$EXISTING" ]]; then
+            gh issue close "$EXISTING" --comment "All Python versions are in sync with upstream. Closing automatically."
+            echo "Closed issue #$EXISTING"
+          fi
