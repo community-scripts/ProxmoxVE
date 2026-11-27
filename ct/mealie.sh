@@ -45,7 +45,7 @@ function update_script() {
     msg_ok "Backup completed"
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "mealie" "mealie-recipes/mealie" "tarball"
-    PYTHON_VERSION="3.12" UV_PROJECT_DIR="/opt/mealie" setup_uv
+    PYTHON_VERSION="3.14" UV_PROJECT_DIR="/opt/mealie" setup_uv
 
     msg_info "Restoring Configuration"
     mv -f /opt/mealie.env /opt/mealie/mealie.env
