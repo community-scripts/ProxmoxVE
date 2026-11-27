@@ -162,7 +162,7 @@ else
 fi
 
 fetch_and_deploy_gh_release "romm" "rommapp/romm" "tarball"
-PYTHON_VERSION="3.13" UV_PROJECT_DIR="/opt/romm" setup_uv
+PYTHON_VERSION="3.14" UV_PROJECT_DIR="/opt/romm" setup_uv
 echo "__version__ = \"$(cat ~/.romm)\"" >/opt/romm/backend/__version__.py
 
 msg_info "Creating environment file"
