@@ -39,9 +39,10 @@ function update_script() {
 
         fetch_and_deploy_gh_release "warracker" "sassanix/Warracker" "tarball" "latest" "/opt/warracker"
 
+        PYTHON_VERSION="3.15" setup_uv
         msg_info "Updating Warracker"
         cd /opt/warracker/backend
-        $STD uv venv --clear .venv
+        $STD uv venv --python 3.15 --clear .venv
         $STD source .venv/bin/activate
         $STD uv pip install -r requirements.txt
         msg_ok "Updated Warracker"
