@@ -80,7 +80,7 @@ EOF
     source /opt/gramps-web/venv/bin/activate
     $STD uv pip install --no-cache-dir --upgrade pip setuptools wheel
     $STD uv pip install --no-cache-dir gunicorn
-    $STD uv pip install --no-cache-dir /opt/gramps-web-api
+    $STD uv pip install --no-cache-dir "/opt/gramps-web-api[ai]"
     msg_ok "Updated Gramps Web API"
 
     msg_info "Applying Database Migration"

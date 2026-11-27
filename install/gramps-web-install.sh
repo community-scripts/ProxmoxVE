@@ -78,7 +78,7 @@ $STD uv venv -c -p python3.12 /opt/gramps-web/venv
 source /opt/gramps-web/venv/bin/activate
 $STD uv pip install --no-cache-dir --upgrade pip setuptools wheel
 $STD uv pip install --no-cache-dir gunicorn
-$STD uv pip install --no-cache-dir /opt/gramps-web-api
+$STD uv pip install --no-cache-dir "/opt/gramps-web-api[ai]"
 
 GRAMPS_VERSION=$(/opt/gramps-web/venv/bin/python3 -c "import gramps.version; print('%s%s' % (gramps.version.VERSION_TUPLE[0], gramps.version.VERSION_TUPLE[1]))" 2>/dev/null || echo "60")
 GRAMPS_PLUGINS_DIR="/opt/gramps-web/data/gramps/gramps${GRAMPS_VERSION}/plugins"
