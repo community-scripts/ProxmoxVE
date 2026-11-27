@@ -47,7 +47,7 @@ function update_script() {
     create_backup /opt/tandoor/.env
 
     NODE_VERSION="22" NODE_MODULE="yarn" setup_nodejs
-    PYTHON_VERSION="3.13" setup_uv
+    PYTHON_VERSION="3.14" setup_uv
     CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="config api mediafiles staticfiles" fetch_and_deploy_gh_release "tandoor" "TandoorRecipes/recipes" "tarball" "latest" "/opt/tandoor"
 
     restore_backup
