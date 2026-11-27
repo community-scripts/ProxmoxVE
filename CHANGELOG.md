@@ -602,6 +602,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
     - update-apps: say what tar or zstd said when a backup fails [@MickLesk](https://github.com/MickLesk) ([#19066](https://github.com/community-scripts/ProxmoxVE/pull/19066))
 
+### 📚 Documentation
+
+  - github: add a weekly PHP version drift check [@MickLesk](https://github.com/MickLesk) ([#19094](https://github.com/community-scripts/ProxmoxVE/pull/19094))
+
 ## 2026-11-26
 
 ### 🆕 New Scripts
