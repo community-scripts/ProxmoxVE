@@ -19,7 +19,7 @@ msg_ok "Installed Dependencies"
 
 setup_mariadb
 MARIADB_DB_NAME="yourls" MARIADB_DB_USER="yourls" setup_mariadb_db
-PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULE="mysql,mbstring,gd,xml,curl" setup_php
+PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="mysql,mbstring,gd,xml,curl" setup_php
 
 fetch_and_deploy_gh_release "yourls" "YOURLS/YOURLS" "tarball"
 
