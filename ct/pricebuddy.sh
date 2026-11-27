@@ -36,6 +36,7 @@ function update_script() {
     systemctl stop pricebuddy-worker
     msg_ok "Stopped PriceBuddy Worker"
 
+    PHP_VERSION="8.4" PHP_FPM="YES" PHP_MEMORY_LIMIT="2048M" setup_php
     setup_composer
     NODE_VERSION="22" setup_nodejs
 

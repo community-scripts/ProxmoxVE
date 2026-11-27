@@ -47,6 +47,7 @@ function update_script() {
     mv /opt/monica/ /opt/monica-backup
     msg_ok "Backup created"
 
+    PHP_VERSION="8.2" PHP_APACHE="YES" PHP_MODULE="mysqli,pdo-mysql" setup_php
     fetch_and_deploy_gh_release "monica" "monicahq/monica" "prebuild" "latest" "/opt/monica" "monica-v*.tar.bz2"
 
     msg_info "Configuring monica"

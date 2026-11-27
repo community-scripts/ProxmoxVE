@@ -44,6 +44,7 @@ function update_script() {
 
     create_backup /opt/projectsend/.env /opt/projectsend/storage/app/files
 
+    PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="ldap,pcntl" setup_php
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "projectsend" "projectsend/projectsend" "prebuild" "latest" "/opt/projectsend"
 
     restore_backup

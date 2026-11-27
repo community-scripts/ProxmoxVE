@@ -38,6 +38,7 @@ function update_script() {
 
     create_backup /opt/matomo/config/config.ini.php /opt/matomo/misc/user /root/matomo.creds
 
+    PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULES="pdo_mysql,gd,mbstring,xml,curl,intl,zip,ldap" setup_php
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "matomo" "matomo-org/matomo" "prebuild" "latest" "/opt/matomo" "matomo-*.zip"
 
     msg_info "Setting up Matomo"

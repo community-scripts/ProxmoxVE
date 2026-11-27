@@ -46,6 +46,7 @@ function update_script() {
 
     create_backup /opt/domain-monitor/.env
 
+    PHP_VERSION="8.4" PHP_APACHE="YES" PHP_FPM="YES" setup_php
     setup_composer
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "domain-monitor" "Hosteroid/domain-monitor" "prebuild" "latest" "/opt/domain-monitor" "domain-monitor-v*.zip"
 

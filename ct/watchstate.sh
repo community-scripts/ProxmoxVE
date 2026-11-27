@@ -37,6 +37,7 @@ function update_script() {
     msg_ok "Stopped WatchState"
 
     create_backup /opt/watchstate/.env
+    PHP_VERSION="8.5" PHP_FPM="YES" setup_php
     setup_composer
     NODE_VERSION="24" NODE_MODULE="bun" setup_nodejs
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "watchstate" "arabcoders/watchstate" "tarball" "latest" "/opt/watchstate" "" "v"

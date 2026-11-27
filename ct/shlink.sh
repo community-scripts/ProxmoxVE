@@ -38,6 +38,7 @@ function update_script() {
 
     create_backup /opt/shlink/.env /opt/shlink/data
 
+    PHP_VERSION="8.5" setup_php
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "shlink" "shlinkio/shlink" "prebuild" "latest" "/opt/shlink" "shlink*_php8.5_dist.zip"
 
     restore_backup

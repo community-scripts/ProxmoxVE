@@ -38,6 +38,7 @@ function update_script() {
 
     create_backup /opt/invoiceninja/.env /opt/invoiceninja/storage /opt/invoiceninja/public/storage /opt/invoiceninja/vendor/beganovich/snappdf/versions
 
+    PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="soap" setup_php
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "invoiceninja" "invoiceninja/invoiceninja" "prebuild" "latest" "/opt/invoiceninja" "invoiceninja.tar.gz"
 
     restore_backup

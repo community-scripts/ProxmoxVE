@@ -34,6 +34,7 @@ function update_script() {
   if check_for_gh_release "rss-bridge" "RSS-Bridge/rss-bridge"; then
     create_backup /opt/rss-bridge/config.ini.php
 
+    PHP_VERSION="8.4" PHP_FPM="YES" setup_php
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "rss-bridge" "RSS-Bridge/rss-bridge" "tarball"
 
     restore_backup

@@ -40,6 +40,7 @@ function update_script() {
 
     create_backup /opt/chevereto/app/env.php /opt/chevereto/content
 
+    PHP_VERSION="8.3" PHP_FPM="YES" PHP_UPLOAD_MAX_FILESIZE="512M" PHP_POST_MAX_SIZE="512M" PHP_MAX_EXECUTION_TIME="600" setup_php
     CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="images" fetch_and_deploy_gh_release "chevereto" "chevereto/chevereto" "tarball"
 
     restore_backup

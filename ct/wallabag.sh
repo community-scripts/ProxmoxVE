@@ -41,6 +41,7 @@ function update_script() {
 
     create_backup /opt/wallabag/app/config/parameters.yml
 
+    PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULE="tidy" setup_php
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wallabag" "wallabag/wallabag" "prebuild" "latest" "/opt/wallabag" "wallabag-*.tar.gz"
 
     restore_backup

@@ -35,6 +35,7 @@ function update_script() {
     msg_ok "Backup created"
 
     rm -rf /opt/privatebin/*
+    PHP_VERSION="8.2" PHP_FPM="YES" setup_php
     fetch_and_deploy_gh_release "privatebin" "PrivateBin/PrivateBin" "tarball"
 
     msg_info "Configuring ${APP}"

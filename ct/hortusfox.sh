@@ -61,6 +61,7 @@ function update_script() {
       /opt/hortusfox/public/img \
       /opt/hortusfox/public/themes
 
+    PHP_VERSION="8.3" PHP_APACHE="YES" setup_php
     CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="public/attachments public/backup public/exports public/snd" fetch_and_deploy_gh_release "hortusfox" "danielbrendel/hortusfox-web" "tarball"
     restore_backup
 

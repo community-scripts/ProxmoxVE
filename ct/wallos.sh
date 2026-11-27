@@ -37,6 +37,7 @@ function update_script() {
     mv /opt/wallos/images/uploads/logos /opt/logos/
     msg_ok "Backup created"
 
+    PHP_VERSION="8.4" PHP_APACHE="YES" setup_php
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wallos" "ellite/Wallos" "tarball"
 
     msg_info "Configuring Wallos"

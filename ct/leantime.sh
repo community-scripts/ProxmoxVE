@@ -39,6 +39,7 @@ function update_script() {
 
     create_backup /opt/leantime/config/.env
 
+    PHP_VERSION="8.4" PHP_APACHE="YES" PHP_FPM="YES" setup_php
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "leantime" "Leantime/leantime" "prebuild" "latest" "/opt/leantime" Leantime*.tar.gz
 
     restore_backup

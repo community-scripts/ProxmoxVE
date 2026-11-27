@@ -40,6 +40,7 @@ function update_script() {
     systemctl stop nagios
     msg_ok "Stopped Nagios"
 
+    PHP_APACHE="YES" setup_php
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "nagios" "NagiosEnterprises/nagioscore" "tarball"
 
     msg_info "Building Nagios Core"

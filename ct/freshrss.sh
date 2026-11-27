@@ -54,6 +54,7 @@ function update_script() {
     mv /opt/freshrss /opt/freshrss-backup
     msg_ok "Backup Created"
 
+    PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="xml,intl" setup_php
     fetch_and_deploy_gh_release "freshrss" "FreshRSS/FreshRSS" "tarball"
 
     msg_info "Restoring data and configuration"
