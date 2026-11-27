@@ -587,6 +587,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-11-27
+
+### 🧰 Tools
+
+  - #### 🔧 Refactor
+
+    - update-apps: say what tar or zstd said when a backup fails [@MickLesk](https://github.com/MickLesk) ([#19066](https://github.com/community-scripts/ProxmoxVE/pull/19066))
+
 ## 2026-11-26
 
 ### 🆕 New Scripts
