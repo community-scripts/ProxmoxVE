@@ -595,6 +595,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🚀 Updated Scripts
 
+  - #### 🐞 Bug Fixes
+
+    - mealie: bump Python from 3.12 to 3.14 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#19106](https://github.com/community-scripts/ProxmoxVE/pull/19106))
+
   - #### ✨ New Features
 
     - Gramps Web: install AI chat dependencies [@owenvoke](https://github.com/owenvoke) ([#19092](https://github.com/community-scripts/ProxmoxVE/pull/19092))
