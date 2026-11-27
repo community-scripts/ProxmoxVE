@@ -589,6 +589,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-27
 
+### 💾 Core
+
+  - incus: check an imported VM image on the target remote  [@MickLesk](https://github.com/MickLesk) ([core#309](https://github.com/community-scripts/core/pull/309))
+
 ### 🧰 Tools
 
   - #### 🔧 Refactor
