@@ -597,6 +597,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - norish: bump Python from 3.14 to 3.15 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#19107](https://github.com/community-scripts/ProxmoxVE/pull/19107))
     - mealie: bump Python from 3.12 to 3.14 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#19106](https://github.com/community-scripts/ProxmoxVE/pull/19106))
 
   - #### ✨ New Features
