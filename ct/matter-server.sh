@@ -36,6 +36,7 @@ function update_script() {
     systemctl stop matter-server
     msg_ok "Stopped Service"
 
+    PYTHON_VERSION="3.12" setup_uv
     msg_info "Updating Matter Server"
     MATTER_VERSION=$(get_latest_github_release "matter-js/python-matter-server")
     $STD uv pip install --python /opt/matter-server/.venv/bin/python --upgrade "python-matter-server[server]==${MATTER_VERSION}"

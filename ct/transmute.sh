@@ -49,9 +49,10 @@ function update_script() {
 
     restore_backup
 
+    PYTHON_VERSION="3.13" setup_uv
     msg_info "Updating Python Dependencies"
     cd /opt/transmute
-    $STD uv venv --clear /opt/transmute/.venv
+    $STD uv venv --python 3.13 --clear /opt/transmute/.venv
     $STD uv pip install --python /opt/transmute/.venv/bin/python -r requirements.txt
     msg_ok "Updated Python Dependencies"
 

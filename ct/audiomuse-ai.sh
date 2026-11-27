@@ -56,6 +56,7 @@ function update_script() {
       ;;
     esac
 
+    PYTHON_VERSION="3.12" setup_uv
     msg_info "Updating Python Environment (${AUDIOMUSE_BACKEND})"
     cd /opt/audiomuse-ai
     $STD uv venv --clear --seed --python "$PY_VERSION" /opt/audiomuse-ai/.venv

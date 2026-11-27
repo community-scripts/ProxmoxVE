@@ -44,9 +44,10 @@ function update_script() {
 
     restore_backup
 
+    PYTHON_VERSION="3.13" setup_uv
     msg_info "Updating Python Dependencies"
     cd /opt/homelable/backend
-    $STD uv venv --clear /opt/homelable/backend/.venv
+    $STD uv venv --python 3.13 --clear /opt/homelable/backend/.venv
     $STD uv pip install --python /opt/homelable/backend/.venv/bin/python -r requirements.txt
     msg_ok "Updated Python Dependencies"
 
@@ -60,7 +61,7 @@ function update_script() {
       msg_info "Restoring MCP Server"
       MCP_OWNER=$(stat -c '%U' /opt/homelable/mcp/.env)
       cd /opt/homelable/mcp
-      $STD uv venv --clear /opt/homelable/mcp/.venv
+      $STD uv venv --python 3.13 --clear /opt/homelable/mcp/.venv
       $STD uv pip install --python /opt/homelable/mcp/.venv/bin/python -r requirements.txt
       chown -R "$MCP_OWNER":"$MCP_OWNER" /opt/homelable/mcp
       systemctl restart homelable-mcp

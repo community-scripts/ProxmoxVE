@@ -40,7 +40,7 @@ function update_script() {
 
     create_backup /opt/fireshare/fireshare.env
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "fireshare" "ShaneIsrael/fireshare" "tarball"
-    UV_PROJECT_DIR="/opt/fireshare" setup_uv
+    PYTHON_VERSION="3.14" UV_PROJECT_DIR="/opt/fireshare" setup_uv
     restore_backup
     rm -f /usr/local/bin/fireshare
 
@@ -56,7 +56,7 @@ function update_script() {
     msg_info "Configuring Fireshare"
 
     cd /opt/fireshare
-    $STD uv venv --clear
+    $STD uv venv --python 3.14 --clear
     $STD .venv/bin/python -m ensurepip --upgrade
     $STD .venv/bin/python -m pip install --upgrade --break-system-packages pip
     $STD .venv/bin/python -m pip install --no-cache-dir --break-system-packages --ignore-installed app/server

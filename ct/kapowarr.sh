@@ -31,7 +31,7 @@ function update_script() {
     exit
   fi
 
-  setup_uv
+  PYTHON_VERSION="3.12" setup_uv
 
   if check_for_gh_release "kapowarr" "Casvt/Kapowarr"; then
     msg_info "Stopping Service"

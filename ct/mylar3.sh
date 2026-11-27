@@ -29,6 +29,7 @@ function update_script() {
   fi
 
   if check_for_gh_release "mylar3" "MylarComics/mylar3"; then
+    PYTHON_VERSION="3.11" setup_uv
     fetch_and_deploy_gh_release "mylar3" "MylarComics/mylar3" "tarball"
     systemctl restart mylar3
     msg_ok "Updated successfully!"

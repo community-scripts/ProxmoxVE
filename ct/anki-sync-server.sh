@@ -38,6 +38,7 @@ function update_script() {
 
     create_backup /opt/anki-sync-server/.env /opt/anki-sync-server/data
 
+    PYTHON_VERSION="3.12" setup_uv
     msg_info "Updating Anki Sync Server"
     $STD uv pip install --python /opt/anki-sync-server/venv/bin/python "anki==$(get_latest_github_release "ankitects/anki")"
     cat <<EOF >~/.anki-sync-server

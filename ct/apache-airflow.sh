@@ -45,6 +45,7 @@ function update_script() {
 
   create_backup /opt/airflow/.env
 
+  PYTHON_VERSION="3.12" setup_uv
   msg_info "Updating Apache Airflow to ${LATEST}"
   $STD uv pip install --python /opt/airflow/.venv/bin/python \
     "apache-airflow[postgres,fab]==${LATEST}" \

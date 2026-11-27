@@ -69,6 +69,7 @@ function update_script() {
       exit 1
     fi
 
+    PYTHON_VERSION="3.12" setup_uv
     if [[ "$(cat /opt/borg1-venv/.pinned_version 2>/dev/null)" != "$BORG1_VERSION" ]]; then
       msg_info "Installing Borg ${BORG1_VERSION} (Patience)"
       $STD uv venv --clear --python "$BORG_PYTHON" /opt/borg1-venv
