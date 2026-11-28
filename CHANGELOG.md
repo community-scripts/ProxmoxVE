@@ -602,6 +602,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - tubearchivist: bump Python from 3.13 to 3.14 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#19111](https://github.com/community-scripts/ProxmoxVE/pull/19111))
     - warracker: bump Python from 3.12 to 3.15 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#19112](https://github.com/community-scripts/ProxmoxVE/pull/19112))
     - Pin install Python version in ct update scripts [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#19114](https://github.com/community-scripts/ProxmoxVE/pull/19114))
     - Garage: use published stable releases for install and update [@mormied22](https://github.com/mormied22) ([#19084](https://github.com/community-scripts/ProxmoxVE/pull/19084))
