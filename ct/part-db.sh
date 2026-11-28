@@ -31,12 +31,12 @@ function update_script() {
   fi
 
   if check_for_gh_release "partdb" "Part-DB/Part-DB-server"; then
+    PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="xsl" PHP_POST_MAX_SIZE="100M" PHP_UPLOAD_MAX_FILESIZE="100M" setup_php
     msg_info "Stopping Service"
     systemctl stop apache2
     msg_ok "Stopped Service"
 
     mv /opt/partdb/ /opt/partdb-backup
-    PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="xsl" PHP_POST_MAX_SIZE="100M" PHP_UPLOAD_MAX_FILESIZE="100M" setup_php
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "partdb" "Part-DB/Part-DB-server" "prebuild" "latest" "/opt/partdb" "partdb_with_assets.zip"
 
     msg_info "Updating Part-DB"

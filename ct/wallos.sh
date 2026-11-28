@@ -31,13 +31,13 @@ function update_script() {
   fi
 
   if check_for_gh_release "wallos" "ellite/Wallos"; then
+    PHP_VERSION="8.4" PHP_APACHE="YES" setup_php
     msg_info "Creating backup"
     mkdir -p /opt/logos
     mv /opt/wallos/db/wallos.db /opt/wallos.db
     mv /opt/wallos/images/uploads/logos /opt/logos/
     msg_ok "Backup created"
 
-    PHP_VERSION="8.4" PHP_APACHE="YES" setup_php
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "wallos" "ellite/Wallos" "tarball"
 
     msg_info "Configuring Wallos"
