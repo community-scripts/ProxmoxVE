@@ -76,7 +76,7 @@ guest's own package manager.
 
 | Component | Details |
 | --------- | ------- |
-| **Proxmox VE** | 8.0 – 8.4, or 9.0 – 9.2 |
+| **Proxmox VE** | 8.0 – 8.4, or 9.0 – 9.3 |
 | **Access** | Root shell on the Proxmox host |
 | **Network** | Internet access during installation |
 
