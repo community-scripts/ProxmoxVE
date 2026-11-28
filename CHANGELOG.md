@@ -597,6 +597,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Pin install Python version in ct update scripts [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#19114](https://github.com/community-scripts/ProxmoxVE/pull/19114))
     - Set up install PHP version in ct update scripts [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#19115](https://github.com/community-scripts/ProxmoxVE/pull/19115))
     - Pelican Panel: leave the PHP version change to setup_php [@MickLesk](https://github.com/MickLesk) ([#19134](https://github.com/community-scripts/ProxmoxVE/pull/19134))
     - FreshRSS: add missing PHP extensions through setup_php [@MickLesk](https://github.com/MickLesk) ([#19135](https://github.com/community-scripts/ProxmoxVE/pull/19135))
