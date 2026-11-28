@@ -620,6 +620,7 @@ for container in $CHOICE; do
   fi
 
   #4) Update service, using the update command
+  pct exec "$container" -- touch /tmp/.cs-update-start 2>/dev/null || true
   # Prepend a no-op 'clear' wrapper to PATH so update scripts calling clear
   # don't fail without a TTY — works for all shells incl. ash (no export -f)
   SETUP_CMD="mkdir -p /tmp/.nc; printf '#!/bin/sh\n:\n' > /tmp/.nc/clear; chmod +x /tmp/.nc/clear; export PATH=/tmp/.nc:\$PATH; export TERM=dumb; "
@@ -631,6 +632,12 @@ for container in $CHOICE; do
   opensuse) pct exec "$container" -- bash -c "${SETUP_CMD}${UPDATE_CMD}" ;;
   esac
   exit_code=$?
+  # The engine in the container leaves what failed in an .errinfo file; without it
+  # the report says only "exit code: 1".
+  update_detail=""
+  if [ $exit_code -ne 0 ]; then
+    update_detail=$(pct exec "$container" -- sh -c 'f=$(find /root /tmp -maxdepth 1 -name "*.errinfo" -newer /tmp/.cs-update-start 2>/dev/null | head -n1); [ -n "$f" ] || exit 0; m=$(sed -n "s/^MESSAGE=//p" "$f" | head -n1); [ -n "$m" ] || m=$(sed -n "s/^COMMAND=//p" "$f" | head -n1); printf "%s" "$m" | head -c 200' 2>/dev/null || true)
+  fi
 
   #5) if build resources are different than run resources, then:
   if [ "$UPDATE_BUILD_RESOURCES" -eq "1" ]; then
@@ -665,7 +672,7 @@ for container in $CHOICE; do
     log_result "$container" "$service" "SKIPPED" "Storage critically low on /boot (>80%)"
     log_write "Container $container ($service): SKIPPED — storage critically low on /boot"
   elif [ "$BACKUP_CHOICE" == "yes" ]; then
-    msg_error "Update failed for container $container ($service, exit code: $exit_code) — attempting restore"
+    msg_error "Update failed for container $container ($service, exit code: $exit_code)${update_detail:+: $update_detail} — attempting restore"
     log_write "Container $container ($service): FAILED (exit $exit_code) — attempting restore"
     msg_info "Restoring LXC $container from backup ($STORAGE_CHOICE)"
     wait
@@ -703,8 +710,8 @@ for container in $CHOICE; do
       exit 235
     fi
   else
-    msg_error "Update failed for container $container ($service, exit code: $exit_code)"
-    log_result "$container" "$service" "FAILED" "Exit code $exit_code"
+    msg_error "Update failed for container $container ($service, exit code: $exit_code)${update_detail:+: $update_detail}"
+    log_result "$container" "$service" "FAILED" "Exit code $exit_code${update_detail:+: $update_detail}"
     log_write "Container $container ($service): FAILED (exit $exit_code)"
     if [[ "$var_continue_on_error" == "yes" ]]; then
       echo -e "${YW}[WARN]${CL} Continuing to next container (var_continue_on_error=yes)"
