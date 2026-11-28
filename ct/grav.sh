@@ -33,6 +33,7 @@ function update_script() {
     fi
 
     if check_for_gh_release "grav" "getgrav/grav"; then
+        PHP_FPM="YES" setup_php
         msg_info "Creating Backup"
         cd /opt/grav
         bin/grav backup -nq

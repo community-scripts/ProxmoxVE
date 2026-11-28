@@ -43,6 +43,7 @@ function update_script() {
       /opt/lychee/public/uploads \
       /opt/lychee/public/dist
 
+    PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="bcmath,ldap,exif,gd,intl,imagick,redis,zip,pdo_pgsql,pcntl" setup_php
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "lychee" "LycheeOrg/Lychee" "prebuild" "latest" "/opt/lychee" "Lychee.zip"
 
     restore_backup

@@ -19,7 +19,7 @@ msg_ok "Installed Dependencies"
 
 mkdir -p /opt/matomo
 
-PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULES="pdo_mysql,gd,mbstring,xml,curl,intl,zip,ldap" setup_php
+PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULE="pdo_mysql,gd,mbstring,xml,curl,intl,zip,ldap" setup_php
 setup_mariadb
 MARIADB_DB_NAME="matomo" MARIADB_DB_USER="matomo" setup_mariadb_db
 

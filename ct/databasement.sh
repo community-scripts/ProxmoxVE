@@ -36,6 +36,7 @@ function update_script() {
     systemctl stop databasement-worker databasement-scheduler php8.5-fpm
     msg_ok "Stopped Databasement"
 
+    PHP_VERSION="8.5" PHP_FPM="YES" PHP_MODULE="mongodb,smbclient" setup_php
     setup_composer
     NODE_VERSION="22" setup_nodejs
 

@@ -38,6 +38,7 @@ function update_script() {
     msg_ok "Stopped Services"
 
     create_backup /opt/librenms/.env /opt/librenms/config.php
+    PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="cli,snmp,gmp" setup_php
     CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="rrd" fetch_and_deploy_gh_release "librenms" "librenms/librenms" "tarball"
     restore_backup
 

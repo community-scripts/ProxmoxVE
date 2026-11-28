@@ -39,6 +39,7 @@ function update_script() {
   fi
 
   if check_for_gh_release "monica" "monicahq/monica"; then
+    PHP_VERSION="8.2" PHP_APACHE="YES" PHP_MODULE="mysqli,pdo-mysql" setup_php
     msg_info "Stopping Service"
     systemctl stop apache2
     msg_ok "Stopped Service"

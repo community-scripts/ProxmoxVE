@@ -40,6 +40,7 @@ function update_script() {
 
     create_backup /opt/koel/.env /opt/koel/storage /opt/koel/public/img
 
+    PHP_VERSION="8.4" PHP_FPM="YES" setup_php
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "koel" "koel/koel" "prebuild" "latest" "/opt/koel" "koel-*.tar.gz"
 
     restore_backup

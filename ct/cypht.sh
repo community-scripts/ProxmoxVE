@@ -39,6 +39,7 @@ function update_script() {
     systemctl stop nginx php8.4-fpm
     msg_ok "Stopped Cypht"
 
+    PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="soap,ldap" setup_php
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "cypht" "cypht-org/cypht" "prebuild" "latest" "/opt/cypht" "cypht.tar.gz"
 
     msg_info "Updating Cypht"

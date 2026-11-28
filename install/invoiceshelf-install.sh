@@ -17,7 +17,7 @@ msg_info "Installing Dependencies"
 $STD apt install -y caddy
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULES="bcmath,gd,intl,xml,zip,pdo_pgsql,mbstring,curl,exif" setup_php
+PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="bcmath,gd,intl,xml,zip,pdo_pgsql,mbstring,curl,exif" setup_php
 setup_composer
 NODE_VERSION="24" NODE_MODULE="corepack,pnpm" setup_nodejs
 PG_VERSION="16" setup_postgresql

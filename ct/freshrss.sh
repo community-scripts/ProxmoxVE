@@ -42,6 +42,7 @@ function update_script() {
   fi
 
   if check_for_gh_release "freshrss" "FreshRSS/FreshRSS"; then
+    PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="xml,intl" setup_php
     msg_info "Stopping Apache2"
     systemctl stop apache2
     msg_ok "Stopped Apache2"

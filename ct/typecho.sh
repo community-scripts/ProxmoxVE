@@ -39,6 +39,7 @@ function update_script() {
     systemctl stop nginx
     msg_ok "Stopped Typecho"
 
+    PHP_FPM="YES" setup_php
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "typecho" "typecho/typecho" "prebuild" "latest" "/opt/typecho" "typecho.zip"
     fetch_and_deploy_from_url "https://github.com/typecho/languages/releases/download/ci/langs.zip" "/opt/typecho_data/usr/langs"
 

@@ -41,6 +41,7 @@ function update_script() {
     msg_ok "Stopped FreeScout"
 
     create_backup /opt/freescout/.env
+    PHP_VERSION="8.4" PHP_FPM="YES" setup_php
     CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="storage Modules public/modules" fetch_and_deploy_gh_release "freescout" "freescout-help-desk/freescout" "tarball"
     restore_backup
 

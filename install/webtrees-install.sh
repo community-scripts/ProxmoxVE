@@ -19,7 +19,7 @@ $STD apt install -y \
   unzip
 msg_ok "Installed Dependencies"
 
-PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULES="bcmath,gd,intl,xml,zip,pdo_mysql,mbstring,curl" setup_php
+PHP_VERSION="8.3" PHP_FPM="YES" PHP_MODULE="bcmath,gd,intl,xml,zip,pdo_mysql,mbstring,curl" setup_php
 setup_mariadb
 MARIADB_DB_NAME="webtrees" MARIADB_DB_USER="webtrees" setup_mariadb_db
 $STD mariadb -u root -e "GRANT ALL ON \`webtrees\`.* TO 'webtrees'@'127.0.0.1' IDENTIFIED BY '${MARIADB_DB_PASS}'; FLUSH PRIVILEGES;"

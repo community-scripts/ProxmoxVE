@@ -36,6 +36,7 @@ function update_script() {
     systemctl stop netalertx
     msg_ok "Stopped NetAlertX"
 
+    PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="curl,sqlite3" setup_php
     CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP=".venv" fetch_and_deploy_gh_release "netalertx" "netalertx/NetAlertX" "tarball"
 
     msg_info "Updating NetAlertX"

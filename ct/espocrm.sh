@@ -40,6 +40,7 @@ function update_script() {
     systemctl stop nginx cron php8.4-fpm
     msg_ok "Stopped Services"
 
+    PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="ldap" setup_php
     CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="data custom client/custom" fetch_and_deploy_gh_release "espo-crm" "espocrm/espocrm" "prebuild" "latest" "/opt/espocrm" "EspoCRM-*.zip"
 
     msg_info "Migrating EspoCRM"

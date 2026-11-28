@@ -52,6 +52,7 @@ function update_script() {
   if check_for_gh_release "poweradmin" "poweradmin/poweradmin"; then
     create_backup /opt/poweradmin/config/settings.php
 
+    PHP_VERSION="8.3" PHP_APACHE="YES" PHP_FPM="YES" PHP_MODULE="gettext,tokenizer,sqlite3,ldap" setup_php
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "poweradmin" "poweradmin/poweradmin" "tarball"
 
     restore_backup

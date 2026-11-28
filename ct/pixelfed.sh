@@ -40,6 +40,7 @@ function update_script() {
     create_backup /opt/pixelfed/.env \
       /opt/pixelfed/storage
 
+    PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="bcmath,ctype,curl,exif,gd,imagick,intl,mbstring,pgsql,redis,xml,zip" PHP_UPLOAD_MAX_FILESIZE="500M" PHP_POST_MAX_SIZE="500M" PHP_MAX_EXECUTION_TIME="600" setup_php
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "pixelfed" "pixelfed/pixelfed" "tarball" "latest" "/opt/pixelfed"
 
     restore_backup
