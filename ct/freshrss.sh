@@ -38,11 +38,7 @@ function update_script() {
   fi
 
   if ! php -r 'exit((extension_loaded("intl") && extension_loaded("xml")) ? 0 : 1);' 2>/dev/null; then
-    msg_info "Installing missing PHP extensions"
-    apt_update_safe
-    $STD apt install -y php-xml php-intl
-    systemctl reload apache2
-    msg_ok "Installed missing PHP extensions"
+    PHP_VERSION="8.4" PHP_APACHE="YES" PHP_MODULE="xml,intl" setup_php
   fi
 
   if check_for_gh_release "freshrss" "FreshRSS/FreshRSS"; then
