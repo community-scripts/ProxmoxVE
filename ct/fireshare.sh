@@ -47,7 +47,8 @@ function update_script() {
     if ! grep -q "__FIRESHARE_PORT__" /etc/nginx/nginx.conf; then
       cp /opt/fireshare/app/nginx/prod.conf /etc/nginx/nginx.conf
       sed -i 's|root /processed/|root /opt/fireshare-processed/|g' /etc/nginx/nginx.conf
-      sed -i 's/^user[[:space:]]\+nginx;/user  root;/' /etc/nginx/nginx.conf
+      sed -i 's|alias /data/|alias /opt/fireshare-data/|g' /etc/nginx/nginx.conf
+      sed -i 's/^user[[:space:]]\+[^;]*;/user  root;/' /etc/nginx/nginx.conf
       sed -i 's|root[[:space:]]\+/app/build;|root /opt/fireshare/app/client/build;|' /etc/nginx/nginx.conf
       sed -i 's/__FIRESHARE_PORT__/80/g' /etc/nginx/nginx.conf
       cp /opt/fireshare/app/nginx/error.html /etc/nginx/
