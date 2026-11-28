@@ -31,15 +31,10 @@ function update_script() {
   fi
 
   setup_mariadb
-  CURRENT_PHP=$(php -v 2>/dev/null | awk '/^PHP/{print $2}' | cut -d. -f1,2)
-  setup_composer
-
-  if [[ "$CURRENT_PHP" != "8.4" ]]; then
-    msg_info "Migrating PHP $CURRENT_PHP to 8.4"
-    $STD apt remove -y php"${CURRENT_PHP//./}"*
+  if [[ "$(php -v 2>/dev/null | awk '/^PHP/{print $2}' | cut -d. -f1,2)" != "8.4" ]]; then
     PHP_VERSION="8.4" PHP_APACHE="YES" PHP_FPM="YES" setup_php
-    msg_ok "Migrated PHP $CURRENT_PHP to 8.4"
   fi
+  setup_composer
 
   if check_for_gh_release "pelican-panel" "pelican-dev/panel"; then
     msg_info "Stopping Service"
@@ -47,10 +42,9 @@ function update_script() {
     $STD php artisan down
     msg_ok "Stopped Service"
 
-    mkdir -p /opt/backup
+    mkdir -p /opt/backup/storage/app
     cp -a /opt/pelican-panel/.env /opt/backup
-    mkdir -p /opt/backup/storage/app/
-    cp -a /opt/pelican-panel/storage/app/public /opt/backup/storage/app/
+    [[ -d /opt/pelican-panel/storage/app/public ]] && cp -a /opt/pelican-panel/storage/app/public /opt/backup/storage/app/
 
     SQLITE_INSTALL=$(ls /opt/pelican-panel/database/*.sqlite 1>/dev/null 2>&1 && echo "true" || echo "false")
     $SQLITE_INSTALL && cp -r /opt/pelican-panel/database/*.sqlite /opt/backup
@@ -63,7 +57,7 @@ function update_script() {
     cp -a /opt/backup/.env /opt/pelican-panel/
     grep -q "^APP_URL=http://panel.test$" /opt/pelican-panel/.env && sed -i "s|^APP_URL=.*|APP_URL=http://${LOCAL_IP}|" /opt/pelican-panel/.env
     $SQLITE_INSTALL && mv /opt/backup/*.sqlite /opt/pelican-panel/database/
-    cp -a /opt/backup/storage/app/public /opt/pelican-panel/storage/app/
+    [[ -d /opt/backup/storage/app/public ]] && cp -a /opt/backup/storage/app/public /opt/pelican-panel/storage/app/
 
     $STD composer install --no-dev --optimize-autoloader --no-interaction
     PANEL_URL="$(sed -n 's/^APP_URL=//p' /opt/pelican-panel/.env | tr -d "\"'")"
