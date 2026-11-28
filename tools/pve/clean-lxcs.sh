@@ -161,6 +161,11 @@ if [ "${#failed_containers[@]}" -gt 0 ]; then
   [ -s "$RUN_LOG" ] && echo -e "Their output: $RUN_LOG\n"
   printf -v CS_ERROR_MSG '%s; ' "${failed_containers[@]}"
   CS_ERROR_MSG="Cleaning failed in ${#failed_containers[@]} container(s): ${CS_ERROR_MSG%; }"
+  # One code shared by every failed container is the real one (100 is apt), not "1".
+  codes=$(printf '%s\n' "${failed_containers[@]}" | sed -n 's/^[^:]*: cleaning exited with \([0-9]*\).*/\1/p')
+  if [[ -n "$codes" && $(wc -l <<<"$codes") -eq ${#failed_containers[@]} && $(sort -u <<<"$codes" | wc -l) -eq 1 ]]; then
+    exit "$(head -n1 <<<"$codes")"
+  fi
   exit 1
 fi
 echo -e "${GN} Finished, Selected Containers Cleaned. ${CL} \n"

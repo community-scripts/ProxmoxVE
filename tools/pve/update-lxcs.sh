@@ -174,5 +174,10 @@ echo ""
 if [ "${#failed_containers[@]}" -gt 0 ]; then
   printf -v CS_ERROR_MSG '%s; ' "${failed_containers[@]}"
   CS_ERROR_MSG="Update failed in ${#failed_containers[@]} container(s): ${CS_ERROR_MSG%; }"
+  # One code shared by every failed container is the real one (100 is apt), not "1".
+  codes=$(printf '%s\n' "${failed_containers[@]}" | sed -n 's/^[^:]*: update exited with \([0-9]*\).*/\1/p')
+  if [[ -n "$codes" && $(wc -l <<<"$codes") -eq ${#failed_containers[@]} && $(sort -u <<<"$codes" | wc -l) -eq 1 ]]; then
+    exit "$(head -n1 <<<"$codes")"
+  fi
   exit 1
 fi
