@@ -124,15 +124,18 @@ msg_ok "Built SQLite Extensions"
 
 if [[ "$(arch_resolve)" == "amd64" ]]; then
   msg_info "Building Intel Media Driver (Patience)"
-  download_gpg_key "https://repositories.intel.com/gpu/intel-graphics.key" "/usr/share/keyrings/intel-graphics.gpg" "dearmor"
-  sed -i '/intel-graphics.key/d' /opt/frigate/docker/main/build_intel_media_driver.sh
-  $STD bash /opt/frigate/docker/main/build_intel_media_driver.sh
-  cp -a /rootfs/. /
-  rm -rf /rootfs
-  rm -f /etc/apt/sources.list.d/intel-gpu-jammy.list /usr/share/keyrings/intel-graphics.gpg
-  apt_update_safe
-  ldconfig
-  msg_ok "Built Intel Media Driver"
+  if download_gpg_key "https://repositories.intel.com/gpu/intel-graphics.key" "/usr/share/keyrings/intel-graphics.gpg" "dearmor"; then
+    sed -i '/intel-graphics.key/d' /opt/frigate/docker/main/build_intel_media_driver.sh
+    $STD bash /opt/frigate/docker/main/build_intel_media_driver.sh
+    cp -a /rootfs/. /
+    rm -rf /rootfs
+    rm -f /etc/apt/sources.list.d/intel-gpu-jammy.list /usr/share/keyrings/intel-graphics.gpg
+    apt_update_safe
+    ldconfig
+    msg_ok "Built Intel Media Driver"
+  else
+    msg_warn "Intel's package repository cannot be reached from this network; Frigate is installed without the Intel media driver"
+  fi
 fi
 
 fetch_and_deploy_gh_release "go2rtc" "AlexxIT/go2rtc" "singlefile" "v1.9.14" "/usr/local/go2rtc/bin" "go2rtc_linux_$(arch_resolve)"
