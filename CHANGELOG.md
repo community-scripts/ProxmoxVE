@@ -602,13 +602,14 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - wavelog: bump PHP from 8.4 to 8.5 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#19103](https://github.com/community-scripts/ProxmoxVE/pull/19103))
+    - TREK: give the build a 3 GB heap [@MickLesk](https://github.com/MickLesk) ([#19148](https://github.com/community-scripts/ProxmoxVE/pull/19148))
+    - Baikal: let composer install the twig version Baikal pins [@MickLesk](https://github.com/MickLesk) ([#19147](https://github.com/community-scripts/ProxmoxVE/pull/19147))
+    - Warracker: fill in the nginx settings the upstream entrypoint sets [@MickLesk](https://github.com/MickLesk) ([#19146](https://github.com/community-scripts/ProxmoxVE/pull/19146))
     - tubearchivist: bump Python from 3.13 to 3.14 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#19111](https://github.com/community-scripts/ProxmoxVE/pull/19111))
     - warracker: bump Python from 3.12 to 3.15 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#19112](https://github.com/community-scripts/ProxmoxVE/pull/19112))
     - Pin install Python version in ct update scripts [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#19114](https://github.com/community-scripts/ProxmoxVE/pull/19114))
     - Garage: use published stable releases for install and update [@mormied22](https://github.com/mormied22) ([#19084](https://github.com/community-scripts/ProxmoxVE/pull/19084))
-    - Baikal: let composer install the twig version Baikal pins [@MickLesk](https://github.com/MickLesk) ([#19147](https://github.com/community-scripts/ProxmoxVE/pull/19147))
-    - Warracker: fill in the nginx settings the upstream entrypoint sets [@MickLesk](https://github.com/MickLesk) ([#19146](https://github.com/community-scripts/ProxmoxVE/pull/19146))
-    - TREK: give the build a 3 GB heap [@MickLesk](https://github.com/MickLesk) ([#19148](https://github.com/community-scripts/ProxmoxVE/pull/19148))
     - Set up install PHP version in ct update scripts [@michelroegl-brunner](https://github.com/michelroegl-brunner) ([#19115](https://github.com/community-scripts/ProxmoxVE/pull/19115))
     - Pelican Panel: leave the PHP version change to setup_php [@MickLesk](https://github.com/MickLesk) ([#19134](https://github.com/community-scripts/ProxmoxVE/pull/19134))
     - FreshRSS: add missing PHP extensions through setup_php [@MickLesk](https://github.com/MickLesk) ([#19135](https://github.com/community-scripts/ProxmoxVE/pull/19135))
