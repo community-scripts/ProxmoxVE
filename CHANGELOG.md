@@ -597,6 +597,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - Baikal: let composer install the twig version Baikal pins [@MickLesk](https://github.com/MickLesk) ([#19147](https://github.com/community-scripts/ProxmoxVE/pull/19147))
     - Warracker: fill in the nginx settings the upstream entrypoint sets [@MickLesk](https://github.com/MickLesk) ([#19146](https://github.com/community-scripts/ProxmoxVE/pull/19146))
     - TREK: give the build a 3 GB heap [@MickLesk](https://github.com/MickLesk) ([#19148](https://github.com/community-scripts/ProxmoxVE/pull/19148))
     - warracker: bump Python from 3.12 to 3.15 [@github-actions[bot]](https://github.com/github-actions[bot]) ([#19112](https://github.com/community-scripts/ProxmoxVE/pull/19112))
