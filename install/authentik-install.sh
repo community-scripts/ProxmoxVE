@@ -57,7 +57,7 @@ PG_VERSION="17" setup_postgresql
 PG_DB_NAME="authentik" PG_DB_USER="authentik" PG_DB_GRANT_SUPERUSER="true" setup_postgresql_db
 
 XMLSEC_VERSION="1.3.13"
-AUTHENTIK_VERSION="version/2026.8.6"
+AUTHENTIK_VERSION="version/2026.8.7"
 fetch_and_deploy_gh_release "xmlsec" "lsh123/xmlsec" "tarball" "${XMLSEC_VERSION}" "/opt/xmlsec"
 fetch_and_deploy_gh_release "authentik" "goauthentik/authentik" "tarball" "${AUTHENTIK_VERSION}" "/opt/authentik"
 GO_VERSION="$(grep -m1 '^go ' /opt/authentik/go.mod | awk '{print $2}')" setup_go
@@ -109,7 +109,29 @@ RetryFor 5m
 Parallelism 1
 EOF
 
-echo "#39 19 * * 6,4 /usr/bin/geoipupdate -f /usr/local/etc/GeoIP.conf" | crontab -
+# Disabled by default like the old commented-out crontab entry; after filling in MaxMind keys: systemctl enable --now authentik-geoipupdate.timer
+cat <<EOF >/etc/systemd/system/authentik-geoipupdate.service
+[Unit]
+Description=authentik GeoIP database update
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/geoipupdate -f /usr/local/etc/GeoIP.conf
+EOF
+
+cat <<EOF >/etc/systemd/system/authentik-geoipupdate.timer
+[Unit]
+Description=authentik GeoIP database update, twice a week (Thu/Sat 19:39)
+
+[Timer]
+OnCalendar=Thu,Sat *-*-* 19:39:00
+RandomizedDelaySec=15m
+Persistent=true
+Unit=authentik-geoipupdate.service
+
+[Install]
+WantedBy=timers.target
+EOF
 
 msg_info "Building binary. It may take more than 10 minutes, please be patient."
 export AWS_LC_FIPS_SYS_CC="clang"

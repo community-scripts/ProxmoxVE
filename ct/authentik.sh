@@ -47,13 +47,58 @@ function update_script() {
   RUST_PROFILE="minimal" RUST_TOOLCHAIN="stable" setup_rust
   setup_yq
 
-  AUTHENTIK_VERSION="version/2026.8.6"
-  # Source: https://github.com/goauthentik/fips/blob/main/Makefile#L26
+  AUTHENTIK_VERSION="version/2026.8.7"
+  # Source: https://github.com/goauthentik/fips/blob/main/Makefile#L28
   XMLSEC_VERSION="1.3.13"
 
   if check_for_gh_release "geoipupdate" "maxmind/geoipupdate"; then
     fetch_and_deploy_gh_release "geoipupdate" "maxmind/geoipupdate" "binary"
   fi
+
+  msg_info "Migrating GeoIP auto-update from cron to systemd timer"
+  if [[ ! -f /etc/systemd/system/authentik-geoipupdate.service ]]; then
+    cat <<EOF >/etc/systemd/system/authentik-geoipupdate.service
+[Unit]
+Description=authentik GeoIP database update
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/geoipupdate -f /usr/local/etc/GeoIP.conf
+EOF
+
+    cat <<EOF >/etc/systemd/system/authentik-geoipupdate.timer
+[Unit]
+Description=authentik GeoIP database update, twice a week (Thu/Sat 19:39)
+
+[Timer]
+OnCalendar=Thu,Sat *-*-* 19:39:00
+RandomizedDelaySec=15m
+Persistent=true
+Unit=authentik-geoipupdate.service
+
+[Install]
+WantedBy=timers.target
+EOF
+  fi
+  TIMER_STATE="disabled by default"
+  if [[ -x /usr/bin/crontab ]]; then
+    existing_crontab=$(/usr/bin/crontab -l 2>&1 || true)
+    if grep -q geoipupdate <<<"$existing_crontab"; then
+      WAS_ACTIVE=false
+      grep -qE '^[[:space:]]*[^#[:space:]].*geoipupdate' <<<"$existing_crontab" && WAS_ACTIVE=true
+      remaining_crontab=$(grep -v geoipupdate <<<"$existing_crontab" || true)
+      if [[ -n "$remaining_crontab" ]]; then
+        printf '%s\n' "$remaining_crontab" | /usr/bin/crontab -
+      else
+        /usr/bin/crontab -r || true
+      fi
+      if [[ "$WAS_ACTIVE" == true ]]; then
+        systemctl enable -q --now authentik-geoipupdate.timer
+        TIMER_STATE="enabled, taking over the active cron job"
+      fi
+    fi
+  fi
+  msg_ok "GeoIP auto-update migrated to systemd timer (${TIMER_STATE})"
 
   if check_for_gh_release "xmlsec" "lsh123/xmlsec" "${XMLSEC_VERSION}"; then
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "xmlsec" "lsh123/xmlsec" "tarball" "${XMLSEC_VERSION}" "/opt/xmlsec"
@@ -204,6 +249,20 @@ EOF
 	    systemctl start authentik-radius
   	fi
   	msg_ok "Started Services"
+
+  msg_info "Waiting for authentik to become ready (up to 300s)"
+  CODE=000
+  for _ in {1..60}; do
+    CODE=$(curl -ksI -m 3 https://127.0.0.1:9443/ | sed -n 's,^HTTP/[0-9.]* \([0-9]\{3\}\).*,\1,p' || true)
+    [[ "$CODE" == "200" || "$CODE" == "302" ]] && break
+    sleep 5
+  done
+  if [[ "$CODE" == "200" || "$CODE" == "302" ]]; then
+    msg_ok "authentik is responding (HTTP ${CODE})"
+  else
+    msg_warn "authentik did not start responding (HTTP ${CODE}) within 300s. It may still be booting (migrations after an upgrade can take longer); check: journalctl -eu authentik-server"
+  fi
+
   fi
   msg_ok "Updated successfully!"
   exit
@@ -225,6 +284,19 @@ msg_ok "Attached data storage volume"
 msg_info "Starting Services"
 ct_exec systemctl enable -q --now authentik-server authentik-worker
 msg_ok "Started Services"
+
+msg_info "Waiting for authentik to become ready (up to 300s)"
+CODE=000
+for _ in {1..60}; do
+  CODE=$(ct_exec curl -ksI -m 3 https://127.0.0.1:9443/ | sed -n 's,^HTTP/[0-9.]* \([0-9]\{3\}\).*,\1,p' || true)
+  [[ "$CODE" == "200" || "$CODE" == "302" ]] && break
+  sleep 5
+done
+if [[ "$CODE" == "200" || "$CODE" == "302" ]]; then
+  msg_ok "authentik is responding (HTTP ${CODE})"
+else
+  msg_warn "authentik did not start responding (HTTP ${CODE}) within 300s. It may still be booting (first boot runs migrations); check: pct exec ${CTID} -- journalctl -eu authentik-server"
+fi
 
 description
 
