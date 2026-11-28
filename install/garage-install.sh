@@ -15,8 +15,7 @@ update_os
 
 setup_deb_based() {
   msg_info "Setup Garage"
-  GITEA_RELEASE=$(curl -s https://api.github.com/repos/deuxfleurs-org/garage/tags | jq -r '.[0].name')
-  curl -fsSL "https://garagehq.deuxfleurs.fr/_releases/${GITEA_RELEASE}/$(arch_resolve "x86_64" "aarch64")-unknown-linux-musl/garage" -o /usr/local/bin/garage
+  download_file "https://garagehq.deuxfleurs.fr/_releases/${garage_release}/$(arch_resolve "x86_64" "aarch64")-unknown-linux-musl/garage" /usr/local/bin/garage
   chmod +x /usr/local/bin/garage
   mkdir -p /var/lib/garage/{data,meta,snapshots}
   mkdir -p /etc/garage
@@ -29,7 +28,7 @@ RPC Secret: $RPC_SECRET
 Admin Token: $ADMIN_TOKEN
 Metrics Token: $METRICS_TOKEN
 EOF
-  echo $GITEA_RELEASE >>~/.garage
+  printf '%s\n' "$garage_release" >~/.garage
   cat <<EOF >/etc/garage.toml
 metadata_dir = "/var/lib/garage/meta"
 data_dir = "/var/lib/garage/data"
@@ -91,8 +90,7 @@ setup_alpine() {
   $STD apk add --no-cache openssl
   msg_ok "Installed Dependencies"
 
-  GITEA_RELEASE=$(curl -s https://api.github.com/repos/deuxfleurs-org/garage/tags | jq -r '.[0].name')
-  curl -fsSL "https://garagehq.deuxfleurs.fr/_releases/${GITEA_RELEASE}/$(arch_resolve "x86_64" "aarch64")-unknown-linux-musl/garage" -o /usr/local/bin/garage
+  download_file "https://garagehq.deuxfleurs.fr/_releases/${garage_release}/$(arch_resolve "x86_64" "aarch64")-unknown-linux-musl/garage" /usr/local/bin/garage
   chmod +x /usr/local/bin/garage
   mkdir -p /var/lib/garage/{data,meta,snapshots}
   mkdir -p /etc/garage
@@ -105,7 +103,7 @@ RPC Secret: $RPC_SECRET
 Admin Token: $ADMIN_TOKEN
 Metrics Token: $METRICS_TOKEN
 EOF
-  echo $GITEA_RELEASE >>~/.garage
+  printf '%s\n' "$garage_release" >~/.garage
   cat <<EOF >/etc/garage.toml
 metadata_dir = "/var/lib/garage/meta"
 data_dir = "/var/lib/garage/data"
@@ -155,6 +153,11 @@ EOF
   msg_ok "Service active"
 }
 
+garage_release=$(curl -fsSL https://git.deuxfleurs.fr/api/v1/repos/Deuxfleurs/garage/releases/latest |
+  jq -er 'select(.draft == false and .prerelease == false) | .tag_name | strings | select(length > 0)') || {
+  msg_error "Could not determine the latest stable Garage release"
+  exit 1
+}
 run_os_setup
 
 motd_ssh
