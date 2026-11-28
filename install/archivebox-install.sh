@@ -15,68 +15,42 @@ update_os
 
 msg_info "Installing Dependencies"
 $STD apt install -y \
-  git \
-  expect \
-  libssl-dev \
-  libldap2-dev \
-  libsasl2-dev \
-  procps \
-  dnsutils \
-  ripgrep \
   libatomic1 \
   chromium
 msg_ok "Installed Dependencies"
 
-msg_info "Installing Python Dependencies"
-$STD apt install -y \
-  python3-ldap \
-  python3-msgpack \
-  python3-regex
-msg_ok "Installed Python Dependencies"
-
-NODE_VERSION="22" NODE_MODULE="@postlight/parser@latest,single-file-cli@latest" setup_nodejs
+export UV_PYTHON_INSTALL_DIR="/opt/archivebox/python"
 PYTHON_VERSION="3.13" setup_uv
 
-msg_info "Installing Playwright"
-$STD uv pip install playwright --system --break-system-packages
-$STD playwright install-deps chromium
-msg_ok "Installed Playwright"
-
 msg_info "Installing ArchiveBox"
-mkdir -p /opt/archivebox/{data,.npm,.cache,.local}
-$STD adduser --system --shell /bin/bash --gecos 'Archive Box User' --group --disabled-password --home /home/archivebox archivebox
-chown -R archivebox:archivebox /opt/archivebox/{data,.npm,.cache,.local}
-chmod -R 755 /opt/archivebox/data
-$STD uv pip install archivebox --system --break-system-packages
-cd /opt/archivebox/data
-ADMIN_PASS=$(random_password 20)
-expect <<EOF
-set timeout -1
-log_user 0
-
-spawn sudo -u archivebox playwright install chromium
-spawn sudo -u archivebox archivebox setup
-
-expect "Username"
-send "\r"
-
-expect "Email address"
-send "\r"
-
-expect "Password"
-send "${ADMIN_PASS}\r"
-
-expect "Password (again)"
-send "${ADMIN_PASS}\r"
-
-expect eof
+ARCHIVEBOX_VERSION="${var_appversion:-$(get_latest_github_release "ArchiveBox/ArchiveBox")}"
+mkdir -p /opt/archivebox/data
+$STD uv venv --python 3.13 /opt/archivebox/.venv
+$STD uv pip install --python /opt/archivebox/.venv/bin/python "archivebox==${ARCHIVEBOX_VERSION#v}"
+ln -sf /opt/archivebox/.venv/bin/archivebox /usr/local/bin/archivebox
+cat <<EOF >~/.archivebox
+${ARCHIVEBOX_VERSION#v}
 EOF
-{
-  echo "ArchiveBox Credentials"
-  echo "Username: archivebox"
-  echo "Password: ${ADMIN_PASS}"
-} >~/archivebox.creds
 msg_ok "Installed ArchiveBox"
+
+msg_info "Initializing ArchiveBox"
+cd /opt/archivebox/data
+$STD archivebox init
+ADMIN_PASS=$(random_password 20)
+DJANGO_SUPERUSER_USERNAME=archivebox DJANGO_SUPERUSER_EMAIL=archivebox@archivebox.local DJANGO_SUPERUSER_PASSWORD="$ADMIN_PASS" $STD archivebox manage createsuperuser --noinput
+$STD archivebox config --set "BASE_URL=http://${LOCAL_IP}:8000"
+cat <<EOF >~/archivebox.creds
+ArchiveBox Credentials
+Username: archivebox
+Password: ${ADMIN_PASS}
+EOF
+msg_ok "Initialized ArchiveBox"
+
+msg_info "Installing ArchiveBox Extractors"
+# 0.9.77 counts page cache as used memory under a cgroup limit and refuses to run (ArchiveBox#1966)
+echo 1G 2>/dev/null >/sys/fs/cgroup/memory.reclaim || true
+$STD archivebox install
+msg_ok "Installed ArchiveBox Extractors"
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/archivebox.service
@@ -85,9 +59,9 @@ Description=ArchiveBox Server
 After=network.target
 
 [Service]
-User=archivebox
 WorkingDirectory=/opt/archivebox/data
-ExecStart=/usr/local/bin/archivebox server 0.0.0.0:8000
+ExecStartPre=-/bin/sh -c "echo 1G 2>/dev/null >/sys/fs/cgroup/memory.reclaim"
+ExecStart=/opt/archivebox/.venv/bin/archivebox server 0.0.0.0:8000
 Restart=always
 
 [Install]

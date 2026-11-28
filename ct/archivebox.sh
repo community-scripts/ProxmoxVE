@@ -12,7 +12,7 @@ var_cpu="${var_cpu:-2}"
 var_ram="${var_ram:-1024}"
 var_disk="${var_disk:-8}"
 var_os="${var_os:-debian}"
-var_version="${var_version:-12}"
+var_version="${var_version:-13}"
 var_arm64="${var_arm64:-yes}"
 var_unprivileged="${var_unprivileged:-1}"
 
@@ -30,30 +30,48 @@ function update_script() {
     exit
   fi
 
-  NODE_VERSION="22" NODE_MODULE="@postlight/parser@latest,single-file-cli@latest" setup_nodejs
-  PYTHON_VERSION="3.13" setup_uv
+  if check_for_gh_release "archivebox" "ArchiveBox/ArchiveBox"; then
+    msg_info "Stopping ArchiveBox"
+    systemctl stop archivebox
+    msg_ok "Stopped ArchiveBox"
 
-  ensure_dependencies chromium
+    export UV_PYTHON_INSTALL_DIR="/opt/archivebox/python"
+    PYTHON_VERSION="3.13" setup_uv
+    ensure_dependencies chromium
 
-  msg_info "Stopping Service"
-  systemctl stop archivebox
-  msg_ok "Stopped Service"
+    if [[ ! -x /opt/archivebox/.venv/bin/archivebox ]]; then
+      msg_info "Migrating ArchiveBox to 0.9"
+      $STD uv pip uninstall --system --break-system-packages archivebox playwright
+      rm -rf /home/archivebox/.cache/ms-playwright
+      remove_old_tool_version "nodejs" "nodesource"
+      sed -i -e '/^User=archivebox$/d' -e 's|^ExecStart=/usr/local/bin/archivebox |ExecStart=/opt/archivebox/.venv/bin/archivebox |' /etc/systemd/system/archivebox.service
+      sed -i '/^ExecStart=/i ExecStartPre=-/bin/sh -c "echo 1G 2>/dev/null >/sys/fs/cgroup/memory.reclaim"' /etc/systemd/system/archivebox.service
+      systemctl daemon-reload
+      $STD uv venv --python 3.13 /opt/archivebox/.venv
+      msg_ok "Migrated ArchiveBox to 0.9"
+    fi
 
-  msg_info "Upgrading Playwright"
-  $STD uv pip install playwright --system --break-system-packages
-  $STD playwright install-deps chromium
-  msg_ok "Upgraded Playwright"
+    msg_info "Updating ArchiveBox"
+    $STD uv pip install --python /opt/archivebox/.venv/bin/python "archivebox==${CHECK_UPDATE_RELEASE#v}"
+    ln -sf /opt/archivebox/.venv/bin/archivebox /usr/local/bin/archivebox
+    cd /opt/archivebox/data
+    $STD archivebox init
+    if ! grep -q "^BASE_URL" ArchiveBox.conf; then
+      $STD archivebox config --set "BASE_URL=http://${LOCAL_IP}:$(grep -oP 'server 0\.0\.0\.0:\K[0-9]+' /etc/systemd/system/archivebox.service)"
+    fi
+    echo 1G 2>/dev/null >/sys/fs/cgroup/memory.reclaim || true
+    $STD archivebox install
+    $STD archivebox update --migrate-only
+    cat <<EOF >~/.archivebox
+${CHECK_UPDATE_RELEASE#v}
+EOF
+    msg_ok "Updated ArchiveBox"
 
-  msg_info "Updating ArchiveBox"
-  cd /opt/archivebox/data
-  $STD uv pip install --system --break-system-packages --upgrade --no-reinstall archivebox
-  sudo -u archivebox archivebox init
-  msg_ok "Updated ArchiveBox"
-
-  msg_info "Starting Service"
-  systemctl start archivebox
-  msg_ok "Started Service"
-  msg_ok "Updated successfully!"
+    msg_info "Starting ArchiveBox"
+    systemctl start archivebox
+    msg_ok "Started ArchiveBox"
+    msg_ok "Updated successfully!"
+  fi
   exit
 }
 
@@ -64,4 +82,4 @@ description
 msg_ok "Completed successfully!\n"
 echo -e "${CREATING}${GN}${APP} setup has been successfully initialized!${CL}"
 echo -e "${INFO}${YW}Access it using the following URL:${CL}"
-echo -e "${GATEWAY}${BGN}http://${IP}:8000/admin/login${CL}"
+echo -e "${GATEWAY}${BGN}http://${IP}:8000/admin/${CL}"
