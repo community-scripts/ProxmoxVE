@@ -587,6 +587,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 </details>
 
+## 2026-11-28
+
+### 💾 Core
+
+  - PHP: keep modules, pools and settings when setup_php changes the PHP version [@MickLesk](https://github.com/MickLesk) ([core#314](https://github.com/community-scripts/core/pull/314))
+
 ## 2026-11-27
 
 ### 🆕 New Scripts
