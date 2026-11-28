@@ -119,7 +119,7 @@ RUNEOF
     cp /opt/tubearchivist/docker_assets/backend_start.py /opt/tubearchivist/backend/
     rm -rf /opt/tubearchivist/.venv
     $STD uv venv /opt/tubearchivist/.venv --python 3.14
-    $STD uv pip install --python /opt/tubearchivist/.venv/bin/python -r /opt/tubearchivist/backend/requirements.txt
+    $STD uv pip install --python /opt/tubearchivist/.venv/bin/python -r /opt/tubearchivist/backend/requirements.txt packaging
     if [[ -f /opt/tubearchivist/backend/requirements.plugins.txt ]]; then
       mkdir -p /opt/yt_plugins/bgutil
       $STD uv pip install --python /opt/tubearchivist/.venv/bin/python --target /opt/yt_plugins/bgutil -r /opt/tubearchivist/backend/requirements.plugins.txt
