@@ -597,6 +597,7 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
   - #### 🐞 Bug Fixes
 
+    - FreshRSS: add missing PHP extensions through setup_php [@MickLesk](https://github.com/MickLesk) ([#19135](https://github.com/community-scripts/ProxmoxVE/pull/19135))
     - Garage: use published stable releases for install and update [@mormied22](https://github.com/mormied22) ([#19084](https://github.com/community-scripts/ProxmoxVE/pull/19084))
 
 ### 💾 Core
