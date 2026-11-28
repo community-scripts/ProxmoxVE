@@ -595,6 +595,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 - Give PVE containers from linuxcontainers.org images the Proxmox templates Base set [@MickLesk](https://github.com/MickLesk) ([core#315](https://github.com/community-scripts/core/pull/315))
 - PHP: keep modules, pools and settings when setup_php changes the PHP version [@MickLesk](https://github.com/MickLesk) ([core#314](https://github.com/community-scripts/core/pull/314))
 
+### 📚 Documentation
+
+  - docs: add 9.3 support [@cwmoriarty](https://github.com/cwmoriarty) ([#19129](https://github.com/community-scripts/ProxmoxVE/pull/19129))
+
 ## 2026-11-27
 
 ### 🆕 New Scripts
