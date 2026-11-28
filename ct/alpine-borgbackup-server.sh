@@ -54,12 +54,12 @@ function update_script() {
 
     if [[ -z "$SSH_PUBLIC_KEY" ]]; then
       msg_error "No SSH public key provided!"
-      exit 1
+      exit 64
     fi
 
     if [[ ! "$SSH_PUBLIC_KEY" =~ ^(ssh-rsa|ssh-dss|ssh-ed25519|ecdsa-sha2-) ]]; then
       msg_error "Invalid SSH public key format!"
-      exit 1
+      exit 64
     fi
 
     msg_info "Setting up SSH access"

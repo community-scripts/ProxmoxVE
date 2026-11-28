@@ -25,7 +25,7 @@ fi
 
 if [[ -z "${var_forgejo_runner_uuid:-}" ]]; then
   msg_error "No runner UUID provided. Cannot continue."
-  exit 1
+  exit 64
 fi
 
 if [[ -z "${var_forgejo_runner_token:-}" ]]; then
@@ -34,7 +34,7 @@ fi
 
 if [[ -z "${var_forgejo_runner_token:-}" ]]; then
   msg_error "No runner registration token provided. Cannot continue."
-  exit 1
+  exit 64
 fi
 
 DEFAULT_RUNNER_LABELS="linux-amd64:docker://node:22-bookworm"

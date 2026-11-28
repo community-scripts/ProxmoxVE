@@ -22,7 +22,7 @@ export var_llm_model="${var_llm_model:-}"
 
 if [[ -n "$var_llm_base_url" && -z "$var_llm_model" ]]; then
   msg_error "var_llm_model is required with var_llm_base_url."
-  exit 1
+  exit 64
 fi
 
 header_info "$APP"
