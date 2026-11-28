@@ -591,7 +591,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - DokuWiki [@MickLesk](https://github.com/MickLesk) ([#19138](https://github.com/community-scripts/ProxmoxVE/pull/19138))
+  - ClamAV [@cisox](https://github.com/cisox) ([#19140](https://github.com/community-scripts/ProxmoxVE/pull/19140))
+- DokuWiki [@MickLesk](https://github.com/MickLesk) ([#19138](https://github.com/community-scripts/ProxmoxVE/pull/19138))
 
 ### 🚀 Updated Scripts
 
