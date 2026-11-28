@@ -591,7 +591,8 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Give PVE containers from linuxcontainers.org images the Proxmox templates Base set [@MickLesk](https://github.com/MickLesk) ([core#315](https://github.com/community-scripts/core/pull/315))
+  - PHP: Keep Sury from pulling a second PHP in, and read the version from packages [@MickLesk](https://github.com/MickLesk) ([core#316](https://github.com/community-scripts/core/pull/316))
+- Give PVE containers from linuxcontainers.org images the Proxmox templates Base set [@MickLesk](https://github.com/MickLesk) ([core#315](https://github.com/community-scripts/core/pull/315))
 - PHP: keep modules, pools and settings when setup_php changes the PHP version [@MickLesk](https://github.com/MickLesk) ([core#314](https://github.com/community-scripts/core/pull/314))
 
 ## 2026-11-27
