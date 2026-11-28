@@ -589,6 +589,12 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-28
 
+### 🚀 Updated Scripts
+
+  - #### 🐞 Bug Fixes
+
+    - Garage: use published stable releases for install and update [@mormied22](https://github.com/mormied22) ([#19084](https://github.com/community-scripts/ProxmoxVE/pull/19084))
+
 ### 💾 Core
 
   - PHP: Keep Sury from pulling a second PHP in, and read the version from packages [@MickLesk](https://github.com/MickLesk) ([core#316](https://github.com/community-scripts/core/pull/316))
