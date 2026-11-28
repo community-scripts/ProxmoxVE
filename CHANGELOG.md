@@ -589,6 +589,10 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ## 2026-11-28
 
+### 🆕 New Scripts
+
+  - DokuWiki [@MickLesk](https://github.com/MickLesk) ([#19138](https://github.com/community-scripts/ProxmoxVE/pull/19138))
+
 ### 🚀 Updated Scripts
 
   - #### 🐞 Bug Fixes
