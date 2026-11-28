@@ -43,6 +43,7 @@ function update_script() {
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "subwave" "perminder-klair/subwave" "tarball"
     fetch_and_deploy_gh_release "liquidsoap" "savonet/liquidsoap" "binary" "$(grep -oP 'savonet/liquidsoap:\Kv[0-9.]+' /opt/subwave/docker/Dockerfile.broadcast)" "" "liquidsoap_*-debian-trixie-ocaml4.14.2-*_$(arch_resolve).deb"
 
+    PYTHON_VERSION="3.12" setup_uv
     msg_info "Updating Analyzer and Kokoro"
     $STD uv pip install --python /opt/analyzer/venv/bin/python librosa==0.11.0 soundfile==0.14.0 pyloudnorm==0.2.0
     $STD uv pip install --python /opt/kokoro/venv/bin/python kokoro-onnx==0.5.0 soundfile==0.12.1 misaki==0.9.4 pyopenjtalk-plus==0.4.1.post10 cn2an==0.5.24 jieba==0.42.1 ordered-set==4.1.0 pypinyin==0.55.0 pypinyin-dict==0.9.0

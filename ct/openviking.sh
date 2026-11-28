@@ -41,6 +41,7 @@ function update_script() {
     systemctl stop openviking
     msg_ok "Stopped Service"
 
+    PYTHON_VERSION="3.12" setup_uv
     msg_info "Updating OpenViking"
     $STD uv pip install --python /opt/openviking/bin/python --upgrade openviking
     msg_ok "Updated OpenViking"

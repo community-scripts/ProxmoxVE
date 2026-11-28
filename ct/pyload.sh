@@ -35,6 +35,7 @@ function update_script() {
   systemctl stop pyload
   msg_ok "Stopped Service"
 
+  PYTHON_VERSION="3.13" setup_uv
   msg_info "Updating ${APP}"
   $STD uv pip install --python /opt/pyload/.venv --upgrade --prerelease allow "pyload-ng[all]"
   msg_ok "Updated ${APP}"

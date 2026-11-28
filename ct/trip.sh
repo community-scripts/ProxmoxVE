@@ -47,6 +47,7 @@ function update_script() {
     cp -r /opt/trip/src/dist/trip/browser/* /opt/trip/frontend/
     msg_ok "Updated Frontend"
 
+    PYTHON_VERSION="3.12" setup_uv
     msg_info "Updating Backend"
     cd /opt/trip/backend
     $STD uv pip install --python /opt/trip/.venv/bin/python -r trip/requirements.txt

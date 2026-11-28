@@ -42,12 +42,13 @@ function update_script() {
     CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP="rrd" fetch_and_deploy_gh_release "librenms" "librenms/librenms" "tarball"
     restore_backup
 
+    PYTHON_VERSION="3.13" setup_uv
     msg_info "Updating LibreNMS"
     mkdir -p /opt/librenms/{rrd,logs,bootstrap/cache,storage}
     chown -R librenms:librenms /opt/librenms
     chmod 771 /opt/librenms
     chmod -R ug=rwX /opt/librenms/bootstrap/cache /opt/librenms/storage /opt/librenms/logs /opt/librenms/rrd
-    $STD su - librenms -s /bin/bash -c "cd /opt/librenms && uv venv --clear .venv && source .venv/bin/activate && uv pip install -r requirements.txt"
+    $STD su - librenms -s /bin/bash -c "cd /opt/librenms && uv venv --python 3.13 --clear .venv && source .venv/bin/activate && uv pip install -r requirements.txt"
     $STD su - librenms -s /bin/bash -c "cd /opt/librenms && COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev"
     $STD su - librenms -s /bin/bash -c "cd /opt/librenms && php8.4 artisan optimize:clear"
     $STD su - librenms -s /bin/bash -c "cd /opt/librenms && php8.4 artisan migrate --force --isolated"

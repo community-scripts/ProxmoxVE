@@ -51,9 +51,10 @@ function update_script() {
 
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "bambuddy" "maziggy/bambuddy" "tarball" "latest" "/opt/bambuddy"
 
+    PYTHON_VERSION="3.13" setup_uv
     msg_info "Updating Python Dependencies"
     cd /opt/bambuddy
-    $STD uv venv --clear
+    $STD uv venv --python 3.13 --clear
     $STD uv pip install -r requirements.txt
     msg_ok "Updated Python Dependencies"
 

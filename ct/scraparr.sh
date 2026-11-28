@@ -35,12 +35,12 @@ function update_script() {
     systemctl stop scraparr
     msg_ok "Services Stopped"
 
-    PYTHON_VERSION="3.12" setup_uv
+    PYTHON_VERSION="3.13" setup_uv
     fetch_and_deploy_gh_release "scrappar" "thecfu/scraparr" "tarball" "latest" "/opt/scraparr"
 
     msg_info "Updating Scraparr"
     cd /opt/scraparr
-    $STD uv venv --clear /opt/scraparr/.venv
+    $STD uv venv --python 3.13 --clear /opt/scraparr/.venv
     $STD /opt/scraparr/.venv/bin/python -m ensurepip --upgrade
     $STD /opt/scraparr/.venv/bin/python -m pip install --upgrade pip
     $STD /opt/scraparr/.venv/bin/python -m pip install -r /opt/scraparr/src/scraparr/requirements.txt

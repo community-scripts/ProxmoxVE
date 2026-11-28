@@ -41,6 +41,8 @@ function update_script() {
 
     VLLM_BACKEND="$(cat /opt/vllm/.backend 2>/dev/null || echo cuda)"
     VLLM_VERSION="$(get_latest_github_release "vllm-project/vllm")"
+
+    PYTHON_VERSION="3.12" setup_uv
     msg_info "Updating vLLM (${VLLM_BACKEND}, Patience)"
     case "$VLLM_BACKEND" in
     rocm)

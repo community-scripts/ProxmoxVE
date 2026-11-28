@@ -40,6 +40,7 @@ function update_script() {
 
     create_backup /opt/kima-hub/backend/.env /opt/kima-hub/frontend/.env
 
+    PYTHON_VERSION="3.13" setup_uv
     CLEAN_INSTALL=1 fetch_and_deploy_gh_release "kima-hub" "Chevron7Locked/kima-hub" "tarball"
 
     restore_backup

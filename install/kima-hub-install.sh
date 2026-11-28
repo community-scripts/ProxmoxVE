@@ -37,7 +37,7 @@ fetch_and_deploy_gh_release "kima-hub" "Chevron7Locked/kima-hub" "tarball"
 
 msg_info "Installing Python Dependencies"
 $STD uv venv --python 3.13 /opt/kima-hub/venv
-$STD uv pip install --no-cache --python /opt/kima-hub/venv \
+$STD uv pip install --no-cache --torch-backend cpu --python /opt/kima-hub/venv \
   tensorflow \
   essentia-tensorflow \
   redis \

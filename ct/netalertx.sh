@@ -39,6 +39,7 @@ function update_script() {
     PHP_VERSION="8.4" PHP_FPM="YES" PHP_MODULE="curl,sqlite3" setup_php
     CLEAN_INSTALL=1 CLEAN_INSTALL_KEEP=".venv" fetch_and_deploy_gh_release "netalertx" "netalertx/NetAlertX" "tarball"
 
+    PYTHON_VERSION="3.13" setup_uv
     msg_info "Updating NetAlertX"
     cd /opt/netalertx
     $STD uv pip install --python .venv/bin/python -r requirements.txt
