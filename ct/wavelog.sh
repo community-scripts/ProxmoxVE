@@ -45,6 +45,7 @@ function update_script() {
     msg_ok "Backup created"
 
     rm -rf /opt/wavelog
+    PHP_VERSION="8.5" PHP_APACHE="YES" PHP_MAX_EXECUTION_TIME="600" setup_php
     fetch_and_deploy_gh_release "wavelog" "wavelog/wavelog" "tarball"
 
     msg_info "Updating Wavelog"
