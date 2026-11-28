@@ -28,7 +28,7 @@ PANGOLIN_ENDPOINT="${PANGOLIN_ENDPOINT:-${var_newt_endpoint:-}}"
 
 if [[ -z "$NEWT_ID" || -z "$NEWT_SECRET" || -z "$PANGOLIN_ENDPOINT" ]]; then
   msg_error "Newt ID, Secret and Endpoint are all required. Aborting."
-  exit 1
+  exit 64
 fi
 
 msg_info "Configuring Newt"

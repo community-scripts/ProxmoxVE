@@ -64,15 +64,15 @@ function update_script() {
 if [[ -n "${mode:-}" ]]; then
   if [[ -z "${var_forgejo_instance:-}" ]]; then
     msg_error "var_forgejo_instance is required for unattended installs."
-    exit 1
+    exit 64
   fi
   if [[ -z "${var_forgejo_runner_uuid:-}" ]]; then
     msg_error "var_forgejo_runner_uuid is required for unattended installs."
-    exit 1
+    exit 64
   fi
   if [[ -z "${var_forgejo_runner_token:-}" ]]; then
     msg_error "var_forgejo_runner_token is required for unattended installs."
-    exit 1
+    exit 64
   fi
 fi
 
