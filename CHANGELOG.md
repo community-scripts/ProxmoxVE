@@ -601,7 +601,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 💾 Core
 
-  - Incus: Report Incus VM runs to telemetry [@MickLesk](https://github.com/MickLesk) ([core#319](https://github.com/community-scripts/core/pull/319))
+  - Leave a legacy version file to the app it belongs to [@MickLesk](https://github.com/MickLesk) ([core#317](https://github.com/community-scripts/core/pull/317))
+- incus: draw the banner when the header cache belongs to another user [@MickLesk](https://github.com/MickLesk) ([core#318](https://github.com/community-scripts/core/pull/318))
+- Incus: Report Incus VM runs to telemetry [@MickLesk](https://github.com/MickLesk) ([core#319](https://github.com/community-scripts/core/pull/319))
 - PHP: Keep Sury from pulling a second PHP in, and read the version from packages [@MickLesk](https://github.com/MickLesk) ([core#316](https://github.com/community-scripts/core/pull/316))
 - Give PVE containers from linuxcontainers.org images the Proxmox templates Base set [@MickLesk](https://github.com/MickLesk) ([core#315](https://github.com/community-scripts/core/pull/315))
 - PHP: keep modules, pools and settings when setup_php changes the PHP version [@MickLesk](https://github.com/MickLesk) ([core#314](https://github.com/community-scripts/core/pull/314))
