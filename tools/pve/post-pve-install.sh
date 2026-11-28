@@ -88,6 +88,11 @@ main() {
     esac
   done
 
+  if ! command -v pveversion >/dev/null 2>&1; then
+    msg_error "This script runs on a Proxmox VE host, and pveversion is missing here"
+    exit 105
+  fi
+
   local PVE_VERSION PVE_MAJOR PVE_MINOR
   PVE_VERSION="$(get_pve_version)"
   read -r PVE_MAJOR PVE_MINOR <<<"$(get_pve_major_minor "$PVE_VERSION")"
