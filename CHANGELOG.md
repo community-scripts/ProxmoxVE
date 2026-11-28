@@ -591,7 +591,9 @@ Exercise vigilance regarding copycat or coat-tailing sites that seek to exploit 
 
 ### 🆕 New Scripts
 
-  - Coder [@MickLesk](https://github.com/MickLesk) ([#19141](https://github.com/community-scripts/ProxmoxVE/pull/19141))
+  - Waydroid ([#19142](https://github.com/community-scripts/ProxmoxVE/pull/19142))
+- ChirpStack [@tomfrenzel](https://github.com/tomfrenzel) ([#19143](https://github.com/community-scripts/ProxmoxVE/pull/19143))
+- Coder [@MickLesk](https://github.com/MickLesk) ([#19141](https://github.com/community-scripts/ProxmoxVE/pull/19141))
 - MusicGrabber [@MickLesk](https://github.com/MickLesk) ([#19139](https://github.com/community-scripts/ProxmoxVE/pull/19139))
 - ClamAV [@cisox](https://github.com/cisox) ([#19140](https://github.com/community-scripts/ProxmoxVE/pull/19140))
 - DokuWiki [@MickLesk](https://github.com/MickLesk) ([#19138](https://github.com/community-scripts/ProxmoxVE/pull/19138))
