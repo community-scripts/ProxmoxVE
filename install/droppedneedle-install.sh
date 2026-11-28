@@ -13,24 +13,15 @@ setting_up_container
 network_check
 update_os
 
-PYTHON_VERSION="3.13" setup_uv
-fetch_and_deploy_gh_release "droppedneedle" "DroppedNeedle/DroppedNeedle" "tarball"
-NODE_VERSION="25" NODE_MODULE="pnpm@10.33.0" setup_nodejs
+msg_info "Installing Dependencies"
+$STD apt install -y \
+  ffmpeg \
+  python3
+msg_ok "Installed Dependencies"
 
-msg_info "Building Frontend"
-cd /opt/droppedneedle/frontend
-export NODE_OPTIONS="--max-old-space-size=3072"
-$STD pnpm install --frozen-lockfile
-$STD pnpm run build
-msg_ok "Built Frontend"
-
-msg_info "Setting up Application"
-mkdir -p /opt/droppedneedle/backend/config /opt/droppedneedle/backend/cache
-$STD uv venv /opt/droppedneedle/venv
-$STD uv pip install -r /opt/droppedneedle/backend/requirements.txt --python=/opt/droppedneedle/venv/bin/python
-rm -rf /opt/droppedneedle/backend/static
-cp -r /opt/droppedneedle/frontend/build /opt/droppedneedle/backend/static
-msg_ok "Set up Application"
+fetch_and_deploy_gh_release "droppedneedle" "DroppedNeedle/DroppedNeedle" "prebuild" "latest" "/opt/droppedneedle" "droppedneedle-v*-$(arch_resolve x86_64 aarch64)-linux.tar.gz"
+fetch_and_deploy_gh_release "droppedneedle-frontend" "DroppedNeedle/DroppedNeedle" "prebuild" "latest" "/opt/droppedneedle/frontend" "droppedneedle-frontend-v*.tar.gz"
+mkdir -p /opt/droppedneedle/backend/{config,cache,plugins,imports}
 
 msg_info "Creating Service"
 cat <<EOF >/etc/systemd/system/droppedneedle.service
@@ -43,10 +34,12 @@ Type=simple
 User=root
 WorkingDirectory=/opt/droppedneedle/backend
 Environment=ROOT_APP_DIR=/opt/droppedneedle/backend
+Environment=DROPPEDNEEDLE_STATIC_DIR=/opt/droppedneedle/frontend/static
 Environment=PORT=8688
 Environment=COMMIT_TAG=v$(<~/.droppedneedle)
+Environment=TZ=$(cat /etc/timezone 2>/dev/null || echo Etc/UTC)
 # Environment=SLSKD_DOWNLOADS_PATH=<path-to-slskd-downloads>
-ExecStart=/opt/droppedneedle/venv/bin/python -m maintenance.automatic_upgrade --start-target
+ExecStart=/opt/droppedneedle/droppedneedle
 Restart=on-failure
 RestartSec=5
 
