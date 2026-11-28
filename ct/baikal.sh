@@ -47,6 +47,7 @@ function update_script() {
 
     msg_info "Configuring Baikal"
     cd /opt/baikal
+    export COMPOSER_NO_SECURITY_BLOCKING=1
     $STD composer install || { msg_warn "composer.lock doesn't match composer.json (known upstream packaging issue) - regenerating"; $STD composer update; }
     msg_ok "Configured Baikal"
 
