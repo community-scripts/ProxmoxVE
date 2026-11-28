@@ -20,7 +20,7 @@ $STD apt install -y \
     nginx
 msg_ok "Installed Dependencies"
 
-PYTHON_VERSION="3.12" setup_uv
+PYTHON_VERSION="3.15" setup_uv
 PG_VERSION="17" setup_postgresql
 
 msg_info "Setup PostgreSQL"
@@ -68,6 +68,9 @@ sed -i \
     -e "s|alias /var/www/html/locales/;|alias /opt/warracker/locales/;|" \
     -e "s|/var/www/html|/opt/warracker/frontend|g" \
     -e "s/client_max_body_size __NGINX_MAX_BODY_SIZE_CONFIG_VALUE__/client_max_body_size 32M/" \
+    -e "s|error_log /dev/stderr|error_log /var/log/nginx/error.log|" \
+    -e "s|__NGINX_TRUST_ALL_PROXIES__|0|g" \
+    -e "s|__NGINX_TRUST_PRIVATE_PROXIES__|1|g" \
     /etc/nginx/sites-available/warracker.conf
 nginx_enable_site warracker.conf
 msg_ok "Configured Nginx"
